@@ -11,9 +11,9 @@ public class TogetherJoinPayment {
     @Id
         private String togetherJoinPayCode;  //전달받은 결제 코드
 
-//    @OneToOne
-//    @JoinColumn(name = "togetherJoinCode")
-//    private TogetherJoin togetherJoinCode;
+    @OneToOne
+    @JoinColumn(name = "togetherJoinCode")
+    private TogetherJoin togetherJoinCode;
 
     @Column(nullable = false)
     private int togetherJoinPayPrice;
