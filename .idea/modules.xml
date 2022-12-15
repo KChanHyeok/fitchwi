@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/fitchwi.iml" filepath="$PROJECT_DIR$/.idea/fitchwi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fitchwiserver/fitchwiserver.iml" filepath="$PROJECT_DIR$/fitchwiserver/fitchwiserver.iml" />
-    </modules>
-  </component>
-</project>
