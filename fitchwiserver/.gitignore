@@ -28,6 +28,7 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+!**/test/java/com/fitchwiframe/fitchwiserver/defaulttest/
 
 ### VS Code ###
 .vscode/
