@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class test {
   @Test
-  @DisplayName("디폴트 테스트")
+  @DisplayName("디폴트 테스트123")
   public void test(){
     Together t = new Together();
     System.out.println("t = " + t);
