@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 public class Together {
   @Id
-  private long TogetherCode = System.currentTimeMillis();
+  private long togetherCode = System.currentTimeMillis();
 
   @OneToOne
   @JoinColumn(name="togetherOpenedCode")
