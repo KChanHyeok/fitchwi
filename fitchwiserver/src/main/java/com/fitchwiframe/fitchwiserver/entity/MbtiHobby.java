@@ -17,7 +17,6 @@ public class MbtiHobby {
     @Column(columnDefinition = "char(4) not null")
     private Character mbtiHobbyMbti;
 
-
     @Column(nullable = false, length = 20)
     private String mbtiHobbyHobby;
 }
