@@ -6,14 +6,14 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
-@Table(name="together")
+@Table(name = "together")
 @Data
 public class Together {
   @Id
   private long togetherCode = System.currentTimeMillis();
 
   @OneToOne
-  @JoinColumn(name="togetherOpenedCode")
+  @JoinColumn(name = "togetherOpenedCode")
   private TogetherOpened togetherOpenedCode;
 
   @Column(nullable = false, length = 10)
@@ -37,7 +37,7 @@ public class Together {
   @Column(nullable = false, length = 5000)
   private String togetherContent;
 
-  @Column(nullable = false, length =100) //기본 이미지 이름
+  @Column(nullable = false, length = 100) //기본 이미지 이름
   private String togetherImg;
 
   @Column(nullable = false, length = 100)//기본 이미지 저장될 이름
@@ -62,9 +62,5 @@ public class Together {
   @Column(nullable = false)
   @ColumnDefault("0")
   private int togetherTotalPrice;
-
-
-
-
 
 }
