@@ -1,7 +1,9 @@
-import React,{useState, useCallback, useEffect} from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./scss/JoinMember.scss";
 
 const JoinMember = () => {
+    const nav = useNavigate();
 
     useEffect(() => {
         preview();
@@ -68,17 +70,17 @@ const JoinMember = () => {
         e.preventDefault();
         const formdata = new FormData();
         formdata.append('uploadImage', fileForm[0]);
-
+        
         const config = {
             Headers: {
                 'content-type': 'multipart/form-data',
             },
         };
-        console.log(formdata, config)
-        
+        console.log(config)
+        setJoinForm({ ...joinForm, minterest: joinForm.minterest.join(" ") })
+        nav("/")
     }
-
-
+    console.log(joinForm)
     return (
         <div>
             <h1>여기는 회원가입 페이지</h1>
