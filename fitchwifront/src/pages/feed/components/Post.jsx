@@ -66,7 +66,6 @@ const Post = () => {
           onClick={(e) => setOpen(true)}
           component="img"
           height="2%"
-          image="/img/EDD9CA7F-4356-412E-B142-6B82C04CEBDA_1_105_c.jpeg"
           alt="Paella dish"
         />
         <CardContent>
@@ -88,14 +87,14 @@ const Post = () => {
             />
           </IconButton>
           <AvatarGroup max={6}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-            <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+            <Avatar alt="Remy Sharp" />
+            <Avatar alt="Travis Howard" />
+            <Avatar alt="Cindy Baker" />
+            <Avatar alt="Agnes Walker" />
+            <Avatar alt="Trevor Henderson" />
+            <Avatar alt="Trevor Henderson" />
+            <Avatar alt="Trevor Henderson" />
+            <Avatar alt="Trevor Henderson" />
           </AvatarGroup>
         </CardActions>
       </Card>
@@ -110,20 +109,11 @@ const Post = () => {
         <Box width={1200} height={600} bgcolor="white" p={3} borderRadius={2}>
           <Stack direction="row" spacing={3} justifyContent="space-between">
             <Box flex={2} p={2}>
-              <CardMedia
-                component="img"
-                height="570px"
-                image="/img/EDD9CA7F-4356-412E-B142-6B82C04CEBDA_1_105_c.jpeg"
-                alt="피드사진"
-              />
+              <CardMedia component="img" height="570px" alt="피드사진" />
             </Box>
             <Box flex={1} p={2}>
               <UserBox>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
-                  sx={{ width: 30, height: 30 }}
-                />
+                <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
                 <Typography fontWeight={500} variant="span">
                   석진
                 </Typography>

@@ -1,12 +1,7 @@
 import React from "react";
-import Login from "./components/Login";
 
-const index = () => {
-  return (
-    <div>
-      <Login />
-    </div>
-  );
+const Home = () => {
+  return <h1>여기는 홈</h1>
 };
 
-export default index;
+export default Home;
