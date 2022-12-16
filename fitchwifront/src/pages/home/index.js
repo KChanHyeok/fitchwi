@@ -1,14 +1,7 @@
 import React from "react";
-// import { Route, Routes } from "react-router-dom";
-import Login from "./components/LoginMember";
 
 const Home = () => {
-  return (
-    // <Routes>
-    //   <Route path="login" element={<Login/>}></Route>
-    // </Routes>
-    <Login/>
-  );
+  return <h1>여기는 홈</h1>
 };
 
 export default Home;
