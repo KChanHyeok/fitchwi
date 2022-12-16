@@ -21,14 +21,14 @@ const Rightbar = () => {
           Online Friends
         </Typography>
         <AvatarGroup max={7}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-          <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-          <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-          <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-          <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-          <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-          <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+          <Avatar alt="Remy Sharp" />
+          <Avatar alt="Travis Howard" />
+          <Avatar alt="Cindy Baker" />
+          <Avatar alt="Agnes Walker" />
+          <Avatar alt="Trevor Henderson" />
+          <Avatar alt="Trevor Henderson" />
+          <Avatar alt="Trevor Henderson" />
+          <Avatar alt="Trevor Henderson" />
         </AvatarGroup>
         <Typography variant="h6" fontWeight={100} mt={2} mb={2}>
           Latest Photos
@@ -61,7 +61,7 @@ const Rightbar = () => {
         >
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+              <Avatar alt="Remy Sharp" />
             </ListItemAvatar>
             <ListItemText
               primary="Brunch this weekend?"
@@ -83,7 +83,7 @@ const Rightbar = () => {
           <Divider variant="inset" component="li" />
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+              <Avatar alt="Travis Howard" />
             </ListItemAvatar>
             <ListItemText
               primary="Summer BBQ"
@@ -105,7 +105,7 @@ const Rightbar = () => {
           <Divider variant="inset" component="li" />
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
-              <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+              <Avatar alt="Cindy Baker" />
             </ListItemAvatar>
             <ListItemText
               primary="Oui Oui"
