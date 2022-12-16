@@ -1,6 +1,26 @@
-import React,{useState, useCallback} from "react";
+import React,{useState, useCallback, useEffect} from "react";
+import "./scss/JoinMember.scss";
 
 const JoinMember = () => {
+
+    useEffect(() => {
+        preview();
+
+        return () => preview();
+    })
+
+    const preview = () => {
+        if(!fileForm) return false;
+
+        const imgEl = document.querySelector('.img_box');
+
+        const reader = new FileReader();
+
+        reader.onload = () => (imgEl.style.backgroundImage = `url(${reader.result})`);
+        reader.readAsDataURL(fileForm[0]);
+        console.log(reader)
+    }
+
     const [joinForm, setJoinForm] = useState({
         memail: "",
         mpwd: "",
@@ -10,10 +30,11 @@ const JoinMember = () => {
         mphone: "",
         maddr: "",
         mbirth: "",
-        mimg: "",
         mmbti: "",
         minterest: []
     })
+    const [fileForm, setFileForm] = useState("");
+
     const onChange = useCallback(
         (e) => {
             const joinObj = {
@@ -35,10 +56,26 @@ const JoinMember = () => {
             }
             setJoinForm(joinObj);
         }, [joinForm])
+
+    const onLoadFile = useCallback(
+        (e) => {
+            const file = e.target.files;
+            setFileForm(file)
+        },[])
+        
  
     const sendJoin = (e) => {
         e.preventDefault();
-        console.log(joinForm)
+        const formdata = new FormData();
+        formdata.append('uploadImage', fileForm[0]);
+
+        const config = {
+            Headers: {
+                'content-type': 'multipart/form-data',
+            },
+        };
+        console.log(formdata, config)
+        
     }
 
 
@@ -54,7 +91,12 @@ const JoinMember = () => {
                 <div> 핸드폰번호 : <input type="text" name="mphone" onChange={onChange}/></div>
                 <div> 주소 : <input type="text" name="maddr" onChange={onChange}/></div>
                 <div> 생일 : <input type="date" name="mbirth" onChange={onChange}/></div>
-                <div> 프로필 이미지 : <input type="file" name="mimg" onChange={onChange}/></div> 
+                <div> 
+                    프로필 이미지 : <input type="file" name="mimg" onChange={onLoadFile} />
+                    <div className="img_box">
+                        <img src="" alt=""/>
+                    </div>
+                </div> 
                 <div> MBTI : <input type="text" name="mmbti" onChange={onChange}/></div>
                 <div>
                     관심 주제 :
