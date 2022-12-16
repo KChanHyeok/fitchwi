@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useState } from "react";
+import axios from "axios";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -58,16 +59,20 @@ const Add = () => {
     }
 
     const feedInfo = {
-      feedcode: `${new Date().getTime()}`,
       memberEmail: "kilehide@naver.com",
-      category: category,
-      tags: tags,
-      contents: contents,
-      reason: reason,
-      date: `${new Date().getTime()}`,
+      feedCategory: category,
+      // tags: tags,
+      feedContent: contents,
+      feedClassificationcode: reason,
+      // reason: reason,
+      feedDate: `${new Date().getTime()}`,
       feedImg: "원래이미지이름",
-      feedSaveImg: "저장된이미지이름",
+      feedSaveimg: "저장된이미지이름",
     };
+    axios
+      .post("insertFeed", feedInfo)
+      .then((response) => console.log(response))
+      .catch((response) => console.log(response));
 
     setOpen(false);
     console.log(feedInfo);

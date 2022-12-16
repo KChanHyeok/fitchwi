@@ -65,6 +65,7 @@ const Post = () => {
         <CardMedia
           onClick={(e) => setOpen(true)}
           component="img"
+          src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=164&h=164&fit=crop&auto=format"
           height="2%"
           alt="Paella dish"
         />
