@@ -15,7 +15,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-
 import React, { useState } from "react";
 
 const StyleModal = styled(Modal)({
@@ -60,15 +59,19 @@ const Add = () => {
 
     const feedInfo = {
       feedcode: `${new Date().getTime()}`,
+      memberEmail: "kilehide@naver.com",
       category: category,
       tags: tags,
       contents: contents,
       reason: reason,
+      date: `${new Date().getTime()}`,
+      feedImg: "원래이미지이름",
+      feedSaveImg: "저장된이미지이름",
     };
+
     setOpen(false);
     console.log(feedInfo);
     alert("피드가 작성되었습니다.");
-    setContents("");
   };
   const handleInput = (event) => {
     setContents(event.currentTarget.value);
@@ -100,11 +103,7 @@ const Add = () => {
             피드 작성
           </Typography>
           <UserBox>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 30, height: 30 }}
-            />
+            <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
             <Typography fontWeight={500} variant="span">
               작성자 이름
             </Typography>
