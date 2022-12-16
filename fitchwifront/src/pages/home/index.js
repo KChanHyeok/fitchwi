@@ -1,12 +1,14 @@
 import React from "react";
-import Login from "./components/Login";
+// import { Route, Routes } from "react-router-dom";
+import Login from "./components/LoginMember";
 
-const index = () => {
+const Home = () => {
   return (
-    <div>
-      <Login />
-    </div>
+    // <Routes>
+    //   <Route path="login" element={<Login/>}></Route>
+    // </Routes>
+    <Login/>
   );
 };
 
-export default index;
+export default Home;
