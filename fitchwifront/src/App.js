@@ -1,17 +1,15 @@
 import React from "react";
-import {
-  BrowserRouter,
-  BrowserRouter as Router,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
+import Feed from "./pages/feed";
 
 function App() {
   return (
     <BrowserRouter>
-      <Router>
+      <Routes>
         <Route path="/" element={<Home />}></Route>
-      </Router>
+        <Route path="/feed" element={<Feed />}></Route>
+      </Routes>
     </BrowserRouter>
   );
 }
