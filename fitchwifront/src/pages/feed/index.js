@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Rightbar from "./components/Rightbar";
 import Sidebar from "./components/Sidebar";
 
-function feed() {
+function index() {
   return (
     <Box>
       <Navbar />
@@ -19,4 +19,4 @@ function feed() {
   );
 }
 
-export default feed;
+export default index;
