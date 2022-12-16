@@ -4,14 +4,12 @@ import {
   Badge,
   Box,
   InputBase,
-  Menu,
-  MenuItem,
   styled,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { Pets, Mail, Notifications } from "@mui/icons-material";
-import React, { useState } from "react";
+import React from "react";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -35,17 +33,7 @@ const Icons = styled(Box)(({ theme }) => ({
   },
 }));
 
-const UserBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  gap: "10px",
-  alignItems: "center",
-  [theme.breakpoints.up("sm")]: {
-    display: "none",
-  },
-}));
-
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -64,34 +52,11 @@ const Navbar = () => {
             <Notifications />
           </Badge>
           <Avatar
-            src="/broken-image.jpg"
+            src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=164&h=164&fit=crop&auto=format"
             sx={{ width: 30, height: 30 }}
-            onClick={(e) => setOpen(true)}
           />
         </Icons>
-        <UserBox onClick={(e) => setOpen(true)}>
-          <Avatar src="/broken-image.jpg" sx={{ width: 30, height: 30 }} />
-          <Typography variant="span">Jin</Typography>
-        </UserBox>
       </StyledToolbar>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        open={open}
-        onClose={(e) => setOpen(false)}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
-      </Menu>
     </AppBar>
   );
 };
