@@ -8,12 +8,16 @@ import javax.persistence.*;
 @Data
 @Table(name = "feed")
 public class Feed {
+
     @Id
     private long feedCode = System.currentTimeMillis();
 
     @ManyToOne
     @JoinColumn(name = "memberEmail")
     private Member memberEmail;
+
+//    @Column(length = 20)
+//    private String memberEmail;
 
     @Column(length = 20)
     private String feedClassificationcode;
