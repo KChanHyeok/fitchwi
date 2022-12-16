@@ -39,6 +39,7 @@ function TalkOpened(props) {
                             <option value="fcfs">선착순</option>
                         </select>
                     <p className="talkInput">애기해요 사진 첨부</p>
+                    <input type="file" name="talkimg" multiple></input>
                     <p className="talkInput">얘기해요 소개 말</p>
                     <textarea placeholder="모임을 소개해주세요"></textarea>
                     <p className="talkInput">애기해요 태그</p>
