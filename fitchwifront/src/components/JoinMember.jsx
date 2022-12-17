@@ -101,7 +101,7 @@ const JoinMember = () => {
         setJoinForm(joinObj);
     }
     
-    console.log(joinForm)
+    console.log(formdata)
 
   return (
     <div>
