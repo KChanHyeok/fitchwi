@@ -17,6 +17,7 @@ import {
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -53,16 +54,16 @@ const Add = () => {
   const preview = () => {
     if (!fileForm) return false;
     const imgEl = document.querySelector(".img_box");
-
     const render = new FileReader();
 
     render.onload = () =>
       (imgEl.style.backgroundImage = `url(${render.result})`);
     render.readAsDataURL(fileForm[0]);
+    console.log(render);
   };
 
   const onLoadFile = useCallback((event) => {
-    const file = event.currentTarget.files;
+    const file = event.target.files;
     setFileForm(file);
   }, []);
 
@@ -77,9 +78,6 @@ const Add = () => {
       headers: { "Content-Type": "multipart/form-data" },
     };
 
-    console.log("before axios");
-    console.log(formdata);
-    console.log(config);
     axios
       .post("/insertfeed", formdata, config)
       .then((response) => {
@@ -90,7 +88,6 @@ const Add = () => {
         }
       })
       .catch((error) => console.log(error));
-    setOpen(false);
   };
 
   const [open, setOpen] = useState(false);
@@ -191,8 +188,8 @@ const Add = () => {
 
           <br />
           <div>
-            프로필 이미지 :{" "}
-            <input type="file" name="memberImg" onChange={onLoadFile} />
+            프로필 이미지 :
+            <input type="file" name="feedImg" onChange={onLoadFile} />
             <div className="img_box">
               <img src="" alt="" />
             </div>
