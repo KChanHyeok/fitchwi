@@ -19,9 +19,10 @@ public class MemberController {
   //회원가입 - 관심사 배열 처리 필요.
   @PostMapping("/joinmember")
   private String joinMember(@RequestPart(value = "data", required = true) Member newMember,
-                            @RequestPart(value = "files", required = false) MultipartFile pic,
+                            @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
                             HttpSession session) {
     log.info("memberController.joinMember()");
+    log.info("pic" + pic);
 
     return memberService.joinMember(newMember, pic, session);
   }
