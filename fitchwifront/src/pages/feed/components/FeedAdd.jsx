@@ -15,8 +15,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -32,54 +33,79 @@ const UserBox = styled(Box)({
 });
 
 const Add = () => {
+  let formdata = new FormData();
+
+  const [fileForm, setFileForm] = useState("");
+
+  const [insertForm, setInsertForm] = useState({
+    memberEmail: "kilehide@naver.com",
+    feedCategory: "",
+    feedContent: "",
+    feedClassificationcode: "",
+    feedDate: `${new Date().getTime()}`,
+  });
+
+  useEffect(() => {
+    preview();
+
+    return () => preview();
+  });
+
+  const preview = () => {
+    if (!fileForm) return false;
+    const imgEl = document.querySelector(".img_box");
+    const render = new FileReader();
+
+    render.onload = () =>
+      (imgEl.style.backgroundImage = `url(${render.result})`);
+    render.readAsDataURL(fileForm[0]);
+    console.log(render);
+  };
+
+  const onLoadFile = useCallback((event) => {
+    const file = event.target.files;
+    setFileForm(file);
+  }, []);
+
+  const sendFeed = (event) => {
+    formdata.append(
+      "data",
+      new Blob([JSON.stringify(insertForm)], { type: "application/json" })
+    );
+    formdata.append("uploadImage", fileForm[0]);
+
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+    };
+
+    axios
+      .post("/insertfeed", formdata, config)
+      .then((response) => {
+        if (response.data === "ok") {
+          alert("성공");
+        } else {
+          alert("실패");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("");
-  const [contents, setContents] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
 
-  const handleChange = (event) => {
-    setReason(event.target.value);
-  };
-
-  const handleChange2 = (event) => {
-    setCategory(event.target.value);
-  };
-
-  const handleChange3 = (event) => {
-    setTags(event.target.value);
-  };
+  const handleChange = useCallback(
+    (event) => {
+      const insertObj = {
+        ...insertForm,
+        [event.target.name]: event.target.value,
+      };
+      setInsertForm(insertObj);
+      console.log(insertForm);
+    },
+    [insertForm]
+  );
 
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleDeclration = () => {
-    if (category === "" || tags === "" || contents === "" || reason === "") {
-      return alert("공백 없이 입력하세요.");
-    }
-
-    const feedInfo = {
-      memberEmail: "kilehide@naver.com",
-      feedCategory: category,
-      // tags: tags,
-      feedContent: contents,
-      feedClassificationcode: reason,
-      // reason: reason,
-      feedDate: `${new Date().getTime()}`,
-      feedImg: "원래이미지이름",
-      feedSaveimg: "저장된이미지이름",
-    };
-    axios
-      .post("insertFeed", feedInfo)
-      .then((response) => console.log(response))
-      .catch((response) => console.log(response));
-
-    setOpen(false);
-    console.log(feedInfo);
-    alert("피드가 작성되었습니다.");
-  };
-  const handleInput = (event) => {
-    setContents(event.currentTarget.value);
   };
 
   return (
@@ -121,7 +147,8 @@ const Add = () => {
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={reason}
+              value={insertForm.feedClassificationcode}
+              name="feedClassificationcode"
               onChange={handleChange}
               autoWidth
               label="목록"
@@ -144,8 +171,9 @@ const Add = () => {
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={category}
-              onChange={handleChange2}
+              value={insertForm.feedCategory}
+              name="feedCategory"
+              onChange={handleChange}
               autoWidth
               label="목록"
             >
@@ -159,31 +187,19 @@ const Add = () => {
           </FormControl>
 
           <br />
-
-          <FormControl sx={{ mt: 2, minWidth: 300, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              태그
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={tags}
-              onChange={handleChange3}
-              autoWidth
-              label="태그"
-            >
-              <MenuItem value="영화">#영화</MenuItem>
-              <MenuItem value="전시회">#전시회</MenuItem>
-              <MenuItem value="사진전">#사진전</MenuItem>
-            </Select>
-          </FormControl>
-
+          <div>
+            프로필 이미지 :
+            <input type="file" name="feedImg" onChange={onLoadFile} />
+            <div className="img_box">
+              <img src="" alt="" />
+            </div>
+          </div>
           <TextField
-            value={contents}
-            onChange={handleInput}
+            value={insertForm.feedContent}
+            onChange={handleChange}
             autoFocus
             margin="dense"
-            id="name"
+            name="feedContent"
             label="피드 내용을 입력하세요(2000자 이내)"
             type="text"
             fullWidth
@@ -197,7 +213,7 @@ const Add = () => {
             <Button onClick={handleClose} sx={{ width: "100px" }}>
               취소하기
             </Button>
-            <Button onClick={handleDeclration}>작성하기</Button>
+            <Button onClick={sendFeed}>작성하기</Button>
           </ButtonGroup>
         </Box>
       </StyleModal>

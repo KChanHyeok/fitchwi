@@ -16,9 +16,6 @@ public class Feed {
     @JoinColumn(name = "memberEmail")
     private Member memberEmail;
 
-//    @Column(length = 20)
-//    private String memberEmail;
-
     @Column(length = 20)
     private String feedClassificationcode;
 
