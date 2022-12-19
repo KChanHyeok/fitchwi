@@ -17,7 +17,6 @@ import {
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -79,10 +78,16 @@ const Add = () => {
     };
 
     axios
-      .post("/insertfeed", formdata, config)
+      .post(
+        "/insertfeed",
+        { params: { memberEmail: insertForm.memberEmail } },
+        formdata,
+        config
+      )
       .then((response) => {
         if (response.data === "ok") {
           alert("성공");
+          console.log(response.data);
         } else {
           alert("실패");
         }
