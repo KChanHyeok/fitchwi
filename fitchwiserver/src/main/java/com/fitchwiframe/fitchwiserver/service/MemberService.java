@@ -82,11 +82,11 @@ private MemberRepository memberRepository;
   //중복 확인
   public String checkDuplicatesMemberId(String userId) {
     log.info("memberService.checkDuplicatesMemberId");
-    String result = "fail";
+    String result = "ok";
     try {
-      memberRepository.findById(userId).isEmpty();
-      log.info("사용가능");
-      result = "ok";
+      memberRepository.findById(userId).get();
+      log.info("불가");
+      result = "fail";
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -111,7 +111,7 @@ private MemberRepository memberRepository;
       e.printStackTrace();
       dbMember = null;
     }
-    return dbMember.getMemberName();
+    return dbMember.getMemberEmail();
 
 
   }

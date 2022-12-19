@@ -30,7 +30,7 @@ public class MemberController {
   //중복확인
   @GetMapping("/checkduplicatesmemberId")
   //나중에 이름 변경 필요
-  private String checkDuplicatesMemberId(@RequestBody String userId) {
+  private String checkDuplicatesMemberId(@RequestParam String userId) {
     log.info("memberController.checkDuplicatesMemberId()");
     return memberService.checkDuplicatesMemberId(userId);
   }
