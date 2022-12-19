@@ -17,6 +17,7 @@ import {
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -33,9 +34,9 @@ const UserBox = styled(Box)({
 
 const Add = ({ memberEmail }) => {
   let formdata = new FormData();
+  const nav = useNavigate();
 
   const [fileForm, setFileForm] = useState("");
-
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: memberEmail,
@@ -51,6 +52,18 @@ const Add = ({ memberEmail }) => {
 
     return () => preview();
   });
+
+  // 시간 이슈
+  const [profil, setProfil] = useState({});
+  useEffect(() => {
+    axios
+      .get("/getMemberInfo", { params: { userId: memberEmail } })
+      .then((response) => {
+        setProfil(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const preview = () => {
     if (!fileForm) return false;
@@ -84,8 +97,9 @@ const Add = ({ memberEmail }) => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
+          setOpen(false);
           alert("성공");
-          console.log(response.data);
+          nav("/feed");
         } else {
           alert("실패");
         }
@@ -137,9 +151,9 @@ const Add = ({ memberEmail }) => {
             피드 작성
           </Typography>
           <UserBox>
-            <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
+            <Avatar alt={profil.memberImg} sx={{ width: 30, height: 30 }} />
             <Typography fontWeight={500} variant="span">
-              작성자 이름
+              {profil.memberName}
             </Typography>
           </UserBox>
           <hr />

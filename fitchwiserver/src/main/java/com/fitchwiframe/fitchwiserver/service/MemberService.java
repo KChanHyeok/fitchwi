@@ -114,4 +114,9 @@ private MemberRepository memberRepository;
     return dbMember.getMemberEmail();
 
   }
+
+  public Member getMemberInfo(String userId) {
+    log.info("memberService.getMemberInfo()");
+    return memberRepository.findById(userId).get();
+  }
 }

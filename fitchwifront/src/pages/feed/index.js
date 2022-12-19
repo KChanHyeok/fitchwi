@@ -4,7 +4,8 @@ import Feed from "./components/Feed";
 import Rightbar from "./components/Rightbar";
 import Sidebar from "../../layout/Sidebar";
 
-function index() {
+function index({ lstate }) {
+  const { logid } = lstate;
   return (
     <Box>
       <Stack direction="row" spacing={7} justifyContent="space-between">
@@ -12,7 +13,7 @@ function index() {
         <Feed />
         <Rightbar />
       </Stack>
-      <FeedAdd memberEmail="kilehide@naver.com" />
+      <FeedAdd memberEmail={logid} />
     </Box>
   );
 }
