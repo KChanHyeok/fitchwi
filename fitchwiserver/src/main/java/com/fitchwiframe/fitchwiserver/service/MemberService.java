@@ -113,6 +113,5 @@ private MemberRepository memberRepository;
     }
     return dbMember.getMemberEmail();
 
-
   }
 }
