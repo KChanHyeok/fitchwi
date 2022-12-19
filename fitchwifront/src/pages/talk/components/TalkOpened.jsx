@@ -1,18 +1,19 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 
 function TalkOpened(props) {
+    // let formData = new FromData();
+
     const [inputTalkOp, setInputTalkOp] = useState({
         talkTitle: "",
         talkmax: 0,
         talkcategory: "",
         talkType: "",
         talkcontent: "",
-        talkTagContent: ""
+        talkTagContent: "",
     });
-
 
     const onChange = useCallback(
         (e) => {
@@ -22,7 +23,34 @@ function TalkOpened(props) {
             };
             setInputTalkOp(inputTo);
             console.log(e.target.value);
-        }, [inputTalkOp])
+        }, [inputTalkOp]);
+
+
+    const [fileForm, setFileForm] = useState("");
+
+    useEffect(() => {
+        preview();
+
+        return () => preview();
+    });
+
+    const preview = () => {
+        if (!fileForm) return false;
+        const imgEl = document.querySelector(".talk_img_box");
+        const render = new FileReader();
+
+        render.onload = () =>
+            (imgEl.style.backgroundImage = `url(${render.result})`);
+        render.readAsDataURL(fileForm[0]);
+        console.log(render);
+    };
+
+    const onLoadFile = useCallback(
+        (e) => {
+            const files = e.target.files;
+            setFileForm(files);
+            console.log(e.target.files);
+        }, []);
 
     //작성 내용 전송 함수
     // const onTalkOpened = useCallback(
@@ -32,14 +60,6 @@ function TalkOpened(props) {
     //     }
     // )
 
-    // const [File, setFile] = useState("");
-
-    // const uploadFile = useCallback(
-    //     (e) => {
-    //         const files = e.target.files;
-    //         setFile(files);
-    //     }
-    // )
 
     //모달창
     const [talkOpened, setTalkOpened] = useState(false);
@@ -80,8 +100,11 @@ function TalkOpened(props) {
                         <option value="fcfs" name="talkType">선착순</option>
                     </select>
                     <p className="talkInput">애기해요 사진 첨부</p>
+                    <div className="talk_img_box">
+                        <img src="" alt="" />
+                    </div>
                     <input type="file" name="talkImg"
-                        // onChange={uploadFile}
+                        onChange={onLoadFile}
                         multiple required></input>
                     <p className="talkInput">얘기해요 소개 말</p>
                     <textarea name="talkContent"
