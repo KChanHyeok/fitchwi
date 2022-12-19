@@ -31,17 +31,13 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const FeedAdd = () => {
+const TogetherAdd = () => {
   let formdata = new FormData();
 
   const [fileForm, setFileForm] = useState("");
 
   const [insertForm, setInsertForm] = useState({
-    memberEmail: "kilehide@naver.com",
-    feedCategory: "",
-    feedContent: "",
-    feedClassificationcode: "",
-    feedDate: `${new Date().getTime()}`,
+    
   });
 
   useEffect(() => {
@@ -136,12 +132,12 @@ const FeedAdd = () => {
       >
         <Box width={800} height={600} bgcolor="white" p={3} borderRadius={5}>
           <Typography variant="h6" color="gray" textAlign="center">
-            피드 작성
+            함께해요 생성
           </Typography>
           <UserBox>
             <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
             <Typography fontWeight={500} variant="span">
-              작성자 이름
+              개설자 이름
             </Typography>
           </UserBox>
           <hr />
@@ -193,7 +189,7 @@ const FeedAdd = () => {
 
           <br />
           <div>
-            프로필 이미지 :
+            함께해요 이미지 :
             <input type="file" name="feedImg" onChange={onLoadFile} />
             <div className="img_box">
               <img src="" alt="" />
@@ -226,4 +222,4 @@ const FeedAdd = () => {
   );
 };
 
-export default FeedAdd;
+export default TogetherAdd;
