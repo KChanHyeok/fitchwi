@@ -4,14 +4,14 @@ import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 
 function TalkOpened(props) {
-    // let formData = new FromData();
+    let formData = new FormData();
 
     const [inputTalkOp, setInputTalkOp] = useState({
         talkTitle: "",
-        talkmax: 0,
-        talkcategory: "",
+        talkMax: 0,
+        talkCategory: "",
         talkType: "",
-        talkcontent: "",
+        talkContent: "",
         talkTagContent: "",
     });
 
@@ -22,10 +22,9 @@ function TalkOpened(props) {
                 [e.target.name]: e.target.value,
             };
             setInputTalkOp(inputTo);
-            console.log(e.target.value);
         }, [inputTalkOp]);
 
-
+    //파일 업로드
     const [fileForm, setFileForm] = useState("");
 
     useEffect(() => {
@@ -42,7 +41,7 @@ function TalkOpened(props) {
         render.onload = () =>
             (imgEl.style.backgroundImage = `url(${render.result})`);
         render.readAsDataURL(fileForm[0]);
-        console.log(render);
+        //console.log(render);
     };
 
     const onLoadFile = useCallback(
@@ -53,12 +52,24 @@ function TalkOpened(props) {
         }, []);
 
     //작성 내용 전송 함수
-    // const onTalkOpened = useCallback(
-    //     (e) => {
-    //         axios
-    //             .post("addTalk",)
-    //     }
-    // )
+    const onTalkOpened = useCallback(
+        (e) => {
+            const check = {
+                ...inputTalkOp,
+                ...fileForm,
+            };
+            console.log(check);
+            // formData.append(
+            //     "data",
+            //     new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
+            // );
+            // formData.append("uploadImage", fileForm[0]);
+
+            // const config = {
+            //     headers: { "Content-Type": "multipart/form-data" },
+            // };
+        }
+    )
 
 
     //모달창
@@ -83,21 +94,22 @@ function TalkOpened(props) {
                         placeholder="숫자만 입력하세요"
                         required></input>
                     <p className="talkInput">모임 카테고리 선정</p>
-                    <select onChange={onChange} required>
-                        <option value="category" name="talkCategory">카테고리</option>
-                        <option value="cultureArt" name="talkCategory">문화∙예술</option>
-                        <option value="exercise" name="talkCategory">운동∙액티비티</option>
-                        <option value="cookFood" name="talkCategory">요리∙음식</option>
-                        <option value="travel" name="talkCategory">여행</option>
-                        <option value="grow" name="talkCategory">성장∙자기계발</option>
-                        <option value="crafts" name="talkCategory">공예∙수공예</option>
-                        <option value="game" name="talkCategory">게임∙오락</option>
-                        <option value="etc" name="talkCategory">기타</option>
+                    <select onChange={onChange} name="talkCategory" required>
+                        <option value="">카테고리</option>
+                        <option value="문화∙예술">문화∙예술</option>
+                        <option value="운동∙액티비티">운동∙액티비티</option>
+                        <option value="요리∙음식">요리∙음식</option>
+                        <option value="여행">여행</option>
+                        <option value="성장∙자기계발">성장∙자기계발</option>
+                        <option value="공예∙수공예">공예∙수공예</option>
+                        <option value="게임∙오락">게임∙오락</option>
+                        <option value="기타">기타</option>
                     </select>
                     <p className="talkInput">가입유형</p>
-                    <select onChange={onChange} required>
-                        <option value="approve" name="talkType">승인제</option>
-                        <option value="fcfs" name="talkType">선착순</option>
+                    <select onChange={onChange} name="talkType" required>
+                        <option value="">선택</option>
+                        <option value="승인제">승인제</option>
+                        <option value="선착순">선착순</option>
                     </select>
                     <p className="talkInput">애기해요 사진 첨부</p>
                     <div className="talk_img_box">
@@ -113,7 +125,7 @@ function TalkOpened(props) {
                     <p className="talkInput">애기해요 태그</p>
                     <input type="text" name="talkTagContent"
                         onChange={onChange} required></input>
-                    <button>개설하기</button> {/*onSubmit={onTalkOpened}*/}
+                    <button onClick={onTalkOpened}>개설하기</button>
                 </TalkOpenedModal>
             )}
         </div>
