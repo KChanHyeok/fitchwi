@@ -51,8 +51,8 @@ const JoinMember = () => {
   const onCheck = useCallback(
     (e) => {
       const joinObj = {
-          ...joinForm,
-          memberInterest: joinForm.memberInterest
+        ...joinForm,
+        memberInterest: joinForm.memberInterest,
       };
       if (e.target.checked === true) {
         joinForm.memberInterest.push(e.target.value);
@@ -63,7 +63,6 @@ const JoinMember = () => {
     },
     [joinForm]
   );
-  
 
   const onLoadFile = useCallback((e) => {
     const file = e.target.files;
@@ -74,34 +73,39 @@ const JoinMember = () => {
     e.preventDefault();
     formdata.append("data", new Blob([JSON.stringify(joinForm)], { type: "application/json" }));
     formdata.append("uploadImage", fileForm[0]);
-    
+
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
-      axios.post("/joinmember", formdata, config).then((res) => {
-          if (res.data === "ok") {
-              alert("성공")
-          } else {
-            alert("실패")
+    axios
+      .post("/joinmember", formdata, config)
+      .then((res) => {
+        if (res.data === "ok") {
+          alert("성공");
+        } else {
+          alert("실패");
         }
       })
-      .catch((error) => console.log(error))
+      .catch((error) => console.log(error));
   };
 
   const onCheckId = (e) => {
     e.preventDefault();
-    axios.get("/checkduplicatesmemberId", joinForm.memberEmail).then((res) => alert(res));
-    };
+    axios
+      .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
+      .then((res) => alert(res.data));
+    console.log(typeof joinForm.memberEmail);
+  };
 
-    const onCheckComple = () => {
-        const joinObj = {
-            ...joinForm,
-            memberInterest: joinForm.memberInterest.join(" ")
-        };
-        setJoinForm(joinObj);
-    }
-    
-    console.log(formdata)
+  const onCheckComple = () => {
+    const joinObj = {
+      ...joinForm,
+      memberInterest: joinForm.memberInterest.join(" "),
+    };
+    setJoinForm(joinObj);
+  };
+
+  console.log(formdata);
 
   return (
     <div>
@@ -163,7 +167,9 @@ const JoinMember = () => {
             기타
           </span>
         </div>
-        <button type="submit" onClick={onCheckComple}>회원가입</button>
+        <button type="submit" onClick={onCheckComple}>
+          회원가입
+        </button>
       </form>
     </div>
   );
