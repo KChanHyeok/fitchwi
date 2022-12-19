@@ -19,24 +19,16 @@ const Header = ({ lstate, onLogout }) => {
       <StyledToolbar>
         <Box>
           <Link to={homeLink} style={{ textDecoration: "none" }}>
-            <Typography
-              variant="h6"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
+            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
               FITCHWI
             </Typography>
           </Link>
         </Box>
         <Box>
-          <Link
-            style={{ textDecoration: "none", marginRight: 100 }}
-            to={"/feed"}
-          >
+          <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/feed"}>
             피드
           </Link>
-          <Link style={{ textDecoration: "none", marginRight: 100 }}>
-            함께해요
-          </Link>
+          <Link style={{ textDecoration: "none", marginRight: 100 }}>함께해요</Link>
           <Link style={{ textDecoration: "none" }} to={"/talk"}>
             얘기해요
           </Link>
@@ -48,7 +40,7 @@ const Header = ({ lstate, onLogout }) => {
             </Button>
           </Link>
           {logid !== "" ? (
-            <Button color="primary" variant="outlined" onClick={"로그아웃"}>
+            <Button color="primary" variant="outlined" onClick={onLogout}>
               로그아웃
             </Button>
           ) : (

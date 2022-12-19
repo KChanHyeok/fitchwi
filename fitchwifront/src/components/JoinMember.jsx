@@ -7,6 +7,8 @@ const JoinMember = () => {
   let formdata = new FormData();
   const nav = useNavigate();
   const [fileForm, setFileForm] = useState("");
+  const [disabled, setDisabled] = useState(true);
+  const [msg, setMsg] = useState("");
 
   const [joinForm, setJoinForm] = useState({
     memberEmail: "",
@@ -80,23 +82,49 @@ const JoinMember = () => {
       headers: { "Content-Type": "multipart/form-data" },
     };
 
-      axios.post("/joinmember", formdata, config).then((res) => {
-          if (res.data === "ok") {
-              alert("성공")
-              nav("/")
-          } else {
-            alert("실패")
+    axios
+      .post("/joinmember", formdata, config)
+      .then((res) => {
+        if (res.data === "ok") {
+          alert("성공");
+          nav("/");
+        } else {
+          alert("실패");
         }
       })
       .catch((error) => console.log(error));
   };
 
+  const onCheckPwd = (e) => {
+    let checkpwd = e.target.value;
+    console.log(joinForm.memberPwd);
+    console.log(checkpwd);
+    if (checkpwd === "") {
+      setMsg("");
+    } else if (checkpwd === joinForm.memberPwd) {
+      setMsg("비밀번호 확인이 완료됐습니다.");
+    } else {
+      setMsg("올바른 비밀번호를 입력해주세요");
+    }
+  };
+
   const onCheckId = (e) => {
     e.preventDefault();
+    if (joinForm.memberEmail === "") {
+      alert("사용하실 Email을 입력해주세요.");
+      return;
+    }
     axios
       .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
-      .then((res) => alert(res.data));
-    console.log(typeof joinForm.memberEmail);
+      .then((res) => {
+        if (res.data === "ok") {
+          setDisabled(!disabled);
+          alert("사용 가능한 Email 입니다.");
+        } else {
+          alert("사용할 수 없는 Email 입니다.");
+        }
+      });
+    //console.log(typeof joinForm.memberEmail);
   };
 
   const onCheckComple = () => {
@@ -114,30 +142,35 @@ const JoinMember = () => {
       <h1>여기는 회원가입 페이지</h1>
       <form className="joinContainer" onSubmit={sendJoin}>
         <div>
-          이메일 : <input type="email" name="memberEmail" onChange={onChange} />
+          이메일 : <input type="email" name="memberEmail" onChange={onChange} required />
           <button onClick={onCheckId}>중복확인</button>
         </div>
         <div>
-          비밀번호 : <input type="password" name="memberPwd" onChange={onChange} />
+          비밀번호 : <input type="password" name="memberPwd" onChange={onChange} required />
         </div>
         <div>
-          이름 : <input type="text" name="memberName" onChange={onChange} />
+          비밀번호확인 : <input type="password" onChange={onCheckPwd} required />
+          <span>{msg}</span>
         </div>
         <div>
-          닉네임 : <input type="text" name="memberNickname" onChange={onChange} />
+          이름 : <input type="text" name="memberName" onChange={onChange} required />
         </div>
         <div>
-          성별 : 남 <input type="radio" name="memberGender" value="남" onChange={onChange} /> 여
-          <input type="radio" name="memberGender" value="여" onChange={onChange} />
+          닉네임 : <input type="text" name="memberNickname" onChange={onChange} required />
         </div>
         <div>
-          핸드폰번호 : <input type="text" name="memberPhone" onChange={onChange} />
+          성별 : 남{" "}
+          <input type="radio" name="memberGender" value="남" onChange={onChange} required /> 여
+          <input type="radio" name="memberGender" value="여" onChange={onChange} required />
         </div>
         <div>
-          주소 : <input type="text" name="memberAddr" onChange={onChange} />
+          핸드폰번호 : <input type="text" name="memberPhone" onChange={onChange} required />
         </div>
         <div>
-          생일 : <input type="date" name="memberBirth" onChange={onChange} />
+          주소 : <input type="text" name="memberAddr" onChange={onChange} required />
+        </div>
+        <div>
+          생일 : <input type="date" name="memberBirth" onChange={onChange} required />
         </div>
         <div>
           프로필 이미지 : <input type="file" name="memberImg" onChange={onLoadFile} />
@@ -169,7 +202,7 @@ const JoinMember = () => {
             기타
           </span>
         </div>
-        <button type="submit" onClick={onCheckComple}>
+        <button type="submit" onClick={onCheckComple} disabled={disabled}>
           회원가입
         </button>
       </form>
