@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./scss/JoinMember.scss";
 
 const JoinMember = () => {
   let formdata = new FormData();
+  const nav = useNavigate();
   const [fileForm, setFileForm] = useState("");
 
   const [joinForm, setJoinForm] = useState({
@@ -81,6 +83,7 @@ const JoinMember = () => {
       axios.post("/joinmember", formdata, config).then((res) => {
           if (res.data === "ok") {
               alert("성공")
+              nav("/")
           } else {
             alert("실패")
         }
