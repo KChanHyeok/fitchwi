@@ -19,9 +19,8 @@ public class FeedController {
 
     @PostMapping("/insertfeed")
     public String insertFeed(@RequestPart(value = "data", required = true) Feed newFeed,
-                             @RequestPart(value = "uploadImage", required = false) MultipartFile pic, HttpSession session){
+                             @RequestPart(value = "uploadImage", required = false) MultipartFile pic, HttpSession session ) {
         log.info("insertFeed()");
-        log.info("pic" + pic);
         return feedService.insertFeed(newFeed, pic, session);
     }
 

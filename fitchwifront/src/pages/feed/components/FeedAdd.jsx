@@ -31,13 +31,15 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Add = () => {
+const Add = ({ memberEmail }) => {
   let formdata = new FormData();
 
   const [fileForm, setFileForm] = useState("");
 
   const [insertForm, setInsertForm] = useState({
-    memberEmail: "kilehide@naver.com",
+    memberEmail: {
+      memberEmail: memberEmail,
+    },
     feedCategory: "",
     feedContent: "",
     feedClassificationcode: "",
@@ -71,6 +73,7 @@ const Add = () => {
       "data",
       new Blob([JSON.stringify(insertForm)], { type: "application/json" })
     );
+
     formdata.append("uploadImage", fileForm[0]);
 
     const config = {
@@ -78,12 +81,7 @@ const Add = () => {
     };
 
     axios
-      .post(
-        "/insertfeed",
-        { params: { memberEmail: insertForm.memberEmail } },
-        formdata,
-        config
-      )
+      .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
           alert("성공");
