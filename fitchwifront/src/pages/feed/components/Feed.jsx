@@ -14,7 +14,9 @@ const Feed = () => {
       .get("/getAllFeedList")
       .then((response) => {
         const list = response.data;
-        console.log(list);
+        if (list.length === 0) {
+          console.log("피드가 존재하지 않습니다");
+        }
       })
       .catch((error) => console.log(error));
   };

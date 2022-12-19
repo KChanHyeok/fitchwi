@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 @Log
@@ -66,6 +67,11 @@ public class FeedService {
 
     public List<Feed> getAllFeedList() {
         log.info("feedService.getAllFeedList()");
-        return (List<Feed>) feedRepository.findAll();
+        Iterable<Feed> feeds = feedRepository.findAll();
+        if (feeds == null){
+            return null;
+        } else {
+            return (List<Feed>) feeds;
+        }
     }
 }
