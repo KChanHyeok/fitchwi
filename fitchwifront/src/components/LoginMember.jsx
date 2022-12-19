@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ sucLogin }) => {
+  const nav = useNavigate();
   const [loginForm, setLoginForm] = useState({
     memberEmail: "",
     memberPwd: "",
@@ -25,9 +27,12 @@ const Login = () => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
         console.log(res.data);
-        if (res.data !== null) {
+        if (res.data !== "") {
+          const id = res.data;
+          sucLogin(id);
           sessionStorage.setItem("id", res.data);
           alert("로그인됨");
+          nav("/");
         } else {
           alert("로그인 실패");
         }

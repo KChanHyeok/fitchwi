@@ -12,7 +12,7 @@ function index() {
         <Feed />
         <Rightbar />
       </Stack>
-      <FeedAdd />
+      <FeedAdd memberEmail="kilehide@naver.com" />
     </Box>
   );
 }

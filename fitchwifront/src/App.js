@@ -19,22 +19,22 @@ function App() {
 
   useEffect(() => {
     //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
-    const mid = sessionStorage.getItem("mid");
+    const id = sessionStorage.getItem("id");
     //console.log(mid);
-    if (mid !== null) {
+    if (id !== null) {
       const newState = {
-        logid: mid,
-        flink: "/main",
+        logid: id,
+        flink: "/",
       };
       setLstate(newState);
     }
   }, []);
 
   //로그인 성공 시 로그인 상태 변경 함수
-  const sucLogin = useCallback((mid) => {
+  const sucLogin = useCallback((id) => {
     const newState = {
-      logid: mid,
-      flink: "/main",
+      logid: id,
+      flink: "/",
     };
     setLstate(newState);
   }, []);
@@ -48,7 +48,7 @@ function App() {
     };
     setLstate(newState);
     //로그아웃 시 로그인 상태 및 페이지번호 삭제
-    sessionStorage.removeItem("mid");
+    sessionStorage.removeItem("id");
     nav("/"); //첫페이지로 돌아감.
   };
   return (
@@ -57,10 +57,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/feed" element={<Feed />}></Route>
-        <Route
-          path="/login"
-          element={<LoginMember sucLogin={sucLogin} />}
-        ></Route>
+        <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join" element={<JoinMember />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
         <Route path="/together" element={<Together />}></Route>
