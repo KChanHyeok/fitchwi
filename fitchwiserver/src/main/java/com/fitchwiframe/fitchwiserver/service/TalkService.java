@@ -19,9 +19,11 @@ public class TalkService {
 
     @Autowired
     private TalkRepository talkRepository;
+
+    @Autowired
     private TalkOpenedRepository talkOpenedRepository;
 
-    public String addTalk(Talk newTalk, TalkOpened talkOpened , MultipartFile pic, HttpSession session) {
+    public String addTalk(Talk newTalk, MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
         String result = null;
 
@@ -66,10 +68,18 @@ public class TalkService {
         return talk;
     }
 
+    //개설 코드 값 저장
     public void addTalkOpened(TalkOpened talkOpened, Talk newTalk) {
-        //log.info("service.addTalkOpened()");
-        //log.info("talkCode : " + talkOpened.getTalkOpenCode());
+        log.info("talkService.addTalkOpened()");
+        talkOpenedRepository.save(talkOpened);
         newTalk.setTalkOpenCode(talkOpened);
-//        newTalk = talkOpenedRepository.findById(talkOpenCode).get();
     }
+
+    //얘기해요 태그 값 저장
+//    public void addTalkTag(TalkTag talkTag, Talk newTalk) {
+//        log.info("talkService.addTalkTag()");
+//        talkRepository.save(newTalk);
+//        talkTag.setTalkCode(newTalk);
+//        log.info("setTalkCode : " + talkTag);
+//    }
 }
