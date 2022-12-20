@@ -19,8 +19,7 @@ export default function Nickname({ onChange }) {
         inputProps={{ maxLength: 10 }}
       />
       <br />
-      <Link to="/join/userimg">
-        {" "}
+      <Link to="/join/userimg" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained">
           다음
         </Button>

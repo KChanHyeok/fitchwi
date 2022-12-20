@@ -26,8 +26,7 @@ const JoinIndex = () => {
     memberAddr: "",
     memberBirth: "",
     memberMbti: "",
-    // memberInterest: [],
-    memberInterest: "문화∙예술",
+    memberInterest: [],
   });
 
   const onChange = useCallback(
@@ -96,7 +95,10 @@ const JoinIndex = () => {
           path="/mbti"
           element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}
         ></Route>
-        <Route path="/userinfo" element={<UserInfo onChange={onChange} />}></Route>
+        <Route
+          path="/userinfo"
+          element={<UserInfo joinForm={joinForm} onChange={onChange} />}
+        ></Route>
       </Routes>
     </Box>
   );

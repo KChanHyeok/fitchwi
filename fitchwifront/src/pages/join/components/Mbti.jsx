@@ -85,7 +85,7 @@ export default function Mbti({ joinForm, setJoinForm }) {
         <MbtiToggleBtn value="P">P</MbtiToggleBtn>
       </ToggleButtonGroup>
       <br />
-      <Link to="/join/UserInfo">
+      <Link to="/join/UserInfo" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onMemberMbti}>
           다음
         </Button>
