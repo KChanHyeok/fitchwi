@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.Optional;
 
 
 @Service
@@ -117,6 +118,12 @@ private MemberRepository memberRepository;
 
   public Member getMemberInfo(String userId) {
     log.info("memberService.getMemberInfo()");
-    return memberRepository.findById(userId).get();
+    Member findMember = null;
+    try {
+      findMember = memberRepository.findById(userId).get();
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+    return findMember;
   }
 }

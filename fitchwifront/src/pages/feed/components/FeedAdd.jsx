@@ -33,10 +33,13 @@ const UserBox = styled(Box)({
 });
 
 const Add = ({ memberEmail }) => {
+  const imgEl = document.querySelector(".img_box");
   let formdata = new FormData();
   const nav = useNavigate();
 
   const [fileForm, setFileForm] = useState("");
+  const [open, setOpen] = useState(false);
+  const [profil, setProfil] = useState({});
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: memberEmail,
@@ -53,8 +56,6 @@ const Add = ({ memberEmail }) => {
     return () => preview();
   });
 
-  // 시간 이슈
-  const [profil, setProfil] = useState({});
   useEffect(() => {
     axios
       .get("/getMemberInfo", { params: { userId: memberEmail } })
@@ -63,11 +64,10 @@ const Add = ({ memberEmail }) => {
         console.log(response.data);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [memberEmail]);
 
   const preview = () => {
     if (!fileForm) return false;
-    const imgEl = document.querySelector(".img_box");
     const render = new FileReader();
 
     render.onload = () =>
@@ -99,15 +99,13 @@ const Add = ({ memberEmail }) => {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          nav("/feed");
+          nav("/");
         } else {
           alert("실패");
         }
       })
       .catch((error) => console.log(error));
   };
-
-  const [open, setOpen] = useState(false);
 
   const handleChange = useCallback(
     (event) => {
@@ -125,10 +123,18 @@ const Add = ({ memberEmail }) => {
     setOpen(false);
   };
 
+  const insertfeed = () => {
+    if (memberEmail === "") {
+      alert("로그인이 필요한 서비스입니다.");
+      nav("/login");
+    } else {
+      setOpen(true);
+    }
+  };
   return (
     <>
       <Tooltip
-        onClick={(e) => setOpen(true)}
+        onClick={insertfeed}
         title="Add"
         sx={{
           position: "fixed",
@@ -207,7 +213,7 @@ const Add = ({ memberEmail }) => {
           <div>
             프로필 이미지 :
             <input type="file" name="feedImg" onChange={onLoadFile} />
-            <div className="img_box">
+            <div className="img_box" style={{ height: 100 }}>
               <img src="" alt="" />
             </div>
           </div>

@@ -42,8 +42,9 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Post = ({ memberName, feedContent }) => {
+const Post = ({ memberName, feedContent, feedDate }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <div>
       <Card sx={{ margin: 5 }}>
@@ -59,7 +60,7 @@ const Post = ({ memberName, feedContent }) => {
             </IconButton>
           }
           title={memberName}
-          subheader="작성일시"
+          subheader={feedDate}
         />
         {/* 피드 이미지 */}
         <CardMedia

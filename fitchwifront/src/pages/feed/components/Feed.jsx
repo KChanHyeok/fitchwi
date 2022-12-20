@@ -36,6 +36,7 @@ const Feed = () => {
             <Post
               key={feed.feedCode}
               memberName={feed.memberEmail.memberName}
+              feedDate={feed.feedDate}
               feedContent={feed.feedContent}
             />
           ))}

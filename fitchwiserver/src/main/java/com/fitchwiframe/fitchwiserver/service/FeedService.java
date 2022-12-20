@@ -4,6 +4,7 @@ import com.fitchwiframe.fitchwiserver.entity.Feed;
 import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,7 +68,7 @@ public class FeedService {
 
     public List<Feed> getAllFeedList() {
         log.info("feedService.getAllFeedList()");
-        Iterable<Feed> feeds = feedRepository.findAll();
+        Iterable<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "feedDate"));
         if (feeds == null){
             return null;
         } else {
