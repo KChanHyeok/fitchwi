@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 
 import {
-  MoreVert,
   Favorite,
   FavoriteBorder,
   EmojiEmotions,
@@ -28,6 +27,7 @@ import {
   PersonAdd,
 } from "@mui/icons-material";
 import { Box } from "@mui/system";
+import LongMenu from "./Longmenu";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -54,11 +54,7 @@ const Post = ({ memberName, feedContent, feedDate }) => {
               S
             </Avatar>
           }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVert />
-            </IconButton>
-          }
+          action={<LongMenu />}
           title={memberName}
           subheader={feedDate}
         />

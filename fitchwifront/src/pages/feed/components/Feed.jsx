@@ -1,47 +1,20 @@
 import { Box } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Post from "./Post";
 
-const Feed = () => {
-  const [feeds, setFeeds] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getAllFeedList();
-  }, []);
-
-  const getAllFeedList = () => {
-    axios
-      .get("/getAllFeedList")
-      .then((response) => {
-        if (response.data.length === 0) {
-          console.log("피드가 존재하지 않습니다");
-        }
-        setFeeds(response.data);
-        setLoading(false);
-      })
-      .catch((error) => console.log(error));
-  };
-  console.log(feeds);
+const Feed = ({ data }) => {
   return (
     <Box flex={4} p={2}>
-      {loading ? (
-        <div>
-          <span>Loading...</span>
-        </div>
-      ) : (
-        <Box>
-          {feeds.map((feed) => (
+      {data === {}
+        ? "작성된 피드가 없습니다."
+        : data.map((data) => (
             <Post
-              key={feed.feedCode}
-              memberName={feed.memberEmail.memberName}
-              feedDate={feed.feedDate}
-              feedContent={feed.feedContent}
+              key={data.feedCode}
+              memberName={data.memberEmail.memberName}
+              feedDate={data.feedDate}
+              feedContent={data.feedContent}
             />
           ))}
-        </Box>
-      )}
     </Box>
   );
 };
