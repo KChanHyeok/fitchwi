@@ -4,9 +4,10 @@ import Home from "./pages/home";
 import Feed from "./pages/feed";
 import LoginMember from "./components/LoginMember";
 import JoinMember from "./components/JoinMember";
-import Together from "./pages/together";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
+import Footer from "./layout/Footer";
+import Together from "./pages/together";
 
 function App() {
   const nav = useNavigate();
@@ -57,14 +58,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/feed" element={<Feed lstate={lstate} />}></Route>
+        <Route path="/talk" element={<Talk />}></Route>
+        <Route path="/together" element={<Together />}></Route>
         <Route
           path="/login"
           element={<LoginMember sucLogin={sucLogin} />}
         ></Route>
         <Route path="/join" element={<JoinMember />}></Route>
-        <Route path="/talk" element={<Talk />}></Route>
-        <Route path="/together" element={<Together />}></Route>
       </Routes>
+      <Footer />
     </>
   );
 }

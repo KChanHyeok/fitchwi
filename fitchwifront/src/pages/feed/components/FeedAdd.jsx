@@ -32,8 +32,8 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-  const imgEl = document.querySelector(".img_box");
-  const FeedAdd = ({ memberEmail }) => {
+const imgEl = document.querySelector(".img_box");
+const FeedAdd = ({ memberEmail, refreshFeed }) => {
   let formdata = new FormData();
   const nav = useNavigate();
 
@@ -99,7 +99,7 @@ const UserBox = styled(Box)({
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          nav("/");
+          refreshFeed();
         } else {
           alert("실패");
         }
@@ -163,9 +163,9 @@ const UserBox = styled(Box)({
             </Typography>
           </UserBox>
           <hr />
-          <FormControl sx={{ mt: 2, minWidth: 100, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              후기
+          <FormControl sx={{ mt: 2, minWidth: 200, minHeight: 100 }}>
+            <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+              함께해요 후기 리스트
             </InputLabel>
             <Select
               labelId="demo-simple-select-autowidth-label"
@@ -173,8 +173,7 @@ const UserBox = styled(Box)({
               value={insertForm.feedClassificationcode}
               name="feedClassificationcode"
               onChange={handleChange}
-              autoWidth
-              label="목록"
+              label="함께해요 후기 리스트"
             >
               <MenuItem value="">
                 <em>선택</em>
@@ -197,8 +196,7 @@ const UserBox = styled(Box)({
               value={insertForm.feedCategory}
               name="feedCategory"
               onChange={handleChange}
-              autoWidth
-              label="목록"
+              label="주제"
             >
               <MenuItem value="">
                 <em>선택</em>
