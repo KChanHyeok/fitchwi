@@ -2,11 +2,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function TalkOpened(props) {
     let formData = new FormData();
+    const nav = useNavigate();
+    const id = sessionStorage.getItem("memberEmail");
 
     const [inputTalkOp, setInputTalkOp] = useState({
+        memberEmail: id,
         talkTitle: "",
         talkMax: 0,
         talkCategory: "",
@@ -52,25 +56,28 @@ function TalkOpened(props) {
         }, []);
 
     //작성 내용 전송 함수
-    const onTalkOpened = useCallback(
-        (e) => {
-            const check = {
-                ...inputTalkOp,
-                ...fileForm,
-            };
-            console.log(check);
-            // formData.append(
-            //     "data",
-            //     new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
-            // );
-            // formData.append("uploadImage", fileForm[0]);
+    const onTalkOpened = (e) => {
+        e.preventDefault();
+        formData.append(
+            "data",
+            new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
+        );
+        formData.append("uploadImage", fileForm[0]);
 
-            // const config = {
-            //     headers: { "Content-Type": "multipart/form-data" },
-            // };
-        }
-    )
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
 
+        axios.post("/addTalk", formData, config).then((res) => {
+            if (res.data === "ok") {
+                alert("개설 성공");
+                nav("/talk");
+            } else {
+                alert("개설 실패");
+            }
+        })
+            .catch((error) => console.log(error));
+    };
 
     //모달창
     const [talkOpened, setTalkOpened] = useState(false);
