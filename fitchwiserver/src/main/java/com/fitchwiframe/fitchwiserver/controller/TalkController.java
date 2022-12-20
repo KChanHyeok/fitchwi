@@ -29,12 +29,8 @@ public class TalkController {
                           @RequestPart(value = "data", required = true)TalkTag talkTag,
                           @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
                           HttpSession session) {
-        log.info("태그 : " + talkTag.getTalkTagContent());
-        log.info("태그테이블 얘기해요 코드 : " + talkTag.getTalkCode());
-        log.info("애기해요 코드 : " + newTalk.getTalkCode());
-        log.info("얘기해요 개설 코드 : " + talkOpened.getTalkOpenCode( ));
         talkService.addTalkOpened(talkOpened, newTalk);
-        log.info("애기해요 개설 코드2 : " + newTalk.getTalkOpenCode());
-        return talkService.addTalk(newTalk , talkOpened , pic, session);
+//        talkService.addTalkTag(talkTag, newTalk);
+        return talkService.addTalk(newTalk, pic, session);
     }
 }
