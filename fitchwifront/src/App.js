@@ -7,6 +7,7 @@ import JoinMember from "./components/JoinMember";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
+import Together from "./pages/together";
 
 function App() {
   const nav = useNavigate();
@@ -58,6 +59,7 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="/feed" element={<Feed lstate={lstate} />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
+        <Route path="/together" element={<Together />}></Route>
         <Route
           path="/login"
           element={<LoginMember sucLogin={sucLogin} />}
