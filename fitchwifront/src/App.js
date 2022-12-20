@@ -6,6 +6,7 @@ import LoginMember from "./components/LoginMember";
 import JoinMember from "./components/JoinMember";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
+import Footer from "./layout/Footer";
 
 function App() {
   const nav = useNavigate();
@@ -63,6 +64,7 @@ function App() {
         ></Route>
         <Route path="/join" element={<JoinMember />}></Route>
       </Routes>
+      <Footer />
     </>
   );
 }
