@@ -1,7 +1,9 @@
 package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Talk;
+import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
 import com.fitchwiframe.fitchwiserver.entity.TalkTag;
+import com.fitchwiframe.fitchwiserver.repository.TalkOpenedRepository;
 import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ public class TalkService {
 
     @Autowired
     private TalkRepository talkRepository;
-    public String addTalk(Talk newTalk, MultipartFile pic, HttpSession session) {
+    private TalkOpenedRepository talkOpenedRepository;
+
+    public String addTalk(Talk newTalk, TalkOpened talkOpened , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
         String result = null;
 
@@ -28,6 +32,9 @@ public class TalkService {
                 newTalk.setTalkImg("이미지 원래 이름");
                 newTalk.setTalkSaveimg("저장된 기본이미지 이름");
             }
+
+            talkRepository.save(newTalk);
+            result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
             log.info("등록 실패");
@@ -57,5 +64,12 @@ public class TalkService {
         pic.transferTo(file);
 
         return talk;
+    }
+
+    public void addTalkOpened(TalkOpened talkOpened, Talk newTalk) {
+        //log.info("service.addTalkOpened()");
+        //log.info("talkCode : " + talkOpened.getTalkOpenCode());
+        newTalk.setTalkOpenCode(talkOpened);
+//        newTalk = talkOpenedRepository.findById(talkOpenCode).get();
     }
 }
