@@ -1,12 +1,11 @@
 import {
   Avatar,
   Box,
-  Button,
-  ButtonGroup,
   Fab,
   FormControl,
   InputLabel,
   MenuItem,
+  Button,
   Modal,
   Select,
   styled,
@@ -15,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import React, { useCallback, /*useEffect,*/ useState } from "react";
+// import axios from "axios";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -32,63 +31,46 @@ const UserBox = styled(Box)({
 });
 
 const Add = () => {
-  let formdata = new FormData();
+  // let formdata = new FormData();
 
-  const [fileForm, setFileForm] = useState("");
+  // const [fileForm, setFileForm] = useState("");
   // const [openForm, setOpenForm] = useState({})
   const [insertForm, setInsertForm] = useState({
     
   });
 
-  useEffect(() => {
-    preview();
+  // useEffect(() => {
+  //   preview();
 
-    return () => preview();
-  });
+  //   return () => preview();
+  // });
 
-  const preview = () => {
-    if (!fileForm) return false;
-    const imgEl = document.querySelector(".img_box");
-    const render = new FileReader();
+  // const preview = () => {
+  //   if (!fileForm) return false;
+  //   const imgEl = document.querySelector(".img_box");
+  //   const render = new FileReader();
 
-    render.onload = () =>
-      (imgEl.style.backgroundImage = `url(${render.result})`);
-    render.readAsDataURL(fileForm[0]);
-    console.log(render);
-  };
+  //   render.onload = () =>
+  //     (imgEl.style.backgroundImage = `url(${render.result})`);
+  //   render.readAsDataURL(fileForm[0]);
+  //   console.log(render);
+  // };
 
-  const onLoadFile = useCallback((event) => {
-    const file = event.target.files;
-    setFileForm(file);
-  }, []);
+  // const onLoadFile = useCallback((event) => {
+  //   const file = event.target.files;
+  //   setFileForm(file);
+  // }, []);
 
-  const sendFeed = (event) => {
-    formdata.append(
-      "data",
-      new Blob([JSON.stringify(insertForm)], { type: "application/json" })
-    );
-    formdata.append("uploadImage", fileForm[0]);
+  const sendTogether = (e) => {
+  //   formdata.append(
+  //     "data",
+  //     new Blob([JSON.stringify(insertForm)], { type: "application/json" })
+  //   );
+  //   formdata.append("uploadImage", fileForm[0]);
 
-    const config = {
-      headers: { "Content-Type": "multipart/form-data" },
-    };
-
-    axios
-      .post(
-        "/insertfeed",
-        { params: { memberEmail: insertForm.memberEmail } },
-        formdata,
-        config
-      )
-      .then((response) => {
-        if (response.data === "ok") {
-          alert("성공");
-          console.log(response.data);
-        } else {
-          alert("실패");
-        }
-      })
-      .catch((error) => console.log(error));
+    // const config = {
+    //   headers: { "Content-Type": "multipart/form-data" },
+    // };
   };
 
   const [open, setOpen] = useState(false);
@@ -129,21 +111,25 @@ const Add = () => {
         onClose={(e) => setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{mt:5}}
       >
-        <Box width={800} height={600} bgcolor="white" p={3} borderRadius={5}>
-          <Typography variant="h6" color="gray" textAlign="center">
-            피드 작성
+        <Box width={800} height={700} bgcolor="white" p={3} borderRadius={5} sx={{mt:5, overflowY:"auto" }} >
+        <Typography variant="h6" color="gray" textAlign="center">
+          함께해요 개설
+        </Typography>
+        <UserBox>
+          <Avatar alt={'profil.memberImg'} sx={{ width: 30, height: 30 }} />
+          <Typography fontWeight={500} variant="span">
+            {sessionStorage.getItem('id')}
           </Typography>
-          <UserBox>
-            <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
-            <Typography fontWeight={500} variant="span">
-              작성자 이름
-            </Typography>
-          </UserBox>
-          <hr />
-          <FormControl sx={{ mt: 2, minWidth: 100, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              후기
+        </UserBox>
+        <hr />
+        <TextField fullWidth label="모임명" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="모이는 일자" sx={{mt:3}} type="date" id="fullWidth" focused color="grey"/>
+        <TextField fullWidth label="최대참여인원" sx={{mt:3}} type="number" id="fullWidth" />
+        <FormControl sx={{ mt: 2}} fullWidth>
+            <InputLabel>
+              모임카테고리선정
             </InputLabel>
             <Select
               labelId="demo-simple-select-autowidth-label"
@@ -151,71 +137,44 @@ const Add = () => {
               value={insertForm.feedClassificationcode}
               name="feedClassificationcode"
               onChange={handleChange}
-              autoWidth
-              label="목록"
+              label="모임카테고리선정"
             >
-              <MenuItem value="">
-                <em>선택</em>
-              </MenuItem>
-              <MenuItem value="함께해요 1의 코드">함께해요 1</MenuItem>
-              <MenuItem value="함께해요 2의 코드">함께해요 2</MenuItem>
-              <MenuItem value="함께해요 3의 코드">함께해요 3</MenuItem>
+              <MenuItem value="문화·예술">문화·예술</MenuItem>
+              <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+              <MenuItem value="요리·음식">요리·음식</MenuItem>
+              <MenuItem value="여행">여행</MenuItem>
+              <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+              <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+              <MenuItem value="게임·오락">게임·오락</MenuItem>
+              <MenuItem value="기타">기타</MenuItem>
             </Select>
           </FormControl>
-
-          <br />
-
-          <FormControl sx={{ mt: 2, minWidth: 300, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              주제
+        <TextField fullWidth label="모집신청 마감일을 입력헤주세요" color="grey" sx={{mt:3}} focused type="date" id="fullWidth" />
+        <TextField fullWidth label="모이는 장소의 주소" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="시설 이용료" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="참가비" type="number" sx={{mt:3}} id="fullWidth" />
+        <FormControl sx={{ mt: 2}} fullWidth>
+            <InputLabel>
+              가입유형
             </InputLabel>
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={insertForm.feedCategory}
-              name="feedCategory"
+              value={insertForm.feedClassificationcode}
+              name="feedClassificationcode"
               onChange={handleChange}
-              autoWidth
-              label="목록"
+              label="가입유형"
             >
-              <MenuItem value="">
-                <em>선택</em>
-              </MenuItem>
-              <MenuItem value="문화">문화</MenuItem>
-              <MenuItem value="스포츠">스포츠</MenuItem>
-              <MenuItem value="자기개발">자기계발</MenuItem>
+              <MenuItem value="선착순">선착순</MenuItem>
+              <MenuItem value="승인제">승인제</MenuItem>
             </Select>
           </FormControl>
-
-          <br />
-          <div>
-            프로필 이미지 :
-            <input type="file" name="feedImg" onChange={onLoadFile} />
-            <div className="img_box">
-              <img src="" alt="" />
-            </div>
-          </div>
-          <TextField
-            value={insertForm.feedContent}
-            onChange={handleChange}
-            autoFocus
-            margin="dense"
-            name="feedContent"
-            label="피드 내용을 입력하세요(2000자 이내)"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <ButtonGroup
-            fullWidth
-            variant="contained"
-            aria-label="outlined primary button group"
-          >
-            <Button onClick={handleClose} sx={{ width: "100px" }}>
-              취소하기
-            </Button>
-            <Button onClick={sendFeed}>작성하기</Button>
-          </ButtonGroup>
+        <TextField fullWidth label="모임대표사진" type="file" focused sx={{mt:3}} id="fullWidth" color="grey" />
+        <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="모임 소개 말" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="태그" sx={{mt:3}} id="fullWidth" />
+        <Button onClick={sendTogether} variant={"contained"} sx={{mt:2,mr:4}}>개설하기</Button>
+        <Button onClick={handleClose} variant={"contained"} sx={{mt:2}}>취소</Button>
         </Box>
       </StyleModal>
     </>
