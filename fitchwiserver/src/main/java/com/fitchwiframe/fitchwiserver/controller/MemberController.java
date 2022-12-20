@@ -41,4 +41,10 @@ public class MemberController {
     log.info("memberController.loginMember()");
     return memberService.loginMember(member);
   }
+
+  @GetMapping("/getMemberInfo")
+  private Member getMemberInfo(@RequestParam String userId){
+    log.info("getMemberInfo()");
+    return memberService.getMemberInfo(userId);
+  }
 }

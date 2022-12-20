@@ -2,17 +2,24 @@ import React, { useCallback, useEffect, useState } from "react";
 import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function TalkOpened(props) {
+function TalkOpened({ memberEmail }) {
     let formData = new FormData();
+    const nav = useNavigate();
+    const imgEl = document.querySelector(".talk_img_box");
 
     const [inputTalkOp, setInputTalkOp] = useState({
+        memberEmail: {
+            memberEmail: memberEmail,
+        },
         talkTitle: "",
         talkMax: 0,
         talkCategory: "",
         talkType: "",
         talkContent: "",
         talkTagContent: "",
+        talkOpenDate: `${new Date().getTime()}`,
     });
 
     const onChange = useCallback(
@@ -35,7 +42,6 @@ function TalkOpened(props) {
 
     const preview = () => {
         if (!fileForm) return false;
-        const imgEl = document.querySelector(".talk_img_box");
         const render = new FileReader();
 
         render.onload = () =>
@@ -52,25 +58,29 @@ function TalkOpened(props) {
         }, []);
 
     //작성 내용 전송 함수
-    const onTalkOpened = useCallback(
-        (e) => {
-            const check = {
-                ...inputTalkOp,
-                ...fileForm,
-            };
-            console.log(check);
-            // formData.append(
-            //     "data",
-            //     new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
-            // );
-            // formData.append("uploadImage", fileForm[0]);
+    const onTalkOpened = (e) => {
+        console.log(inputTalkOp);
+        e.preventDefault();
+        formData.append(
+            "data",
+            new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
+        );
+        formData.append("uploadImage", fileForm[0]);
 
-            // const config = {
-            //     headers: { "Content-Type": "multipart/form-data" },
-            // };
-        }
-    )
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
 
+        axios.post("/addTalk", formData, config).then((res) => {
+            if (res.data === "ok") {
+                alert("개설 성공")
+                nav("/talk")
+            } else {
+                alert("개설 실패")
+            }
+        })
+            .catch((error) => console.log(error));
+    };
 
     //모달창
     const [talkOpened, setTalkOpened] = useState(false);
@@ -111,6 +121,11 @@ function TalkOpened(props) {
                         <option value="승인제">승인제</option>
                         <option value="선착순">선착순</option>
                     </select>
+                    {/* <div>
+                    <p className="talkInput">가입질문</p>
+                    <input type="text" name="talkInquery"
+                    placeholder="가입 시 받을 질문을 작성하세요"></input>
+                    </div> */}
                     <p className="talkInput">애기해요 사진 첨부</p>
                     <div className="talk_img_box">
                         <img src="" alt="" />

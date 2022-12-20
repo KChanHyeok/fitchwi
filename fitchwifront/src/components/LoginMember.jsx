@@ -38,7 +38,7 @@ const Login = ({ sucLogin }) => {
         }
       });
     },
-    [loginForm]
+    [loginForm, nav, sucLogin]
   );
 
   return (

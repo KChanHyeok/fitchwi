@@ -8,7 +8,11 @@ const JoinMember = () => {
   const [fileForm, setFileForm] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [msg, setMsg] = useState("");
+
   const inputPwd = useRef();
+
+  const imgEl = document.querySelector(".img_box");
+
 
   const [joinForm, setJoinForm] = useState({
     memberEmail: "",
@@ -31,13 +35,11 @@ const JoinMember = () => {
 
   const preview = () => {
     if (!fileForm) return false;
-
-    const imgEl = document.querySelector(".img_box");
+    
 
     const reader = new FileReader();
-
-    reader.onload = () => (imgEl.style.backgroundImage = `url(${reader.result})`);
     reader.readAsDataURL(fileForm[0]);
+    reader.onload = () => (imgEl.style.backgroundImage = `url(${reader.result})`);
     console.log(reader);
   };
 
