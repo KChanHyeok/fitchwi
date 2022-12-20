@@ -79,10 +79,7 @@ const Post = ({ memberName, feedContent, feedDate }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
-            <Checkbox
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite sx={{ color: "red" }} />}
-            />
+            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite sx={{ color: "red" }} />} />
           </IconButton>
           <AvatarGroup max={6}>
             <Avatar alt="Remy Sharp" />
@@ -133,12 +130,14 @@ const Post = ({ memberName, feedContent, feedDate }) => {
                 placeholder="댓글 달기..."
                 variant="standard"
               />
+
               <ButtonGroup
                 fullWidth
                 variant="contained"
                 aria-label="outlined primary button group"
               >
                 <Button>댓글 등록</Button>
+
               </ButtonGroup>
             </Box>
           </Stack>
