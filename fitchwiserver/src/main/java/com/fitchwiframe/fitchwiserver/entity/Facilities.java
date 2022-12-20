@@ -6,14 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "facilitiesCode")
+@Table(name = "facilities")
 public class Facilities {
   @Id
   private long facilitiesCode = System.currentTimeMillis();
-
-  @ManyToOne
-  @JoinColumn(name = "nodayCode")
-  private Noday nodayCode;
 
   @Column(nullable = false, length = 50)
   private String facilitiesName;
