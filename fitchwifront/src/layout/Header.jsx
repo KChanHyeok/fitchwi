@@ -12,20 +12,26 @@ const StyledToolbar = styled(Toolbar)({
 const Header = ({ lstate, onLogout }) => {
   const { logid, flink } = lstate;
   //로고 클릭(로그인 후 main, 로그인 전 home)
-  const homeLink = logid === "" ? "/" : "/feed";
+  const homeLink = logid === "" ? "/" : "/";
 
   return (
     <AppBar position="sticky">
       <StyledToolbar>
         <Box>
           <Link to={homeLink} style={{ textDecoration: "none" }}>
-            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
+            <Typography
+              variant="h6"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
               FITCHWI
             </Typography>
           </Link>
         </Box>
         <Box>
-          <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/feed"}>
+          <Link
+            style={{ textDecoration: "none", marginRight: 100 }}
+            to={"/feed"}
+          >
             피드
           </Link>
           <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/together"}>

@@ -17,6 +17,7 @@ import {
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -31,11 +32,14 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const FeedAdd = ({ memberEmail }) => {
+  const imgEl = document.querySelector(".img_box");
+  const FeedAdd = ({ memberEmail }) => {
   let formdata = new FormData();
+  const nav = useNavigate();
 
   const [fileForm, setFileForm] = useState("");
-
+  const [open, setOpen] = useState(false);
+  const [profil, setProfil] = useState({});
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: memberEmail,
@@ -52,9 +56,18 @@ const FeedAdd = ({ memberEmail }) => {
     return () => preview();
   });
 
+  useEffect(() => {
+    axios
+      .get("/getMemberInfo", { params: { userId: memberEmail } })
+      .then((response) => {
+        setProfil(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  }, [memberEmail]);
+
   const preview = () => {
     if (!fileForm) return false;
-    const imgEl = document.querySelector(".img_box");
     const render = new FileReader();
 
     render.onload = () =>
@@ -84,16 +97,15 @@ const FeedAdd = ({ memberEmail }) => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
+          setOpen(false);
           alert("성공");
-          console.log(response.data);
+          nav("/");
         } else {
           alert("실패");
         }
       })
       .catch((error) => console.log(error));
   };
-
-  const [open, setOpen] = useState(false);
 
   const handleChange = useCallback(
     (event) => {
@@ -111,10 +123,18 @@ const FeedAdd = ({ memberEmail }) => {
     setOpen(false);
   };
 
+  const insertfeed = () => {
+    if (memberEmail === "") {
+      alert("로그인이 필요한 서비스입니다.");
+      nav("/login");
+    } else {
+      setOpen(true);
+    }
+  };
   return (
     <>
       <Tooltip
-        onClick={(e) => setOpen(true)}
+        onClick={insertfeed}
         title="Add"
         sx={{
           position: "fixed",
@@ -137,9 +157,9 @@ const FeedAdd = ({ memberEmail }) => {
             피드 작성
           </Typography>
           <UserBox>
-            <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
+            <Avatar alt={profil.memberImg} sx={{ width: 30, height: 30 }} />
             <Typography fontWeight={500} variant="span">
-              작성자 이름
+              {profil.memberName}
             </Typography>
           </UserBox>
           <hr />
@@ -193,7 +213,7 @@ const FeedAdd = ({ memberEmail }) => {
           <div>
             프로필 이미지 :
             <input type="file" name="feedImg" onChange={onLoadFile} />
-            <div className="img_box">
+            <div className="img_box" style={{ height: 100 }}>
               <img src="" alt="" />
             </div>
           </div>

@@ -42,8 +42,9 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Post = () => {
+const Post = ({ memberName, feedContent, feedDate }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <div>
       <Card sx={{ margin: 5 }}>
@@ -58,8 +59,8 @@ const Post = () => {
               <MoreVert />
             </IconButton>
           }
-          title="작성자"
-          subheader="작성일시"
+          title={memberName}
+          subheader={feedDate}
         />
         {/* 피드 이미지 */}
         <CardMedia
@@ -71,7 +72,7 @@ const Post = () => {
         />
         <CardContent>
           <Typography variant="h6" color="text.primary">
-            피드 내용
+            {feedContent}
           </Typography>
           <Typography variant="body2" color="skyblue" marginBottom={2}>
             #해쉬 태그 #해쉬 태그 #해쉬 태그 #해쉬 태그
@@ -116,11 +117,11 @@ const Post = () => {
               <UserBox>
                 <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
                 <Typography fontWeight={500} variant="span">
-                  석진
+                  {memberName}
                 </Typography>
               </UserBox>
               <Typography fontWeight={500} variant="span">
-                피드내용
+                {feedContent}
               </Typography>
               <Stack direction="row" gap={1} mt={2} mb={3}>
                 <EmojiEmotions color="primary" />
@@ -141,7 +142,7 @@ const Post = () => {
                 variant="contained"
                 aria-label="outlined primary button group"
               >
-                <Button>게시</Button>
+                <Button>댓글 등록</Button>
               </ButtonGroup>
             </Box>
           </Stack>
