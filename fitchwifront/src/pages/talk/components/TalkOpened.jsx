@@ -4,19 +4,22 @@ import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function TalkOpened(props) {
+function TalkOpened({ memberEmail }) {
     let formData = new FormData();
     const nav = useNavigate();
-    const id = sessionStorage.getItem("memberEmail");
+    const imgEl = document.querySelector(".talk_img_box");
 
     const [inputTalkOp, setInputTalkOp] = useState({
-        memberEmail: id,
+        memberEmail: {
+            memberEmail: memberEmail,
+        },
         talkTitle: "",
         talkMax: 0,
         talkCategory: "",
         talkType: "",
         talkContent: "",
         talkTagContent: "",
+        talkOpenDate: `${new Date().getTime()}`,
     });
 
     const onChange = useCallback(
@@ -39,7 +42,6 @@ function TalkOpened(props) {
 
     const preview = () => {
         if (!fileForm) return false;
-        const imgEl = document.querySelector(".talk_img_box");
         const render = new FileReader();
 
         render.onload = () =>
@@ -57,6 +59,7 @@ function TalkOpened(props) {
 
     //작성 내용 전송 함수
     const onTalkOpened = (e) => {
+        console.log(inputTalkOp);
         e.preventDefault();
         formData.append(
             "data",
@@ -70,10 +73,10 @@ function TalkOpened(props) {
 
         axios.post("/addTalk", formData, config).then((res) => {
             if (res.data === "ok") {
-                alert("개설 성공");
-                nav("/talk");
+                alert("개설 성공")
+                nav("/talk")
             } else {
-                alert("개설 실패");
+                alert("개설 실패")
             }
         })
             .catch((error) => console.log(error));
@@ -118,6 +121,11 @@ function TalkOpened(props) {
                         <option value="승인제">승인제</option>
                         <option value="선착순">선착순</option>
                     </select>
+                    {/* <div>
+                    <p className="talkInput">가입질문</p>
+                    <input type="text" name="talkInquery"
+                    placeholder="가입 시 받을 질문을 작성하세요"></input>
+                    </div> */}
                     <p className="talkInput">애기해요 사진 첨부</p>
                     <div className="talk_img_box">
                         <img src="" alt="" />
