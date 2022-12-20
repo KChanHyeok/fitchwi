@@ -17,6 +17,9 @@ import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, /*useEffect,*/ useState } from "react";
 // import axios from "axios";
 
+
+const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth()+1) + "-" + new Date().getDate()
+
 const StyleModal = styled(Modal)({
   display: "flex",
   alignItems: "center",
@@ -34,9 +37,26 @@ const Add = () => {
   // let formdata = new FormData();
 
   // const [fileForm, setFileForm] = useState("");
-  // const [openForm, setOpenForm] = useState({})
   const [insertForm, setInsertForm] = useState({
-    
+    memberEmail: {
+      memberEmail: sessionStorage.getItem("id"),
+      },
+      facilities_code: {
+        facilities_code: 0
+      },
+      togetherOpenedDate: nowdate, // 함께해요 개설일 당일
+      togetherTitle: "",
+      togetherCategory: "",
+      togetherPosition: "",
+      togetherDate: "",
+      togetherMax: 2,
+      togetherContent: "",
+      togetherRecruitStartDate: "", // 모집 시작일
+      togetherRecruitEndDate: "", // 모집 마감일
+      togetherType: "", //가입 유형
+      togetherInquery : "", // 함께해요 가입 질문
+      togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
+      togetherTagContent : "", //태그 내용
   });
 
   // useEffect(() => {
@@ -71,6 +91,7 @@ const Add = () => {
     // const config = {
     //   headers: { "Content-Type": "multipart/form-data" },
     // };
+    console.log("개설")
   };
 
   const [open, setOpen] = useState(false);
@@ -90,6 +111,7 @@ const Add = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  console.log(insertForm)
 
   return (
     <>
@@ -124,9 +146,9 @@ const Add = () => {
           </Typography>
         </UserBox>
         <hr />
-        <TextField fullWidth label="모임명" sx={{mt:3}} id="fullWidth" />
-        <TextField fullWidth label="모이는 일자" sx={{mt:3}} type="date" id="fullWidth" focused color="grey"/>
-        <TextField fullWidth label="최대참여인원" sx={{mt:3}} type="number" id="fullWidth" />
+        <TextField fullWidth label="모임명" sx={{mt:3}} id="fullWidth" onChange={handleChange} name="togetherTitle" />
+        <TextField fullWidth label="모이는 일자" sx={{mt:3}} type="date" id="fullWidth" onChange={handleChange} name="togetherDate" focused color="grey"/>
+        <TextField fullWidth label="최대참여인원" sx={{mt:3}} type="number" id="fullWidth" onChange={handleChange} name="togetherMax" />
         <FormControl sx={{ mt: 2}} fullWidth>
             <InputLabel>
               모임카테고리선정
@@ -134,8 +156,8 @@ const Add = () => {
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={insertForm.feedClassificationcode}
-              name="feedClassificationcode"
+              value={insertForm.togetherCategory}
+              name="togetherCategory"
               onChange={handleChange}
               label="모임카테고리선정"
             >
@@ -149,10 +171,11 @@ const Add = () => {
               <MenuItem value="기타">기타</MenuItem>
             </Select>
           </FormControl>
-        <TextField fullWidth label="모집신청 마감일을 입력헤주세요" color="grey" sx={{mt:3}} focused type="date" id="fullWidth" />
-        <TextField fullWidth label="모이는 장소의 주소" sx={{mt:3}} id="fullWidth" />
-        <TextField fullWidth label="시설 이용료" sx={{mt:3}} id="fullWidth" />
-        <TextField fullWidth label="참가비" type="number" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="모집신청 시작일을 입력헤주세요" sx={{mt:3}} type="date" id="fullWidth" onChange={handleChange} name="togetherRecruitStartDate" focused color="grey"/>
+        <TextField fullWidth label="모집신청 마감일을 입력헤주세요" color="grey" sx={{mt:3}} focused type="date" onChange={handleChange} name="togetherRecruitEndDate" id="fullWidth" />
+        <TextField fullWidth label="모이는 장소의 주소" sx={{mt:3}} id="fullWidth" onChange={handleChange} name="togetherPosition" />
+        <TextField fullWidth label="시설 이용료" sx={{mt:3}} id="fullWidth" onChange={handleChange} name="facilities_code" />
+        <TextField fullWidth label="1인당 참가비" type="number" sx={{mt:3}} id="fullWidth" name="togetherPrice" onChange={handleChange} />
         <FormControl sx={{ mt: 2}} fullWidth>
             <InputLabel>
               가입유형
@@ -160,8 +183,8 @@ const Add = () => {
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={insertForm.feedClassificationcode}
-              name="feedClassificationcode"
+              value={insertForm.togetherType}
+              name="togetherType"
               onChange={handleChange}
               label="가입유형"
             >
@@ -170,9 +193,9 @@ const Add = () => {
             </Select>
           </FormControl>
         <TextField fullWidth label="모임대표사진" type="file" focused sx={{mt:3}} id="fullWidth" color="grey" />
-        <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} id="fullWidth" />
-        <TextField fullWidth label="모임 소개 말" sx={{mt:3}} id="fullWidth" />
-        <TextField fullWidth label="태그" sx={{mt:3}} id="fullWidth" />
+        <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} name="togetherInquery" onChange={handleChange} id="fullWidth" />
+        <TextField fullWidth label="모임 소개 말" sx={{mt:3}} id="fullWidth" name="togetherContent" onChange={handleChange} />
+        <TextField fullWidth label="태그" sx={{mt:3}} id="fullWidth" name="togetherTagContent" onChange={handleChange} />
         <Button onClick={sendTogether} variant={"contained"} sx={{mt:2,mr:4}}>개설하기</Button>
         <Button onClick={handleClose} variant={"contained"} sx={{mt:2}}>취소</Button>
         </Box>
