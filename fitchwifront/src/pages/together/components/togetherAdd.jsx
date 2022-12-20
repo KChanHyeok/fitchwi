@@ -35,13 +35,9 @@ const Add = () => {
   let formdata = new FormData();
 
   const [fileForm, setFileForm] = useState("");
-
+  // const [openForm, setOpenForm] = useState({})
   const [insertForm, setInsertForm] = useState({
-    memberEmail: "kilehide@naver.com",
-    feedCategory: "",
-    feedContent: "",
-    feedClassificationcode: "",
-    feedDate: `${new Date().getTime()}`,
+    
   });
 
   useEffect(() => {
