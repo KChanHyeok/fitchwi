@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import "./index.scss";
 
 const JoinMember = () => {
   let formdata = new FormData();

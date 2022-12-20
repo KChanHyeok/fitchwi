@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/home";
 import Feed from "./pages/feed";
 import LoginMember from "./components/LoginMember";
-import JoinMember from "./components/JoinMember";
+import JoinMember from "./pages/join";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
 
@@ -57,7 +57,7 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
-        <Route path="/join" element={<JoinMember />}></Route>
+        <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
       </Routes>
     </>
