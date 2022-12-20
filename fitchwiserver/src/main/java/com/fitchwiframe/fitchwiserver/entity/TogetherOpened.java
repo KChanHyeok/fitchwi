@@ -17,7 +17,4 @@ public class TogetherOpened {
 
   @Column(nullable = false, length = 20)
   private String togetherOpenedDate;
-
-  @Column(nullable = false, length = 20)
-  private String togetherReservedDate;
 }

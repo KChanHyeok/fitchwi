@@ -18,6 +18,6 @@ public class TogetherTag {
     private Together togetherCode;
 
     @Column(nullable = false, length = 30)
-    private String feedTagContent;
+    private String togetherTagContent;
 
 }
