@@ -3,6 +3,8 @@ import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Fab, Tooltip } from "@mui/material";
+import { Add as AddIcon } from "@mui/icons-material";
 
 function TalkOpened({ memberEmail }) {
     let formData = new FormData();
@@ -101,15 +103,26 @@ function TalkOpened({ memberEmail }) {
         }
     }
 
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
 
     //모달창
     const [talkOpened, setTalkOpened] = useState(false);
 
     return (
-        <div className="Main">
-            <input type="button" value="애기해요 개설" className="talkOpenedBtn"
-                onClick={insertTalkOp} />
+        <>
+            <Tooltip
+                onClick={insertTalkOp}
+                title="Add"
+                sx={{
+                    position: "fixed",
+                    bottom: 20,
+                    left: { xs: "calc(50% - 25px)", md: 30 },
+                }}
+            >
+                <Fab color="secondary" aria-label="add">
+                    <AddIcon className="talkOpenedBtn" />
+                </Fab>
+            </Tooltip>
             {talkOpened && (
                 <TalkOpenedModal closeModal={() => setTalkOpened(!talkOpened)}>
                     <form onSubmit={onTalkOpened}>
@@ -142,7 +155,7 @@ function TalkOpened({ memberEmail }) {
                             <span className="talkInput talkInqSt">가입질문</span>
                             <div>
                                 <select onChange={onChange} onClick={onDisabled} name="talkType" required>
-                                    {/* <option value="">선택</option> */}
+                                    <option value="">선택</option>
                                     <option value="승인제">승인제</option>
                                     <option value="선착순">선착순</option>
                                 </select>
@@ -168,7 +181,7 @@ function TalkOpened({ memberEmail }) {
                     </form>
                 </TalkOpenedModal>
             )}
-        </div>
+        </>
     );
 }
 

@@ -1,4 +1,7 @@
+import { Stack } from "@mui/system";
 import React from "react";
+import Sidebar from "../../layout/Sidebar";
+import TalkMain from "./components/TalkMain";
 import TalkOpened from "./components/TalkOpened";
 
 function index() {
@@ -6,7 +9,13 @@ function index() {
     console.log(id);
 
     return (
-        <TalkOpened memberEmail={id} />
+        <>
+        <Stack direction="row" spacing={7} justifyContent="space-between">
+            <Sidebar />
+            <TalkMain />
+            <TalkOpened memberEmail={id} />
+        </Stack>
+        </>
     );
 }
 
