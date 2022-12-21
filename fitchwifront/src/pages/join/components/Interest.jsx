@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { Button, Checkbox, FormControlLabel, styled, Typography } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
@@ -14,9 +14,27 @@ export default function Interest({ joinForm, setJoinForm }) {
     marginRight: "100px",
     onClick: "onCheck",
   });
+
+  const [checked, setChecked] = useState({
+    culture: false,
+    activity: false,
+    food: false,
+    travel: false,
+    grownup: false,
+    making: false,
+    game: false,
+    etc: false,
+  });
+
+  const handleChange = (e) => {
+    console.log(e.target.checked);
+    setChecked({ ...checked, [e.target.name]: e.target.checked });
+    console.log(e.target.name);
+  };
+
   const onCheck = useCallback(
     (e) => {
-      console.log(e.target.value);
+      console.log(e.target.checked);
 
       const joinObj = {
         ...joinForm,
@@ -49,8 +67,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.culture}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="culture"
             value="문화∙예술"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -63,8 +83,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.activity}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="activity"
             value="운동∙액티비티"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -77,8 +99,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.food}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="food"
             value="요리∙음식"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -91,8 +115,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.travel}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="travel"
             value="여행"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -105,8 +131,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.grownup}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="grownup"
             value="성장∙자기계발"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -119,8 +147,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.making}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="making"
             value="공예∙수공예"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -133,8 +163,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.game}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="game"
             value="게임∙오락"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
@@ -147,8 +179,10 @@ export default function Interest({ joinForm, setJoinForm }) {
       <FormControlLabel
         control={
           <InterestCheckBox
+            checked={checked.etc}
+            onClick={handleChange}
             onChange={onCheck}
-            name="memberInterest"
+            name="etc"
             value="기타"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
