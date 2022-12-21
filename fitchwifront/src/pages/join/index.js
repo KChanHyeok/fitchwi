@@ -97,7 +97,7 @@ const JoinIndex = () => {
         ></Route>
         <Route
           path="/userinfo"
-          element={<UserInfo joinForm={joinForm} onChange={onChange} />}
+          element={<UserInfo joinForm={joinForm} onChange={onChange} setJoinForm={setJoinForm} />}
         ></Route>
       </Routes>
     </Box>

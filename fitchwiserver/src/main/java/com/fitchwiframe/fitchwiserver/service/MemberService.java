@@ -102,19 +102,21 @@ private MemberRepository memberRepository;
 
     Member dbMember = null;
     try {
-      dbMember = memberRepository.findById(inputMember.getMemberEmail()).get();
+      dbMember = memberRepository.findById(inputMember.getMemberEmail()).orElseGet(Member::new);
       if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
         dbMember.setMemberPwd("");
       } else {
-        dbMember = null;
+        dbMember.setMemberEmail("");
       }
     } catch (Exception e) {
       e.printStackTrace();
-      dbMember = null;
+      dbMember.setMemberEmail("");
     }
     return dbMember.getMemberEmail();
 
   }
+  //회원 정보 수정
+
 
   public Member getMemberInfo(String userId) {
     log.info("memberService.getMemberInfo()");

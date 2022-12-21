@@ -67,7 +67,7 @@ export default function UserImg({ fileForm, setFileForm }) {
         />
       </Button>
       <br />{" "}
-      <Link to="/join/gender">
+      <Link to="/join/gender" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained" style={{ textDecoration: "none" }}>
           다음
         </Button>

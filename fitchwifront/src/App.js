@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/home";
 import Feed from "./pages/feed";
-import LoginMember from "./components/LoginMember";
+import LoginMember from "./pages/login";
 import JoinMember from "./pages/join";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
@@ -62,7 +62,6 @@ function App() {
         <Route path="/feed" element={<Feed lstate={lstate} />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
         <Route path="/together" element={<Together />}></Route>
-
       </Routes>
       <Footer />
     </>
