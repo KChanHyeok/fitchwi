@@ -47,4 +47,10 @@ public class MemberController {
     log.info("getMemberInfo()");
     return memberService.getMemberInfo(userId);
   }
+
+  @DeleteMapping("/deleteMember")
+  private String deleteMemberInfo(@RequestBody Member member, HttpSession session){
+    log.info("memberController.deleteMemberInfo()");
+    return memberService.deleteMemberInfo(member, session);
+  }
 }
