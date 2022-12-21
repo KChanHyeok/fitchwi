@@ -135,7 +135,7 @@ const Add = () => {
         aria-describedby="modal-modal-description"
         sx={{mt:5}}
       >
-        <Box width={800} height={700} bgcolor="white" p={3} borderRadius={5} sx={{mt:5, overflowY:"auto" }} >
+        <Box width={800} height={700} bgcolor="white" p={3} borderRadius={5} sx={{mt:5, mb:10, overflowY:"auto" }} >
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
