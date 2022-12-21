@@ -6,7 +6,8 @@ import Sidebar from "../../layout/Sidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function Feedindex({ lstate }) {
+function Feedindex() {
+  const id = sessionStorage.getItem("id");
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,15 +20,13 @@ function Feedindex({ lstate }) {
       .get("/getAllFeedList")
       .then((response) => {
         if (response.data.length === 0) {
-          console.log("피드가 존재하지 않습니다");
+          console.log("피드가 존재하지 않습니다.");
         }
         setFeeds(response.data);
         setLoading(false);
       })
       .catch((error) => console.log(error));
   };
-  console.log(feeds);
-  const { logid } = lstate;
 
   return (
     <Box>
@@ -41,9 +40,9 @@ function Feedindex({ lstate }) {
       ) : (
         <Stack direction="row" spacing={7} justifyContent="space-between">
           <Sidebar />
-          <Feed data={feeds} />
+          {feeds === [] ? <Feed /> : <Feed data={feeds} />}
           <Rightbar />
-          <FeedAdd memberEmail={logid} refreshFeed={getAllFeedList} />
+          <FeedAdd memberEmail={id} refreshFeed={getAllFeedList} />
         </Stack>
       )}
     </Box>

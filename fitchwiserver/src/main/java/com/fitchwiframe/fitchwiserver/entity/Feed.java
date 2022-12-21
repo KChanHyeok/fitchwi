@@ -1,8 +1,10 @@
 package com.fitchwiframe.fitchwiserver.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,9 +30,6 @@ public class Feed {
     @Column(nullable = false, length = 2000)
     private String feedContent;
 
-    @Column(nullable = false, length = 100)
-    private String feedImg;
-
-    @Column(nullable = false, length = 100)
-    private String feedSaveimg;
+    @Transient
+    private List<FeedFile> ffList;
 }

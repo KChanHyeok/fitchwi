@@ -1,6 +1,7 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
+import com.fitchwiframe.fitchwiserver.entity.FeedFile;
 import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,10 @@ public class FeedController {
     }
     @PostMapping("/insertfeed")
     public String insertFeed(@RequestPart(value = "data") Feed newFeed,
-                             @RequestPart(value = "uploadImage", required = false) MultipartFile pic, HttpSession session ) {
+                             @RequestPart(value = "uploadImage", required = false) List<MultipartFile> files, HttpSession session ) {
+        log.info("FileList : " + files);
         log.info("insertFeed()");
-        return feedService.insertFeed(newFeed, pic, session);
+        return feedService.insertFeed(newFeed, files, session);
     }
 
     @GetMapping("/getAllFeedList")
@@ -32,4 +34,9 @@ public class FeedController {
         return feedService.getAllFeedList();
     }
 
+    @GetMapping("/getFeedFile")
+    public List<FeedFile> getFeedFile(Feed feed){
+        log.info("getFeedFile()");
+        return feedService.getFeedFile(feed);
+    }
 }

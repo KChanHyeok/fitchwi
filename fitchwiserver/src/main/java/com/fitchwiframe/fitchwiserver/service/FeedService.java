@@ -1,6 +1,8 @@
 package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
+import com.fitchwiframe.fitchwiserver.entity.FeedFile;
+import com.fitchwiframe.fitchwiserver.repository.FeedFileRepository;
 import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 @Service
 @Log
@@ -20,20 +22,20 @@ public class FeedService {
     @Autowired
     private FeedRepository feedRepository;
 
+    @Autowired
+    private FeedFileRepository feedFileRepository;
+
     // 피드 등록
-    public String insertFeed(Feed newFeed, MultipartFile pic, HttpSession session) {
-        log.info("feedService.insertFeed");
+    public String insertFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
+        log.info("feedService.insertFeed()");
         String result = null;
 
         try {
-            if (pic != null){
-                newFeed = fileUpload(newFeed,pic, session);
-            } else {
-                newFeed.setFeedImg("이미지 원래 이름");
-                newFeed.setFeedSaveimg("저장된 기본이미지 이름");
+            Feed saveFeed = feedRepository.save(newFeed);
+            if (files != null){
+                List<FeedFile> saveFeedFile = fileUpload(saveFeed,files,session);
+                saveFeed.setFfList(saveFeedFile);
             }
-
-            feedRepository.save(newFeed);
             log.info("등록 성공");
             result = "ok";
         } catch (Exception e){
@@ -44,8 +46,11 @@ public class FeedService {
         return result;
     }
 
-    public Feed fileUpload(Feed feed, MultipartFile pic, HttpSession session) throws Exception{
+    public List<FeedFile> fileUpload(Feed feed, List<MultipartFile> files, HttpSession session) throws Exception{
         log.info("feedService.fileupload()");
+        log.info("feedInfo : " + feed);
+
+        List<FeedFile> saveFeedFile = new ArrayList<>();
         String realPath = session.getServletContext().getRealPath("/");
         log.info("realPath : " + realPath);
 
@@ -55,24 +60,46 @@ public class FeedService {
             folder.mkdir();
         }
 
-        String orname = pic.getOriginalFilename();
-        feed.setFeedImg(orname);
-        String sysname = System.currentTimeMillis() + orname.substring(orname.lastIndexOf("."));
-        feed.setFeedSaveimg(sysname);
-        File file = new File(realPath+sysname);
-        pic.transferTo(file);
+        for(MultipartFile mf : files) {
+            String orname = mf.getOriginalFilename(); //업로드 파일명 가져오기
+            if (orname.equals("")) {
+                //업로드하는 파일이 없는 상태.
+                return null; //파일 저장 처리 중지!
+            }
 
-        return feed;
+            //파일 정보를 피드 파일 테이블에 저장
+            FeedFile ff = new FeedFile();
+            ff.setFeedCode(feed);
+            ff.setFeedFileImg(orname);
+            String sysname = System.currentTimeMillis() + orname.substring(orname.lastIndexOf("."));
+            ff.setFeedFileSaveimg(sysname);
+            //업로드하는 파일을 upload 폴더에 저장.
+            File file = new File(realPath + sysname);
+            //파일 저장(upload 폴더)
+            mf.transferTo(file);
+
+            //파일 정보를 DB에 저장
+            saveFeedFile.add(feedFileRepository.save(ff));
+        }
+        log.info("saveFeedFile : " + saveFeedFile);
+        return saveFeedFile;
     }
 
 
     public List<Feed> getAllFeedList() {
         log.info("feedService.getAllFeedList()");
         Iterable<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "feedDate"));
+        log.info("feeds : " + feeds);
         if (feeds == null){
             return null;
         } else {
             return (List<Feed>) feeds;
         }
+    }
+
+    public List<FeedFile> getFeedFile(Feed feed) {
+        log.info("feedService.getAllFeedListWithFeedFile()");
+        List<FeedFile> files = feedFileRepository.findByFeedCode(feed);
+        return files;
     }
 }
