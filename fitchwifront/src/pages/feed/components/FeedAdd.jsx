@@ -33,7 +33,9 @@ const UserBox = styled(Box)({
 });
 
 const imgEl = document.querySelector(".img_box");
+
 const FeedAdd = ({ memberEmail, refreshFeed }) => {
+  console.log(memberEmail);
   let formdata = new FormData();
   const nav = useNavigate();
 
@@ -57,13 +59,14 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
   });
 
   useEffect(() => {
-    axios
-      .get("/getMemberInfo", { params: { userId: memberEmail } })
-      .then((response) => {
-        setProfil(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.log(error));
+    if (memberEmail !== null) {
+      axios
+        .get("/getMemberInfo", { params: { userId: memberEmail } })
+        .then((response) => {
+          setProfil(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
   }, [memberEmail]);
 
   const preview = () => {
@@ -73,12 +76,12 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
     render.onload = () =>
       (imgEl.style.backgroundImage = `url(${render.result})`);
     render.readAsDataURL(fileForm[0]);
-    console.log(render);
   };
 
   const onLoadFile = useCallback((event) => {
-    const file = event.target.files;
-    setFileForm(file);
+    const files = event.target.files;
+    setFileForm(files);
+    console.log(files);
   }, []);
 
   const sendFeed = (event) => {
@@ -87,7 +90,9 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
       new Blob([JSON.stringify(insertForm)], { type: "application/json" })
     );
 
-    formdata.append("uploadImage", fileForm[0]);
+    for (let i = 0; i < fileForm.length; i++) {
+      formdata.append("uploadImage", fileForm[i]);
+    }
 
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
@@ -124,7 +129,7 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
   };
 
   const insertfeed = () => {
-    if (memberEmail === "") {
+    if (memberEmail === null) {
       alert("로그인이 필요한 서비스입니다.");
       nav("/login");
     } else {
@@ -209,8 +214,8 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
 
           <br />
           <div>
-            프로필 이미지 :
-            <input type="file" name="feedImg" onChange={onLoadFile} />
+            프로필 이미지 :{" "}
+            <input type="file" name="feedImg" onChange={onLoadFile} multiple />
             <div className="img_box" style={{ height: 100 }}>
               <img src="" alt="" />
             </div>

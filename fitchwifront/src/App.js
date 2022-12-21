@@ -6,7 +6,6 @@ import LoginMember from "./pages/login";
 import JoinMember from "./pages/join";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
-import Footer from "./layout/Footer";
 import Together from "./pages/together";
 
 function App() {
@@ -57,13 +56,15 @@ function App() {
       <Header lstate={lstate} onLogout={onLogout} />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
+        <Route
+          path="/login"
+          element={<LoginMember sucLogin={sucLogin} />}
+        ></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
-        <Route path="/feed" element={<Feed lstate={lstate} />}></Route>
+        <Route path="/feed" element={<Feed />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
         <Route path="/together" element={<Together />}></Route>
       </Routes>
-      <Footer />
     </>
   );
 }
