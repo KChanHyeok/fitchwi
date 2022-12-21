@@ -7,7 +7,7 @@ import JoinMember from "./pages/join";
 import Talk from "./pages/talk";
 import Header from "./layout/Header";
 import Together from "./pages/together";
-import Mypage from "./pages/mypage";
+import MemberPage from "./pages/memberpage";
 
 function App() {
   const nav = useNavigate();
@@ -25,7 +25,7 @@ function App() {
     if (id !== null) {
       const newState = {
         logid: id,
-        flink: "/mypage",
+        flink: "/memberpage",
       };
       setLstate(newState);
     }
@@ -35,7 +35,7 @@ function App() {
   const sucLogin = useCallback((id) => {
     const newState = {
       logid: id,
-      flink: "/mypage",
+      flink: "/memberpage",
     };
     setLstate(newState);
   }, []);
@@ -62,7 +62,7 @@ function App() {
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
         <Route path="/together" element={<Together />}></Route>
-        <Route path="/mypage" element={<Mypage />}></Route>
+        <Route path="/memberpage" element={<MemberPage onLogout={onLogout} />}></Route>
       </Routes>
     </>
   );

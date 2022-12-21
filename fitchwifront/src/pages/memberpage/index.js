@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Mypage from "./components/Mypage";
-export default function MypageIndex() {
+import MemberPage from "./components/MemberPage";
+export default function MemberPageIndex({ onLogout }) {
   const nav = useNavigate();
   const [member, setMember] = useState({});
   const memberEmail = sessionStorage.getItem("id");
@@ -23,5 +23,5 @@ export default function MypageIndex() {
   useEffect(() => {
     getMemberInfo();
   }, [getMemberInfo]);
-  return <Mypage member={member} />;
+  return <MemberPage member={member} onLogout={onLogout} />;
 }

@@ -11,14 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.util.Optional;
 
 
 @Service
 @Log
 public class MemberService {
   @Autowired
-private MemberRepository memberRepository;
+  private MemberRepository memberRepository;
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
@@ -124,9 +123,48 @@ private MemberRepository memberRepository;
     try {
       findMember = memberRepository.findById(userId).get();
       findMember.setMemberPwd("");
-    } catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return findMember;
+  }
+
+  //회원 탈퇴
+  public String deleteMemberInfo(Member member, HttpSession session) {
+    String result = "fail";
+    try {
+      //얘기해요 함께해요 관련 처리 추가 필요함
+      deleteFile(member.getMemberSaveimg(), session);
+      memberRepository.deleteById(member.getMemberEmail());
+      result="ok";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return result;
+  }
+
+
+  //회원 탈퇴시 이미지 삭제
+  private void deleteFile(String filsSysname, HttpSession session) {
+    if (filsSysname.equals("기본이미지로 저장된 이름")) {
+      return;
+    }
+    String realPath = session.getServletContext().getRealPath("/");
+
+    realPath += "images/";
+
+    File fileToDelete = new File(realPath + filsSysname);
+
+
+    if (fileToDelete.exists()) {
+      if (fileToDelete.delete()) {
+        log.info("파일 삭제 성공");
+      } else {
+        log.info("파일을 삭제하였습니다.");
+      }
+    } else {
+      log.info("파일이 존재하지 않습니다.");
+    }
   }
 }
