@@ -19,7 +19,7 @@ export default function Name({ onChange }) {
         onChange={onChange}
       />
       <br />
-      <Link to="/join/nickname">
+      <Link to="/join/nickname" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained">
           다음
         </Button>

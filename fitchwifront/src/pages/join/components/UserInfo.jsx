@@ -1,26 +1,59 @@
-import React /*, { useRef , useState  }*/ from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Button, Grid, TextField, Typography } from "@mui/material";
+import axios from "axios";
+import Postcode from "./Postcode";
 
-export default function UserInfo({ onChange }) {
-  //const [msg, setMsg] = useState("");
-  // const inputPwd = useRef();
+export default function UserInfo({ onChange, joinForm, setJoinForm }) {
+  const [msg, setMsg] = useState("");
+  const [formPwd, setFormPwd] = useState("");
+  const onCheckPwd = useCallback(
+    (e) => {
+      let checkPwd = e.target.value;
+      console.log(checkPwd);
 
-  // const onCheckPwd = (e) => {
-  //   let checkpwd = e.target.value;
-  //   console.log(inputPwd.current.value);
-  //   console.log(checkpwd);
-  //   if (checkpwd === "") {
-  //     setMsg("");
-  //   } else if (checkpwd === inputPwd.current.value) {
-  //     setMsg("비밀번호 확인이 완료됐습니다.");
-  //   } else {
-  //     setMsg("올바른 비밀번호를 입력해주세요");
-  //   }
-  // };
+      if (checkPwd === "") {
+        setMsg("미입력");
+      } else if (checkPwd === formPwd) {
+        setCorrectPwd(true);
+        setMsg("비밀번호 확인이 완료됐습니다.");
+      } else {
+        setCorrectPwd(false);
+        setMsg("올바른 비밀번호를 입력해주세요");
+      }
+    },
+    [formPwd]
+  );
+
+  useEffect(() => {
+    setFormPwd(joinForm.memberPwd);
+    return () => onCheckPwd;
+  }, [joinForm.memberPwd, onCheckPwd]);
+
+  const [disabled, setDisabled] = useState(true);
+  const [correctPwd, setCorrectPwd] = useState(null);
+
+  const onCheckId = (e) => {
+    e.preventDefault();
+    if (joinForm.memberEmail === "") {
+      alert("사용하실 Email을 입력해주세요.");
+      return;
+    }
+    axios
+      .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
+      .then((res) => {
+        if (res.data === "ok") {
+          setDisabled(!disabled);
+          alert("사용 가능한 Email 입니다.");
+        } else {
+          alert("사용할 수 없는 Email 입니다.");
+        }
+      });
+    //console.log(typeof joinForm.memberEmail);
+  };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: "center", width: 500 }}>
       <Typography variant="h2" gutterBottom mb={10}>
         더 알려주세요
       </Typography>
@@ -29,14 +62,24 @@ export default function UserInfo({ onChange }) {
           <TextField
             onChange={onChange}
             name="memberEmail"
-            sx={{ mb: 5 }}
+            sx={{ mb: 1 }}
             label="Email"
             type="email"
-            multiline
             variant="standard"
-            InputProps={{ style: { fontSize: 30 } }}
+            InputProps={{ style: { fontSize: 20 } }}
             inputProps={{ maxLength: 30 }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            fullWidth
+            style={{ width: "60%" }}
+            sx={{ mb: 1 }}
+            onClick={onCheckId}
+          >
+            중복확인
+          </Button>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -46,52 +89,77 @@ export default function UserInfo({ onChange }) {
             type="password"
             label="비밀번호"
             variant="standard"
-            InputProps={{ style: { fontSize: 30 } }}
+            InputProps={{ style: { fontSize: 20 } }}
             inputProps={{ maxLength: 30 }}
           />
         </Grid>{" "}
         <Grid item xs={12}>
           <TextField
-            // onChange={onCheckPwd}
-            //name="memberPwd"
+            onChange={onCheckPwd}
+            name="memberPwd"
             sx={{ mb: 5 }}
             type="password"
             label="비밀번호 확인"
             variant="standard"
-            InputProps={{ style: { fontSize: 30 } }}
+            InputProps={{ style: { fontSize: 20 } }}
             inputProps={{ maxLength: 30 }}
           />
         </Grid>
         <Grid item xs={12}>
-          {/* <Alert severity="info">위와 동일한 비밀번호를 입력해주세요.</Alert> */}
+          {correctPwd == null ? null : correctPwd ? (
+            <Alert
+              severity="info"
+              sx={{
+                width: "50%",
+                margin: "auto",
+              }}
+            >
+              {msg}
+            </Alert>
+          ) : (
+            <Alert
+              severity="error"
+              sx={{
+                width: "50%",
+                margin: "auto",
+              }}
+            >
+              {msg}
+            </Alert>
+          )}
         </Grid>
         <Grid item xs={12}>
           <TextField
             onChange={onChange}
             name="memberAddr"
-            sx={{ mb: 5 }}
+            sx={{ mb: 1 }}
             label="주소"
+            value={joinForm.memberAddr}
             multiline
             variant="standard"
-            InputProps={{ style: { fontSize: 30 } }}
+            InputProps={{ style: { fontSize: 20 } }}
             inputProps={{ maxLength: 50 }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          {" "}
+          <Postcode joinForm={joinForm} setJoinForm={setJoinForm} />
         </Grid>
         <Grid item xs={12}>
           <TextField
             onChange={onChange}
             name="memberPhone"
             label="연락처"
-            multiline
             variant="standard"
-            InputProps={{ style: { fontSize: 30 } }}
+            size="small"
+            InputProps={{ style: { fontSize: 20 } }}
             inputProps={{ maxLength: 16 }}
           />
         </Grid>
       </Grid>
       <br />
       <Grid item xs={12}>
-        <Button type="submit" sx={{ mt: 5, width: 100 }} variant="contained">
+        <Button type="submit" sx={{ mt: 5, width: "60%" }} variant="contained" disabled={disabled}>
           회원가입
         </Button>
       </Grid>

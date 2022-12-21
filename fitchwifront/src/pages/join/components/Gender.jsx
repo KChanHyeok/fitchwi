@@ -31,13 +31,13 @@ export default function Gender({ joinForm, setJoinForm }) {
       </Typography>
       <br />
       <Link to="/join/birth" style={{ textDecoration: "none" }}>
-        <GenderBtn variant="contained" onClick={onClick} name="memberGender" value="남">
+        <GenderBtn variant="outlined" onClick={onClick} name="memberGender" value="남">
           남성
         </GenderBtn>
-        <GenderBtn variant="contained" onClick={onClick} name="memberGender" value="여">
+        <GenderBtn variant="outlined" onClick={onClick} name="memberGender" value="여">
           여성
         </GenderBtn>
-        <GenderBtn variant="contained" onClick={onClick} name="memberGender" value="기타">
+        <GenderBtn variant="outlined" onClick={onClick} name="memberGender" value="기타">
           기타
         </GenderBtn>
       </Link>

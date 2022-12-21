@@ -29,7 +29,7 @@ export default function Birth({ onChange }) {
         inputProps={{ maxLength: 10 }}
       />
       <br />
-      <Link to="/join/interest">
+      <Link to="/join/interest" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained">
           다음
         </Button>
