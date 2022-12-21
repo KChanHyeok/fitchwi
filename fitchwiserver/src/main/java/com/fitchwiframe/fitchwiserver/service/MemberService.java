@@ -123,6 +123,7 @@ private MemberRepository memberRepository;
     Member findMember = null;
     try {
       findMember = memberRepository.findById(userId).get();
+      findMember.setMemberPwd("");
     } catch (Exception e){
       e.printStackTrace();
     }
