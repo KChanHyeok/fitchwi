@@ -13,7 +13,7 @@ function TalkOpenedModal(props) {
             window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
         };
     }, []);
-    
+
     function closeModal() {
         props.closeModal();
     }
