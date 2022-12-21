@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
     const id = sessionStorage.getItem("id");
-    //console.log(mid);
+
     if (id !== null) {
       const newState = {
         logid: id,

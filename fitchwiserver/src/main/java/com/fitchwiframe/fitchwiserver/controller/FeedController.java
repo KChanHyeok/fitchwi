@@ -34,9 +34,4 @@ public class FeedController {
         return feedService.getAllFeedList();
     }
 
-    @GetMapping("/getFeedFile")
-    public List<FeedFile> getFeedFile(Feed feed){
-        log.info("getFeedFile()");
-        return feedService.getFeedFile(feed);
-    }
 }
