@@ -24,8 +24,6 @@ function Feedindex() {
         }
         setFeeds(response.data);
         setLoading(false);
-        console.log(response.data);
-        console.log(response.data[0].ffList[0]);
       })
       .catch((error) => console.log(error));
   };
