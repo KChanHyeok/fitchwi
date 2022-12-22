@@ -6,6 +6,7 @@ import com.fitchwiframe.fitchwiserver.entity.TogetherTag;
 import com.fitchwiframe.fitchwiserver.service.TogetherService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpSession;
 public class TogetherController {
 
     @Autowired
-    private TogetherService togetherService;
+    TogetherService togetherService;
 
     @PostMapping("/addTogether")
     public String addTogether(@RequestPart(value = "data", required = false)TogetherOpened togetherOpened,
@@ -35,4 +36,9 @@ public class TogetherController {
 
         return togetherService.addTogetherOpened(togetherOpened, together, togetherTag, pic,session);
     }
+    @GetMapping("/getAllTogetherList")
+    public Iterable<Together> getAllTogetherList() {
+        return togetherService.getAllTogetherList();
+    }
+
 }

@@ -19,13 +19,15 @@ import java.io.File;
 public class TogetherService {
 
     @Autowired
-    private TogetherOpenedRepository togetherOpenedRepository;
+    TogetherOpenedRepository togetherOpenedRepository;
 
     @Autowired
-    private TogetherRepository togetherRepository;
+    TogetherRepository togetherRepository;
 
     @Autowired
-    private TogetherTagRepository togetherTagRepository;
+    TogetherTagRepository togetherTagRepository;
+
+
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
         String result = null;
 
@@ -70,5 +72,11 @@ public class TogetherService {
         pic.transferTo(file);
 
         return together;
+    }
+    public Iterable<Together> getAllTogetherList() {
+        log.info("getAllTogetherList()");
+        Iterable<Together> togetherList = togetherRepository.findAll();
+        log.info(togetherList+"");
+        return togetherList;
     }
 }

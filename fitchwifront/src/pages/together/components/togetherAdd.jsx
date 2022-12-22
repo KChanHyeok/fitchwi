@@ -56,7 +56,6 @@ const TogetherAdd = ({data}) => {
   const formDate = new FormData(); 
   const [fileForm, setFileForm] = useState("")
   const imgEl = document.querySelector(".img_box");
-  console.log(data)
   useEffect(() => {
     preview();
 
@@ -92,7 +91,7 @@ const TogetherAdd = ({data}) => {
     axios.post("/addTogether",formDate, config)
     .then((res)=> console.log(res))
     .catch((error) => console.log(error))
-    console.log("개설")
+    alert("개설완료")
   };
 
   const [open, setOpen] = useState(false);
@@ -104,7 +103,6 @@ const TogetherAdd = ({data}) => {
         [event.target.name]: event.target.value,
       };
       setInsertForm(insertObj);
-      console.log(insertObj)
     },
     [insertForm]
   );
