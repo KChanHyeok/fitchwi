@@ -17,6 +17,7 @@ const Feed = ({ data }) => {
             memberName={data.memberEmail.memberName}
             feedDate={data.feedDate}
             feedContent={data.feedContent}
+            file={data.ffList}
           />
         ))
       )}

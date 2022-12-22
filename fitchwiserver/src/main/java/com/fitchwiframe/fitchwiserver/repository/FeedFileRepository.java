@@ -1,6 +1,5 @@
 package com.fitchwiframe.fitchwiserver.repository;
 
-import com.fitchwiframe.fitchwiserver.entity.Feed;
 import com.fitchwiframe.fitchwiserver.entity.FeedFile;
 import org.springframework.data.repository.CrudRepository;
 
