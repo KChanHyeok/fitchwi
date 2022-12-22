@@ -1,7 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
-import com.fitchwiframe.fitchwiserver.entity.FeedFile;
 import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +30,8 @@ public class FeedController {
     @GetMapping("/getAllFeedList")
     public List<Feed> getAllFeedList(){
         log.info("getAllFeedList()");
+        System.out.println("feedService = " + feedService);
         return feedService.getAllFeedList();
     }
 
-    @GetMapping("/getFeedFile")
-    public List<FeedFile> getFeedFile(Feed feed){
-        log.info("getFeedFile()");
-        return feedService.getFeedFile(feed);
-    }
 }
