@@ -19,7 +19,7 @@ function TalkOpened({ memberEmail }) {
         talkMax: 0,
         talkCategory: "",
         talkType: "",
-        talkInquery: "",
+        talkInquiry: "",
         talkContent: "",
         talkTagContent: "",
         talkOpenDate: `${new Date().getTime()}`,
@@ -160,7 +160,7 @@ function TalkOpened({ memberEmail }) {
                                     <option value="승인제">승인제</option>
                                     <option value="선착순">선착순</option>
                                 </select>
-                                <input onChange={onChange} type="text" name="talkInquery" className="talkInqSt"
+                                <input onChange={onChange} type="text" name="talkInquiry" className="talkInqSt"
                                     placeholder="가입 시 받을 질문을 작성하세요" disabled={disabled}></input>
                             </div>
                         </div>
