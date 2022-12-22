@@ -34,7 +34,7 @@ public class Talk {
     private String talkType;
 
     @Column(length = 100)
-    private String talkInquery;
+    private String talkInquiry;
 
     @Column(nullable = false)
     private int talkMax;
