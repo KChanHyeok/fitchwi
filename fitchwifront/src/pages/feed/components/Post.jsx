@@ -28,6 +28,7 @@ import {
 } from "@mui/icons-material";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
+import { Link } from "react-router-dom";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -42,7 +43,8 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Post = ({ memberName, feedContent, feedDate, file }) => {
+const Post = ({ memberName, feedContent, feedDate, file, memberEmail }) => {
+  //memberEmail Feed에서 새로 받아옴
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
     {
@@ -75,9 +77,7 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
   const viewFlist = flist.map((v, i) => {
     return (
       <div key={i} style={{ display: "flex", justifyContent: "center" }}>
-        {v.image && (
-          <img src={v.image} alt="preview-img" width={100} height={100} />
-        )}
+        {v.image && <img src={v.image} alt="preview-img" width={100} height={100} />}
         {v.bforiname}
       </div>
     );
@@ -88,9 +88,12 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
       <Card sx={{ margin: 5 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe">
-              S
-            </Avatar>
+            // avatar 클릭했을 때 email 가지고 넘어가도록 수정
+            <Link to="/memberpage" state={{ memberId: memberEmail }}>
+              <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe">
+                S
+              </Avatar>
+            </Link>
           }
           action={<LongMenu />}
           title={memberName}
@@ -118,10 +121,7 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
-            <Checkbox
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite sx={{ color: "red" }} />}
-            />
+            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite sx={{ color: "red" }} />} />
           </IconButton>
           <AvatarGroup max={6}>
             <Avatar alt="Remy Sharp" />
@@ -173,11 +173,7 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
                 variant="standard"
               />
 
-              <ButtonGroup
-                fullWidth
-                variant="contained"
-                aria-label="outlined primary button group"
-              >
+              <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
                 <Button>댓글 등록</Button>
               </ButtonGroup>
             </Box>
