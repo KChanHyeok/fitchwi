@@ -74,12 +74,18 @@ public class TalkService {
         talkOpenedRepository.save(talkOpened);
         newTalk.setTalkOpenCode(talkOpened);
     }
-
-    //얘기해요 태그 값 저장
+    //    얘기해요 태그 값 저장
 //    public void addTalkTag(TalkTag talkTag, Talk newTalk) {
 //        log.info("talkService.addTalkTag()");
 //        talkRepository.save(newTalk);
 //        talkTag.setTalkCode(newTalk);
 //        log.info("setTalkCode : " + talkTag);
+//    }
+
+//    public Talk getTalk(long talkCode) {
+//        log.info("talkService.getTalk()");
+//
+//        Talk talk = talkRepository.findById(talkCode).get();
+//        return talk;
 //    }
 }
