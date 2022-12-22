@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ConfirmDialog from "./ConfirmDialog";
 
-export default function Mypage({ member, onLogout }) {
+export default function Mypage({ member, onLogout, pageOwner }) {
   const nav = useNavigate();
   const {
     memberEmail,
@@ -19,7 +19,7 @@ export default function Mypage({ member, onLogout }) {
     memberPhone,
     memberSaveimg,
   } = member;
-
+  const loginId = sessionStorage.getItem("id");
   const deleteMemberInfo = useCallback(
     (member) => {
       axios.delete("/deleteMember", { data: member }).then((res) => {
@@ -35,7 +35,8 @@ export default function Mypage({ member, onLogout }) {
     },
     [nav, onLogout]
   );
-
+  console.log(memberEmail);
+  console.log(pageOwner);
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
     <Container component="main" maxWidth="xs">
@@ -82,35 +83,39 @@ export default function Mypage({ member, onLogout }) {
         <Typography component="h1" variant="h5">
           {memberSaveimg}
         </Typography>
-        <Box component="form" sx={{ mt: 1 }}>
-          <Link to="/updatemember" style={{ textDecoration: "none" }}>
-            <Button sx={{ mr: 5, mt: 5, width: 100 }} variant="contained">
-              정보수정
+
+        {loginId === pageOwner ? (
+          <Box component="form" sx={{ mt: 1 }}>
+            {/* {member} */}
+            <Link to="/updatemember" style={{ textDecoration: "none" }}>
+              <Button sx={{ mr: 5, mt: 5, width: 100 }} variant="contained">
+                정보수정
+              </Button>
+            </Link>
+
+            <Button
+              sx={{ mt: 5, width: 100 }}
+              variant="contained"
+              onClick={() => setConfirmOpen(() => true)}
+            >
+              탈퇴
             </Button>
-          </Link>
+            <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>
+              로그아웃
+            </Button>
 
-          <Button
-            sx={{ mt: 5, width: 100 }}
-            variant="contained"
-            onClick={() => setConfirmOpen(() => true)}
-          >
-            탈퇴
-          </Button>
-          <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>
-            로그아웃
-          </Button>
-
-          <ConfirmDialog
-            title="Fitchwi 회원 탈퇴"
-            open={confirmOpen}
-            setOpen={setConfirmOpen}
-            onConfirm={() => deleteMemberInfo(member)}
-          >
-            {`${member.memberName}(${member.memberEmail})님께서 Fitchwi에서 활동한 내역 중,
+            <ConfirmDialog
+              title="Fitchwi 회원 탈퇴"
+              open={confirmOpen}
+              setOpen={setConfirmOpen}
+              onConfirm={() => deleteMemberInfo(member)}
+            >
+              {`${member.memberName}(${member.memberEmail})님께서 Fitchwi에서 활동한 내역 중,
             피드와 채팅 기록을 제외한 모든 내역이 삭제됩니다. 
             이에 동의하신다면 아래의 '탈퇴'버튼을 눌러주세요. `}
-          </ConfirmDialog>
-        </Box>
+            </ConfirmDialog>
+          </Box>
+        ) : null}
       </Box>
     </Container>
   );
