@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -42,8 +42,46 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Post = ({ memberName, feedContent, feedDate }) => {
+const Post = ({ memberName, feedContent, feedDate, file }) => {
   const [open, setOpen] = useState(false);
+  const [flist, setFlist] = useState([
+    {
+      feedFileCode: "",
+      feedCode: "",
+      feedFileImg: "Nothing",
+      feedFileSaveimg: "",
+      image: "",
+    },
+  ]);
+  console.log(file);
+
+  useEffect(() => {
+    if (file.length > 0) {
+      let FeedFileList = [];
+      for (let i = 0; i < file.length; i++) {
+        const FeedFile = {
+          ...file[i],
+          image: "images/" + file[i].feedFileSaveimg,
+        };
+        FeedFileList.push(FeedFile);
+      }
+      setFlist(FeedFileList);
+      console.log(FeedFileList);
+    }
+  }, [file]);
+
+  console.log(flist);
+
+  const viewFlist = flist.map((v, i) => {
+    return (
+      <div key={i} style={{ display: "flex", justifyContent: "center" }}>
+        {v.image && (
+          <img src={v.image} alt="preview-img" width={100} height={100} />
+        )}
+        {v.bforiname}
+      </div>
+    );
+  });
 
   return (
     <div>
@@ -59,13 +97,14 @@ const Post = ({ memberName, feedContent, feedDate }) => {
           subheader={feedDate}
         />
         {/* 피드 이미지 */}
-        <CardMedia
+        <div>{viewFlist}</div>
+        {/* <CardMedia
           onClick={(e) => setOpen(true)}
           component="img"
           src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=164&h=164&fit=crop&auto=format"
           height="2%"
           alt="Paella dish"
-        />
+        /> */}
         <CardContent>
           <Typography variant="h6" color="text.primary">
             {feedContent}
@@ -79,7 +118,10 @@ const Post = ({ memberName, feedContent, feedDate }) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
-            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite sx={{ color: "red" }} />} />
+            <Checkbox
+              icon={<FavoriteBorder />}
+              checkedIcon={<Favorite sx={{ color: "red" }} />}
+            />
           </IconButton>
           <AvatarGroup max={6}>
             <Avatar alt="Remy Sharp" />
@@ -137,7 +179,6 @@ const Post = ({ memberName, feedContent, feedDate }) => {
                 aria-label="outlined primary button group"
               >
                 <Button>댓글 등록</Button>
-
               </ButtonGroup>
             </Box>
           </Stack>
