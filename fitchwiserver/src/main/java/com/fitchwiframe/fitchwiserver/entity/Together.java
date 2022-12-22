@@ -44,7 +44,7 @@ public class Together {
   private String togetherSaveimg;
 
   @Column(nullable = false, length = 20)
-  private int togetherRecruitStartDate;
+  private String togetherRecruitStartDate;
 
   @Column(nullable = false, length = 20)
   private String togetherRecruitEndDate;
