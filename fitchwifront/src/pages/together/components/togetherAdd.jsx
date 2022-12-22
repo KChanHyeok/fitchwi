@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import React, { useCallback, /*useEffect,*/ useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // import axios from "axios";
 
 
@@ -33,17 +33,12 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Add = () => {
-  // let formdata = new FormData();
-
-  // const [fileForm, setFileForm] = useState("");
+const TogetherAdd = ({data}) => {
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
       },
-      facilities_code: {
-        facilities_code: 0
-      },
+      facilities: "",
       togetherOpenedDate: nowdate, // 함께해요 개설일 당일
       togetherTitle: "",
       togetherCategory: "",
@@ -59,27 +54,29 @@ const Add = () => {
       togetherTagContent : "", //태그 내용
   });
 
-  // useEffect(() => {
-  //   preview();
+  const [fileForm, setFileForm] = useState("")
+  const imgEl = document.querySelector(".img_box");
 
-  //   return () => preview();
-  // });
+  useEffect(() => {
+    preview();
 
-  // const preview = () => {
-  //   if (!fileForm) return false;
-  //   const imgEl = document.querySelector(".img_box");
-  //   const render = new FileReader();
+    return () => preview();
+  });
 
-  //   render.onload = () =>
-  //     (imgEl.style.backgroundImage = `url(${render.result})`);
-  //   render.readAsDataURL(fileForm[0]);
-  //   console.log(render);
-  // };
+  const preview = () => {
+    if (!fileForm) return false;
+    const render = new FileReader();
 
-  // const onLoadFile = useCallback((event) => {
-  //   const file = event.target.files;
-  //   setFileForm(file);
-  // }, []);
+    render.onload = () =>
+      (imgEl.style.backgroundImage = `url(${render.result})`);
+    render.readAsDataURL(fileForm[0]);
+    console.log(render);
+  };
+
+  const onLoadFile = useCallback((event) => {
+    const file = event.target.files;
+    setFileForm(file);
+  }, []);
 
   const sendTogether = (e) => {
   //   formdata.append(
@@ -103,7 +100,7 @@ const Add = () => {
         [event.target.name]: event.target.value,
       };
       setInsertForm(insertObj);
-      console.log(insertForm);
+      console.log(insertObj)
     },
     [insertForm]
   );
@@ -111,7 +108,14 @@ const Add = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(insertForm)
+
+  const imgBoxStyle = {
+    marginTop: "20px",
+    width: "300px",
+    height: "200px",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  }
 
   return (
     <>
@@ -173,8 +177,31 @@ const Add = () => {
           </FormControl>
         <TextField fullWidth label="모집신청 시작일을 입력헤주세요" sx={{mt:3}} type="date" id="fullWidth" onChange={handleChange} name="togetherRecruitStartDate" focused color="grey"/>
         <TextField fullWidth label="모집신청 마감일을 입력헤주세요" color="grey" sx={{mt:3}} focused type="date" onChange={handleChange} name="togetherRecruitEndDate" id="fullWidth" />
+        <FormControl sx={{ mt: 2}} fullWidth>
+            <InputLabel>
+              시설이용료
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-autowidth-label"
+              id="demo-simple-select-autowidth"
+              value={insertForm.facilities}
+              name="facilities"
+              onChange={handleChange}
+              label="시설이용료"
+            >
+              <MenuItem value='' disabled sx={{display: "none"}} ><em>-</em></MenuItem>
+              {data.map((data) => (
+              <MenuItem value={data} key={data.facilitiesCode}>
+                  {data.facilitiesName}<br />
+                  가격 : {data.facilitiesPrice}원<br />
+                  담당자 : {data.facilitiesGrade}<br />
+                  연락처 : {data.facilitiesPhone}<br />
+                  위치 : {data.facilitiesPosition}
+              </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         <TextField fullWidth label="모이는 장소의 주소" sx={{mt:3}} id="fullWidth" onChange={handleChange} name="togetherPosition" />
-        <TextField fullWidth label="시설 이용료" sx={{mt:3}} id="fullWidth" onChange={handleChange} name="facilities_code" />
         <TextField fullWidth label="1인당 참가비" type="number" sx={{mt:3}} id="fullWidth" name="togetherPrice" onChange={handleChange} />
         <FormControl sx={{ mt: 2}} fullWidth>
             <InputLabel>
@@ -192,7 +219,10 @@ const Add = () => {
               <MenuItem value="승인제">승인제</MenuItem>
             </Select>
           </FormControl>
-        <TextField fullWidth label="모임대표사진" type="file" focused sx={{mt:3}} id="fullWidth" color="grey" />
+          <TextField fullWidth label="모임대표사진" type="file" focused sx={{ mt: 3 }} id="fullWidth" color="grey" onChange={onLoadFile} />
+          <div style={imgBoxStyle} className="img_box">
+            <img src="" alt="" />
+          </div>
         <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} name="togetherInquery" onChange={handleChange} id="fullWidth" />
         <TextField fullWidth label="모임 소개 말" sx={{mt:3}} id="fullWidth" name="togetherContent" onChange={handleChange} />
         <TextField fullWidth label="태그" sx={{mt:3}} id="fullWidth" name="togetherTagContent" onChange={handleChange} />
@@ -204,4 +234,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default TogetherAdd;
