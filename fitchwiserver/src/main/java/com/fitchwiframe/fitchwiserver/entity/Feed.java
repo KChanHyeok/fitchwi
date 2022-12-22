@@ -32,4 +32,8 @@ public class Feed {
 
     @Transient
     private List<FeedFile> ffList;
+
+    @Transient
+    private List<FeedComment> fcList;
+
 }

@@ -3,7 +3,6 @@ import React from "react";
 import Post from "./Post";
 
 const Feed = ({ data }) => {
-  console.log(data);
   return (
     <Box flex={4} p={2}>
       {data.length === 0 ? (
@@ -14,9 +13,10 @@ const Feed = ({ data }) => {
         data.map((data) => (
           <Post
             key={data.feedCode}
-            memberName={data.memberEmail.memberName}
+            memberInfo={data.memberEmail}
             feedDate={data.feedDate}
             feedContent={data.feedContent}
+            feedCode={data.feedCode}
             file={data.ffList}
           />
         ))

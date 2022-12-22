@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -25,9 +25,12 @@ import {
   Image,
   VideoCameraBack,
   PersonAdd,
+  AccountCircle,
 } from "@mui/icons-material";
+import Carousel from "react-material-ui-carousel";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
+import axios from "axios";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -42,7 +45,20 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const Post = ({ memberName, feedContent, feedDate, file }) => {
+const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
+  const toDay = new Date();
+  const toDayD = toDay.getTime();
+
+  let divide = 1000 * 60 * 60 * 24;
+  let date = (toDayD - feedDate) / divide;
+
+  let day = String(Math.floor(date)).padStart(2, 0);
+  let hour = String(Math.floor((date - day) * 24)).padStart(2, 0);
+  let minute = String(Math.floor(((date - day) * 24 - hour) * 60)).padStart(
+    2,
+    0
+  );
+
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
     {
@@ -53,7 +69,6 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
       image: "",
     },
   ]);
-  console.log(file);
 
   useEffect(() => {
     if (file.length > 0) {
@@ -66,74 +81,153 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
         FeedFileList.push(FeedFile);
       }
       setFlist(FeedFileList);
-      console.log(FeedFileList);
     }
   }, [file]);
 
-  console.log(flist);
-
-  const viewFlist = flist.map((v, i) => {
-    return (
-      <div key={i} style={{ display: "flex", justifyContent: "center" }}>
-        {v.image && (
-          <img src={v.image} alt="preview-img" width={100} height={100} />
-        )}
-        {v.bforiname}
-      </div>
-    );
+  const [insertCommentForm, setInsertCommentForm] = useState({
+    memberEmail: {
+      memberEmail: memberInfo.memberEmail,
+    },
+    feedCode: { feedCode },
+    feedCommentContent: "",
   });
+
+  const handleChange = useCallback(
+    (event) => {
+      const insertObj = {
+        ...insertCommentForm,
+        [event.target.name]: event.target.value,
+      };
+      setInsertCommentForm(insertObj);
+    },
+    [insertCommentForm]
+  );
+
+  const insertComment = () => {
+    if (insertCommentForm.feedCommentContent !== null) {
+      axios
+        .post("/insertComment", insertCommentForm)
+        .then((response) => {
+          if (response.data === "ok") {
+            alert("성공");
+          } else {
+            alert("실패");
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+  };
 
   return (
     <div>
-      <Card sx={{ margin: 5 }}>
+      <Card sx={{ margin: 5, border: 1 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe">
-              S
-            </Avatar>
+            <Avatar
+              sx={{ bgcolor: "orange" }}
+              aria-label="recipe"
+              src={"images/" + memberInfo.memberSaveimg}
+            ></Avatar>
           }
           action={<LongMenu />}
-          title={memberName}
-          subheader={feedDate}
+          title={<b>{memberInfo.memberNickname}</b>}
+          subheader={
+            day > 1
+              ? day + "일 전"
+              : hour > 1
+              ? hour + "시간 전"
+              : minute + "분전"
+          }
         />
         {/* 피드 이미지 */}
-        <div>{viewFlist}</div>
-        {/* <CardMedia
-          onClick={(e) => setOpen(true)}
-          component="img"
-          src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=164&h=164&fit=crop&auto=format"
-          height="2%"
-          alt="Paella dish"
-        /> */}
+        {flist.length > 1 ? (
+          <Carousel
+            next={() => {}}
+            prev={() => {}}
+            autoPlay={false}
+            animation="slide"
+            duration={800}
+            sx={{ height: "100%" }}
+          >
+            {flist.map((item, i) => (
+              <CardMedia
+                key={item.feedCode}
+                component="img"
+                src={item.image}
+                alt={item.feedFileImg}
+              />
+            ))}
+          </Carousel>
+        ) : (
+          <CardMedia
+            key={flist[0].feedCode}
+            sx={{ cursor: "pointer" }}
+            onClick={(e) => setOpen(true)}
+            component="img"
+            height="20%"
+            src={flist[0].image}
+            alt={flist[0].feedFileImg}
+          />
+        )}
         <CardContent>
-          <Typography variant="h6" color="text.primary">
+          <Typography
+            variant="h6"
+            color="text.primary"
+            onClick={(e) => setOpen(true)}
+            sx={{ cursor: "pointer" }}
+          >
             {feedContent}
           </Typography>
           <Typography variant="body2" color="skyblue" marginBottom={2}>
             #해쉬 태그 #해쉬 태그 #해쉬 태그 #해쉬 태그
           </Typography>
+          {/* <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <Checkbox
+                icon={<FavoriteBorder />}
+                checkedIcon={<Favorite sx={{ color: "red" }} />}
+              />
+            </IconButton>
+            <AvatarGroup max={6}>
+              <Avatar alt="Remy Sharp" />
+              <Avatar alt="Travis Howard" />
+              <Avatar alt="Cindy Baker" />
+              <Avatar alt="Agnes Walker" />
+              <Avatar alt="Trevor Henderson" />
+              <Avatar alt="Trevor Henderson" />
+              <Avatar alt="Trevor Henderson" />
+              <Avatar alt="Trevor Henderson" />
+            </AvatarGroup>
+          </CardActions> */}
           <Typography variant="body2" color="text.secondary">
             댓글작성자 : 댓글내용
           </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <Checkbox
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite sx={{ color: "red" }} />}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+            }}
+            mt={2}
+          >
+            <Avatar
+              alt={memberInfo.memberName}
+              src={"images/" + memberInfo.memberSaveimg}
+              sx={{ width: 30, height: 30, mr: 2 }}
             />
-          </IconButton>
-          <AvatarGroup max={6}>
-            <Avatar alt="Remy Sharp" />
-            <Avatar alt="Travis Howard" />
-            <Avatar alt="Cindy Baker" />
-            <Avatar alt="Agnes Walker" />
-            <Avatar alt="Trevor Henderson" />
-            <Avatar alt="Trevor Henderson" />
-            <Avatar alt="Trevor Henderson" />
-            <Avatar alt="Trevor Henderson" />
-          </AvatarGroup>
-        </CardActions>
+            <TextField
+              id="input-with-sx"
+              name="feedCommentContent"
+              fullWidth
+              variant="standard"
+              placeholder="댓글 달기..."
+              onChange={handleChange}
+            />
+            <Box>
+              <Button onClick={insertComment}>게시</Button>
+            </Box>
+          </Box>
+        </CardContent>
       </Card>
 
       {/* 피드 상세보기 모달 */}
@@ -145,14 +239,44 @@ const Post = ({ memberName, feedContent, feedDate, file }) => {
       >
         <Box width={1200} height={600} bgcolor="white" p={3} borderRadius={2}>
           <Stack direction="row" spacing={3} justifyContent="space-between">
-            <Box flex={2} p={2}>
-              <CardMedia component="img" height="570px" alt="피드사진" />
+            <Box flex={2}>
+              {flist.length > 1 ? (
+                <Carousel
+                  next={() => {}}
+                  prev={() => {}}
+                  autoPlay={false}
+                  animation="slide"
+                  duration={800}
+                  height="570px"
+                >
+                  {flist.map((item, i) => (
+                    <CardMedia
+                      key={item.feedCode}
+                      component="img"
+                      src={item.image}
+                      alt={item.feedFileImg}
+                    />
+                  ))}
+                </Carousel>
+              ) : (
+                <CardMedia
+                  key={flist[0].feedCode}
+                  component="img"
+                  height="570px"
+                  src={flist[0].image}
+                  alt={flist[0].feedFileImg}
+                />
+              )}
             </Box>
-            <Box flex={1} p={2}>
+            <Box flex={1} p={1}>
               <UserBox>
-                <Avatar alt="Remy Sharp" sx={{ width: 30, height: 30 }} />
+                <Avatar
+                  alt={memberInfo.memberName}
+                  src={"images/" + memberInfo.memberSaveimg}
+                  sx={{ width: 30, height: 30 }}
+                />
                 <Typography fontWeight={500} variant="span">
-                  {memberName}
+                  {memberInfo.memberName}
                 </Typography>
               </UserBox>
               <Typography fontWeight={500} variant="span">

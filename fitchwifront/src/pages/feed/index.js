@@ -19,13 +19,8 @@ function Feedindex() {
     axios
       .get("/getAllFeedList")
       .then((response) => {
-        if (response.data.length === 0) {
-          console.log("피드가 존재하지 않습니다.");
-        }
         setFeeds(response.data);
         setLoading(false);
-        console.log(response.data);
-        console.log(response.data[0].ffList[0]);
       })
       .catch((error) => console.log(error));
   };

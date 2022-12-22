@@ -35,7 +35,6 @@ const UserBox = styled(Box)({
 const imgEl = document.querySelector(".img_box");
 
 const FeedAdd = ({ memberEmail, refreshFeed }) => {
-  console.log(memberEmail);
   let formdata = new FormData();
   const nav = useNavigate();
 
@@ -81,7 +80,6 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
   const onLoadFile = useCallback((event) => {
     const files = event.target.files;
     setFileForm(files);
-    console.log(files);
   }, []);
 
   const sendFeed = (event) => {
@@ -119,7 +117,6 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
         [event.target.name]: event.target.value,
       };
       setInsertForm(insertObj);
-      console.log(insertForm);
     },
     [insertForm]
   );
