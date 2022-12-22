@@ -18,6 +18,7 @@ const Feed = ({ data }) => {
             feedContent={data.feedContent}
             feedCode={data.feedCode}
             file={data.ffList}
+            memberEmail={data.memberEmail.memberEmail} //post로 email 넘기려고 추가함
           />
         ))
       )}

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 
 
 const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth()+1) + "-" + new Date().getDate()
@@ -38,7 +38,7 @@ const TogetherAdd = ({data}) => {
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
       },
-      facilities: "",
+      facilitiesCode: "",
       togetherOpenedDate: nowdate, // 함께해요 개설일 당일
       togetherTitle: "",
       togetherCategory: "",
@@ -49,14 +49,13 @@ const TogetherAdd = ({data}) => {
       togetherRecruitStartDate: "", // 모집 시작일
       togetherRecruitEndDate: "", // 모집 마감일
       togetherType: "", //가입 유형
-      togetherInquery : "", // 함께해요 가입 질문
+      togetherInquiry : "", // 함께해요 가입 질문
       togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
       togetherTagContent : "", //태그 내용
   });
-
+  const formDate = new FormData(); 
   const [fileForm, setFileForm] = useState("")
   const imgEl = document.querySelector(".img_box");
-
   useEffect(() => {
     preview();
 
@@ -79,16 +78,20 @@ const TogetherAdd = ({data}) => {
   }, []);
 
   const sendTogether = (e) => {
-  //   formdata.append(
-  //     "data",
-  //     new Blob([JSON.stringify(insertForm)], { type: "application/json" })
-  //   );
-  //   formdata.append("uploadImage", fileForm[0]);
+    formDate.append(
+      "data",
+      new Blob([JSON.stringify(insertForm)], { type: "application/json" })
+    );
+    formDate.append("uploadImage", fileForm[0]);
 
-    // const config = {
-    //   headers: { "Content-Type": "multipart/form-data" },
-    // };
-    console.log("개설")
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+    };
+
+    axios.post("/addTogether",formDate, config)
+    .then((res)=> console.log(res))
+    .catch((error) => console.log(error))
+    alert("개설완료")
   };
 
   const [open, setOpen] = useState(false);
@@ -100,7 +103,6 @@ const TogetherAdd = ({data}) => {
         [event.target.name]: event.target.value,
       };
       setInsertForm(insertObj);
-      console.log(insertObj)
     },
     [insertForm]
   );
@@ -184,8 +186,8 @@ const TogetherAdd = ({data}) => {
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
-              value={insertForm.facilities}
-              name="facilities"
+              value={insertForm.facilitiesCode}
+              name="facilitiesCode"
               onChange={handleChange}
               label="시설이용료"
             >
@@ -223,7 +225,7 @@ const TogetherAdd = ({data}) => {
           <div style={imgBoxStyle} className="img_box">
             <img src="" alt="" />
           </div>
-        <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} name="togetherInquery" onChange={handleChange} id="fullWidth" />
+        <TextField fullWidth label="유저 신청시 질문내용 작성(승인제)" sx={{mt:3}} name="togetherInquiry" onChange={handleChange} id="fullWidth" />
         <TextField fullWidth label="모임 소개 말" sx={{mt:3}} id="fullWidth" name="togetherContent" onChange={handleChange} />
         <TextField fullWidth label="태그" sx={{mt:3}} id="fullWidth" name="togetherTagContent" onChange={handleChange} />
         <Button onClick={sendTogether} variant={"contained"} sx={{mt:2,mr:4}}>개설하기</Button>

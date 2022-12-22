@@ -1,15 +1,25 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MemberPage from "./components/MemberPage";
 export default function MemberPageIndex({ onLogout }) {
+  const location = useLocation();
+  console.log(location);
   const nav = useNavigate();
   const [member, setMember] = useState({});
-  const memberEmail = sessionStorage.getItem("id");
+
+  let pageOwner = "";
+
+  if (location.state != null) {
+    pageOwner = location.state.memberId;
+  } else {
+    pageOwner = sessionStorage.getItem("id");
+  }
+
   const getMemberInfo = useCallback(
     (e) => {
-      if (memberEmail != null) {
-        axios.get("/getMemberInfo", { params: { userId: memberEmail } }).then((res) => {
+      if (pageOwner != null) {
+        axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
           setMember(() => res.data);
         });
       } else {
@@ -17,11 +27,11 @@ export default function MemberPageIndex({ onLogout }) {
         nav("/");
       }
     },
-    [memberEmail, nav]
+    [pageOwner, nav]
   );
   console.log(member);
   useEffect(() => {
     getMemberInfo();
   }, [getMemberInfo]);
-  return <MemberPage member={member} onLogout={onLogout} />;
+  return <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} />;
 }

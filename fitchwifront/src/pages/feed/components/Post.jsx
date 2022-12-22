@@ -30,7 +30,11 @@ import {
 import Carousel from "react-material-ui-carousel";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
+
 import axios from "axios";
+
+import { Link } from "react-router-dom";
+
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -45,6 +49,7 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
+
 const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -58,6 +63,7 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
     2,
     0
   );
+
 
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
@@ -84,12 +90,14 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
     }
   }, [file]);
 
+
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
       memberEmail: memberInfo.memberEmail,
     },
     feedCode: { feedCode },
     feedCommentContent: "",
+
   });
 
   const handleChange = useCallback(
@@ -123,11 +131,17 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
       <Card sx={{ margin: 5, border: 1 }}>
         <CardHeader
           avatar={
+
+    <Link to="/memberpage" state={{ memberId: memberInfo.memberEmail }}>
             <Avatar
               sx={{ bgcolor: "orange" }}
               aria-label="recipe"
               src={"images/" + memberInfo.memberSaveimg}
             ></Avatar>
+     </Link>
+
+
+
           }
           action={<LongMenu />}
           title={<b>{memberInfo.memberNickname}</b>}
@@ -202,6 +216,7 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
           <Typography variant="body2" color="text.secondary">
             댓글작성자 : 댓글내용
           </Typography>
+
           <Box
             sx={{
               display: "flex",
@@ -228,6 +243,7 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
             </Box>
           </Box>
         </CardContent>
+
       </Card>
 
       {/* 피드 상세보기 모달 */}
@@ -297,11 +313,7 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
                 variant="standard"
               />
 
-              <ButtonGroup
-                fullWidth
-                variant="contained"
-                aria-label="outlined primary button group"
-              >
+              <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
                 <Button>댓글 등록</Button>
               </ButtonGroup>
             </Box>
