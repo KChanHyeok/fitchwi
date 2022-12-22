@@ -22,6 +22,9 @@ public class Member {
   @Column(nullable = false, length = 100)
   private String memberPwd ;
 
+  @Column(length = 200)
+  private String memberIntroduction;
+
   @Column(length = 20)
   private String memberNickname ;
 
