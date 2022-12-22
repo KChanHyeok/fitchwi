@@ -19,6 +19,7 @@ function TalkOpened({ memberEmail }) {
         talkMax: 0,
         talkCategory: "",
         talkType: "",
+        talkInquery: "",
         talkContent: "",
         talkTagContent: "",
         talkOpenDate: `${new Date().getTime()}`,
@@ -76,7 +77,7 @@ function TalkOpened({ memberEmail }) {
         axios.post("/addTalk", formData, config).then((res) => {
             if (res.data === "ok") {
                 alert("개설 성공")
-                nav("/");
+                nav("/TalkInfo");
             } else {
                 alert("개설 실패")
             }
@@ -159,7 +160,7 @@ function TalkOpened({ memberEmail }) {
                                     <option value="승인제">승인제</option>
                                     <option value="선착순">선착순</option>
                                 </select>
-                                <input type="text" name="talkInquery" className="talkInqSt"
+                                <input onChange={onChange} type="text" name="talkInquery" className="talkInqSt"
                                     placeholder="가입 시 받을 질문을 작성하세요" disabled={disabled}></input>
                             </div>
                         </div>

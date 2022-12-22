@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "talk_join")
+@Table(name = "talkJoin")
 public class TalkJoin {
     @Id
     private long talkJoinCode = System.currentTimeMillis();

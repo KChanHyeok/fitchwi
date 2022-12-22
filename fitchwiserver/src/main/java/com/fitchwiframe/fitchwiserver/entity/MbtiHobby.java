@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@Table(name = "mbti_hobby")
+@Table(name = "mbtiHobby")
 public class MbtiHobby {
     @Id
     private long mbtiHobbyCode;

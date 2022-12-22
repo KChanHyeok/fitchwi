@@ -8,6 +8,7 @@ import Talk from "./pages/talk";
 import Header from "./layout/Header";
 import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
+import TalkInfo from "./pages/talk/components/TalkInfo";
 
 function App() {
   const nav = useNavigate();
@@ -61,6 +62,7 @@ function App() {
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/talk" element={<Talk />}></Route>
+        <Route path="/talkInfo" element={<TalkInfo />}></Route>
         <Route path="/together" element={<Together />}></Route>
         <Route path="/memberpage" element={<MemberPage onLogout={onLogout} />}></Route>
       </Routes>

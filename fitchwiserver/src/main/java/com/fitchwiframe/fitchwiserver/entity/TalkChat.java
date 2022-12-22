@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "talk_chat")
+@Table(name = "talkChat")
 public class TalkChat {
     @Id
     private long talkChatCode = System.currentTimeMillis();
