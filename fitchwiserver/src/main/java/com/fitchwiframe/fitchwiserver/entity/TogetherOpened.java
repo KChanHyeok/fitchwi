@@ -1,8 +1,12 @@
 package com.fitchwiframe.fitchwiserver.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@Table(name = "togetherOpened")
 public class TogetherOpened {
   @Id
   private long togetherOpenCode = System.currentTimeMillis();
