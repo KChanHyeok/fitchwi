@@ -64,6 +64,7 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
         .get("/getMemberInfo", { params: { userId: memberEmail } })
         .then((response) => {
           setProfil(response.data);
+          console.log(response.data);
         })
         .catch((error) => console.log(error));
     }
