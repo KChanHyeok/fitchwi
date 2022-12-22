@@ -34,4 +34,7 @@ public class FeedController {
         return feedService.getAllFeedList();
     }
 
+    // 피드 댓글 등록
+    //@PostMapping("/insertComment")
+
 }

@@ -11,9 +11,11 @@ public class FeedComment {
     @Id
     private long feedCommentCode;
 
-    @ManyToOne
-    @JoinColumn(name = "feedCode")
-    private Feed feedCode;
+//    @ManyToOne
+//    @JoinColumn(name = "feedCode")
+//    private Feed feedCode;
+    @Column(nullable = false, length = 50)
+    private Long feedCode;
 
     @ManyToOne
     @JoinColumn(name = "memberEmail")
@@ -23,5 +25,5 @@ public class FeedComment {
     private String feedCommentContent;
 
     @Column(nullable = false, length = 50)
-    private String feedCommentDate;
+    private Long feedCommentDate = System.currentTimeMillis();
 }
