@@ -7,6 +7,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Home,
   Palette,
@@ -19,13 +20,13 @@ import {
   MoreHoriz,
 } from "@mui/icons-material";
 
-const Sidebar = () => {
+const Sidebar = ({pageurl}) => {
   return (
     <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
       <Box position="fixed">
         <List>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}`}>
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
@@ -33,7 +34,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/culture`}>
               <ListItemIcon>
                 <Palette />
               </ListItemIcon>
@@ -41,7 +42,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/exercise`}>
               <ListItemIcon>
                 <RunCircle />
               </ListItemIcon>
@@ -49,7 +50,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/food`}>
               <ListItemIcon>
                 <Fastfood />
               </ListItemIcon>
@@ -57,7 +58,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/travel`}>
               <ListItemIcon>
                 <Flight />
               </ListItemIcon>
@@ -65,7 +66,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/growth`}>
               <ListItemIcon>
                 <LocalLibrary />
               </ListItemIcon>
@@ -73,7 +74,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/art`}>
               <ListItemIcon>
                 <AutoAwesome />
               </ListItemIcon>
@@ -81,7 +82,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/game`}>
               <ListItemIcon>
                 <Extension />
               </ListItemIcon>
@@ -89,7 +90,7 @@ const Sidebar = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
-            <ListItemButton component="a" href="#home">
+            <ListItemButton component={Link} to={`/${pageurl}/other`}>
               <ListItemIcon>
                 <MoreHoriz />
               </ListItemIcon>

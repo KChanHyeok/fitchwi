@@ -1,44 +1,46 @@
 import React from "react";
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Link, Typography } from "@mui/material";
 
 const Together = ({togetherList}) => {
-
-    const {
-        // togetherCode,
-        // togetherCategory,
+        const {
+        togetherCode,
+        togetherCategory,
         togetherContent,
-        // togetherDate,
-        // togetherInquiry,
-        // togetherMax,
-        // togetherposition,
+        togetherDate,
+        togetherInquiry,
+        togetherMax,
+        togetherposition,
         togetherPrice,
-        // togetherRecruitEndDate,
-        // togetherRecruitStartDate,
+        togetherRecruitEndDate,
+        togetherRecruitStartDate,
         togetherSaveimg,
-        // togetherState,
+        togetherState,
         togetherTitle,
-        // togetherType,
-    } = togetherList
+        togetherType,
+        } = togetherList;
     return (
-        <Card sx={{ maxWidth: 500 }}>
-            <CardActionArea>
-                <CardMedia
+        <Link href={`/together/${togetherCode}`} underline="none">
+            <Card sx={{ mb:3}}>
+                <CardActionArea>
+                    <CardMedia
+                        sx={{}}
                         component="img"
-                        height="140"
-                        src={"images/"+ togetherSaveimg}
+                        height="200"
+                        src={`images/${togetherSaveimg}`}
                         alt="green iguana"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {togetherTitle}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {togetherContent}<br/>
-                        {togetherPrice} 원
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {togetherTitle}
+                        </Typography>
+                        <Typography variant="body" color="text.secondary">
+                            {togetherContent}<br/>
+                            {togetherPrice}원
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        </Link>
     )
 }
 
