@@ -8,12 +8,11 @@ import javax.persistence.*;
 @Data
 @Table(name = "feedComment")
 public class FeedComment {
+    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long feedCommentCode;
 
-//    @ManyToOne
-//    @JoinColumn(name = "feedCode")
-//    private Feed feedCode;
     @Column(nullable = false, length = 50)
     private Long feedCode;
 

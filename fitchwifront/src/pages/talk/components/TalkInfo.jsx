@@ -7,16 +7,17 @@ import TalkOpMenu from "./TalkOpMenu";
 const TalkInfo = () => {
     const [talkInfo, setTalkInfo] = useState({});
 
-    useEffect(() => {
-        const talk = 1671693635677;
 
-        axios
-            .get("/getTalk", { params: { talkCode: talk } })
-            .then((res) => {
-                setTalkInfo(res.data);
-            })
-            .catch((err) => console.log(err))
-    })
+    // useEffect(() => {
+    //     const talk = 1;
+
+    //     axios
+    //         .get("/getTalk", { params: { talkCode: talk } })
+    //         .then((res) => {
+    //             setTalkInfo(res.data);
+    //         })
+    //         .catch((err) => console.log(err))
+    // })
 
 
     return (

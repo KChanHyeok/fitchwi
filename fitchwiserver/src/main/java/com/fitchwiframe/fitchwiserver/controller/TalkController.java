@@ -1,6 +1,5 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
-import com.fitchwiframe.fitchwiserver.entity.Member;
 import com.fitchwiframe.fitchwiserver.entity.Talk;
 import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
 import com.fitchwiframe.fitchwiserver.entity.TalkTag;
@@ -29,11 +28,14 @@ public class TalkController {
                           HttpSession session) {
         log.info("talkController.addTalk()");
         talkService.addTalkOpened(talkOpened, newTalk);
-//        talkService.addTalkTag(talkTag, newTalk);
-        log.info("talk : " + talkTag.getTalkTagCode());
-        log.info("talk 태그 외래키 코드 : " + talkTag.getTalkCode());
-        log.info("talk 태그 : " + talkTag.getTalkTagContent());
-        return talkService.addTalk(newTalk, pic, session);
+        return talkService.addTalk(newTalk, talkTag, pic, session);
+    }
+
+    //얘기해요 전체 조회
+    @GetMapping("/getAllTalkList")
+    public Iterable<Talk> getAllTalkList() {
+        log.info("talkController.getAllTalkList()");
+        return talkService.getAllTalkList();
     }
 
     //해당 얘기해요 상세보기

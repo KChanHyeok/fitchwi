@@ -133,6 +133,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
           alignItems: "center",
         }}
       >
+
         <Grid container sx={{ alignItems: "center" }}>
           <Card sx={{ maxWidth: 800, minWidth: 600 }}>
             {memberSaveimg && (
@@ -226,6 +227,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
             } */}
           </Box>
         </Grid>
+
         {loginId === pageOwner ? (
           <Box component="form" sx={{ mt: 1 }}>
             {/* {member} */}
@@ -235,11 +237,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
               </Button>
             </Link>
 
-            <Button
-              sx={{ mt: 5, width: 100 }}
-              variant="contained"
-              onClick={() => setConfirmOpen(() => true)}
-            >
+            <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={() => setConfirmOpen(() => true)}>
               탈퇴
             </Button>
             <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>
