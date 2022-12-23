@@ -36,4 +36,7 @@ public class Feed {
     @Transient
     private List<FeedComment> fcList;
 
+    @Transient
+    private List<FeedLike> flList;
+
 }
