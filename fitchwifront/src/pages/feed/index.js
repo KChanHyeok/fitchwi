@@ -10,10 +10,22 @@ function Feedindex() {
   const id = sessionStorage.getItem("id");
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [profil, setProfil] = useState({});
 
   useEffect(() => {
     getAllFeedList();
   }, []);
+
+  useEffect(() => {
+    if (id !== null) {
+      axios
+        .get("/getMemberInfo", { params: { userId: id } })
+        .then((response) => {
+          setProfil(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [id]);
 
   const getAllFeedList = () => {
     axios
@@ -37,9 +49,17 @@ function Feedindex() {
       ) : (
         <Stack direction="row" spacing={7} justifyContent="space-between">
           <Sidebar />
-          {feeds === [] ? <Feed /> : <Feed data={feeds} />}
+          {feeds === [] ? (
+            <Feed />
+          ) : (
+            <Feed
+              data={feeds}
+              memberInfo={profil}
+              refreshFeed={getAllFeedList}
+            />
+          )}
           <Rightbar />
-          <FeedAdd memberEmail={id} refreshFeed={getAllFeedList} />
+          <FeedAdd memberInfo={profil} refreshFeed={getAllFeedList} />
         </Stack>
       )}
     </Box>

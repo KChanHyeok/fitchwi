@@ -2,7 +2,8 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import Post from "./Post";
 
-const Feed = ({ data }) => {
+const Feed = ({ data, memberInfo, refreshFeed }) => {
+  console.log(data);
   return (
     <Box flex={4} p={2}>
       {data.length === 0 ? (
@@ -13,12 +14,15 @@ const Feed = ({ data }) => {
         data.map((data) => (
           <Post
             key={data.feedCode}
-            memberInfo={data.memberEmail}
+            memberWriterInfo={data.memberEmail}
             feedDate={data.feedDate}
             feedContent={data.feedContent}
             feedCode={data.feedCode}
             file={data.ffList}
             memberEmail={data.memberEmail.memberEmail} //post로 email 넘기려고 추가함
+            comment={data.fcList}
+            memberInfo={memberInfo}
+            refreshFeed={refreshFeed}
           />
         ))
       )}
