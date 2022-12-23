@@ -60,8 +60,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     if (!fileForm) return false;
     const render = new FileReader();
 
-    render.onload = () =>
-      (imgEl.style.backgroundImage = `url(${render.result})`);
+    render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
     render.readAsDataURL(fileForm[0]);
   };
 
@@ -71,10 +70,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   }, []);
 
   const sendFeed = () => {
-    formdata.append(
-      "data",
-      new Blob([JSON.stringify(insertForm)], { type: "application/json" })
-    );
+    formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
 
     for (let i = 0; i < fileForm.length; i++) {
       formdata.append("uploadImage", fileForm[i]);
@@ -114,7 +110,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   };
 
   const insertfeed = () => {
-    if (memberInfo.memberEmail === null) {
+    if (memberInfo.memberEmail === undefined) {
       alert("로그인이 필요한 서비스입니다.");
       nav("/login");
     } else {
@@ -181,9 +177,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
           <br />
 
           <FormControl sx={{ mt: 2, minWidth: 300, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">
-              주제
-            </InputLabel>
+            <InputLabel id="demo-simple-select-autowidth-label">주제</InputLabel>
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
@@ -203,8 +197,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
 
           <br />
           <div>
-            프로필 이미지 :{" "}
-            <input type="file" name="feedImg" onChange={onLoadFile} multiple />
+            프로필 이미지 : <input type="file" name="feedImg" onChange={onLoadFile} multiple />
             <div className="img_box" style={{ height: 100 }}>
               <img src="" alt="" />
             </div>
@@ -220,11 +213,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
             fullWidth
             variant="standard"
           />
-          <ButtonGroup
-            fullWidth
-            variant="contained"
-            aria-label="outlined primary button group"
-          >
+          <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
             <Button onClick={handleClose} sx={{ width: "100px" }}>
               취소하기
             </Button>

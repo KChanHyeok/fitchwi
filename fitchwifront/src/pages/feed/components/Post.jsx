@@ -48,6 +48,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   let day = String(Math.floor(date));
   let hour = String(Math.floor((date - day) * 24));
   let minute = String(Math.floor(((date - day) * 24 - hour) * 60));
+  let second = String(Math.floor((((date - day) * 24 - hour) * 60 - minute) * 60));
 
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
@@ -159,7 +160,9 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
           }
           action={<LongMenu />}
           title={<b>{memberWriterInfo.memberNickname}</b>}
-          subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute + "분전"}
+          subheader={
+            day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"
+          }
         />
         {/* 피드 이미지 */}
         {flist.length > 1 ? (
