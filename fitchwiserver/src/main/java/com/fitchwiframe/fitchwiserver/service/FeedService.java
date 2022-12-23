@@ -2,6 +2,7 @@ package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
 import com.fitchwiframe.fitchwiserver.entity.FeedFile;
+import com.fitchwiframe.fitchwiserver.entity.Member;
 import com.fitchwiframe.fitchwiserver.repository.FeedFileRepository;
 import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import lombok.extern.java.Log;
@@ -11,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Log
@@ -26,7 +29,9 @@ public class FeedService {
         this.feedFileRepository = feedFileRepository;
     }
 
-    // 피드 등록
+
+
+  // 피드 등록
     public String insertFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
         log.info("feedService.insertFeed()");
         log.info("newFeed : " + newFeed);
@@ -108,5 +113,28 @@ public class FeedService {
         }
         return feedList;
     }
+
+    public List<Feed>getMemberFeed(Member member) {
+        log.info("feedService.getMemberFeed");
+        //피드 가져오기
+        List<Feed> feedList = feedRepository.findAllByMemberEmail(member);
+        List<Feed> memberFeedList = new ArrayList<>();
+
+        //각 피드에 해당하는 피드파일 가져오기
+        for(Feed feed : feedList){
+            List<FeedFile> feedFileList = feedFileRepository.findByFeedCode(feed.getFeedCode());
+            feed.setFfList(feedFileList);
+            memberFeedList.add(feed);
+        }
+
+        return memberFeedList;
+        //맵에 담기
+        //리스트에 담기
+
+
+    }
+
+
+//멤버가 작성한 피드 조회
 
 }

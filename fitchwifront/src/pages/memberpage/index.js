@@ -7,7 +7,7 @@ export default function MemberPageIndex({ onLogout }) {
   console.log(location);
   const nav = useNavigate();
   const [member, setMember] = useState({});
-
+  // const [feedList, setFeedList] = useState({});
   let pageOwner = "";
 
   if (location.state != null) {
@@ -16,22 +16,31 @@ export default function MemberPageIndex({ onLogout }) {
     pageOwner = sessionStorage.getItem("id");
   }
 
-  const getMemberInfo = useCallback(
-    (e) => {
-      if (pageOwner != null) {
-        axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
-          setMember(() => res.data);
-        });
-      } else {
-        alert("로그인 후 이용 가능합니다.");
-        nav("/");
-      }
-    },
-    [pageOwner, nav]
-  );
-  console.log(member);
+  const getMemberInfo = useCallback(() => {
+    if (pageOwner != null) {
+      axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
+        setMember(() => res.data);
+      });
+    } else {
+      alert("로그인 후 이용 가능합니다.");
+      nav("/");
+    }
+  }, [pageOwner, nav]);
+
+  // const getAllFeedList = useCallback(() => {
+  //   axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
+  // }, [member]);
+  // console.log(member);
+
+  // useEffect(() => {
+  //   getAllFeedList();
+  // }, [getAllFeedList]);
+
   useEffect(() => {
     getMemberInfo();
   }, [getMemberInfo]);
-  return <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} />;
+
+  return (
+    <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} /*feedList={feedList}*/ />
+  );
 }

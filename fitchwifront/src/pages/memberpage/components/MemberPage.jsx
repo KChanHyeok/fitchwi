@@ -1,25 +1,98 @@
-import { Avatar, Box, Button, Container, Typography } from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Chip,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+  // ImageList,
+  // ImageListItem,
+} from "@mui/material";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ConfirmDialog from "./ConfirmDialog";
 
-export default function Mypage({ member, onLogout, pageOwner }) {
+export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
+  //페이지 기본 데이터
+
   const nav = useNavigate();
+
   const {
     memberEmail,
     memberName,
-    memberBirth,
-    memberAddr,
-    memberGender,
-    memberImg,
     memberInterest,
+    memberSaveimg,
     memberMbti,
     memberNickname,
-    memberPhone,
-    memberSaveimg,
+    // memberAddr,
+    // memberGender,
+    // memberImg,
+    // memberBirth,
+    // memberPhone,
   } = member;
+  // console.log(feedList);
   const loginId = sessionStorage.getItem("id");
+
+  let interestArr = [];
+  if (memberInterest != null) {
+    interestArr = memberInterest.split(" ");
+  }
+
+  //팔로우 관련
+  const [followList, setFollowList] = useState({});
+  const [followerList, setFollowerList] = useState({});
+  const getFollowCount = useCallback(() => {
+    axios.get("/getFollowList", { params: { pageOwner: pageOwner } }).then((res) => {
+      setFollowList(() => res.data.follow);
+      setFollowerList(() => res.data.follower);
+    });
+  }, [pageOwner]);
+
+  useEffect(() => {
+    for (let i = 0; i < followerList.length; i++) {
+      if (followerList[0].memberEmail === loginId) {
+        setIsFollow(true);
+        console.log(followerList[0].memberEmail);
+      }
+    }
+    console.log(followerList);
+  }, [followerList, loginId]);
+  const [isFollow, setIsFollow] = useState(false);
+
+  const onFollow = useCallback(
+    (isFollow) => {
+      if (isFollow === false) {
+        console.log(pageOwner.memberEmail);
+        axios.get("/follow", { params: { loginId: loginId, pageOwner: pageOwner } }).then((res) => {
+          console.log(res.data);
+          alert(`${pageOwner}님을 팔로우했습니다.`);
+          setIsFollow(!isFollow);
+        });
+      } else {
+        axios
+          .delete("/unfollow", {
+            params: { loginId: loginId, pageOwner: pageOwner, isFollow: isFollow },
+          })
+          .then((res) => {
+            console.log(res.data);
+            alert(`${pageOwner}님 팔로우를 취소했습니다.`);
+            setIsFollow(!isFollow);
+          });
+      }
+    },
+    [loginId, pageOwner]
+  );
+
+  //회원 탈퇴
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const deleteMemberInfo = useCallback(
     (member) => {
       axios.delete("/deleteMember", { data: member }).then((res) => {
@@ -35,11 +108,23 @@ export default function Mypage({ member, onLogout, pageOwner }) {
     },
     [nav, onLogout]
   );
-  console.log(memberEmail);
-  console.log(pageOwner);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    getFollowCount();
+  }, [getFollowCount]);
+
+  // const [memberFeedList, setMemberFeedList] = useState([]);
+
+  // useEffect(() => {
+  //   setMemberFeedList(feedList);
+  // }, [feedList]);
+
+  // useEffect(() => {
+  //   console.log(memberFeedList[0]);
+  // }, [memberFeedList]);
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container style={{ width: 600 }} maxWidth="xl">
       <Box
         sx={{
           marginTop: 8,
@@ -48,42 +133,99 @@ export default function Mypage({ member, onLogout, pageOwner }) {
           alignItems: "center",
         }}
       >
-        <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 150, height: 150 }} />
-
-        <Typography component="h1" variant="h5">
-          {memberEmail}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberName}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberBirth}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberAddr}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberGender}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberImg}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberInterest}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberMbti}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberNickname}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberPhone}
-        </Typography>
-        <Typography component="h1" variant="h5">
-          {memberSaveimg}
-        </Typography>
-
+        <Grid container sx={{ alignItems: "center" }}>
+          <Card sx={{ maxWidth: 800, minWidth: 600 }}>
+            {memberSaveimg && (
+              <CardHeader
+                style={{ background: "linear-gradient(190deg,lightgray, white)" }}
+                avatar={
+                  <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                }
+                title={
+                  <Typography sx={{ fontSize: 25 }}>
+                    {" "}
+                    {loginId === pageOwner
+                      ? memberNickname == null
+                        ? `${memberName}`
+                        : `${memberNickname}(${memberName})`
+                      : memberNickname == null
+                      ? `${memberName}`
+                      : `${memberNickname}`}
+                  </Typography>
+                }
+                subheader={loginId === pageOwner ? memberEmail : null}
+              />
+            )}
+            <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
+            <CardContent sx={{ textAlign: "right" }}>
+              <Grid container justifyContent={"space-between"}>
+                <Grid item xs={8}>
+                  <div style={{ textAlign: "left" }}>
+                    {interestArr &&
+                      interestArr.map((interest, index) => (
+                        <Chip
+                          onClick={() => console.log("검색으로 이동")}
+                          variant="outlined"
+                          key={index}
+                          label={interest}
+                          style={{
+                            fontSize: 10,
+                            marginLeft: 5,
+                            marginBottom: 5,
+                            boxShadow: "0 3px 5px  lightgray",
+                          }}
+                        />
+                      ))}
+                  </div>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    variant="text"
+                    style={{ color: "black", fontSize: 15 }}
+                    onClick={() => console.log("팔로워 목록 열기")}
+                  >
+                    팔로워 {followerList.length}
+                  </Button>
+                  <Button
+                    variant="text"
+                    style={{ color: "black", fontSize: 15 }}
+                    onClick={() => console.log("팔로우 목록 열기")}
+                  >
+                    팔로우 {followList.length}
+                  </Button>
+                  {loginId === pageOwner ? null : (
+                    <Checkbox
+                      checked={isFollow}
+                      icon={<FavoriteBorder />}
+                      checkedIcon={<Favorite />}
+                      onClick={() => onFollow(isFollow)}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+          <Box sx={{ width: 500, height: 450 /*, overflowY: "scroll" */ }}>
+            {/* {
+              <ImageList variant="masonry" cols={3} gap={8}>
+                {memberFeedList != null ? (
+                  memberFeedList.map((feed, index) => (
+                    <ImageListItem key={feed.ffList[index].feedFileCode}>
+                      <img
+                        src={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                        // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        alt={memberFeedList.feedFileImg}
+                        loading="lazy"
+                      />
+                    </ImageListItem>
+                  ))
+                ) : (
+                  <Typography>작성한 피드가 없어요</Typography>
+                )}
+              </ImageList>
+            } */}
+          </Box>
+        </Grid>
         {loginId === pageOwner ? (
           <Box component="form" sx={{ mt: 1 }}>
             {/* {member} */}
