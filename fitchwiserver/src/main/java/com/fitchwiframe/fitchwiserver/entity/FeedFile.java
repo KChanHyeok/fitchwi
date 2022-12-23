@@ -12,10 +12,6 @@ public class FeedFile {
     @Id
     private long feedFileCode = System.currentTimeMillis();
 
-//    @ManyToOne
-//    @JoinColumn(name = "feedCode")
-//    private Feed feedCode;
-
     @Column(nullable = false, length = 50)
     private Long feedCode;
 

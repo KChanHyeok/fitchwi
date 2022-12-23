@@ -1,6 +1,7 @@
 import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
+import TalkList from "./TalkList";
 
 const TalkMain = () => {
     return (
@@ -9,6 +10,7 @@ const TalkMain = () => {
             <Link style={{ textDecoration: "none" }} to={"/talkInfo"}>
                 내가 개설한 얘기해요
             </Link>
+            <TalkList />
         </Box>
     )
 }

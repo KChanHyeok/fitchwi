@@ -5,6 +5,7 @@ import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
 import com.fitchwiframe.fitchwiserver.entity.TalkTag;
 import com.fitchwiframe.fitchwiserver.repository.TalkOpenedRepository;
 import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
+import com.fitchwiframe.fitchwiserver.repository.TalkTagRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,10 @@ public class TalkService {
     @Autowired
     private TalkOpenedRepository talkOpenedRepository;
 
-    public String addTalk(Talk newTalk, MultipartFile pic, HttpSession session) {
+    @Autowired
+    private TalkTagRepository talkTagRepository;
+
+    public String addTalk(Talk newTalk, TalkTag talkTag , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
         String result = null;
 
@@ -34,8 +38,9 @@ public class TalkService {
                 newTalk.setTalkImg("이미지 원래 이름");
                 newTalk.setTalkSaveimg("저장된 기본이미지 이름");
             }
-
+            talkTag.setTalkCode(newTalk); //talkCode 외래키 연결
             talkRepository.save(newTalk);
+            talkTagRepository.save(talkTag); //얘기해요 태그값 DB 저장
             result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,18 +79,10 @@ public class TalkService {
         talkOpenedRepository.save(talkOpened);
         newTalk.setTalkOpenCode(talkOpened);
     }
-    //    얘기해요 태그 값 저장
-//    public void addTalkTag(TalkTag talkTag, Talk newTalk) {
-//        log.info("talkService.addTalkTag()");
-//        talkRepository.save(newTalk);
-//        talkTag.setTalkCode(newTalk);
-//        log.info("setTalkCode : " + talkTag);
-//    }
 
-//    public Talk getTalk(long talkCode) {
-//        log.info("talkService.getTalk()");
-//
-//        Talk talk = talkRepository.findById(talkCode).get();
-//        return talk;
-//    }
+    public Iterable<Talk> getAllTalkList() {
+        log.info("talkService.getAllTalkList()");
+        Iterable<Talk> talkList = talkRepository.findAll();
+        return talkList;
+    }
 }

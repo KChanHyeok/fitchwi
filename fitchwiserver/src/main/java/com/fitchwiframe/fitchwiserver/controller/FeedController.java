@@ -1,6 +1,7 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
+import com.fitchwiframe.fitchwiserver.entity.FeedComment;
 import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,10 @@ public class FeedController {
         return feedService.getAllFeedList();
     }
 
-    // 피드 댓글 등록
-    //@PostMapping("/insertComment")
-
+     // 피드 댓글 등록
+    @PostMapping("/insertComment")
+    public String insertComment(@RequestBody FeedComment feedComment){
+        System.out.println("feedComment = " + feedComment);
+        return feedService.insertComment(feedComment);
+    }
 }
