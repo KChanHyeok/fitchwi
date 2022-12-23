@@ -1,16 +1,21 @@
 package com.fitchwiframe.fitchwiserver.service;
 
+import com.fitchwiframe.fitchwiserver.entity.Follow;
 import com.fitchwiframe.fitchwiserver.entity.Member;
 
+import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -18,6 +23,9 @@ import java.io.File;
 public class MemberService {
   @Autowired
   private MemberRepository memberRepository;
+  @Autowired
+  private FollowRepository followRepository;
+
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
@@ -136,7 +144,7 @@ public class MemberService {
       //얘기해요 함께해요 관련 처리 추가 필요함
       deleteFile(member.getMemberSaveimg(), session);
       memberRepository.deleteById(member.getMemberEmail());
-      result="ok";
+      result = "ok";
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -166,5 +174,73 @@ public class MemberService {
     } else {
       log.info("파일이 존재하지 않습니다.");
     }
+  }
+
+  public String followMember(Member member, String pageOwner) {
+    log.info("memberService.followMember");
+    Follow follow = new Follow();
+
+    follow.setMemberEmail(memberRepository.findById(member.getMemberEmail()).get());
+    follow.setFollowId(pageOwner);
+    String result = "fail";
+    try {
+      followRepository.save(follow);
+      result = "ok";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+
+  }
+
+  public String unFollowMember(Member member, String pageOwner) {
+    String result = "fail";
+    try {
+      Follow follow = followRepository.findByMemberEmailAndFollowId(member, pageOwner);
+      followRepository.delete(follow);
+      result = "ok";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+
+  }
+  //내가 팔로우
+  public List<Member> getFollowingList(String pageOwner) {
+    log.info("memberService.getFollowingList");
+    Member member = memberRepository.findById(pageOwner).get();
+
+    List<Follow> followList = followRepository.findAllByMemberEmail(member);
+
+    return extractMemberData(followList);
+
+  }
+//나를 팔로우
+  public List<Member> getFollowerList(String pageOwner) {
+    log.info("memberService.getFollowerList");
+//    Member member = memberRepository.findById(pageOwner).get();
+
+    List<Follow> followList = followRepository.findAllByFollowId(pageOwner);
+
+    return extractMemberData(followList);
+  }
+
+  private List<Member> extractMemberData(List<Follow> followList) {
+    List<Member> memberList = new ArrayList<>();
+
+    if (followList != null) {
+
+      for (Follow follow : followList) {
+        Member followMember = memberRepository.findById(follow.getMemberEmail().getMemberEmail()).get();
+        followMember.setMemberPwd("");
+        followMember.setMemberBirth("");
+        followMember.setMemberPhone("");
+        followMember.setMemberAddr("");
+        memberList.add(followMember);
+      }
+    }
+
+
+    return memberList;
   }
 }

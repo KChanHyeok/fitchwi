@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log
@@ -47,10 +50,40 @@ public class MemberController {
     log.info("getMemberInfo()");
     return memberService.getMemberInfo(userId);
   }
-
+  //회원탈퇴
   @DeleteMapping("/deleteMember")
   private String deleteMemberInfo(@RequestBody Member member, HttpSession session){
     log.info("memberController.deleteMemberInfo()");
     return memberService.deleteMemberInfo(member, session);
+  }
+
+  //팔로우 하기
+  @GetMapping("/follow")
+  private String followMember(@RequestParam String loginId, String pageOwner){
+    log.info("membercontroller.followmember");
+    Member member = memberService.getMemberInfo(loginId);
+    return memberService.followMember(member,pageOwner);
+  }
+
+
+  //팔로우 끊기
+  @DeleteMapping("/unfollow")
+  private String unFollowMember(@RequestParam String loginId, String pageOwner){
+    log.info("membercontroller.unfollowmember");
+    Member member = memberService.getMemberInfo(loginId);
+    return memberService.unFollowMember(member,pageOwner);
+  }
+  //팔로우 조회
+  @GetMapping("/getFollowList")
+  private Map<String, List<Member>> getFollowList(@RequestParam String pageOwner){
+    log.info("memberController.getFollowList");
+    Map<String, List<Member>> followMap = new HashMap<>();
+    //내가 팔로우한 사람들
+    List<Member> followMemberList = memberService.getFollowingList(pageOwner);
+    //나를 팔로우하는 사람들
+    List<Member>  followerList = memberService.getFollowerList(pageOwner);
+    followMap.put("follow", followMemberList);
+    followMap.put("follower", followerList);
+    return followMap;
   }
 }
