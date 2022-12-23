@@ -62,12 +62,14 @@ public class TogetherService {
             folder.mkdir();
         }
         String orname = pic.getOriginalFilename();
+
         together.setTogetherImg(orname);
 
-        String sysname = System.currentTimeMillis()+orname.substring(orname.lastIndexOf("."));
+        String sysname = System.currentTimeMillis()
+                +orname.substring(orname.lastIndexOf("."));
         together.setTogetherSaveimg(sysname);
 
-        File file = new File(realPath + orname);
+        File file = new File(realPath + sysname);
 
         pic.transferTo(file);
 
