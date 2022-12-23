@@ -1,7 +1,9 @@
 package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Feed;
+import com.fitchwiframe.fitchwiserver.entity.FeedComment;
 import com.fitchwiframe.fitchwiserver.entity.FeedFile;
+import com.fitchwiframe.fitchwiserver.repository.FeedCommentRepository;
 import com.fitchwiframe.fitchwiserver.repository.FeedFileRepository;
 import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import lombok.extern.java.Log;
@@ -20,11 +22,15 @@ public class FeedService {
     private final FeedRepository feedRepository;
 
     private final FeedFileRepository feedFileRepository;
+    private final FeedCommentRepository feedCommentRepository;
 
-    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository) {
+    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository, FeedCommentRepository feedCommentRepository) {
         this.feedRepository = feedRepository;
         this.feedFileRepository = feedFileRepository;
+        this.feedCommentRepository = feedCommentRepository;
     }
+
+
 
     // 피드 등록
     public String insertFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
@@ -99,7 +105,9 @@ public class FeedService {
 
         for (Feed a : feedList){
             List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+            List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
             a.setFfList(feedFiles);
+            a.setFcList(feedComments);
             newList.add(a);
         }
         System.out.println("newList = " + newList);
@@ -109,4 +117,19 @@ public class FeedService {
         return feedList;
     }
 
+    public String insertComment(FeedComment feedComment) {
+        log.info("feedService.insertComment()");
+
+        String result = null;
+        try {
+            feedCommentRepository.save(feedComment);
+            System.out.println("피드 추가 성공");
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("댓글 추가 실패");
+            result = "fail";
+        }
+        return result;
+    }
 }

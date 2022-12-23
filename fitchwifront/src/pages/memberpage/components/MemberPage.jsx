@@ -48,7 +48,7 @@ export default function Mypage({ member, onLogout, pageOwner }) {
           alignItems: "center",
         }}
       >
-        <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 150, height: 150 }} />
+        <Avatar src={`images/${memberSaveimg}`} sx={{ width: 150, height: 150 }} />
 
         <Typography component="h1" variant="h5">
           {memberEmail}
@@ -93,11 +93,7 @@ export default function Mypage({ member, onLogout, pageOwner }) {
               </Button>
             </Link>
 
-            <Button
-              sx={{ mt: 5, width: 100 }}
-              variant="contained"
-              onClick={() => setConfirmOpen(() => true)}
-            >
+            <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={() => setConfirmOpen(() => true)}>
               탈퇴
             </Button>
             <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>

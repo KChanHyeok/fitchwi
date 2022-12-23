@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Avatar,
-  AvatarGroup,
   Button,
   ButtonGroup,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
-  Checkbox,
-  IconButton,
+  Chip,
+  Divider,
   Modal,
   Stack,
   styled,
@@ -18,15 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import {
-  Favorite,
-  FavoriteBorder,
-  EmojiEmotions,
-  Image,
-  VideoCameraBack,
-  PersonAdd,
-  AccountCircle,
-} from "@mui/icons-material";
+import { FavoriteBorder, ChatBubbleOutline } from "@mui/icons-material";
 import Carousel from "react-material-ui-carousel";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
@@ -34,7 +24,7 @@ import LongMenu from "./Longmenu";
 import axios from "axios";
 
 import { Link } from "react-router-dom";
-
+import Comments from "./Comments";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -46,24 +36,18 @@ const UserBox = styled(Box)({
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  marginBottom: "20px",
 });
 
-
-const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
+const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed }) => {
   const toDay = new Date();
   const toDayD = toDay.getTime();
 
   let divide = 1000 * 60 * 60 * 24;
   let date = (toDayD - feedDate) / divide;
 
-  let day = String(Math.floor(date)).padStart(2, 0);
-  let hour = String(Math.floor((date - day) * 24)).padStart(2, 0);
-  let minute = String(Math.floor(((date - day) * 24 - hour) * 60)).padStart(
-    2,
-    0
-  );
-
+  let day = String(Math.floor(date));
+  let hour = String(Math.floor((date - day) * 24));
+  let minute = String(Math.floor(((date - day) * 24 - hour) * 60));
 
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
@@ -75,7 +59,21 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
       image: "",
     },
   ]);
-
+  const [clist, setClist] = useState([
+    {
+      feedCode: "",
+      feedCommentCode: "",
+      feedCommentContent: "",
+      feedCommentDate: "",
+      image: "",
+      memberEmail: {
+        memberEmail: "",
+        memberName: "",
+        memberNickname: "",
+        memberSaveimg: "",
+      },
+    },
+  ]);
   useEffect(() => {
     if (file.length > 0) {
       let FeedFileList = [];
@@ -90,14 +88,26 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
     }
   }, [file]);
 
+  useEffect(() => {
+    if (comment.length > 0) {
+      let FeedCommentList = [];
+      for (let i = 0; i < comment.length; i++) {
+        const FeedComment = {
+          ...comment[i],
+          image: "images/" + comment[i].memberEmail.memberSaveimg,
+        };
+        FeedCommentList.push(FeedComment);
+      }
+      setClist(FeedCommentList);
+    }
+  }, [comment]);
 
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
       memberEmail: memberInfo.memberEmail,
     },
-    feedCode: { feedCode },
+    feedCode: feedCode,
     feedCommentContent: "",
-
   });
 
   const handleChange = useCallback(
@@ -112,46 +122,44 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
   );
 
   const insertComment = () => {
-    if (insertCommentForm.feedCommentContent !== null) {
-      axios
-        .post("/insertComment", insertCommentForm)
-        .then((response) => {
-          if (response.data === "ok") {
-            alert("성공");
-          } else {
-            alert("실패");
-          }
-        })
-        .catch((error) => console.log(error));
-    }
+    axios
+      .post("/insertComment", insertCommentForm)
+      .then((response) => {
+        if (response.data === "ok") {
+          alert("성공");
+          refreshFeed();
+        } else {
+          alert("실패");
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
+  const rendering = () => {
+    const result = [];
+    if (clist.length > 4) {
+      for (let i = 0; i < 1; i++) {
+        result.push(<Comments key={clist[i].feedCommentCode} data={clist[i]} />);
+      }
+    }
+    return result;
+  };
   return (
     <div>
       <Card sx={{ margin: 5, border: 1 }}>
         <CardHeader
           avatar={
-
-    <Link to="/memberpage" state={{ memberId: memberInfo.memberEmail }}>
-            <Avatar
-              sx={{ bgcolor: "orange" }}
-              aria-label="recipe"
-              src={"images/" + memberInfo.memberSaveimg}
-            ></Avatar>
-     </Link>
-
-
-
+            <Link to="/memberpage" state={{ memberId: memberInfo.memberEmail }}>
+              <Avatar
+                sx={{ bgcolor: "orange" }}
+                aria-label="recipe"
+                src={"images/" + memberWriterInfo.memberSaveimg}
+              ></Avatar>
+            </Link>
           }
           action={<LongMenu />}
-          title={<b>{memberInfo.memberNickname}</b>}
-          subheader={
-            day > 1
-              ? day + "일 전"
-              : hour > 1
-              ? hour + "시간 전"
-              : minute + "분전"
-          }
+          title={<b>{memberWriterInfo.memberNickname}</b>}
+          subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute + "분전"}
         />
         {/* 피드 이미지 */}
         {flist.length > 1 ? (
@@ -164,12 +172,7 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
             sx={{ height: "100%" }}
           >
             {flist.map((item, i) => (
-              <CardMedia
-                key={item.feedCode}
-                component="img"
-                src={item.image}
-                alt={item.feedFileImg}
-              />
+              <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
             ))}
           </Carousel>
         ) : (
@@ -184,46 +187,51 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
           />
         )}
         <CardContent>
-          <Typography
-            variant="h6"
-            color="text.primary"
-            onClick={(e) => setOpen(true)}
-            sx={{ cursor: "pointer" }}
-          >
-            {feedContent}
+          <Stack direction="row" gap={2} mt={2} mb={2}>
+            <FavoriteBorder />
+            <ChatBubbleOutline />
+          </Stack>
+          <Typography variant="body1" color="text.primary" onClick={(e) => setOpen(true)} sx={{ cursor: "pointer" }}>
+            <b>{memberWriterInfo.memberNickname}</b>{" "}
+            {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
           </Typography>
           <Typography variant="body2" color="skyblue" marginBottom={2}>
             #해쉬 태그 #해쉬 태그 #해쉬 태그 #해쉬 태그
           </Typography>
-          {/* <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <Checkbox
-                icon={<FavoriteBorder />}
-                checkedIcon={<Favorite sx={{ color: "red" }} />}
-              />
-            </IconButton>
-            <AvatarGroup max={6}>
-              <Avatar alt="Remy Sharp" />
-              <Avatar alt="Travis Howard" />
-              <Avatar alt="Cindy Baker" />
-              <Avatar alt="Agnes Walker" />
-              <Avatar alt="Trevor Henderson" />
-              <Avatar alt="Trevor Henderson" />
-              <Avatar alt="Trevor Henderson" />
-              <Avatar alt="Trevor Henderson" />
-            </AvatarGroup>
-          </CardActions> */}
-          <Typography variant="body2" color="text.secondary">
-            댓글작성자 : 댓글내용
-          </Typography>
-
+          {comment.length >= 1 ? (
+            comment.length > 4 ? (
+              <Box>
+                <Typography
+                  variant="body2"
+                  color="grey"
+                  marginBottom={2}
+                  onClick={(e) => setOpen(true)}
+                  sx={{ cursor: "pointer", mt: 2 }}
+                >
+                  댓글 {comment.length}개 모두 보기
+                </Typography>
+                {rendering()}
+              </Box>
+            ) : (
+              <Box>
+                {clist.map((clist) => (
+                  <Comments key={clist.feedCommentCode} data={clist} />
+                ))}
+              </Box>
+            )
+          ) : (
+            <Typography variant="body2" color="grey" marginBottom={2}>
+              작성한 댓글이 없습니다.
+            </Typography>
+          )}
+          <Divider sx={{ mt: 2 }} />
           <Box
             sx={{
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "space-between",
             }}
-            mt={2}
+            mt={1}
           >
             <Avatar
               alt={memberInfo.memberName}
@@ -243,7 +251,6 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
             </Box>
           </Box>
         </CardContent>
-
       </Card>
 
       {/* 피드 상세보기 모달 */}
@@ -263,58 +270,96 @@ const Post = ({ memberInfo, feedContent, feedDate, feedCode, file }) => {
                   autoPlay={false}
                   animation="slide"
                   duration={800}
-                  height="570px"
+                  height={570}
                 >
                   {flist.map((item, i) => (
-                    <CardMedia
-                      key={item.feedCode}
-                      component="img"
-                      src={item.image}
-                      alt={item.feedFileImg}
-                    />
+                    <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
                   ))}
                 </Carousel>
               ) : (
                 <CardMedia
                   key={flist[0].feedCode}
                   component="img"
-                  height="570px"
+                  height={600}
                   src={flist[0].image}
                   alt={flist[0].feedFileImg}
                 />
               )}
             </Box>
             <Box flex={1} p={1}>
-              <UserBox>
-                <Avatar
-                  alt={memberInfo.memberName}
-                  src={"images/" + memberInfo.memberSaveimg}
-                  sx={{ width: 30, height: 30 }}
-                />
-                <Typography fontWeight={500} variant="span">
-                  {memberInfo.memberName}
-                </Typography>
+              <UserBox display="flex" justifyContent="space-between" mb={1}>
+                <Box display="flex" alignItems="center">
+                  <Avatar
+                    alt={memberWriterInfo.memberName}
+                    src={"images/" + memberWriterInfo.memberSaveimg}
+                    sx={{ width: 30, height: 30, mr: 1 }}
+                  />
+                  <Typography fontWeight={500} variant="span">
+                    <b>{memberWriterInfo.memberNickname}</b> {}
+                  </Typography>
+                </Box>
+                <LongMenu />
               </UserBox>
-              <Typography fontWeight={500} variant="span">
-                {feedContent}
-              </Typography>
-              <Stack direction="row" gap={1} mt={2} mb={3}>
-                <EmojiEmotions color="primary" />
-                <Image color="secondary" />
-                <VideoCameraBack color="success" />
-                <PersonAdd color="error" />
+              <Divider />
+              <Box mt={1}>
+                <UserBox mb={2}>
+                  <Avatar
+                    alt={memberWriterInfo.memberName}
+                    src={"images/" + memberWriterInfo.memberSaveimg}
+                    sx={{ width: 30, height: 30 }}
+                  />
+                  <Typography fontWeight={500} variant="span">
+                    <b>{memberWriterInfo.memberNickname}</b>{" "}
+                    {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+                  </Typography>
+                </UserBox>
+              </Box>
+              <Box height={105} border={1} mb={2}>
+                "태그 및 후기"
+              </Box>
+              <Box
+                height={150}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  overflowY: "auto",
+                }}
+              >
+                {comment.length >= 1 ? (
+                  <>
+                    {comment.map((comment) => (
+                      <Comments key={comment.feedCommentCode} data={comment} />
+                    ))}
+                  </>
+                ) : (
+                  <Typography variant="body2" color="grey">
+                    작성한 댓글이 없습니다.
+                  </Typography>
+                )}
+              </Box>
+              <Stack direction="row" gap={2} mt={2} mb={2}>
+                <FavoriteBorder />
+                <ChatBubbleOutline />
               </Stack>
+              <Typography color="grey" variant="body2" mb={1}>
+                {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute + "분전"}
+              </Typography>
+              <Divider>
+                <Chip label="Comment" />
+              </Divider>
               <TextField
-                sx={{ width: "100%", mb: 2 }}
+                sx={{ width: "100%", mb: 2, mt: 1 }}
                 id="standard-multiline-static"
                 multiline
                 rows={1}
                 placeholder="댓글 달기..."
                 variant="standard"
+                onChange={handleChange}
+                name="feedCommentContent"
               />
 
               <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
-                <Button>댓글 등록</Button>
+                <Button onClick={insertComment}>댓글 등록</Button>
               </ButtonGroup>
             </Box>
           </Stack>

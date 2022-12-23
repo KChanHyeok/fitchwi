@@ -34,16 +34,15 @@ const UserBox = styled(Box)({
 
 const imgEl = document.querySelector(".img_box");
 
-const FeedAdd = ({ memberEmail, refreshFeed }) => {
+const FeedAdd = ({ memberInfo, refreshFeed }) => {
   let formdata = new FormData();
   const nav = useNavigate();
 
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
-  const [profil, setProfil] = useState({});
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
-      memberEmail: memberEmail,
+      memberEmail: memberInfo.memberEmail,
     },
     feedCategory: "",
     feedContent: "",
@@ -56,17 +55,6 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
 
     return () => preview();
   });
-
-  useEffect(() => {
-    if (memberEmail !== null) {
-      axios
-        .get("/getMemberInfo", { params: { userId: memberEmail } })
-        .then((response) => {
-          setProfil(response.data);
-        })
-        .catch((error) => console.log(error));
-    }
-  }, [memberEmail]);
 
   const preview = () => {
     if (!fileForm) return false;
@@ -82,7 +70,7 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
     setFileForm(files);
   }, []);
 
-  const sendFeed = (event) => {
+  const sendFeed = () => {
     formdata.append(
       "data",
       new Blob([JSON.stringify(insertForm)], { type: "application/json" })
@@ -126,7 +114,7 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
   };
 
   const insertfeed = () => {
-    if (memberEmail === null) {
+    if (memberInfo.memberEmail === null) {
       alert("로그인이 필요한 서비스입니다.");
       nav("/login");
     } else {
@@ -159,9 +147,13 @@ const FeedAdd = ({ memberEmail, refreshFeed }) => {
             피드 작성
           </Typography>
           <UserBox>
-            <Avatar alt={profil.memberImg} sx={{ width: 30, height: 30 }} />
+            <Avatar
+              alt={memberInfo.memberImg}
+              sx={{ width: 30, height: 30 }}
+              src={"images/" + memberInfo.memberSaveimg}
+            />
             <Typography fontWeight={500} variant="span">
-              {profil.memberName}
+              {memberInfo.memberNickname}
             </Typography>
           </UserBox>
           <hr />
