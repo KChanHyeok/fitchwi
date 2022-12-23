@@ -4,20 +4,20 @@ import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/m
 const Together = ({togetherList}) => {
 
     const {
-        togetherCode,
-        togetherCategory,
+        // togetherCode,
+        // togetherCategory,
         togetherContent,
-        togetherDate,
-        togetherInquiry,
-        togetherMax,
-        togetherposition,
+        // togetherDate,
+        // togetherInquiry,
+        // togetherMax,
+        // togetherposition,
         togetherPrice,
-        togetherRecruitEndDate,
-        togetherRecruitStartDate,
+        // togetherRecruitEndDate,
+        // togetherRecruitStartDate,
         togetherSaveimg,
-        togetherState,
+        // togetherState,
         togetherTitle,
-        togetherType,
+        // togetherType,
     } = togetherList
     return (
         <Card sx={{ maxWidth: 500 }}>
