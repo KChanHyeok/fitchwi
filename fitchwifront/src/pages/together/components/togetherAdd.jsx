@@ -82,12 +82,16 @@ const TogetherAdd = ({ data }) => {
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
+    axios.post("/addTogether",formDate, config)
+    .then((res)=> 
+    {
+      setOpen(false);
+      alert("개설완료")
+      data();
+    }
+    )
+    .catch((error) => console.log(error))
 
-    axios
-      .post("/addTogether", formDate, config)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-    alert("개설완료");
   };
 
   const [open, setOpen] = useState(false);
