@@ -11,6 +11,10 @@ import {
   Container,
   Divider,
   Grid,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  Paper,
   Typography,
   // ImageList,
   // ImageListItem,
@@ -39,7 +43,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
     // memberBirth,
     // memberPhone,
   } = member;
-  // console.log(feedList);
+
   const loginId = sessionStorage.getItem("id");
 
   let interestArr = [];
@@ -92,14 +96,10 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
     [loginId, pageOwner]
   );
   console.log(isFollow);
-  //팔로우 멤버 조회
-  // const [followMemberList, setFollowMemberList] = useState([])
-  //   const getFollowMemberList=()=>{
-  //     followList
-  //   }
-  //   const getFollowerMemberList=()=>{
 
-  //   }
+  useEffect(() => {
+    getFollow();
+  }, [getFollow, isFollow]);
 
   //회원 탈퇴
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -119,19 +119,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
     [nav, onLogout]
   );
 
-  useEffect(() => {
-    getFollow();
-  }, [getFollow, isFollow]);
-
-  // const [memberFeedList, setMemberFeedList] = useState([]);
-
-  // useEffect(() => {
-  //   setMemberFeedList(feedList);
-  // }, [feedList]);
-
-  // useEffect(() => {
-  //   console.log(memberFeedList[0]);
-  // }, [memberFeedList]);
+  //피드 불러오기
 
   return (
     <Container style={{ width: 600 }} maxWidth="xl">
@@ -211,31 +199,46 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
               </Grid>
             </CardContent>
           </Card>
-          <Box sx={{ width: 500, height: 450 /*, overflowY: "scroll" */ }}>
-            {/* {
-              <ImageList variant="masonry" cols={3} gap={8}>
-                {memberFeedList != null ? (
-                  memberFeedList.map((feed, index) => (
-                    <ImageListItem key={feed.ffList[index].feedFileCode}>
-                      <img
-                        src={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                        // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                        alt={memberFeedList.feedFileImg}
-                        loading="lazy"
-                      />
-                    </ImageListItem>
-                  ))
+          <Box sx={{ mt: 5, width: 800, height: 400, overflowY: "scroll" }}>
+            {
+              <ImageList variant="masonry" cols={3} gap={10}>
+                {feedList !== null ? (
+                  feedList.map((feed, index) =>
+                    feed.ffList.length !== 0 ? (
+                      <ImageListItem key={feed.ffList[0].feedFileCode}>
+                        <img
+                          src={`/images/${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format`}
+                          // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                          alt={feed.ffList[0].feedFileImg}
+                          loading="lazy"
+                        />
+                        <ImageListItemBar
+                          title={feed.feedContent}
+                          subtitle={feed.feedDate}
+                          position="below"
+                        />
+                      </ImageListItem>
+                    ) : (
+                      <ImageListItem key={index}>
+                        <Paper variant="outlined" style={{ width: 161, height: 215 }} />
+                        <ImageListItemBar
+                          title={feed.feedContent}
+                          subtitle={feed.feedDate}
+                          position="below"
+                        />
+                      </ImageListItem>
+                    )
+                  )
                 ) : (
                   <Typography>작성한 피드가 없어요</Typography>
                 )}
               </ImageList>
-            } */}
+            }
           </Box>
         </Grid>
 
         {loginId === pageOwner ? (
           <Box component="form" sx={{ mt: 1 }}>
-            {/* {member} */}
             <Link to="/updatemember" style={{ textDecoration: "none" }}>
               <Button sx={{ mr: 5, mt: 5, width: 100 }} variant="contained">
                 정보수정

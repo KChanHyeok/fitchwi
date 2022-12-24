@@ -7,7 +7,7 @@ export default function MemberPageIndex({ onLogout }) {
   console.log(location);
   const nav = useNavigate();
   const [member, setMember] = useState({});
-  // const [feedList, setFeedList] = useState({});
+  const [feedList, setFeedList] = useState([]);
   let pageOwner = "";
 
   if (location.state != null) {
@@ -27,20 +27,24 @@ export default function MemberPageIndex({ onLogout }) {
     }
   }, [pageOwner, nav]);
 
-  // const getAllFeedList = useCallback(() => {
-  //   axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
-  // }, [member]);
-  // console.log(member);
+  const getAllFeedList = useCallback(() => {
+    axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
+  }, [member]);
+  console.log(member);
 
-  // useEffect(() => {
-  //   getAllFeedList();
-  // }, [getAllFeedList]);
+  useEffect(() => {
+    getAllFeedList();
+  }, [getAllFeedList]);
+
+  useEffect(() => {
+    console.log(feedList);
+  }, [feedList]);
 
   useEffect(() => {
     getMemberInfo();
   }, [getMemberInfo]);
 
   return (
-    <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} /*feedList={feedList}*/ />
+    <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} feedList={feedList} />
   );
 }
