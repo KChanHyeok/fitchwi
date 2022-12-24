@@ -88,11 +88,10 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
             setIsFollow(!isFollow);
           });
       }
-      getFollow();
     },
-    [loginId, pageOwner, getFollow]
+    [loginId, pageOwner]
   );
-
+  console.log(isFollow);
   //팔로우 멤버 조회
   // const [followMemberList, setFollowMemberList] = useState([])
   //   const getFollowMemberList=()=>{
@@ -122,7 +121,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
 
   useEffect(() => {
     getFollow();
-  }, [getFollow]);
+  }, [getFollow, isFollow]);
 
   // const [memberFeedList, setMemberFeedList] = useState([]);
 
