@@ -61,8 +61,8 @@ public class MemberController {
   @GetMapping("/follow")
   private String followMember(@RequestParam String loginId, String pageOwner){
     log.info("membercontroller.followmember");
-    Member member = memberService.getMemberInfo(loginId);
-    return memberService.followMember(member,pageOwner);
+
+    return memberService.followMember(loginId,pageOwner);
   }
 
 
@@ -70,8 +70,7 @@ public class MemberController {
   @DeleteMapping("/unfollow")
   private String unFollowMember(@RequestParam String loginId, String pageOwner){
     log.info("membercontroller.unfollowmember");
-    Member member = memberService.getMemberInfo(loginId);
-    return memberService.unFollowMember(member,pageOwner);
+    return memberService.unFollowMember(loginId,pageOwner);
   }
   //팔로우 조회
   @GetMapping("/getFollowList")

@@ -176,14 +176,16 @@ public class MemberService {
     }
   }
 
-  public String followMember(Member member, String pageOwner) {
+  public String followMember(String loginId, String pageOwner) {
     log.info("memberService.followMember");
     Follow follow = new Follow();
 
-    follow.setMemberEmail(memberRepository.findById(member.getMemberEmail()).get());
+
     follow.setFollowId(pageOwner);
     String result = "fail";
     try {
+      Member loginMember =   memberRepository.findById(loginId).get();
+      follow.setMemberEmail(loginMember);
       followRepository.save(follow);
       result = "ok";
     } catch (Exception e) {
@@ -193,10 +195,12 @@ public class MemberService {
 
   }
 
-  public String unFollowMember(Member member, String pageOwner) {
+  public String unFollowMember(String loginId, String pageOwner) {
     String result = "fail";
     try {
-      Follow follow = followRepository.findByMemberEmailAndFollowId(member, pageOwner);
+      Member loginMember = memberRepository.findById(loginId).get();
+
+      Follow follow = followRepository.findByMemberEmailAndFollowId(loginMember, pageOwner);
       followRepository.delete(follow);
       result = "ok";
     } catch (Exception e) {

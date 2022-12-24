@@ -123,7 +123,7 @@ public class FeedService {
         return feedList;
     }
 
-
+    //멤버가 작성한 피드 조회
     public List<Feed>getMemberFeed(Member member) {
         log.info("feedService.getMemberFeed");
         //피드 가져오기
@@ -138,14 +138,8 @@ public class FeedService {
         }
 
         return memberFeedList;
-        //맵에 담기
-        //리스트에 담기
-
-
     }
 
-
-//멤버가 작성한 피드 조회
 
     public String insertComment(FeedComment feedComment) {
         log.info("feedService.insertComment()");
