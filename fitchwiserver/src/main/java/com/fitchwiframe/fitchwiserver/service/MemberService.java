@@ -212,7 +212,13 @@ public class MemberService {
 
     List<Follow> followList = followRepository.findAllByMemberEmail(member);
 
-    return extractMemberData(followList);
+    List<Member> followMemberList = new ArrayList<>();
+    for(Follow follow : followList){
+      Member member1 = memberRepository.findById(follow.getFollowId()).get();
+      followMemberList.add(member1);
+    }
+
+    return extractMemberData(followMemberList);
 
   }
 //나를 팔로우
@@ -220,27 +226,31 @@ public class MemberService {
     log.info("memberService.getFollowerList");
 //    Member member = memberRepository.findById(pageOwner).get();
 
-    List<Follow> followList = followRepository.findAllByFollowId(pageOwner);
-
-    return extractMemberData(followList);
+    List<Follow> followerList = followRepository.findAllByFollowId(pageOwner);
+    List<Member> followerMemberList = new ArrayList<>();
+    for(Follow follow : followerList){
+      Member member1 = memberRepository.findById(follow.getMemberEmail().getMemberEmail()).get();
+      followerMemberList.add(member1);
+    }
+    return extractMemberData(followerMemberList);
   }
 
-  private List<Member> extractMemberData(List<Follow> followList) {
-    List<Member> memberList = new ArrayList<>();
+  private List<Member> extractMemberData(List<Member> memberList) {
+   List<Member> memberListForReturn = new ArrayList<>();
 
-    if (followList != null) {
+    if (memberList != null) {
 
-      for (Follow follow : followList) {
-        Member followMember = memberRepository.findById(follow.getMemberEmail().getMemberEmail()).get();
-        followMember.setMemberPwd("");
-        followMember.setMemberBirth("");
-        followMember.setMemberPhone("");
-        followMember.setMemberAddr("");
-        memberList.add(followMember);
+      for (Member member : memberList) {
+        System.out.println("member = " + member);
+        member.setMemberPwd("");
+        member.setMemberBirth("");
+        member.setMemberPhone("");
+        member.setMemberAddr("");
+        memberListForReturn.add(member);
       }
     }
 
 
-    return memberList;
+    return memberListForReturn;
   }
 }
