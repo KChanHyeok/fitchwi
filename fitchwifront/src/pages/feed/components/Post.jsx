@@ -38,7 +38,16 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed }) => {
+const Post = ({
+  memberWriterInfo,
+  memberInfo,
+  feedContent,
+  feedDate,
+  feedCode,
+  file,
+  comment,
+  refreshFeed,
+}) => {
   const toDay = new Date();
   const toDayD = toDay.getTime();
 
@@ -150,7 +159,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
       <Card sx={{ margin: 5, border: 1 }}>
         <CardHeader
           avatar={
-            <Link to="/memberpage" state={{ memberId: memberInfo.memberEmail }}>
+            <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }}>
               <Avatar
                 sx={{ bgcolor: "orange" }}
                 aria-label="recipe"
@@ -161,7 +170,13 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
           action={<LongMenu />}
           title={<b>{memberWriterInfo.memberNickname}</b>}
           subheader={
-            day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"
+            day > 1
+              ? day + "일 전"
+              : hour > 1
+              ? hour + "시간 전"
+              : minute > 1
+              ? minute + "분 전"
+              : second + "초 전"
           }
         />
         {/* 피드 이미지 */}
@@ -175,7 +190,12 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
             sx={{ height: "100%" }}
           >
             {flist.map((item, i) => (
-              <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
+              <CardMedia
+                key={item.feedCode}
+                component="img"
+                src={item.image}
+                alt={item.feedFileImg}
+              />
             ))}
           </Carousel>
         ) : (
@@ -194,7 +214,12 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
             <FavoriteBorder />
             <ChatBubbleOutline />
           </Stack>
-          <Typography variant="body1" color="text.primary" onClick={(e) => setOpen(true)} sx={{ cursor: "pointer" }}>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            onClick={(e) => setOpen(true)}
+            sx={{ cursor: "pointer" }}
+          >
             <b>{memberWriterInfo.memberNickname}</b>{" "}
             {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
           </Typography>
@@ -276,7 +301,12 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                   height={570}
                 >
                   {flist.map((item, i) => (
-                    <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
+                    <CardMedia
+                      key={item.feedCode}
+                      component="img"
+                      src={item.image}
+                      alt={item.feedFileImg}
+                    />
                   ))}
                 </Carousel>
               ) : (

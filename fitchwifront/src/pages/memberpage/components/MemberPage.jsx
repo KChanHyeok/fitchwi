@@ -19,6 +19,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ConfirmDialog from "./ConfirmDialog";
+import FollowMemberListModal from "./FollowMemberListModal";
 
 export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
   //페이지 기본 데이터
@@ -47,9 +48,10 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
   }
 
   //팔로우 관련
-  const [followList, setFollowList] = useState({});
-  const [followerList, setFollowerList] = useState({});
-  const getFollowCount = useCallback(() => {
+  const [followList, setFollowList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+  const [isFollow, setIsFollow] = useState(false);
+  const getFollow = useCallback(() => {
     axios.get("/getFollowList", { params: { pageOwner: pageOwner } }).then((res) => {
       setFollowList(() => res.data.follow);
       setFollowerList(() => res.data.follower);
@@ -58,14 +60,13 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
 
   useEffect(() => {
     for (let i = 0; i < followerList.length; i++) {
-      if (followerList[0].memberEmail === loginId) {
+      if (followerList[i].memberEmail === loginId) {
         setIsFollow(true);
-        console.log(followerList[0].memberEmail);
+        console.log(followerList[i].memberEmail);
       }
     }
     console.log(followerList);
   }, [followerList, loginId]);
-  const [isFollow, setIsFollow] = useState(false);
 
   const onFollow = useCallback(
     (isFollow) => {
@@ -87,9 +88,19 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
             setIsFollow(!isFollow);
           });
       }
+      getFollow();
     },
-    [loginId, pageOwner]
+    [loginId, pageOwner, getFollow]
   );
+
+  //팔로우 멤버 조회
+  // const [followMemberList, setFollowMemberList] = useState([])
+  //   const getFollowMemberList=()=>{
+  //     followList
+  //   }
+  //   const getFollowerMemberList=()=>{
+
+  //   }
 
   //회원 탈퇴
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -110,8 +121,8 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
   );
 
   useEffect(() => {
-    getFollowCount();
-  }, [getFollowCount]);
+    getFollow();
+  }, [getFollow]);
 
   // const [memberFeedList, setMemberFeedList] = useState([]);
 
@@ -133,7 +144,6 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
           alignItems: "center",
         }}
       >
-
         <Grid container sx={{ alignItems: "center" }}>
           <Card sx={{ maxWidth: 800, minWidth: 600 }}>
             {memberSaveimg && (
@@ -179,30 +189,26 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
                       ))}
                   </div>
                 </Grid>
-                <Grid item xs={4}>
-                  <Button
-                    variant="text"
-                    style={{ color: "black", fontSize: 15 }}
-                    onClick={() => console.log("팔로워 목록 열기")}
-                  >
-                    팔로워 {followerList.length}
-                  </Button>
-                  <Button
-                    variant="text"
-                    style={{ color: "black", fontSize: 15 }}
-                    onClick={() => console.log("팔로우 목록 열기")}
-                  >
-                    팔로우 {followList.length}
-                  </Button>
-                  {loginId === pageOwner ? null : (
-                    <Checkbox
-                      checked={isFollow}
-                      icon={<FavoriteBorder />}
-                      checkedIcon={<Favorite />}
-                      onClick={() => onFollow(isFollow)}
-                    />
-                  )}
-                </Grid>
+                {followList && (
+                  <Grid item xs={4}>
+                    <FollowMemberListModal followList={followerList}>
+                      팔로워 {followerList.length}
+                    </FollowMemberListModal>
+
+                    <FollowMemberListModal followList={followList}>
+                      팔로우 {followList.length}
+                    </FollowMemberListModal>
+
+                    {loginId === pageOwner ? null : (
+                      <Checkbox
+                        checked={isFollow}
+                        icon={<FavoriteBorder />}
+                        checkedIcon={<Favorite />}
+                        onClick={() => onFollow(isFollow)}
+                      />
+                    )}
+                  </Grid>
+                )}
               </Grid>
             </CardContent>
           </Card>
@@ -237,7 +243,11 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
               </Button>
             </Link>
 
-            <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={() => setConfirmOpen(() => true)}>
+            <Button
+              sx={{ mt: 5, width: 100 }}
+              variant="contained"
+              onClick={() => setConfirmOpen(() => true)}
+            >
               탈퇴
             </Button>
             <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>
