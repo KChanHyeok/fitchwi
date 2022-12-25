@@ -6,6 +6,7 @@ import TogetherAdd from "./components/togetherAdd";
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import TogetherArt from "./components/togetherArt";
+import TogetherInfo from "./components/togetherInfo";
 
 
 const Together = () => {
@@ -34,9 +35,10 @@ const Together = () => {
                 <Sidebar pageurl={"together"}/>
                 <Routes>
                     <Route path="/*" element={<TogetherMain togetherList={togetherList}/>}/>
-                    <Route path="art" element={<TogetherArt />}/>
+                    <Route path="art" element={<TogetherArt />} />
+                    <Route path="/:togetherPageCode" element={<TogetherInfo />} />
                 </Routes>
-                <TogetherAdd data={facilitiesList}/>
+                <TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />
             </Stack>
         </Box>
     );
