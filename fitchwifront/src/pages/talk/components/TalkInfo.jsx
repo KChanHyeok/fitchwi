@@ -1,39 +1,60 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
+import TalkOpMenu from "../components/TalkOpMenu";
+import { Stack } from "@mui/system";
 
 const TalkInfo = () => {
     let { talkCode } = useParams();
     console.log(talkCode);
 
-    axios.get("/getTalk", { params: { talkCode: talkCode } })
-        .then((res) => console.log(res.data));
+    const [talkInfo, setTalkInfo] = useState({});
+
+    const getTalkInfo = () => {
+        axios.get("/getTalk", { params: { talkCode: talkCode } })
+            .then((res) => setTalkInfo(res.data));
+    }
+
+    useEffect(() => {
+        getTalkInfo();
+    }, []);
+
+
+
 
 
     return (
-        <div className="talkDetail">
-            <p>{ }</p>
-            {/* <div>
-                <div className="header">
-                    <span>mbti 취미</span>
-                    <span>카테고리</span>
-                    <span>남은 자리 0/9</span>
-                    <div className="talkOpMenu">
-                        <TalkOpMenu />
+        <Stack
+            flex={4} p={2}
+            direction="column"
+            justifyContent="space-around"
+            alignItems="stretch"
+            spacing={2}
+        >
+            <div className="talkDetail">
+                <div>
+                    <div className="header">
+                        <span>mbti 취미</span>
+                        <span>{talkInfo.talkCategory}</span>
+                        <span>남은 자리 0/{talkInfo.talkMax}</span>
+                        <div className="talkOpMenu">
+                            <TalkOpMenu />
+                        </div>
+                    </div>
+                    <div className="section">
+                        <div>
+                            <span className="talkTitle"><b>{talkInfo.talkTitle}</b></span>
+                            <span className="reportBtn">신고하기</span>
+                            {/* <img src={`/images/${talkInfo.talkSaveImg}`}></img> */}
+                        </div>
+                        <p>멤버소개</p>
+                        <p>방장</p>
+                        <div>얘기해요 피드</div>
                     </div>
                 </div>
-                <div className="section">
-                    <div>
-                        <span className="talkTitle"><b>얘기해요 모임명</b></span>
-                        <span className="reportBtn">신고하기</span>
-                        <p>이미지</p>
-                    </div>
-                    <p>멤버소개</p>
-                    <p>방장</p>
-                    <div>얘기해요 피드</div>
-                </div>
-            </div> */}
-        </div>
+            </div>
+        </Stack>
 
     )
 
