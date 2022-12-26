@@ -3,7 +3,7 @@ import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Fab, Tooltip } from "@mui/material";
+import { Fab, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 
 function TalkOpened({ memberEmail }) {
@@ -129,28 +129,30 @@ function TalkOpened({ memberEmail }) {
                     <form onSubmit={onTalkOpened}>
                         <div>얘기해요 개설하기</div>
                         <hr />
-                        <p className="talkInput">얘기해요 명</p>
-                        <input type="text" name="talkTitle"
+                        <TextField fullWidth label="얘기해요 모임명"
+                            name="talkTitle" sx={{ mt: 3 }}
                             onChange={onChange}
-                            placeholder="모임 명을 입력하세요"
-                            autoFocus required></input>
-                        <p className="talkInput">최대 참여인원</p>
-                        <input type="number" name="talkMax"
+                            autoFocus required />
+                        <TextField fullWidth label="최대 참여인원"
+                            type="number" name="talkMax" sx={{ mt: 3 }}
                             onChange={onChange}
-                            placeholder="숫자만 입력하세요"
-                            required></input>
-                        <p className="talkInput">모임 카테고리 선정</p>
-                        <select onChange={onChange} name="talkCategory" required>
-                            <option value="">카테고리</option>
-                            <option value="문화∙예술">문화∙예술</option>
-                            <option value="운동∙액티비티">운동∙액티비티</option>
-                            <option value="요리∙음식">요리∙음식</option>
-                            <option value="여행">여행</option>
-                            <option value="성장∙자기계발">성장∙자기계발</option>
-                            <option value="공예∙수공예">공예∙수공예</option>
-                            <option value="게임∙오락">게임∙오락</option>
-                            <option value="기타">기타</option>
-                        </select>
+                            required></TextField>
+                        <FormControl sx={{ mt: 2 }} fullWidth>
+                            <InputLabel>모임 카테고리 선정</InputLabel>
+                            <Select label="모임 카테고리 선정"
+                                name="talkCategory" value={inputTalkOp.talkCategory}
+                                onChange={onChange}
+                                required>
+                                <MenuItem value="문화∙예술">문화∙예술</MenuItem>
+                                <MenuItem value="운동∙액티비티">운동∙액티비티</MenuItem>
+                                <MenuItem value="요리∙음식">요리∙음식</MenuItem>
+                                <MenuItem value="여행">여행</MenuItem>
+                                <MenuItem value="성장∙자기계발">성장∙자기계발</MenuItem>
+                                <MenuItem value="공예∙수공예">공예∙수공예</MenuItem>
+                                <MenuItem value="게임∙오락">게임∙오락</MenuItem>
+                                <MenuItem value="기타">기타</MenuItem>
+                            </Select>
+                        </FormControl>
                         <div className="talkJoinStyle">
                             <span className="talkInput talkTypeSt">가입유형</span>
                             <span className="talkInput talkInqSt">가입질문</span>
@@ -163,6 +165,19 @@ function TalkOpened({ memberEmail }) {
                                 <input onChange={onChange} type="text" name="talkInquiry" className="talkInqSt"
                                     placeholder="가입 시 받을 질문을 작성하세요" disabled={disabled}></input>
                             </div>
+                            {/* <FormControl sx={{ mt: 2, minWidth: 130, minHeight: 100 }}>
+                                <InputLabel className="talkTypeSt">가입유형</InputLabel>
+                                <Select label="가입유형" name="talkType"
+                                    value={inputTalkOp.talkType}
+                                    onChange={onChange} onClick={onDisabled}
+                                    required>
+                                    <MenuItem value="승인제">승인제</MenuItem>
+                                    <MenuItem value="선착순">선착순</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField label="가입질문"
+                                name="talkInquiry" sx={{ mt: 3 }}
+                                onChange={onChange} disabled={disabled} /> */}
                         </div>
                         <p className="talkInput">애기해요 사진 첨부</p>
                         <div className="talk_img_box">

@@ -5,20 +5,20 @@ import "../styles/TalkList.scss";
 const TalkList = () => {
     const [talkList, setTalkList] = useState({});
 
-    // useEffect(() => {
-    //     getTalkList();
-    // }, []);
+    useEffect(() => {
+        getTalkList();
+    }, []);
 
-    // const getTalkList = () => {
-    //     axios
-    //         .get("/getAllTalkList")
-    //         .then((res) => {
-    //             setTalkList(res.data);
-    //         })
-    //         .catch((error) => console.log(error));
-    // };
+    const getTalkList = () => {
+        axios
+            .get("/getAllTalkList")
+            .then((res) => {
+                setTalkList(res.data);
+            })
+            .catch((error) => console.log(error));
+    };
 
-    // console.log(talkList);
+    console.log(talkList);
 
     // let list = null;
     // if (talkList.length === 0) {
