@@ -1,51 +1,48 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/TalkList.scss";
 
-const TalkList = () => {
-    const [talkList, setTalkList] = useState({});
+const TalkList = ({ talkList }) => {
+    const {
+        talkCode,
+        talkTitle,
+        talkCategory,
+        talkContent,
+        talkImg,
+        talkSaveimg,
+        talkType,
+        talkInquiry,
+        talkMax,
+    } = talkList;
 
-    useEffect(() => {
-        getTalkList();
-    }, []);
-
-    const getTalkList = () => {
-        axios
-            .get("/getAllTalkList")
-            .then((res) => {
-                setTalkList(res.data);
-            })
-            .catch((error) => console.log(error));
-    };
-
-    console.log(talkList);
-
-    // let list = null;
-    // if (talkList.length === 0) {
-    //     list = (
-    //         <div className="talkListShow">
-    //             개설된 얘기해요가 없습니다.
-    //         </div>
-    //     );
-    // }
 
     return (
-        <>
-            <div>
-                전체출력
-            </div>
+        <Link to={`/talk/${talkCode}`} underline="none">
             <div className="talkListShow">
-                {/* {talkList[0].talkCode}
-                {talkList[0].talkTitle}
-                {talkList[0].talkContent} */}
+                <p>{talkTitle}</p>
+                <p>{talkCategory}</p>
+                <p>{talkContent}</p>
             </div>
-            <div className="talkListShow">
-                dd
-            </div>
-            <div className="talkListShow">
-                dd
-            </div>
-        </>
+            {/* <Card sx={{ mb: 3 }}>
+                <CardActionArea>
+                    <CardMedia
+                        component="img"
+                        height="200"
+                        src={`images/${talkSaveimg}`}
+                        alt="green iguana" />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {talkTitle}
+                        </Typography>
+                        <Typography variant="body" color="text.secondary">
+                            {talkCategory}<br />
+                            {talkContent}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Card> */}
+        </Link>
     )
 }
 

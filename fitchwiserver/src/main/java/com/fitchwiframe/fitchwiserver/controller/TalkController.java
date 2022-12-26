@@ -39,10 +39,9 @@ public class TalkController {
     }
 
     //해당 얘기해요 상세보기
-//    @GetMapping("/getTalk")
-//    public Talk getTalk(@RequestParam long talkCode) {
-//        log.info("talkController.getTalk()");
-//        log.info("getTalk() talkCode : " + talkCode);
-//        return talkService.getTalk(talkCode);
-//    }
+    @GetMapping("/getTalk")
+    public Talk getTalk(long talkCode) {
+        log.info("talkController.getTalk()");
+        return talkService.getTalk(talkCode);
+    }
 }

@@ -62,7 +62,7 @@ function App() {
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/talk/*" element={<Talk />}></Route>
-        <Route path="/talkInfo" element={<TalkInfo />}></Route>
+        <Route path="/talk/info" element={<TalkInfo />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} />}></Route>
       </Routes>
