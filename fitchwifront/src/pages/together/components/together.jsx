@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, CardActionArea, CardContent, CardMedia, Link, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 
 const Together = ({togetherList}) => {
         const {
@@ -19,13 +20,13 @@ const Together = ({togetherList}) => {
         // togetherType,
         } = togetherList;
     return (
-        <Link href={`/together/${togetherCode}`} underline="none">
-            <Card sx={{ mb:3}}>
+        <Link to={`/together/${togetherCode}`} >
+            <Card sx={{ mb:3, maxWidth:1000}}>
                 <CardActionArea>
                     <CardMedia
                         component="img"
                         height="200"
-                        src={`images/${togetherSaveimg}`}
+                        src={`images/${togetherSaveimg}`}   
                         alt="green iguana"
                     />
                     <CardContent>
