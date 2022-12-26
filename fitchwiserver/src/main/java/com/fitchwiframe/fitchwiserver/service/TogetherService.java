@@ -81,4 +81,12 @@ public class TogetherService {
         log.info(togetherList+"");
         return togetherList;
     }
+
+    public Together getTogetherInfo(long togetherPageCode) {
+        log.info("getTogetherInfo()");
+        Together togetherInfo;
+        togetherInfo = togetherRepository.findById(togetherPageCode).get();
+
+        return togetherInfo;
+    }
 }
