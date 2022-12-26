@@ -41,8 +41,6 @@ const UserBox = styled(Box)({
 });
 
 const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like }) => {
-  console.log(feedCode);
-  console.log(memberInfo);
   const nav = useNavigate();
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -74,7 +72,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
       feedCommentDate: "",
       image: "",
       memberEmail: {
-        memberEmail: "",
+        memberEmail: sessionStorage.getItem("id"),
         memberName: "",
         memberNickname: "",
         memberSaveimg: "",
@@ -111,7 +109,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
 
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
-      memberEmail: memberInfo.memberEmail,
+      memberEmail: sessionStorage.getItem("id"),
     },
     feedCode: feedCode,
     feedCommentContent: "",
@@ -129,17 +127,22 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   );
 
   const insertComment = () => {
-    axios
-      .post("/insertComment", insertCommentForm)
-      .then((response) => {
-        if (response.data === "ok") {
-          alert("성공");
-          refreshFeed();
-        } else {
-          alert("실패");
-        }
-      })
-      .catch((error) => console.log(error));
+    if (sessionStorage.getItem("id") === null) {
+      alert("로그인이 필요한 서비스입니다.");
+      nav("/login");
+    } else {
+      axios
+        .post("/insertComment", insertCommentForm)
+        .then((response) => {
+          if (response.data === "ok") {
+            alert("성공");
+            refreshFeed();
+          } else {
+            alert("실패");
+          }
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   const rendering = () => {
@@ -161,7 +164,6 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
         console.log(like[i].memberEmail.memberEmail);
       }
     }
-    console.log(like);
   }, [like, memberInfo.memberEmail]);
 
   const onLike = useCallback(

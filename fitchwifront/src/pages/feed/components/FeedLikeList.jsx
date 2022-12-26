@@ -21,6 +21,8 @@ const StyleModal = styled(Modal)({
 });
 
 const FeedLikeList = ({ children, flList }) => {
+  const id = sessionStorage.getItem("id");
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -65,9 +67,11 @@ const FeedLikeList = ({ children, flList }) => {
                       </Typography>
                     }
                   />
-                  <Button variant="outlined" onClick={() => alert("팔로우 연결")}>
-                    팔로우
-                  </Button>
+                  {id === like.memberEmail.memberEmail ? null : (
+                    <Button variant="outlined" onClick={() => alert("팔로우 연결")}>
+                      팔로우
+                    </Button>
+                  )}
                 </ListItem>
                 <Divider variant="inset" component="li" />
               </List>

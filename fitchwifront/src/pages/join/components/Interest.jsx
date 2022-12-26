@@ -46,6 +46,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         joinForm.memberInterest.splice(joinForm.memberInterest.indexOf(e.target.value), 1);
       }
       setJoinForm(joinObj);
+      console.log(joinForm.memberInterest);
     },
     [joinForm, setJoinForm]
   );
@@ -56,7 +57,9 @@ export default function Interest({ joinForm, setJoinForm }) {
       memberInterest: joinForm.memberInterest.join(" "),
     };
     setJoinForm(joinObj);
+    console.log(setJoinForm);
   };
+
   return (
     <div style={{ textAlign: "center", width: "1200px" }}>
       <Typography variant="h2" gutterBottom mb={10}>

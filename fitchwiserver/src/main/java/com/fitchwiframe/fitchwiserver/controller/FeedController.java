@@ -1,9 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
-import com.fitchwiframe.fitchwiserver.entity.Feed;
-import com.fitchwiframe.fitchwiserver.entity.FeedFile;
-import com.fitchwiframe.fitchwiserver.entity.Member;
-import com.fitchwiframe.fitchwiserver.entity.FeedComment;
+import com.fitchwiframe.fitchwiserver.entity.*;
 
 import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
@@ -26,11 +23,11 @@ public class FeedController {
     }
     @PostMapping("/insertfeed")
     public String insertFeed(@RequestPart(value = "data") Feed newFeed,
-                             @RequestPart(value = "uploadImage", required = false) List<MultipartFile> files, HttpSession session ) {
+                             @RequestPart(value = "uploadImage", required = false) List<MultipartFile> files, HttpSession session) {
         log.info("newFeed : "+ newFeed);
         log.info("FileList : " + files);
         log.info("insertFeed()");
-        return feedService.insertFeed(newFeed, files, session);
+        return feedService.insertFeed(newFeed,files,session);
     }
 
     @GetMapping("/getAllFeedList")

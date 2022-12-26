@@ -18,30 +18,36 @@ import java.util.List;
 public class FeedService {
 
     private final FeedRepository feedRepository;
-
     private final FeedFileRepository feedFileRepository;
     private final FeedCommentRepository feedCommentRepository;
     private final FeedLikeRepository feedLikeRepository;
-
+    private final FeedTagRepository feedTagRepository;
     private final MemberRepository memberRepository;
 
-    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository, FeedCommentRepository feedCommentRepository, FeedLikeRepository feedLikeRepository, MemberRepository memberRepository) {
+
+    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository, FeedCommentRepository feedCommentRepository, FeedLikeRepository feedLikeRepository, FeedTagRepository feedTagRepository, MemberRepository memberRepository) {
         this.feedRepository = feedRepository;
         this.feedFileRepository = feedFileRepository;
         this.feedCommentRepository = feedCommentRepository;
         this.feedLikeRepository = feedLikeRepository;
+        this.feedTagRepository = feedTagRepository;
         this.memberRepository = memberRepository;
     }
 
 
+
     // 피드 등록
-    public String insertFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
+    public String insertFeed(Feed newFeed, List<MultipartFile> files, HttpSession session ) {
         log.info("feedService.insertFeed()");
         log.info("newFeed : " + newFeed);
         String result = null;
 
         try {
             Feed saveFeed = feedRepository.save(newFeed);
+            FeedTag feedTag = new FeedTag();
+            feedTag.setFeedCode(newFeed.getFeedCode());
+            feedTag.setFeedTagContent(newFeed.getFeedTag());
+            feedTagRepository.save(feedTag);
             if (files != null){
                 List<FeedFile> feedFiles = fileUpload(saveFeed,files,session);
                 log.info("feedFiles : " + feedFiles);

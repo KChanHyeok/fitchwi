@@ -1,23 +1,27 @@
 import {
-  Avatar,
+  Alert,
   Box,
   Button,
   ButtonGroup,
+  Divider,
   Fab,
   FormControl,
   InputLabel,
   MenuItem,
   Modal,
   Select,
+  Snackbar,
   styled,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Stack } from "@mui/system";
+import MultipleSelectChip from "./MultipleSelectChip";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -25,21 +29,14 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-const UserBox = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginBottom: "20px",
-});
-
-const imgEl = document.querySelector(".img_box");
-
 const FeedAdd = ({ memberInfo, refreshFeed }) => {
   let formdata = new FormData();
   const nav = useNavigate();
-
+  const [state, setState] = useState(false);
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
+  const [SnackbarOpen, setSnackbarOpen] = useState(false);
+  const [tagForm, setTagForm] = useState([]);
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -48,17 +45,18 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     feedContent: "",
     feedClassificationcode: "",
     feedDate: `${new Date().getTime()}`,
+    feedTag: [],
   });
 
   useEffect(() => {
     preview();
-
     return () => preview();
   });
 
   const preview = () => {
     if (!fileForm) return false;
     const render = new FileReader();
+    const imgEl = document.querySelector(".img_box");
 
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
     render.readAsDataURL(fileForm[0]);
@@ -69,6 +67,15 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     setFileForm(files);
   }, []);
 
+  const saveFeed = () => {
+    const tagObj = {
+      ...insertForm,
+      feedTag: tagForm.join(" "),
+    };
+    setInsertForm(tagObj);
+    setState(true);
+    setSnackbarOpen(true);
+  };
   const sendFeed = () => {
     formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
 
@@ -80,7 +87,6 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
       headers: { "Content-Type": "multipart/form-data" },
     };
 
-    console.log(formdata);
     axios
       .post("/insertfeed", formdata, config)
       .then((response) => {
@@ -110,14 +116,23 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     setOpen(false);
   };
 
+  const snackBarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const insertfeed = () => {
-    if (memberInfo.memberEmail === undefined) {
+    if (sessionStorage.getItem("id") === null) {
       alert("로그인이 필요한 서비스입니다.");
       nav("/login");
     } else {
       setOpen(true);
     }
   };
+  const imageInput = useRef();
+  const onClickImageInput = () => {
+    imageInput.current.click();
+  };
+
   return (
     <>
       <Tooltip
@@ -139,87 +154,135 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box width={800} height={600} bgcolor="white" p={3} borderRadius={5}>
-          <Typography variant="h6" color="gray" textAlign="center">
-            피드 작성
-          </Typography>
-          <UserBox>
-            <Avatar
-              alt={memberInfo.memberImg}
-              sx={{ width: 30, height: 30 }}
-              src={"images/" + memberInfo.memberSaveimg}
-            />
-            <Typography fontWeight={500} variant="span">
-              {memberInfo.memberNickname}
-            </Typography>
-          </UserBox>
-          <hr />
-          <FormControl sx={{ mt: 2, minWidth: 200, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-              함께해요 후기 리스트
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={insertForm.feedClassificationcode}
-              name="feedClassificationcode"
-              onChange={handleChange}
-              label="함께해요 후기 리스트"
-            >
-              <MenuItem value="">
-                <em>선택</em>
-              </MenuItem>
-              <MenuItem value="함께해요 1의 코드">함께해요 1</MenuItem>
-              <MenuItem value="함께해요 2의 코드">함께해요 2</MenuItem>
-              <MenuItem value="함께해요 3의 코드">함께해요 3</MenuItem>
-            </Select>
-          </FormControl>
-
-          <br />
-
-          <FormControl sx={{ mt: 2, minWidth: 300, minHeight: 100 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">주제</InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={insertForm.feedCategory}
-              name="feedCategory"
-              onChange={handleChange}
-              label="주제"
-            >
-              <MenuItem value="">
-                <em>선택</em>
-              </MenuItem>
-              <MenuItem value="문화">문화</MenuItem>
-              <MenuItem value="스포츠">스포츠</MenuItem>
-              <MenuItem value="자기개발">자기계발</MenuItem>
-            </Select>
-          </FormControl>
-
-          <br />
-          <div>
-            프로필 이미지 : <input type="file" name="feedImg" onChange={onLoadFile} multiple />
-            <div className="img_box" style={{ height: 100 }}>
-              <img src="" alt="" />
-            </div>
-          </div>
-          <TextField
-            value={insertForm.feedContent}
-            onChange={handleChange}
-            autoFocus
-            margin="dense"
-            name="feedContent"
-            label="피드 내용을 입력하세요(2000자 이내)"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
-            <Button onClick={handleClose} sx={{ width: "100px" }}>
-              취소하기
+        <Box
+          width={1000}
+          height={500}
+          bgcolor="white"
+          p={3}
+          borderRadius={5}
+          sx={{ display: "flex", flexDirection: "column" }}
+        >
+          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+            <Button color="error" onClick={handleClose}>
+              CANCEL
             </Button>
-            <Button onClick={sendFeed}>작성하기</Button>
-          </ButtonGroup>
+            <Typography variant="h5" textAlign="center">
+              피드 작성
+            </Typography>
+            <ButtonGroup>
+              <Button color="success" onClick={saveFeed}>
+                SAVE
+              </Button>
+              <Snackbar open={SnackbarOpen} autoHideDuration={6000} onClose={snackBarClose}>
+                <Alert onClose={snackBarClose} severity="success" sx={{ width: "100%" }}>
+                  피드 저장 완료!
+                </Alert>
+              </Snackbar>
+              {state === false ? (
+                <Button onClick={sendFeed} disabled>
+                  UPLOAD
+                </Button>
+              ) : (
+                <Button onClick={sendFeed}>UPLOAD</Button>
+              )}
+            </ButtonGroup>
+          </Stack>
+          <Divider />
+          <Stack direction="row" gap={2} mb={2} p={1}>
+            <Box mt={1}>
+              {fileForm.length === 0 ? (
+                <>
+                  <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 500, height: 420 }}>
+                    <AddIcon />
+                  </Button>
+                  <input
+                    type="file"
+                    name="feedImg"
+                    onChange={onLoadFile}
+                    multiple
+                    ref={imageInput}
+                    style={{ display: "none" }}
+                  />
+                </>
+              ) : (
+                <div className="img_box" style={{ width: 500, height: 420 }} onClick={onClickImageInput}>
+                  <img src="" alt="" />
+                  <input
+                    type="file"
+                    name="feedImg"
+                    onChange={onLoadFile}
+                    multiple
+                    ref={imageInput}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              )}
+            </Box>
+            <Divider orientation="vertical" flexItem variant="middle" />
+            <Box sx={{ width: 440, height: 400 }} mt={1}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                  참여한 함께해요
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={insertForm.feedClassificationcode}
+                  name="feedClassificationcode"
+                  onChange={handleChange}
+                  label="함께해요 리스트"
+                >
+                  <MenuItem value="">
+                    <em>선택</em>
+                  </MenuItem>
+                  <MenuItem value="함께해요 1의 코드">함께해요 1</MenuItem>
+                  <MenuItem value="함께해요 2의 코드">함께해요 2</MenuItem>
+                  <MenuItem value="함께해요 3의 코드">함께해요 3</MenuItem>
+                </Select>
+              </FormControl>
+              <br />
+              <FormControl sx={{ mt: 2 }} fullWidth>
+                <InputLabel>피드 카테고리</InputLabel>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={insertForm.feedCategory}
+                  name="feedCategory"
+                  onChange={handleChange}
+                  label="피드 카테고리"
+                >
+                  <MenuItem value="">
+                    <em>선택</em>
+                  </MenuItem>
+                  <MenuItem value="문화·예술">문화·예술</MenuItem>
+                  <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+                  <MenuItem value="요리·음식">요리·음식</MenuItem>
+                  <MenuItem value="여행">여행</MenuItem>
+                  <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+                  <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+                  <MenuItem value="게임·오락">게임·오락</MenuItem>
+                  <MenuItem value="기타">기타</MenuItem>
+                </Select>
+              </FormControl>
+              <MultipleSelectChip
+                insertForm={insertForm}
+                setInsertForm={setInsertForm}
+                tagForm={tagForm}
+                setTagForm={setTagForm}
+              />
+              <TextField
+                sx={{ mt: 2 }}
+                fullWidth
+                value={insertForm.feedContent}
+                id="outlined-multiline-static"
+                onChange={handleChange}
+                label="피드 내용"
+                multiline
+                rows={4}
+                name="feedContent"
+              />
+            </Box>
+          </Stack>
         </Box>
       </StyleModal>
     </>
