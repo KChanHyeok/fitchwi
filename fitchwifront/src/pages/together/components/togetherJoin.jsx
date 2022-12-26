@@ -1,16 +1,15 @@
 import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import axios from "axios";
 import React, { useState } from "react";
 
 const TogetherJoin = ({children, togetherInfo}) => {
     const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
-
     const [insertForm,setInsertFrom] = useState({
         togetherJoinDate: nowdate,
         togetherJoinAnswer: "",
-        togetherCode: {
-            togetherCode: togetherInfo.togetherCode
-        },
+        togetherJoinState:"",
+        togetherCode: togetherInfo,
         memberEmail: {
             memberEmail: sessionStorage.getItem("id")
         }
@@ -18,6 +17,7 @@ const TogetherJoin = ({children, togetherInfo}) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [disabled,setdisabled] = useState(true)
 
     const style = {
         position: "absolute",
@@ -40,9 +40,20 @@ const TogetherJoin = ({children, togetherInfo}) => {
       const handleChange = (e) => {
         const insertObj = {
             ...insertForm,
+            togetherCode: togetherInfo,
             [e.target.name] : e.target.value,
         }
+        if(insertObj.togetherJoinAnswer.length!==0) 
+        {
+            setdisabled(false)
+        }else {
+            setdisabled(true)
+        }
         setInsertFrom(insertObj);
+      }
+      const togetherJoinSend = (e) => {
+        e.preventDefault();
+        axios.post("/insertTogetherJoinInfo",insertForm).then((res) => console.log(res))
       }
 
     return (
@@ -57,7 +68,7 @@ const TogetherJoin = ({children, togetherInfo}) => {
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
             >
-                <Box sx={style}>
+                <Box sx={style} component="form">
                     <UserBox>
                         <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
@@ -78,8 +89,9 @@ const TogetherJoin = ({children, togetherInfo}) => {
                     type="text"
                     fullWidth
                     variant="standard"
+                    required
                     />
-                    <Button variant="contained">참여하기</Button>
+                    <Button type="submit" variant="contained" onClick={togetherJoinSend} disabled={disabled}>참여하기</Button>
                 </Box>
             </Modal>
         </>

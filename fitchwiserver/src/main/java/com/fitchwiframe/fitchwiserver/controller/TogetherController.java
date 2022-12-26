@@ -1,15 +1,13 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Together;
+import com.fitchwiframe.fitchwiserver.entity.TogetherJoin;
 import com.fitchwiframe.fitchwiserver.entity.TogetherOpened;
 import com.fitchwiframe.fitchwiserver.entity.TogetherTag;
 import com.fitchwiframe.fitchwiserver.service.TogetherService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -36,6 +34,13 @@ public class TogetherController {
 
         return togetherService.addTogetherOpened(togetherOpened, together, togetherTag, pic,session);
     }
+
+    @PostMapping("/insertTogetherJoinInfo")
+    public String insertTogetherJoinInfo(@RequestBody TogetherJoin togetherJoin) {
+        log.info("insertTogetherJoinInfo()");
+        return togetherService.insertTogetherJoinInfo(togetherJoin);
+    }
+
     @GetMapping("/getAllTogetherList")
     public Iterable<Together> getAllTogetherList() {
         return togetherService.getAllTogetherList();
