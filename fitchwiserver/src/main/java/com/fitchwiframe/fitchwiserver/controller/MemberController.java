@@ -85,4 +85,11 @@ public class MemberController {
     followMap.put("follower", followerList);
     return followMap;
   }
+
+  @GetMapping("/createMemeber")
+  private String createMembers(){
+    log.info("memberController.createMembers");
+
+    return memberService.createMember();
+  }
 }

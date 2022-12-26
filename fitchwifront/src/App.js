@@ -9,6 +9,7 @@ import Header from "./layout/Header";
 import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
 import TalkInfo from "./pages/talk/components/TalkInfo";
+import Manager from "./pages/manager";
 
 function App() {
   const nav = useNavigate();
@@ -65,6 +66,7 @@ function App() {
         <Route path="/talkInfo" element={<TalkInfo />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} />}></Route>
+        <Route path="/manager/*" element={<Manager />}></Route>
       </Routes>
     </>
   );

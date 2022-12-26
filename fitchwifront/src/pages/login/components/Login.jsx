@@ -47,6 +47,11 @@ export default function Login({ sucLogin }) {
     },
     [loginForm, nav, sucLogin]
   );
+  const createMemeber = () => {
+    axios.get("/createMemeber").then((result) => {
+      alert(result.data);
+    });
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -91,7 +96,12 @@ export default function Login({ sucLogin }) {
             로그인
           </Button>
 
-          <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => createMemeber()}
+          >
             구글로그인
           </Button>
 
