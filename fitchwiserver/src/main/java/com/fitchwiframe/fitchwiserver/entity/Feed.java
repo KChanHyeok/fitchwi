@@ -39,4 +39,7 @@ public class Feed {
     @Transient
     private List<FeedLike> flList;
 
+    @Column(nullable = false, length = 50)
+    private String feedTag;
+
 }
