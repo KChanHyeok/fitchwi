@@ -4,6 +4,7 @@ import Post from "./Post";
 
 const Feed = ({ data, memberInfo, refreshFeed }) => {
   console.log(data);
+
   console.log(memberInfo);
   return (
     <Box flex={4} p={2}>

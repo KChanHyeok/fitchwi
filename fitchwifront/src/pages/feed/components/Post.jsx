@@ -65,6 +65,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
       image: "",
     },
   ]);
+
   const [clist, setClist] = useState([
     {
       feedCode: "",

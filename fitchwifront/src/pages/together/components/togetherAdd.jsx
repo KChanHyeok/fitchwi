@@ -31,13 +31,22 @@ const UserBox = styled(Box)({
   gap: "10px",
   marginBottom: "20px",
 });
+const facilities = {
+  facilitiesCode: null,
+  facilitiesGrade: "", 
+  facilitiesManager: "" ,
+  facilitiesName: "",
+  facilitiesPhone: "",
+  facilitiesPosition: "",
+  facilitiesPrice: 0
+}
 
-const TogetherAdd = ({ data }) => {
+const TogetherAdd = ({ data, refreshTogetherList }) => {
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
     },
-    facilitiesCode: "",
+    facilitiesCode: facilities,
     togetherOpenedDate: nowdate, // 함께해요 개설일 당일
     togetherTitle: "",
     togetherCategory: "",
@@ -55,19 +64,20 @@ const TogetherAdd = ({ data }) => {
   const formDate = new FormData();
   const [fileForm, setFileForm] = useState("");
   const imgEl = document.querySelector(".img_box");
+  
   useEffect(() => {
     preview();
-
+    
     return () => preview();
   });
-
+  
   const preview = () => {
-    if (!fileForm) return false;
+    if (!fileForm) return false
+
     const render = new FileReader();
 
-    render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
     render.readAsDataURL(fileForm[0]);
-    console.log(render);
+    render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
   };
 
   const onLoadFile = useCallback((event) => {
@@ -87,7 +97,7 @@ const TogetherAdd = ({ data }) => {
     {
       setOpen(false);
       alert("개설완료")
-      data();
+      refreshTogetherList();
     }
     )
     .catch((error) => console.log(error))
@@ -232,7 +242,7 @@ const TogetherAdd = ({ data }) => {
               onChange={handleChange}
               label="시설이용료"
             >
-              <MenuItem value="" disabled sx={{ display: "none" }}>
+              <MenuItem value={facilities}>
                 <em>-</em>
               </MenuItem>
               {data.map((data) => (

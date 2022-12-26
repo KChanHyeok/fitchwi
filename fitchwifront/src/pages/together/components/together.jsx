@@ -4,26 +4,25 @@ import { Card, CardActionArea, CardContent, CardMedia, Link, Typography } from "
 const Together = ({togetherList}) => {
         const {
         togetherCode,
-        togetherCategory,
+        // togetherCategory,
         togetherContent,
-        togetherDate,
-        togetherInquiry,
-        togetherMax,
-        togetherposition,
+        // togetherDate,
+        // togetherInquiry,
+        // togetherMax,
+        // togetherposition,
         togetherPrice,
-        togetherRecruitEndDate,
-        togetherRecruitStartDate,
+        // togetherRecruitEndDate,
+        // togetherRecruitStartDate,
         togetherSaveimg,
-        togetherState,
+        // togetherState,
         togetherTitle,
-        togetherType,
+        // togetherType,
         } = togetherList;
     return (
         <Link href={`/together/${togetherCode}`} underline="none">
             <Card sx={{ mb:3}}>
                 <CardActionArea>
                     <CardMedia
-                        sx={{}}
                         component="img"
                         height="200"
                         src={`images/${togetherSaveimg}`}
