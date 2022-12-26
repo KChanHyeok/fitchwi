@@ -12,10 +12,12 @@ import TogetherInfo from "./components/togetherInfo";
 const Together = () => {
     const [facilitiesList, setFacilitiesList] = useState([]);
     const [togetherList, setTogetherList] = useState([]);
+    const [togetherJoinList, setTogetherJoinList] = useState([]);
     
     useEffect(() => {
         getAllFacilitiesList();
         getAllTogetherList();
+        getAllTogetherJoinList();
     },[])
 
     const getAllFacilitiesList = () => {
@@ -28,6 +30,11 @@ const Together = () => {
             setTogetherList(res.data)
         }).catch((error) => console.log(error))
     }
+    const getAllTogetherJoinList = () => {
+        axios.get("/getAllTogetherJoinList").then((res) => {
+            setTogetherJoinList(res.data)
+        }).catch((error) => console.log(error))
+    }
 
     return (
         <Box>
@@ -36,7 +43,7 @@ const Together = () => {
                 <Routes>
                     <Route path="/*" element={<TogetherMain togetherList={togetherList}/>}/>
                     <Route path="art" element={<TogetherArt />} />
-                    <Route path="/:togetherPageCode" element={<TogetherInfo />} />
+                    <Route path="/:togetherPageCode" element={<TogetherInfo togetherJoinList={togetherJoinList} />} />
                 </Routes>
                 <TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />
             </Stack>

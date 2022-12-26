@@ -8,7 +8,6 @@ const TogetherJoin = ({children, togetherInfo}) => {
     const [insertForm,setInsertFrom] = useState({
         togetherJoinDate: nowdate,
         togetherJoinAnswer: "",
-        togetherJoinState:"",
         togetherCode: togetherInfo,
         memberEmail: {
             memberEmail: sessionStorage.getItem("id")
@@ -53,7 +52,12 @@ const TogetherJoin = ({children, togetherInfo}) => {
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
-        axios.post("/insertTogetherJoinInfo",insertForm).then((res) => console.log(res))
+          axios.post("/insertTogetherJoinInfo", insertForm)
+              .then((res) => {
+                  setOpen(false);
+                  alert(res.data)
+              })
+              .catch((Error) => console.log(Error))
       }
 
     return (
