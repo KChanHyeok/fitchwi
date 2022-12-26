@@ -193,11 +193,12 @@ export default function Interest({ joinForm, setJoinForm }) {
       />
 
       <br />
-      <Link to="/join/mbti" style={{ textDecoration: "none" }}>
-        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
+
+      <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
+        <Link to="/join/mbti" style={{ textDecoration: "none" }}>
           다음
-        </Button>
-      </Link>
+        </Link>
+      </Button>
     </div>
   );
 }
