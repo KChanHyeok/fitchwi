@@ -85,4 +85,11 @@ public class TalkService {
         Iterable<Talk> talkList = talkRepository.findAll();
         return talkList;
     }
+
+    public Talk getTalk(long talkCode) {
+        log.info("talkService.getTalk()");
+        Talk talkInfo;
+        talkInfo = talkRepository.findById(talkCode).get();
+        return talkInfo;
+    }
 }

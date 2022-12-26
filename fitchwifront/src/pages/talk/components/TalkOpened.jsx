@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Fab, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 
-function TalkOpened({ memberEmail }) {
+function TalkOpened({ memberEmail, refreshTalkList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
@@ -55,9 +55,9 @@ function TalkOpened({ memberEmail }) {
 
     const onLoadFile = useCallback(
         (e) => {
-            const files = e.target.files;
-            setFileForm(files);
-            console.log(e.target.files);
+            const file = e.target.files;
+            setFileForm(file);
+            console.log(e.target.file);
         }, []);
 
     //작성 내용 전송 함수
@@ -66,7 +66,8 @@ function TalkOpened({ memberEmail }) {
         e.preventDefault();
         formData.append(
             "data",
-            new Blob([JSON.stringify(inputTalkOp)], { type: "application/json" })
+            new Blob([JSON.stringify(inputTalkOp)],
+                { type: "application/json" })
         );
         formData.append("uploadImage", fileForm[0]);
 
@@ -74,14 +75,16 @@ function TalkOpened({ memberEmail }) {
             headers: { "Content-Type": "multipart/form-data" },
         };
 
-        axios.post("/addTalk", formData, config).then((res) => {
-            if (res.data === "ok") {
-                alert("개설 성공")
-                nav("/TalkInfo");
-            } else {
-                alert("개설 실패")
-            }
-        })
+        axios.post("/addTalk", formData, config)
+            .then((res) => {
+                if (res.data === "ok") {
+                    setTalkOpened(false);
+                    alert("개설 성공");
+                    refreshTalkList();
+                } else {
+                    alert("개설 실패");
+                }
+            })
             .catch((error) => console.log(error));
     };
 
@@ -110,7 +113,7 @@ function TalkOpened({ memberEmail }) {
     const [talkOpened, setTalkOpened] = useState(false);
 
     return (
-        <>
+        <div>
             <Tooltip
                 onClick={insertTalkOp}
                 title="Add"
@@ -197,7 +200,7 @@ function TalkOpened({ memberEmail }) {
                     </form>
                 </TalkOpenedModal>
             )}
-        </>
+        </div>
     );
 }
 
