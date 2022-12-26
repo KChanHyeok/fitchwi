@@ -1,8 +1,10 @@
 package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Together;
+import com.fitchwiframe.fitchwiserver.entity.TogetherJoin;
 import com.fitchwiframe.fitchwiserver.entity.TogetherOpened;
 import com.fitchwiframe.fitchwiserver.entity.TogetherTag;
+import com.fitchwiframe.fitchwiserver.repository.TogetherJoinRepository;
 import com.fitchwiframe.fitchwiserver.repository.TogetherOpenedRepository;
 import com.fitchwiframe.fitchwiserver.repository.TogetherRepository;
 import com.fitchwiframe.fitchwiserver.repository.TogetherTagRepository;
@@ -27,6 +29,8 @@ public class TogetherService {
     @Autowired
     TogetherTagRepository togetherTagRepository;
 
+    @Autowired
+    TogetherJoinRepository togetherJoinRepository;
 
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
         String result = null;
@@ -88,5 +92,18 @@ public class TogetherService {
         togetherInfo = togetherRepository.findById(togetherPageCode).get();
 
         return togetherInfo;
+    }
+
+    public String insertTogetherJoinInfo(TogetherJoin togetherJoin) {
+        String result = null;
+        try {
+            togetherJoinRepository.save(togetherJoin);
+            result="성공";
+        }catch (Exception e) {
+            e.printStackTrace();
+            result="실패";
+        }
+
+        return result;
     }
 }

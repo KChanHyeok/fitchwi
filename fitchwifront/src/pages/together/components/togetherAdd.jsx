@@ -32,7 +32,7 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 const facilities = {
-  facilitiesCode: null,
+  facilitiesCode: 0,
   facilitiesGrade: "", 
   facilitiesManager: "" ,
   facilitiesName: "",
