@@ -42,7 +42,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   const [open, setOpen] = useState(false);
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
-      memberEmail: memberInfo.memberEmail,
+      memberEmail: sessionStorage.getItem("id"),
     },
     feedCategory: "",
     feedContent: "",

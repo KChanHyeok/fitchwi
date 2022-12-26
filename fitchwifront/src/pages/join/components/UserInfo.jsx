@@ -43,9 +43,10 @@ export default function UserInfo({ onChange, joinForm, setJoinForm }) {
       .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
       .then((res) => {
         if (res.data === "ok") {
-          setDisabled(!disabled);
+          setDisabled(false);
           alert("사용 가능한 Email 입니다.");
         } else {
+          setDisabled(true);
           alert("사용할 수 없는 Email 입니다.");
         }
       });

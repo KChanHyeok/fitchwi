@@ -18,4 +18,41 @@ public class AdminService {
         Iterable<Facilities> fList = facilitiesRepository.findAll();
         return fList;
     }
+
+  public String insertFacilities(Facilities facilities) {
+    log.info("adminService.insertfacilities()");
+    String result = "fail";
+    try {
+      facilitiesRepository.save(facilities);
+      result = "ok";
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  public Facilities getFacilitiesInfo(Long facilitiesCode) {
+      Facilities facilities = new Facilities();
+      try{
+        facilities = facilitiesRepository.findById(facilitiesCode).get();
+
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+      return facilities;
+
+  }
+
+  public String deleteFacilities(Long facilitiesCode) {
+      log.info("adminService.deleteFacilities()");
+      String result = "fail";
+      try{
+        facilitiesRepository.deleteById(facilitiesCode);
+        result ="ok";
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+    return result;
+  }
 }

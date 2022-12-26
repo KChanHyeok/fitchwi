@@ -10,7 +10,7 @@ const ConfirmDialog = (props) => {
       <DialogContent style={{ whiteSpace: "pre-line" }}>{children}</DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={() => setOpen(false)}>
-          ㄴㄴ
+          취소
         </Button>
         <Button
           variant="contained"
@@ -19,7 +19,7 @@ const ConfirmDialog = (props) => {
             onConfirm();
           }}
         >
-          ㅇㅇ
+          탈퇴
         </Button>
       </DialogActions>
     </Dialog>
