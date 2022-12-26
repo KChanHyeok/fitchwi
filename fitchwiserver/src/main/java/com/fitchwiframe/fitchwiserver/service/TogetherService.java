@@ -106,4 +106,10 @@ public class TogetherService {
 
         return result;
     }
+
+    public Iterable<TogetherJoin> getAllTogetherJoinList() {
+        log.info("getAllTogetherJoinList()");
+        Iterable<TogetherJoin> togetherJoinList = togetherJoinRepository.findAll();
+        return togetherJoinList;
+    }
 }

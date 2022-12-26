@@ -4,19 +4,19 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 
-const TogetherInfo = () => {
-    const getTogetherInfo = () => {
-        axios.get("/getTogetherInfo", { params: { togetherPageCode: togetherPageCode } }).then((res) => setTogetherInfo(res.data))
-    }
-
-    let { togetherPageCode } = useParams()
-    const [togetherInfo, setTogetherInfo] = useState({});
-    const [togetherJoinMember, setTogetherJoinMember] = useState([])
-    
+const TogetherInfo = ({togetherJoinList}) => {
     useEffect(() => {
         getTogetherInfo()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    }, [])
+    
+    let { togetherPageCode } = useParams()
+    const [togetherInfo, setTogetherInfo] = useState({});
+    const [togetherJoinMember, setTogetherJoinMember] = useState([])
+
+    const getTogetherInfo = () => {
+        axios.get("/getTogetherInfo", { params: { togetherPageCode: togetherPageCode } }).then((res) => setTogetherInfo(res.data))
+    }
 
 
     return (
@@ -43,9 +43,10 @@ const TogetherInfo = () => {
                 {togetherInfo.togetherContent}
             </Box>
             <h3>멤버 소개</h3>
-            {togetherJoinMember.length===0? <Box component="span">현재 참여중인 멤버가 없습니다</Box> : togetherJoinMember.map((data) =>  
-                <Box key={data.info}>
-                    {data}
+            {togetherJoinList.length === 0 ? <Box component="span">현재 참여중인 멤버가 없습니다</Box> :
+                togetherJoinList.map((data) =>  
+                <Box key={data.togetherJoinCode}>
+                    {data.memberEmail.memberName}
                 </Box>
             )}
             <h3>안내사항</h3>
