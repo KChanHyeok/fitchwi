@@ -80,6 +80,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
       headers: { "Content-Type": "multipart/form-data" },
     };
 
+    console.log(formdata);
     axios
       .post("/insertfeed", formdata, config)
       .then((response) => {

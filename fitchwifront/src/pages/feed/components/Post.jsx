@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Checkbox,
   Chip,
   Divider,
   Modal,
@@ -16,15 +17,16 @@ import {
   Typography,
 } from "@mui/material";
 
-import { FavoriteBorder, ChatBubbleOutline } from "@mui/icons-material";
+import { FavoriteBorder, Favorite, ChatOutlined } from "@mui/icons-material";
 import Carousel from "react-material-ui-carousel";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
 
 import axios from "axios";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Comments from "./Comments";
+import FeedLikeList from "./FeedLikeList";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -38,16 +40,10 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({
-  memberWriterInfo,
-  memberInfo,
-  feedContent,
-  feedDate,
-  feedCode,
-  file,
-  comment,
-  refreshFeed,
-}) => {
+const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like }) => {
+  console.log(feedCode);
+  console.log(memberInfo);
+  const nav = useNavigate();
   const toDay = new Date();
   const toDayD = toDay.getTime();
 
@@ -155,6 +151,41 @@ const Post = ({
     }
     return result;
   };
+
+  const [isLike, setIsLike] = useState(false);
+
+  useEffect(() => {
+    for (let i = 0; i < like.length; i++) {
+      if (like[i].memberEmail.memberEmail === memberInfo.memberEmail) {
+        setIsLike(true);
+        console.log(like[i].memberEmail.memberEmail);
+      }
+    }
+    console.log(like);
+  }, [like, memberInfo.memberEmail]);
+
+  const onLike = useCallback(
+    (isLike) => {
+      if (memberInfo.memberEmail === undefined) {
+        alert("로그인이 필요한 서비스입니다.");
+        return nav("/login");
+      }
+      if (isLike === false) {
+        axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {
+          setIsLike(!isLike);
+          refreshFeed();
+        });
+      } else {
+        axios
+          .delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } })
+          .then((res) => {
+            setIsLike(!isLike);
+            refreshFeed();
+          });
+      }
+    },
+    [feedCode, memberInfo.memberEmail, refreshFeed, nav]
+  );
   return (
     <div>
       <Card sx={{ margin: 5, border: 1 }}>
@@ -171,13 +202,7 @@ const Post = ({
           action={<LongMenu />}
           title={<b>{memberWriterInfo.memberNickname}</b>}
           subheader={
-            day > 1
-              ? day + "일 전"
-              : hour > 1
-              ? hour + "시간 전"
-              : minute > 1
-              ? minute + "분 전"
-              : second + "초 전"
+            day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"
           }
         />
         {/* 피드 이미지 */}
@@ -191,12 +216,7 @@ const Post = ({
             sx={{ height: "100%" }}
           >
             {flist.map((item, i) => (
-              <CardMedia
-                key={item.feedCode}
-                component="img"
-                src={item.image}
-                alt={item.feedFileImg}
-              />
+              <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
             ))}
           </Carousel>
         ) : (
@@ -211,19 +231,30 @@ const Post = ({
           />
         )}
         <CardContent>
-          <Stack direction="row" gap={2} mt={2} mb={2}>
-            <FavoriteBorder />
-            <ChatBubbleOutline />
+          <Stack direction="row" gap={2} mb={2}>
+            <Checkbox
+              checked={isLike}
+              icon={<FavoriteBorder />}
+              checkedIcon={<Favorite />}
+              onClick={() => onLike(isLike)}
+            />
+            <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} onClick={(e) => setOpen(true)} />
           </Stack>
-          <Typography
-            variant="body1"
-            color="text.primary"
-            onClick={(e) => setOpen(true)}
-            sx={{ cursor: "pointer" }}
-          >
-            <b>{memberWriterInfo.memberNickname}</b>{" "}
-            {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
-          </Typography>
+          {like.length === 0 ? null : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
+          <Stack direction="row" gap={1} mt={1} mb={1} alignItems="center">
+            <Link
+              to="/memberpage"
+              state={{ memberId: memberWriterInfo.memberEmail }}
+              style={{ textDecoration: "none" }}
+            >
+              <Typography variant="body1" color="text.primary" sx={{ cursor: "pointer" }}>
+                <b>{memberWriterInfo.memberNickname}</b>
+              </Typography>
+            </Link>
+            <Typography variant="body6">
+              {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+            </Typography>
+          </Stack>
           <Typography variant="body2" color="skyblue" marginBottom={2}>
             #해쉬 태그 #해쉬 태그 #해쉬 태그 #해쉬 태그
           </Typography>
@@ -302,12 +333,7 @@ const Post = ({
                   height={570}
                 >
                   {flist.map((item, i) => (
-                    <CardMedia
-                      key={item.feedCode}
-                      component="img"
-                      src={item.image}
-                      alt={item.feedFileImg}
-                    />
+                    <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
                   ))}
                 </Carousel>
               ) : (
@@ -352,7 +378,7 @@ const Post = ({
                 "태그 및 후기"
               </Box>
               <Box
-                height={150}
+                height={130}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -362,7 +388,7 @@ const Post = ({
                 {comment.length >= 1 ? (
                   <>
                     {comment.map((comment) => (
-                      <Comments key={comment.feedCommentCode} data={comment} />
+                      <Comments key={comment.feedCommentCode} data={comment} memberWriterInfo={memberWriterInfo} />
                     ))}
                   </>
                 ) : (
@@ -371,10 +397,18 @@ const Post = ({
                   </Typography>
                 )}
               </Box>
-              <Stack direction="row" gap={2} mt={2} mb={2}>
-                <FavoriteBorder />
-                <ChatBubbleOutline />
+              <Divider />
+              <Stack direction="row" gap={1} mb={1}>
+                <Checkbox
+                  checked={isLike}
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  onClick={() => onLike(isLike)}
+                  sx={{ p: 0 }}
+                />
+                <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} />
               </Stack>
+              {like.length === 0 ? null : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
               <Typography color="grey" variant="body2" mb={1}>
                 {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute + "분전"}
               </Typography>

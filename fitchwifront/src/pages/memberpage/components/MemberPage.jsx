@@ -174,12 +174,14 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
                 </ListItem>
                 <Divider variant="middle" component="li" />
 
+
                 <ListItem disablePadding>
                   <ListItemButton component="a" onClick={() => setConfirmOpen(() => true)}>
                     <CenterListText primary="탈퇴" />
                   </ListItemButton>
                 </ListItem>
                 <Divider variant="middle" component="li" />
+
 
                 <ConfirmDialog
                   title="Fitchwi 회원 탈퇴"

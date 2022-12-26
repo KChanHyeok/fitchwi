@@ -1,15 +1,9 @@
 package com.fitchwiframe.fitchwiserver.service;
 
-import com.fitchwiframe.fitchwiserver.entity.Feed;
-import com.fitchwiframe.fitchwiserver.entity.FeedComment;
-import com.fitchwiframe.fitchwiserver.entity.FeedFile;
+import com.fitchwiframe.fitchwiserver.entity.*;
 
-import com.fitchwiframe.fitchwiserver.entity.Member;
+import com.fitchwiframe.fitchwiserver.repository.*;
 
-import com.fitchwiframe.fitchwiserver.repository.FeedCommentRepository;
-
-import com.fitchwiframe.fitchwiserver.repository.FeedFileRepository;
-import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,9 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Log
@@ -29,13 +21,17 @@ public class FeedService {
 
     private final FeedFileRepository feedFileRepository;
     private final FeedCommentRepository feedCommentRepository;
+    private final FeedLikeRepository feedLikeRepository;
 
-    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository, FeedCommentRepository feedCommentRepository) {
+    private final MemberRepository memberRepository;
+
+    public FeedService(FeedRepository feedRepository, FeedFileRepository feedFileRepository, FeedCommentRepository feedCommentRepository, FeedLikeRepository feedLikeRepository, MemberRepository memberRepository) {
         this.feedRepository = feedRepository;
         this.feedFileRepository = feedFileRepository;
         this.feedCommentRepository = feedCommentRepository;
+        this.feedLikeRepository = feedLikeRepository;
+        this.memberRepository = memberRepository;
     }
-
 
 
     // 피드 등록
@@ -112,8 +108,10 @@ public class FeedService {
         for (Feed a : feedList){
             List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
             List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+            List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
             a.setFfList(feedFiles);
             a.setFcList(feedComments);
+            a.setFlList(feedLikes);
             newList.add(a);
         }
         System.out.println("newList = " + newList);
@@ -157,4 +155,33 @@ public class FeedService {
         return result;
     }
 
+    public String likeFeed(Long feedCode, String memberInfo) {
+        log.info("feedService.likeFeed()");
+        FeedLike like = new FeedLike();
+        like.setFeedCode(feedCode);
+        String result = null;
+        try {
+            Member loginMember = memberRepository.findById(memberInfo).get();
+            like.setMemberEmail(loginMember);
+            feedLikeRepository.save(like);
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String dLikeFeed(Long feedCode, String memberInfo) {
+        String result = "fail";
+
+        try {
+            Member loginMember = memberRepository.findById(memberInfo).get();
+            FeedLike like = feedLikeRepository.findByFeedCodeAndMemberEmail(feedCode, loginMember);
+            feedLikeRepository.delete(like);
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
