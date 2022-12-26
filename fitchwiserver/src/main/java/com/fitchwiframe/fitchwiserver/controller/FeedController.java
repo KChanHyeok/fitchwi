@@ -27,6 +27,7 @@ public class FeedController {
     @PostMapping("/insertfeed")
     public String insertFeed(@RequestPart(value = "data") Feed newFeed,
                              @RequestPart(value = "uploadImage", required = false) List<MultipartFile> files, HttpSession session ) {
+        log.info("newFeed : "+ newFeed);
         log.info("FileList : " + files);
         log.info("insertFeed()");
         return feedService.insertFeed(newFeed, files, session);
@@ -46,9 +47,6 @@ public class FeedController {
         return feedService.getMemberFeed(member);
     }
 
-
-
-
      // 피드 댓글 등록
     @PostMapping("/insertComment")
     public String insertComment(@RequestBody FeedComment feedComment){
@@ -56,4 +54,20 @@ public class FeedController {
         return feedService.insertComment(feedComment);
     }
 
+    // 피드 좋아요 하기
+    @GetMapping("/likeFeed")
+    private String likeFeed(@RequestParam Long feedCode, String memberInfo){
+        log.info("feedCode : "+ feedCode);
+        log.info("memberInfo : "+ memberInfo);
+
+        log.info("likeFeed()");
+        return feedService.likeFeed(feedCode, memberInfo);
+    }
+
+    // 피드 좋아요 취소하기
+    @DeleteMapping("/dLikeFeed")
+    private String dLikeFeed(@RequestParam Long feedCode, String memberInfo){
+        log.info("dLikeFeed()");
+        return feedService.dLikeFeed(feedCode, memberInfo);
+    }
 }

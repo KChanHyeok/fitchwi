@@ -46,11 +46,7 @@ export default function FollowMemberListModal({ children, followList }) {
           {followList.map((member, index) => (
             <List key={index} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
               {member.memberSaveimg && (
-                <Link
-                  to="/memberpage"
-                  state={{ memberId: member.memberEmail }}
-                  style={{ textDecoration: "none" }}
-                >
+                <Link to="/memberpage" state={{ memberId: member.memberEmail }} style={{ textDecoration: "none" }}>
                   {" "}
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>

@@ -136,9 +136,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
             {memberSaveimg && (
               <CardHeader
                 style={{ background: "linear-gradient(190deg,lightgray, white)" }}
-                avatar={
-                  <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                }
+                avatar={<Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />}
                 title={
                   <Typography sx={{ fontSize: 25 }}>
                     {" "}
@@ -182,9 +180,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
                       팔로워 {followerList.length}
                     </FollowMemberListModal>
 
-                    <FollowMemberListModal followList={followList}>
-                      팔로우 {followList.length}
-                    </FollowMemberListModal>
+                    <FollowMemberListModal followList={followList}>팔로우 {followList.length}</FollowMemberListModal>
 
                     {loginId === pageOwner ? null : (
                       <Checkbox
@@ -212,20 +208,12 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
                           alt={feed.ffList[0].feedFileImg}
                           loading="lazy"
                         />
-                        <ImageListItemBar
-                          title={feed.feedContent}
-                          subtitle={feed.feedDate}
-                          position="below"
-                        />
+                        <ImageListItemBar title={feed.feedContent} subtitle={feed.feedDate} position="below" />
                       </ImageListItem>
                     ) : (
                       <ImageListItem key={index}>
                         <Paper variant="outlined" style={{ width: 161, height: 215 }} />
-                        <ImageListItemBar
-                          title={feed.feedContent}
-                          subtitle={feed.feedDate}
-                          position="below"
-                        />
+                        <ImageListItemBar title={feed.feedContent} subtitle={feed.feedDate} position="below" />
                       </ImageListItem>
                     )
                   )
@@ -245,11 +233,7 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
               </Button>
             </Link>
 
-            <Button
-              sx={{ mt: 5, width: 100 }}
-              variant="contained"
-              onClick={() => setConfirmOpen(() => true)}
-            >
+            <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={() => setConfirmOpen(() => true)}>
               탈퇴
             </Button>
             <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onLogout}>
