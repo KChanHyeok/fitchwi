@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import MemberPage from "./components/MemberPage";
+import UpdateMember from "./components/UpdateMember";
 export default function MemberPageIndex({ onLogout }) {
   const location = useLocation();
   console.log(location);
@@ -45,6 +46,22 @@ export default function MemberPageIndex({ onLogout }) {
   }, [getMemberInfo]);
 
   return (
-    <MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} feedList={feedList} />
+    <div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MemberPage
+              member={member}
+              onLogout={onLogout}
+              pageOwner={pageOwner}
+              feedList={feedList}
+            />
+          }
+        ></Route>
+
+        <Route path="/updateMember" element={<UpdateMember />}></Route>
+      </Routes>
+    </div>
   );
 }

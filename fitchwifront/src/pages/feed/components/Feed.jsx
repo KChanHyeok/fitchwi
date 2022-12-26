@@ -4,6 +4,8 @@ import Post from "./Post";
 
 const Feed = ({ data, memberInfo, refreshFeed }) => {
   console.log(data);
+  console.log("여기");
+  console.log(memberInfo);
   return (
     <Box flex={4} p={2}>
       {data.length === 0 ? (

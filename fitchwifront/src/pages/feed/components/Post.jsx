@@ -69,6 +69,7 @@ const Post = ({
       image: "",
     },
   ]);
+
   const [clist, setClist] = useState([
     {
       feedCode: "",
