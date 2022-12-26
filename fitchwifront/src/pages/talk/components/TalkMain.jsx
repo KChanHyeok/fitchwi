@@ -7,7 +7,7 @@ const TalkMain = () => {
     return (
         <Box flex={4} p={2}>
             <h1>얘기해요 메인페이지</h1>
-            <Link style={{ textDecoration: "none" }} to={"/talkInfo"}>
+            <Link style={{ textDecoration: "none" }} to={"/talk/Info"}>
                 내가 개설한 얘기해요
             </Link>
             <TalkList />

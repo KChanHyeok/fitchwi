@@ -11,7 +11,7 @@ function index() {
     return (
         <>
         <Stack direction="row" spacing={7} justifyContent="space-between">
-            <Sidebar />
+            <Sidebar pageurl={"talk"} />    
             <TalkMain />
             <TalkOpened memberEmail={id} />
         </Stack>
