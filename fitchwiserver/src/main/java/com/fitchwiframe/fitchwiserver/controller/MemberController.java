@@ -92,4 +92,11 @@ public class MemberController {
 
     return memberService.createMember();
   }
+  @PostMapping("/checkPwd")
+  private String checkPwd(@RequestBody Member memberToCheck){
+    log.info("memberController.checkPwd()");
+
+    return memberService.checkPwd(memberToCheck);
+
+  }
 }

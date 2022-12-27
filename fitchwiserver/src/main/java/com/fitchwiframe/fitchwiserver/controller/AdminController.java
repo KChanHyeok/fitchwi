@@ -35,4 +35,9 @@ public class AdminController {
         log.info("adminController.deleteFacilities();");
         return adminService.deleteFacilities(facilitiesCode);
     }
+    @PutMapping("/updateFacilities/{facilitiesCode}")
+    public String updateFacilities(@RequestBody Facilities newFacilities, @PathVariable Long facilitiesCode) {
+        log.info("adminController.updateFacilities();");
+        return adminService.updateFacilities(newFacilities, facilitiesCode);
+    }
 }
