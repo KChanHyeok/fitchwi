@@ -49,15 +49,23 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     feedTag: [],
   });
 
+  const handleOpen = () => {
+    if (sessionStorage.getItem("id") === null) {
+      alert("로그인이 필요한 서비스입니다.");
+      nav("/login");
+    } else {
+      setOpen(true);
+      preview();
+    }
+  };
+
   useEffect(() => {
     preview();
-    return () => preview();
   }, [fileForm]);
 
   const preview = useCallback(
     (e) => {
       if (!fileForm) return false;
-
       if (fileForm.length === 1) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -76,13 +84,10 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
         fileArr.forEach((file, index) => {
           const reader = new FileReader();
           const $imgDiv = document.createElement("div");
+          $imgDiv.setAttribute("style", "display:flex");
           const $img = document.createElement("img");
           $img.classList.add("image");
-          const $label = document.createElement("label");
-          $label.classList.add("image-label");
-          $label.textContent = file.name;
           $imgDiv.appendChild($img);
-          $imgDiv.appendChild($label);
           reader.onload = (e) => {
             $img.src = e.target.result;
             $imgDiv.style.width = "200px";
@@ -106,6 +111,10 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
 
   const onLoadFile = useCallback((event) => {
     const files = event.target.files;
+    if (files.length > 4) {
+      alert("사진은 최대 4장까지입니다!");
+      return;
+    }
     setFileForm(files);
   }, []);
 
@@ -148,6 +157,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   };
 
   const reset = () => {
+    setState(false);
     setFileForm("");
     setTagForm([]);
     setInsertForm({
@@ -174,31 +184,24 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   );
 
   const handleClose = () => {
-    setOpen(false);
     reset();
+    setOpen(false);
   };
 
   const snackBarClose = () => {
     setSnackbarOpen(false);
   };
 
-  const insertfeed = () => {
-    if (sessionStorage.getItem("id") === null) {
-      alert("로그인이 필요한 서비스입니다.");
-      nav("/login");
-    } else {
-      setOpen(true);
-    }
-  };
   const imageInput = useRef();
   const onClickImageInput = () => {
     imageInput.current.click();
+    preview();
   };
 
   return (
     <>
       <Tooltip
-        onClick={insertfeed}
+        onClick={handleOpen}
         title="Add"
         sx={{
           position: "fixed",
@@ -210,20 +213,8 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
           <AddIcon />
         </Fab>
       </Tooltip>
-      <StyleModal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          width={850}
-          height={500}
-          bgcolor="white"
-          p={3}
-          borderRadius={5}
-          sx={{ display: "flex", flexDirection: "column" }}
-        >
+      <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box width={850} height={500} bgcolor="white" p={3} borderRadius={5} sx={{ display: "flex", flexDirection: "column" }}>
           <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
             <ButtonGroup>
               <Button color="error" onClick={handleClose}>
@@ -259,36 +250,25 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
             <Box mt={1}>
               {fileForm.length === 0 ? (
                 <>
+                  <Typography variant="body6" component="p" textAlign="right" color="grey">
+                    * 이미지는 최대 4장까지만 등록할 수 있습니다.
+                  </Typography>
                   <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 400, height: 400 }}>
                     <AddIcon />
                   </Button>
-                  <input
-                    type="file"
-                    name="feedImg"
-                    onChange={onLoadFile}
-                    multiple
-                    ref={imageInput}
-                    style={{ display: "none" }}
-                  />
+                  <input type="file" name="feedImg" onChange={onLoadFile} multiple ref={imageInput} style={{ display: "none" }} />
                 </>
               ) : fileForm.length > 1 ? (
                 <div id="multiple-container"></div>
               ) : (
-                <div onClick={onClickImageInput}>
+                <div>
                   <img
                     className="preview-image"
                     src="https://dummyimage.com/500x500/ffffff/000000.png&text=preview+image"
                     alt=""
                     style={{ backgroundSize: "cover", width: 400, height: 400 }}
                   />
-                  <input
-                    type="file"
-                    name="feedImg"
-                    onChange={onLoadFile}
-                    multiple
-                    ref={imageInput}
-                    style={{ display: "none" }}
-                  />
+                  <input type="file" name="feedImg" onChange={onLoadFile} multiple ref={imageInput} style={{ display: "none" }} />
                 </div>
               )}
             </Box>
@@ -315,7 +295,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                 </Select>
               </FormControl>
               <br />
-              <FormControl sx={{ mt: 1 }} fullWidth>
+              <FormControl sx={{ mt: 2 }} fullWidth>
                 <InputLabel>피드 카테고리</InputLabel>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
@@ -338,14 +318,9 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
-              <MultipleSelectChip
-                insertForm={insertForm}
-                setInsertForm={setInsertForm}
-                tagForm={tagForm}
-                setTagForm={setTagForm}
-              />
+              <MultipleSelectChip insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
               <TextField
-                sx={{ mt: 1 }}
+                sx={{ mt: 2 }}
                 fullWidth
                 value={insertForm.feedContent}
                 id="outlined-multiline-static"

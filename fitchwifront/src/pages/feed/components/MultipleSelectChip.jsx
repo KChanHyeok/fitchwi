@@ -35,6 +35,10 @@ export default function MultipleSelectChip({ insertForm, setInsertForm, tagForm,
   };
 
   const onClick = useCallback(() => {
+    if (tag === "") {
+      alert("내용을 입력하세요!");
+      return;
+    }
     setTagList(tagList.concat(tag));
     setTag("");
     setOpen(true);
