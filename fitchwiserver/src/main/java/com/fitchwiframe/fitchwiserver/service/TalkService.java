@@ -92,4 +92,52 @@ public class TalkService {
         talkInfo = talkRepository.findById(talkCode).get();
         return talkInfo;
     }
+
+    public String updateTalk(Talk talk, MultipartFile pic, HttpSession session) {
+        log.info("talkService.updateTalk()");
+        String result = null;
+
+
+        try {
+            if (pic != null) {
+                talk = talkFileUpload(talk, pic, session);
+            } else {
+                talk.setTalkImg("이미지 원래 이름");
+                talk.setTalkSaveimg("저장된 기본이미지 이름");
+            }
+//            Talk test = (Talk)session.getAttribute("talkCode");
+//            Talk upTalk = talkRepository.findById(test.getTalkCode()).get();
+//
+//            upTalk.setTalkTitle(talk.getTalkTitle());
+//            upTalk.setTalkMax(talk.getTalkMax());
+//            upTalk.setTalkCategory(talk.getTalkCategory());
+//            upTalk.setTalkContent(talk.getTalkContent());
+//            talkRepository.save(upTalk);
+//            session.setAttribute("talkCode", upTalk);
+
+            talkRepository.save(talk);
+
+            result = "ok";
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("등록 실패");
+            result = "fail";
+        }
+        return result;
+    }
+
+    public String deleteTalk(Talk talk, TalkOpened talkOpened, TalkTag talkTag) {
+        String result = null;
+
+        try {
+            talkRepository.deleteById(talk.getTalkCode());
+            talkOpenedRepository.deleteById(talkOpened.getTalkOpenCode());
+            talkTagRepository.deleteById(talkTag.getTalkTagCode());
+            result = "ok";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "fail";
+        }
+        return result;
+    }
 }

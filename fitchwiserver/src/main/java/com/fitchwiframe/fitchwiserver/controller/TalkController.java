@@ -44,4 +44,20 @@ public class TalkController {
         log.info("talkController.getTalk()");
         return talkService.getTalk(talkCode);
     }
+
+    //얘기해요 수정
+    @GetMapping("/updateTalk")
+    public String updateTalk(Talk talk, MultipartFile pic, HttpSession session) {
+        log.info("talkController.updateTalk()");
+        return talkService.updateTalk(talk, pic, session);
+    }
+
+    //얘기해요 삭제
+    @DeleteMapping("/deleteTalk")
+    public String deleteTalk(@RequestBody Talk talk,
+                             @RequestBody TalkOpened talkOpened,
+                             @RequestBody TalkTag talkTag) {
+        log.info("talkController.deleteTalk()");
+        return talkService.deleteTalk(talk, talkOpened, talkTag);
+    }
 }

@@ -1,16 +1,4 @@
-.talkDetail {
-    margin-top: 10px !important;
-    width: 50rem;
-    height: 50rem;
-    border: 1px solid #F8AA83;
-    z-index: 1 !important;
-}
-
-// .css-10dgnsb-MuiStack-root>:not(style)+:not(style) {
-//     margin: 0;
-//     margin-left: 100px;
-// }
-
+//얘기해요 관리버튼
 button#demo-customized-button {
     background-color: #F8AA83;
 }
@@ -21,11 +9,6 @@ button#demo-customized-button:hover {
 
 .talkOpMenu {
     float: right;
-    margin-right: 20rem;
-}
-
-.talkTitle {
-    font-size: 30px;
 }
 
 .reportBtn {

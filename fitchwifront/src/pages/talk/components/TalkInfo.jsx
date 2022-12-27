@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
+import { Box } from "@mui/material";
 
 const TalkInfo = () => {
     let { talkCode } = useParams();
@@ -15,6 +16,7 @@ const TalkInfo = () => {
         axios.get("/getTalk", { params: { talkCode: talkCode } })
             .then((res) => setTalkInfo(res.data));
     }
+    console.log(talkInfo);
 
     useEffect(() => {
         getTalkInfo();
@@ -32,28 +34,35 @@ const TalkInfo = () => {
             alignItems="stretch"
             spacing={2}
         >
-            <div className="talkDetail">
-                <div>
-                    <div className="header">
-                        <span>mbti 취미</span>
-                        <span>{talkInfo.talkCategory}</span>
-                        <span>남은 자리 0/{talkInfo.talkMax}</span>
-                        <div className="talkOpMenu">
-                            <TalkOpMenu />
-                        </div>
-                    </div>
-                    <div className="section">
-                        <div>
-                            <span className="talkTitle"><b>{talkInfo.talkTitle}</b></span>
-                            <span className="reportBtn">신고하기</span>
-                            {/* <img src={`/images/${talkInfo.talkSaveImg}`}></img> */}
-                        </div>
-                        <p>멤버소개</p>
-                        <p>방장</p>
-                        <div>얘기해요 피드</div>
-                    </div>
+            <Box>
+                <span>mbti 취미&nbsp;</span>
+                <span>{talkInfo.talkCategory}&nbsp;</span>
+                <span>남은 자리 0/{talkInfo.talkMax}&nbsp;</span>
+                <span>유형 - {talkInfo.talkType}</span>
+                <div className="talkOpMenu">
+                    <TalkOpMenu />
+                    <p className="reportBtn">신고하기</p>
                 </div>
-            </div>
+            </Box>
+            <h1>{talkInfo.talkTitle}</h1>
+
+            <Box sx={{ maxWidth: 900 }}>
+                {
+                    talkInfo.talkSaveimg && (<Box
+                        component="img"
+                        sx={{ maxHeight: 400, textAlign: "center" }}
+                        src={`/images/${talkInfo.talkSaveimg}`}
+                        alt="green iguana"
+                    ></Box>)
+                }
+            </Box>
+            <h3>함께해요 소개</h3>
+            <Box component="span">
+                {talkInfo.togetherContent}
+            </Box>
+            <p>멤버소개</p>
+            <p>방장</p>
+            <div>얘기해요 피드</div>
         </Stack>
 
     )

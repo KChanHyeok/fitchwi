@@ -1,14 +1,18 @@
-import * as React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Divider from '@mui/material/Divider';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import BuildIcon from '@mui/icons-material/Build';
+import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Avatar, FormControl, InputLabel, Modal, Select, TextField, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -51,8 +55,21 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-export default function CategoryMenu() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+const StyleModal = styled(Modal)({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+});
+
+const UserBox = styled(Box)({
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
+});
+
+function TalkOpMenu(refreshTalkList) {
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -60,6 +77,101 @@ export default function CategoryMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    let formData = new FormData();
+    const imgEl = document.querySelector(".talk_img_box");
+    let { talkCode } = useParams();
+    const nav = useNavigate();
+
+    //수정 모달창
+    const [talkUpModal, setTalkUpModal] = useState(false);
+
+    const [updateTalk, setUpdateTalk] = useState({
+        talkTitle: "",
+        talkMax: 0,
+        talkCategory: "",
+        talkContent: "",
+        talkTagContent: "",
+    });
+
+    const onChange = useCallback(
+        (e) => {
+            const updateTo = {
+                ...talkUpModal,
+                [e.target.name]: e.target.value,
+            };
+            setUpdateTalk(updateTo);
+        }, [updateTalk]);
+
+    //파일 업로드
+    const [fileForm, setFileForm] = useState("");
+
+    useEffect(() => {
+        preview();
+
+        return () => preview();
+    });
+
+    const preview = () => {
+        if (!fileForm) return false;
+        const render = new FileReader();
+
+        render.onload = () =>
+            (imgEl.style.backgroundImage = `url(${render.result})`);
+        render.readAsDataURL(fileForm[0]);
+        //console.log(render);
+    };
+
+    const onLoadFile = useCallback(
+        (e) => {
+            const file = e.target.files;
+            setFileForm(file);
+            console.log(e.target.file);
+        }, []);
+
+
+    //수정하기
+    const onTalkUpdate = (e) => {
+        console.log(updateTalk);
+        e.preventDefault();
+        formData.append(
+            "data",
+            new Blob([JSON.stringify(updateTalk)],
+                { type: "application/json" })
+        );
+        formData.append("uploadImage", fileForm[0]);
+
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
+
+        axios.get("/updateTalk", formData, config)
+            .then((res) => {
+                if (res.data === "ok") {
+                    setUpdateTalk(false);
+                    alert("개설 성공");
+                    refreshTalkList();
+                } else {
+                    alert("개설 실패");
+                }
+            })
+            .catch((error) => console.log(error));
+    };
+
+    //삭제하기
+    const deleteTalk = useCallback(
+        () => {
+            axios.delete("/deleteTalk")
+                .then((res) => {
+                    if (res.data === "ok") {
+                        alert("얘기해요 삭제 완료");
+                        nav("/");
+                    } else {
+                        alert("삭제 불가");
+                    }
+                });
+        }
+    )
 
     return (
         <div>
@@ -85,23 +197,91 @@ export default function CategoryMenu() {
                 onClose={handleClose}
             >
                 <MenuItem onClick={handleClose} disableRipple>
-                    <EditIcon />
+                    <ManageAccountsIcon />
                     가입멤버 관리
                 </MenuItem>
                 <MenuItem onClick={handleClose} disableRipple>
-                    <FileCopyIcon />
+                    <FactCheckIcon />
                     문의사항 확인
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose} disableRipple>
-                    <ArchiveIcon />
+                <MenuItem onClick={(e) => setTalkUpModal(true)} disableRipple>
+                    <BuildIcon />
                     얘기해요 수정
                 </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <MoreHorizIcon />
+                <MenuItem onClick={() => deleteTalk()} disableRipple>
+                    <DeleteIcon />
                     얘기해요 삭제
                 </MenuItem>
             </StyledMenu>
+            <StyleModal open={talkUpModal}
+                onClose={(e) => setTalkUpModal(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                sx={{ mt: 5 }}>
+                <Box width={400} height={600} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                    <Typography variant="h6" color="gray" textAlign="center">
+                        얘기해요 수정하기
+                    </Typography>
+                    <UserBox>
+                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Typography fontWeight={500} variant="span">
+                            {sessionStorage.getItem("id")}
+                        </Typography>
+                    </UserBox>
+                    <hr />
+                    <TextField fullWidth
+                        label="얘기해요 모임명"
+                        name="talkTitle"
+                        sx={{ mt: 3 }}
+                        onChange={onChange}
+
+                    />
+                    <TextField fullWidth
+                        label="최대 참여인원"
+                        type="number"
+                        name="talkMax"
+                        sx={{ mt: 3 }}
+                        onChange={onChange}
+                    />
+                    <FormControl sx={{ mt: 2 }} fullWidth>
+                        <InputLabel>모임 카테고리 선정</InputLabel>
+                        <Select label="모임 카테고리 선정"
+                            name="talkCategory" value={updateTalk.talkCategory}
+                            // onChange={onChange}
+                            required>
+                            <MenuItem value="문화∙예술">문화∙예술</MenuItem>
+                            <MenuItem value="운동∙액티비티">운동∙액티비티</MenuItem>
+                            <MenuItem value="요리∙음식">요리∙음식</MenuItem>
+                            <MenuItem value="여행">여행</MenuItem>
+                            <MenuItem value="성장∙자기계발">성장∙자기계발</MenuItem>
+                            <MenuItem value="공예∙수공예">공예∙수공예</MenuItem>
+                            <MenuItem value="게임∙오락">게임∙오락</MenuItem>
+                            <MenuItem value="기타">기타</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <p className="talkInput">애기해요 사진 첨부</p>
+                    <div className="talk_img_box">
+                        <img src="" alt="" />
+                    </div>
+                    <input type="file" name="talkImg"
+                        onChange={onLoadFile}
+                        multiple required></input>
+                    <TextField fullWidth
+                        label="얘기해요 소개 말"
+                        name="talkContent"
+                        sx={{ mt: 3 }}
+                        multiline
+                        rows={3} />
+                    <p className="talkInput">애기해요 태그</p>
+                    <input type="text" name="talkTagContent"
+                        // onChange={onChange}
+                        required></input>
+                    <Button onClick={onTalkUpdate}>수정하기</Button>
+                </Box>
+            </StyleModal>
         </div>
     );
 }
+
+export default TalkOpMenu;
