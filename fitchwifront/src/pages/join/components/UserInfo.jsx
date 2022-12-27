@@ -53,6 +53,17 @@ export default function UserInfo({ onChange, joinForm, setJoinForm }) {
     //console.log(typeof joinForm.memberEmail);
   };
 
+  const insertAddr = useCallback(
+    (addr) => {
+      const joinObj = {
+        ...joinForm,
+        memberAddr: addr,
+      };
+      setJoinForm(joinObj);
+    },
+    [joinForm, setJoinForm]
+  );
+
   return (
     <div style={{ textAlign: "center", width: 500 }}>
       <Typography variant="h2" gutterBottom mb={10}>
@@ -144,7 +155,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm }) {
         </Grid>
         <Grid item xs={12}>
           {" "}
-          <Postcode joinForm={joinForm} setJoinForm={setJoinForm} />
+          <Postcode insertAddr={insertAddr} />
         </Grid>
         <Grid item xs={12}>
           <TextField
