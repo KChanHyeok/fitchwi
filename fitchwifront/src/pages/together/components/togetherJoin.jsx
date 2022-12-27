@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useState } from "react";
 
-const TogetherJoin = ({children, togetherInfo}) => {
+const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState}) => {
     const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
     const [insertForm,setInsertFrom] = useState({
         togetherJoinDate: nowdate,
@@ -56,15 +56,17 @@ const TogetherJoin = ({children, togetherInfo}) => {
               .then((res) => {
                   setOpen(false);
                   alert(res.data)
+                  refreshTogetherJoinList();
               })
               .catch((Error) => console.log(Error))
       }
-
     return (
         <>
-            <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>
-            {children}
-            </Button>
+            { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>: 
+            togetherJoinState==="거절" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}} disabled>신청이 거절되었습니다</Button>:
+            togetherJoinState==="가입중" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>참여취소하기</Button>:
+            <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}} >{children}</Button>
+            }
             <Modal
             keepMounted
             open={open}

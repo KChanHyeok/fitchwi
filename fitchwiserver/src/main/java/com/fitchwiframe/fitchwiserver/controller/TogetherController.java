@@ -46,12 +46,6 @@ public class TogetherController {
         return togetherService.getAllTogetherList();
     }
 
-    @GetMapping("/getTogetherInfo")
-    public Together getTogetherInfo(long togetherPageCode) {
-        log.info("getTogetherInfo()");
-        return togetherService.getTogetherInfo(togetherPageCode);
-    }
-
     @GetMapping("/getAllTogetherJoinList")
     public Iterable<TogetherJoin> getAllTogetherJoinList() {
         log.info("getAllTogetherJoinList");
