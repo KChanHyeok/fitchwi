@@ -105,6 +105,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         } else {
             setDisabled(true);
         }
+        // console.log(e.target.value);
     }
 
     const [disabled, setDisabled] = useState(true);
@@ -139,7 +140,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <TextField fullWidth label="최대 참여인원"
                             type="number" name="talkMax" sx={{ mt: 3 }}
                             onChange={onChange}
-                            required></TextField>
+                            required />
                         <FormControl sx={{ mt: 2 }} fullWidth>
                             <InputLabel>모임 카테고리 선정</InputLabel>
                             <Select label="모임 카테고리 선정"
