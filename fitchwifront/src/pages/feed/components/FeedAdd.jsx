@@ -22,6 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
 import MultipleSelectChip from "./MultipleSelectChip";
+import "./FeedAdd.scss";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -51,16 +52,57 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   useEffect(() => {
     preview();
     return () => preview();
-  });
+  }, [fileForm]);
 
-  const preview = () => {
-    if (!fileForm) return false;
-    const render = new FileReader();
-    const imgEl = document.querySelector(".img_box");
+  const preview = useCallback(
+    (e) => {
+      if (!fileForm) return false;
 
-    render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-    render.readAsDataURL(fileForm[0]);
-  };
+      if (fileForm.length === 1) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const previewImage = document.querySelector(".preview-image");
+          previewImage.src = e.target.result;
+        };
+
+        reader.readAsDataURL(fileForm[0]);
+      } else if (fileForm.length > 1) {
+        const multipleContainer = document.getElementById("multiple-container");
+        const fileArr = Array.from(fileForm);
+        const $colDiv1 = document.createElement("div");
+        const $colDiv2 = document.createElement("div");
+        $colDiv1.classList.add("column");
+        $colDiv2.classList.add("column");
+        fileArr.forEach((file, index) => {
+          const reader = new FileReader();
+          const $imgDiv = document.createElement("div");
+          const $img = document.createElement("img");
+          $img.classList.add("image");
+          const $label = document.createElement("label");
+          $label.classList.add("image-label");
+          $label.textContent = file.name;
+          $imgDiv.appendChild($img);
+          $imgDiv.appendChild($label);
+          reader.onload = (e) => {
+            $img.src = e.target.result;
+            $imgDiv.style.width = "200px";
+            $imgDiv.style.height = "200px";
+          };
+
+          if (index % 2 === 0) {
+            $colDiv1.appendChild($imgDiv);
+          } else {
+            $colDiv2.appendChild($imgDiv);
+          }
+
+          reader.readAsDataURL(file);
+        });
+        multipleContainer.appendChild($colDiv1);
+        multipleContainer.appendChild($colDiv2);
+      }
+    },
+    [fileForm]
+  );
 
   const onLoadFile = useCallback((event) => {
     const files = event.target.files;
@@ -76,6 +118,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     setState(true);
     setSnackbarOpen(true);
   };
+
   const sendFeed = () => {
     formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
 
@@ -94,11 +137,29 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
           setOpen(false);
           alert("성공");
           refreshFeed();
+          setFileForm("");
+          setTagForm([]);
+          setInsertForm({});
         } else {
           alert("실패");
         }
       })
       .catch((error) => console.log(error));
+  };
+
+  const reset = () => {
+    setFileForm("");
+    setTagForm([]);
+    setInsertForm({
+      memberEmail: {
+        memberEmail: sessionStorage.getItem("id"),
+      },
+      feedCategory: "",
+      feedContent: "",
+      feedClassificationcode: "",
+      feedDate: `${new Date().getTime()}`,
+      feedTag: [],
+    });
   };
 
   const handleChange = useCallback(
@@ -114,6 +175,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
   const snackBarClose = () => {
@@ -150,12 +212,12 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
       </Tooltip>
       <StyleModal
         open={open}
-        onClose={(e) => setOpen(false)}
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box
-          width={1000}
+          width={850}
           height={500}
           bgcolor="white"
           p={3}
@@ -163,9 +225,14 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
           sx={{ display: "flex", flexDirection: "column" }}
         >
           <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-            <Button color="error" onClick={handleClose}>
-              CANCEL
-            </Button>
+            <ButtonGroup>
+              <Button color="error" onClick={handleClose}>
+                CANCEL
+              </Button>
+              <Button color="secondary" onClick={reset}>
+                RESET
+              </Button>
+            </ButtonGroup>
             <Typography variant="h5" textAlign="center">
               피드 작성
             </Typography>
@@ -192,7 +259,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
             <Box mt={1}>
               {fileForm.length === 0 ? (
                 <>
-                  <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 500, height: 420 }}>
+                  <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 400, height: 400 }}>
                     <AddIcon />
                   </Button>
                   <input
@@ -204,9 +271,16 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                     style={{ display: "none" }}
                   />
                 </>
+              ) : fileForm.length > 1 ? (
+                <div id="multiple-container"></div>
               ) : (
-                <div className="img_box" style={{ width: 500, height: 420 }} onClick={onClickImageInput}>
-                  <img src="" alt="" />
+                <div onClick={onClickImageInput}>
+                  <img
+                    className="preview-image"
+                    src="https://dummyimage.com/500x500/ffffff/000000.png&text=preview+image"
+                    alt=""
+                    style={{ backgroundSize: "cover", width: 400, height: 400 }}
+                  />
                   <input
                     type="file"
                     name="feedImg"
@@ -241,7 +315,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                 </Select>
               </FormControl>
               <br />
-              <FormControl sx={{ mt: 2 }} fullWidth>
+              <FormControl sx={{ mt: 1 }} fullWidth>
                 <InputLabel>피드 카테고리</InputLabel>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
@@ -271,7 +345,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                 setTagForm={setTagForm}
               />
               <TextField
-                sx={{ mt: 2 }}
+                sx={{ mt: 1 }}
                 fullWidth
                 value={insertForm.feedContent}
                 id="outlined-multiline-static"

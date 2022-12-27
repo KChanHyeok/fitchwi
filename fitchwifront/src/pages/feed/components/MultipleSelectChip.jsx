@@ -76,7 +76,7 @@ export default function MultipleSelectChip({ insertForm, setInsertForm, tagForm,
         </Select>
         <FormControl variant="outlined" fullWidth>
           <OutlinedInput
-            sx={{ mt: 2 }}
+            sx={{ mt: 1 }}
             value={tag}
             id="outlined-adornment-weight"
             endAdornment={
