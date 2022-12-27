@@ -86,14 +86,6 @@ public class TogetherService {
         return togetherList;
     }
 
-    public Together getTogetherInfo(long togetherPageCode) {
-        log.info("getTogetherInfo()");
-        Together togetherInfo;
-        togetherInfo = togetherRepository.findById(togetherPageCode).get();
-
-        return togetherInfo;
-    }
-
     public String insertTogetherJoinInfo(TogetherJoin togetherJoin) {
         String result = null;
         try {

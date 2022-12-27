@@ -20,18 +20,18 @@ const Together = () => {
         getAllTogetherJoinList();
     },[])
 
-    const getAllFacilitiesList = () => {
-        axios.get("/getAllFacilitiesList").then((res) => {
+    const getAllFacilitiesList = async () => {
+        await axios.get("/getAllFacilitiesList").then((res) => {
             setFacilitiesList(res.data)
         }).catch((error) => console.log(error))
     }    
-    const getAllTogetherList = () => {
-        axios.get("/getAllTogetherList").then((res) => {
+    const getAllTogetherList = async () => {
+        await axios.get("/getAllTogetherList").then((res) => {
             setTogetherList(res.data)
         }).catch((error) => console.log(error))
     }
-    const getAllTogetherJoinList = () => {
-        axios.get("/getAllTogetherJoinList").then((res) => {
+    const getAllTogetherJoinList = async () => {
+        await axios.get("/getAllTogetherJoinList").then((res) => {
             setTogetherJoinList(res.data)
         }).catch((error) => console.log(error))
     }
@@ -43,7 +43,7 @@ const Together = () => {
                 <Routes>
                     <Route path="/*" element={<TogetherMain togetherList={togetherList}/>}/>
                     <Route path="art" element={<TogetherArt />} />
-                    <Route path="/:togetherPageCode" element={<TogetherInfo togetherJoinList={togetherJoinList} />} />
+                    <Route path="/:togetherPageCode" element={<TogetherInfo refreshTogetherJoinList={getAllTogetherJoinList} togetherJoinList={togetherJoinList} togetherList={togetherList} />} />
                 </Routes>
                 <TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />
             </Stack>
