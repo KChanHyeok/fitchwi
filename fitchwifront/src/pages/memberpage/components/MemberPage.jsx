@@ -25,14 +25,18 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
 
-export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
+export default function MemberPage({ member, onLogout, pageOwner }) {
   //페이지 기본 데이터
-
   const nav = useNavigate();
+  const [feedList, setFeedList] = useState([]);
+  const getAllFeedList = useCallback(() => {
+    axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
+  }, [member]);
 
   const {
     memberEmail,
@@ -55,6 +59,12 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
     interestArr = memberInterest.split(" ");
   }
 
+  useEffect(() => {
+    if (member !== undefined) {
+      getAllFeedList();
+    }
+  }, [member, getAllFeedList]);
+
   //팔로우 관련
   const [followList, setFollowList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
@@ -71,6 +81,8 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
       if (followerList[i].memberEmail === loginId) {
         setIsFollow(true);
         console.log(followerList[i].memberEmail);
+      } else {
+        setIsFollow(false);
       }
     }
     console.log(followerList);
@@ -78,12 +90,16 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
 
   const onFollow = useCallback(
     (isFollow) => {
+      if (sessionStorage.getItem("id") == null) {
+        alert("로그인 후 가능합니다.");
+        return;
+      }
       if (isFollow === false) {
         console.log(pageOwner.memberEmail);
         axios.get("/follow", { params: { loginId: loginId, pageOwner: pageOwner } }).then((res) => {
           console.log(res.data);
           alert(`${pageOwner}님을 팔로우했습니다.`);
-          setIsFollow(!isFollow);
+          setIsFollow(true);
         });
       } else {
         axios
@@ -93,13 +109,13 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
           .then((res) => {
             console.log(res.data);
             alert(`${pageOwner}님 팔로우를 취소했습니다.`);
-            setIsFollow(!isFollow);
+            setIsFollow(false);
           });
       }
     },
     [loginId, pageOwner]
   );
-  console.log(isFollow);
+  //console.log(isFollow);
 
   useEffect(() => {
     getFollow();
@@ -128,10 +144,11 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
     color: "black",
   });
 
-  //피드 불러오기
+  //회원 정보 수정
+  const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
   return (
-    <Container style={{ width: 1200 }} maxWidth="xl" justifyContent>
+    <Container style={{ width: 1200 }} maxWidth="xl">
       <Grid container>
         <Grid item xs={2} sx={{ mt: 10 }}>
           <List>
@@ -158,14 +175,17 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
           {loginId === pageOwner ? (
             <Box component="form" sx={{ mt: 30 }}>
               <List>
-                <Link to="/memberpage/updateMember" style={{ textDecoration: "none" }}>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="#simple-list">
-                      <CenterListText primary="정보수정" />
-                    </ListItemButton>
-                  </ListItem>
-                  <Divider variant="middle" component="li" />
-                </Link>
+                <ListItem disablePadding sx={{ justifyContent: "space-around" }}>
+                  <CheckPwdModal
+                    onClick={() => setOpenCheckPwd(() => true)}
+                    openCheckPwd={openCheckPwd}
+                    setOpenCheckPwd={setOpenCheckPwd}
+                    member={member}
+                  >
+                    정보수정
+                  </CheckPwdModal>
+                </ListItem>
+                <Divider variant="middle" component="li" />
 
                 <ListItem disablePadding>
                   <ListItemButton component="a" onClick={onLogout}>
@@ -174,14 +194,12 @@ export default function MemberPage({ member, onLogout, pageOwner, feedList }) {
                 </ListItem>
                 <Divider variant="middle" component="li" />
 
-
                 <ListItem disablePadding>
                   <ListItemButton component="a" onClick={() => setConfirmOpen(() => true)}>
                     <CenterListText primary="탈퇴" />
                   </ListItemButton>
                 </ListItem>
                 <Divider variant="middle" component="li" />
-
 
                 <ConfirmDialog
                   title="Fitchwi 회원 탈퇴"

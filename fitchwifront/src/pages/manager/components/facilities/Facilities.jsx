@@ -76,7 +76,7 @@ export default function Facilities() {
                   <TableCell align="center">
                     <ButtonGroup>
                       <Link
-                        to={`/facilities/edit${facilities.facilitiesCode}`}
+                        to={`/manager/facilities/updateFacilities/${facilities.facilitiesCode}`}
                         style={{ textDecoration: "none" }}
                       >
                         <Button>수정하기</Button>

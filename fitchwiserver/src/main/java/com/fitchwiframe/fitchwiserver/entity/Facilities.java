@@ -3,6 +3,7 @@ package com.fitchwiframe.fitchwiserver.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,4 +30,6 @@ public class Facilities {
   @Column(nullable = false, length = 10)
   private String facilitiesGrade;
 
+  @Transient
+  private List<Noday> nodayList;
 }

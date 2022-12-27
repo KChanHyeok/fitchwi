@@ -8,7 +8,7 @@ export default function MemberPageIndex({ onLogout }) {
   console.log(location);
   const nav = useNavigate();
   const [member, setMember] = useState({});
-  const [feedList, setFeedList] = useState([]);
+
   let pageOwner = "";
 
   if (location.state != null) {
@@ -28,19 +28,6 @@ export default function MemberPageIndex({ onLogout }) {
     }
   }, [pageOwner, nav]);
 
-  const getAllFeedList = useCallback(() => {
-    axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
-  }, [member]);
-  console.log(member);
-
-  useEffect(() => {
-    getAllFeedList();
-  }, [getAllFeedList]);
-
-  useEffect(() => {
-    console.log(feedList);
-  }, [feedList]);
-
   useEffect(() => {
     getMemberInfo();
   }, [getMemberInfo]);
@@ -50,17 +37,10 @@ export default function MemberPageIndex({ onLogout }) {
       <Routes>
         <Route
           path="/"
-          element={
-            <MemberPage
-              member={member}
-              onLogout={onLogout}
-              pageOwner={pageOwner}
-              feedList={feedList}
-            />
-          }
+          element={<MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} />}
         ></Route>
 
-        <Route path="/updateMember" element={<UpdateMember />}></Route>
+        <Route path="/updateMember" element={<UpdateMember member={member} />}></Route>
       </Routes>
     </div>
   );

@@ -22,7 +22,10 @@ export default function FollowMemberListModal({ children, followList }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // console.log(followList[0].memberEmail);
+  React.useEffect(() => {
+    setOpen(() => false);
+  }, [followList]);
+
   let interestArr = [];
 
   followList.map((member) => (interestArr = member.memberInterest.split(" ")));
@@ -39,42 +42,55 @@ export default function FollowMemberListModal({ children, followList }) {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Box sx={style}>
-          <Typography sx={{ mb: 2 }} variant="h6" component="div">
+        <Box sx={style} style={{ height: 400, borderRadius: "10px" }}>
+          <Typography sx={{ mb: 3 }} variant="h6" component="div">
             {children} 명
           </Typography>
-          {followList.map((member, index) => (
-            <List key={index} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-              {member.memberSaveimg && (
-                <Link to="/memberpage" state={{ memberId: member.memberEmail }} style={{ textDecoration: "none" }}>
-                  {" "}
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar
-                        sx={{ bgcolor: "orange" }}
-                        aria-label="recipe"
-                        src={"images/" + member.memberSaveimg}
-                        onClick={handleClose}
-                      ></Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography>
-                          {member.memberNickname == null
-                            ? `${member.memberName}`
-                            : `${member.memberNickname}(${member.memberName})`}
-                        </Typography>
-                      }
-                      secondary={interestArr.map((interest, index) => (
-                        <span key={index}> #{interest}</span>
-                      ))}
-                    />
-                  </ListItem>
-                </Link>
-              )}
-              <Divider variant="inset" component="li" />
-            </List>
-          ))}
+          <Box
+            style={{
+              height: 360,
+              overflowY: "scroll",
+              overflowX: "hidden",
+              borderRadius: "10px",
+            }}
+          >
+            {followList.map((member, index) => (
+              <List key={index} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+                {member.memberSaveimg && (
+                  <Link
+                    to="/memberpage"
+                    state={{ memberId: member.memberEmail }}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {" "}
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar
+                          sx={{ bgcolor: "orange" }}
+                          aria-label="recipe"
+                          src={"images/" + member.memberSaveimg}
+                          onClick={handleClose}
+                        ></Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography>
+                            {member.memberNickname == null
+                              ? `${member.memberName}`
+                              : `${member.memberNickname}(${member.memberName})`}
+                          </Typography>
+                        }
+                        secondary={interestArr.map((interest, index) => (
+                          <span key={index}> #{interest}</span>
+                        ))}
+                      />
+                    </ListItem>
+                  </Link>
+                )}
+                <Divider variant="inset" component="li" />
+              </List>
+            ))}
+          </Box>
         </Box>
       </Modal>
     </div>

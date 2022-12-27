@@ -184,7 +184,7 @@ public class MemberService {
     follow.setFollowId(pageOwner);
     String result = "fail";
     try {
-      Member loginMember =   memberRepository.findById(loginId).get();
+      Member loginMember = memberRepository.findById(loginId).get();
       follow.setMemberEmail(loginMember);
       followRepository.save(follow);
       result = "ok";
@@ -209,6 +209,7 @@ public class MemberService {
     return result;
 
   }
+
   //내가 팔로우
   public List<Member> getFollowingList(String pageOwner) {
     log.info("memberService.getFollowingList");
@@ -217,7 +218,7 @@ public class MemberService {
     List<Follow> followList = followRepository.findAllByMemberEmail(member);
 
     List<Member> followMemberList = new ArrayList<>();
-    for(Follow follow : followList){
+    for (Follow follow : followList) {
       Member member1 = memberRepository.findById(follow.getFollowId()).get();
       followMemberList.add(member1);
     }
@@ -225,14 +226,15 @@ public class MemberService {
     return extractMemberData(followMemberList);
 
   }
-//나를 팔로우
+
+  //나를 팔로우
   public List<Member> getFollowerList(String pageOwner) {
     log.info("memberService.getFollowerList");
 //    Member member = memberRepository.findById(pageOwner).get();
 
     List<Follow> followerList = followRepository.findAllByFollowId(pageOwner);
     List<Member> followerMemberList = new ArrayList<>();
-    for(Follow follow : followerList){
+    for (Follow follow : followerList) {
       Member member1 = memberRepository.findById(follow.getMemberEmail().getMemberEmail()).get();
       followerMemberList.add(member1);
     }
@@ -240,7 +242,7 @@ public class MemberService {
   }
 
   private List<Member> extractMemberData(List<Member> memberList) {
-   List<Member> memberListForReturn = new ArrayList<>();
+    List<Member> memberListForReturn = new ArrayList<>();
 
     if (memberList != null) {
 
@@ -259,13 +261,13 @@ public class MemberService {
   }
 
   public String createMember() {
-    String result=null;
-    try{
-      for(int i=0;i<=99;i++){
+    String result = null;
+    try {
+      for (int i = 0; i <= 9; i++) {
         Member member = new Member();
-        member.setMemberName("테스트이름"+i);
-        member.setMemberEmail("test"+i+"@test.com");
-        member.setMemberNickname("테스트닉네임"+i);
+        member.setMemberName("테스트이름" + i);
+        member.setMemberEmail("test" + i + "@test.com");
+        member.setMemberNickname("테스트닉네임" + i);
         member.setMemberGender("남");
         member.setMemberInterest("운동∙액티비티 성장∙자기계발");
         member.setMemberBirth("2022-12-26");
@@ -277,11 +279,29 @@ public class MemberService {
         member.setMemberAddr("경기도 시흥시");
         member.setMemberPhone("000-0000-0000");
         memberRepository.save(member);
-        result="ok";
+        result = "ok";
       }
-    }catch(Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
-      result="fail" ;
+      result = "fail";
+    }
+    return result;
+  }
+
+  public String checkPwd(Member memberToCheck) {
+    log.info("memberService.checkPwd()");
+    String result = "";
+    Member dbMember = memberRepository.findById(memberToCheck.getMemberEmail()).get();
+
+
+    try {
+      if (encoder.matches(memberToCheck.getMemberPwd(), dbMember.getMemberPwd())) {
+        result = "ok";
+      } else {
+        result = "fail";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return result;
   }

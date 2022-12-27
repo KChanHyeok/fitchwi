@@ -55,4 +55,17 @@ public class AdminService {
       }
     return result;
   }
+
+  public String updateFacilities(Facilities newFacilities, Long facilitiesCode) {
+      log.info("adminService.updateFacilities()");
+      String result ="fail";
+      try{
+        newFacilities.setFacilitiesCode(facilitiesCode);
+        facilitiesRepository.save(newFacilities);
+        result="ok";
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+      return result;
+  }
 }
