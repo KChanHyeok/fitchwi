@@ -67,4 +67,12 @@ public class FeedController {
         log.info("dLikeFeed()");
         return feedService.dLikeFeed(feedCode, memberInfo);
     }
+    // 피드 수정
+    @PostMapping("/updateFeed")
+    private String updateFeed(@RequestPart(value = "data") Feed newFeed,
+                              @RequestPart(value = "uploadImage", required = false) List<MultipartFile> files, HttpSession session){
+        log.info("updateFeed()");
+        log.info("newFeed : "+ newFeed);
+        return feedService.updateFeed(newFeed, files, session);
+    }
 }

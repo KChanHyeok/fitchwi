@@ -4,6 +4,7 @@
     border: 1px solid black;
     border-radius: 5px;
     padding: 2px;
+    text-align: center;
 }
 
 // 이미지 크기
@@ -11,14 +12,4 @@
     display: block;
     width: 100%;
     border-radius: 5px;
-}
-
-// 이미지 파일 명
-.image-label {
-    position: relative;
-    bottom: 22px;
-    left: auto;
-    color: white;
-    font-size: 10px;
-    text-shadow: 2px 2px 2px black;
 }

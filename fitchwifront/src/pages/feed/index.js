@@ -9,9 +9,9 @@ import axios from "axios";
 function Feedindex() {
   const id = sessionStorage.getItem("id");
   const [feeds, setFeeds] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [profil, setProfil] = useState({});
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     getAllFeedList();
   }, []);

@@ -3,6 +3,7 @@ import React from "react";
 import Post from "./Post";
 
 const Feed = ({ data, memberInfo, refreshFeed }) => {
+  console.log(data);
   return (
     <Box flex={4} p={2}>
       {data.length === 0 ? (

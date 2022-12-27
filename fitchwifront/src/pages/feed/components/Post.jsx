@@ -40,18 +40,7 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({
-  memberWriterInfo,
-  memberInfo,
-  feedContent,
-  feedDate,
-  feedCode,
-  file,
-  comment,
-  refreshFeed,
-  like,
-  tag,
-}) => {
+const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like, tag }) => {
   let tagArr = [];
   if (tag != null) {
     tagArr = tag.split(" ");
@@ -68,6 +57,7 @@ const Post = ({
   let minute = String(Math.floor(((date - day) * 24 - hour) * 60));
   let second = String(Math.floor((((date - day) * 24 - hour) * 60 - minute) * 60));
 
+  const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
   const [flist, setFlist] = useState([
     {
@@ -78,6 +68,14 @@ const Post = ({
       image: "",
     },
   ]);
+
+  const [insertCommentForm, setInsertCommentForm] = useState({
+    memberEmail: {
+      memberEmail: sessionStorage.getItem("id"),
+    },
+    feedCode: feedCode,
+    feedCommentContent: "",
+  });
 
   const [clist, setClist] = useState([
     {
@@ -94,6 +92,7 @@ const Post = ({
       },
     },
   ]);
+
   useEffect(() => {
     if (file.length > 0) {
       let FeedFileList = [];
@@ -106,9 +105,6 @@ const Post = ({
       }
       setFlist(FeedFileList);
     }
-  }, [file]);
-
-  useEffect(() => {
     if (comment.length > 0) {
       let FeedCommentList = [];
       for (let i = 0; i < comment.length; i++) {
@@ -120,15 +116,7 @@ const Post = ({
       }
       setClist(FeedCommentList);
     }
-  }, [comment]);
-
-  const [insertCommentForm, setInsertCommentForm] = useState({
-    memberEmail: {
-      memberEmail: sessionStorage.getItem("id"),
-    },
-    feedCode: feedCode,
-    feedCommentContent: "",
-  });
+  }, [file, comment]);
 
   const handleChange = useCallback(
     (event) => {
@@ -151,6 +139,13 @@ const Post = ({
         .then((response) => {
           if (response.data === "ok") {
             alert("성공");
+            setInsertCommentForm({
+              memberEmail: {
+                memberEmail: sessionStorage.getItem("id"),
+              },
+              feedCode: feedCode,
+              feedCommentContent: "",
+            });
             refreshFeed();
           } else {
             alert("실패");
@@ -169,8 +164,6 @@ const Post = ({
     }
     return result;
   };
-
-  const [isLike, setIsLike] = useState(false);
 
   useEffect(() => {
     for (let i = 0; i < like.length; i++) {
@@ -193,12 +186,10 @@ const Post = ({
           refreshFeed();
         });
       } else {
-        axios
-          .delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } })
-          .then((res) => {
-            setIsLike(!isLike);
-            refreshFeed();
-          });
+        axios.delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } }).then((res) => {
+          setIsLike(!isLike);
+          refreshFeed();
+        });
       }
     },
     [feedCode, memberInfo.memberEmail, refreshFeed, nav]
@@ -209,31 +200,18 @@ const Post = ({
         <CardHeader
           avatar={
             <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }}>
-              <Avatar
-                sx={{ bgcolor: "orange" }}
-                aria-label="recipe"
-                src={"images/" + memberWriterInfo.memberSaveimg}
-              ></Avatar>
+              <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe" src={"images/" + memberWriterInfo.memberSaveimg}></Avatar>
             </Link>
           }
           action={<LongMenu />}
           title={<b>{memberWriterInfo.memberNickname}</b>}
-          subheader={
-            day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"
-          }
+          subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
         />
         {/* 피드 이미지 */}
         {flist.length > 1 ? (
-          <Carousel
-            next={() => {}}
-            prev={() => {}}
-            autoPlay={false}
-            animation="slide"
-            duration={800}
-            sx={{ height: "100%" }}
-          >
+          <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
             {flist.map((item, i) => (
-              <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
+              <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} sx={{ backgroundSize: "cover" }} />
             ))}
           </Carousel>
         ) : (
@@ -249,28 +227,17 @@ const Post = ({
         )}
         <CardContent>
           <Stack direction="row" gap={2} mb={2}>
-            <Checkbox
-              checked={isLike}
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite />}
-              onClick={() => onLike(isLike)}
-            />
+            <Checkbox checked={isLike} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onClick={() => onLike(isLike)} />
             <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} onClick={(e) => setOpen(true)} />
           </Stack>
           {like.length === 0 ? null : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
           <Stack direction="row" gap={1} mt={1} mb={1} alignItems="center">
-            <Link
-              to="/memberpage"
-              state={{ memberId: memberWriterInfo.memberEmail }}
-              style={{ textDecoration: "none" }}
-            >
+            <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }} style={{ textDecoration: "none" }}>
               <Typography variant="body1" color="text.primary" sx={{ cursor: "pointer" }}>
                 <b>{memberWriterInfo.memberNickname}</b>
               </Typography>
             </Link>
-            <Typography variant="body6">
-              {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
-            </Typography>
+            <Typography variant="body6">{feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}</Typography>
           </Stack>
           <Stack direction="row" gap={1} mb={2} alignItems="center">
             {tagArr &&
@@ -283,13 +250,7 @@ const Post = ({
           {comment.length >= 1 ? (
             comment.length > 4 ? (
               <Box>
-                <Typography
-                  variant="body2"
-                  color="grey"
-                  marginBottom={2}
-                  onClick={(e) => setOpen(true)}
-                  sx={{ cursor: "pointer", mt: 2 }}
-                >
+                <Typography variant="body2" color="grey" marginBottom={2} onClick={(e) => setOpen(true)} sx={{ cursor: "pointer", mt: 2 }}>
                   댓글 {comment.length}개 모두 보기
                 </Typography>
                 {rendering()}
@@ -315,17 +276,14 @@ const Post = ({
             }}
             mt={1}
           >
-            <Avatar
-              alt={memberInfo.memberName}
-              src={"images/" + memberInfo.memberSaveimg}
-              sx={{ width: 30, height: 30, mr: 2 }}
-            />
+            <Avatar alt={memberInfo.memberName} src={"images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
             <TextField
               id="input-with-sx"
               name="feedCommentContent"
               fullWidth
               variant="standard"
               placeholder="댓글 달기..."
+              value={insertCommentForm.feedCommentContent}
               onChange={handleChange}
             />
             <Box>
@@ -346,26 +304,13 @@ const Post = ({
           <Stack direction="row" spacing={3} justifyContent="space-between">
             <Box flex={2}>
               {flist.length > 1 ? (
-                <Carousel
-                  next={() => {}}
-                  prev={() => {}}
-                  autoPlay={false}
-                  animation="slide"
-                  duration={800}
-                  height={570}
-                >
+                <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={570}>
                   {flist.map((item, i) => (
                     <CardMedia key={item.feedCode} component="img" src={item.image} alt={item.feedFileImg} />
                   ))}
                 </Carousel>
               ) : (
-                <CardMedia
-                  key={flist[0].feedCode}
-                  component="img"
-                  height={600}
-                  src={flist[0].image}
-                  alt={flist[0].feedFileImg}
-                />
+                <CardMedia key={flist[0].feedCode} component="img" height={600} src={flist[0].image} alt={flist[0].feedFileImg} />
               )}
             </Box>
             <Box flex={1} p={1}>
@@ -391,16 +336,27 @@ const Post = ({
                     sx={{ width: 30, height: 30 }}
                   />
                   <Typography fontWeight={500} variant="span">
-                    <b>{memberWriterInfo.memberNickname}</b>{" "}
-                    {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+                    <b>{memberWriterInfo.memberNickname}</b> {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
                   </Typography>
                 </UserBox>
               </Box>
-              <Box height={105} border={1} mb={2}>
-                "태그 및 후기"
+              <Box height={90} mb={1}>
+                <Stack direction="row" gap={1} mb={1} alignItems="center">
+                  {tagArr &&
+                    tagArr.map((tag, index) => (
+                      <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                        #{tag}
+                      </Typography>
+                    ))}
+                </Stack>
+                <Box height={60} border={1}>
+                  후기 영역
+                </Box>
               </Box>
               <Box
-                height={130}
+                height={140}
+                mt={1}
+                mb={2}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -420,7 +376,7 @@ const Post = ({
                 )}
               </Box>
               <Divider />
-              <Stack direction="row" gap={1} mb={1}>
+              <Stack direction="row" gap={1}>
                 <Checkbox
                   checked={isLike}
                   icon={<FavoriteBorder />}
@@ -430,9 +386,9 @@ const Post = ({
                 />
                 <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} />
               </Stack>
-              {like.length === 0 ? null : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
-              <Typography color="grey" variant="body2" mb={1}>
-                {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute + "분전"}
+              {like.length === 0 ? <Box height={25}></Box> : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
+              <Typography color="grey" variant="body2" mb={1} mt={1}>
+                {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
               </Typography>
               <Divider>
                 <Chip label="Comment" />
@@ -442,6 +398,7 @@ const Post = ({
                 id="standard-multiline-static"
                 multiline
                 rows={1}
+                value={insertCommentForm.feedCommentContent}
                 placeholder="댓글 달기..."
                 variant="standard"
                 onChange={handleChange}

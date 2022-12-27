@@ -1,15 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  Avatar,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemText, Modal, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -21,14 +11,12 @@ const StyleModal = styled(Modal)({
 });
 
 const FeedLikeList = ({ children, flList }) => {
-  const id = sessionStorage.getItem("id");
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
     <>
-      <Button onClick={handleOpen} style={{ color: "black" }} sx={{ p: 0 }}>
+      <Button onClick={handleOpen} style={{ color: "black" }} sx={{ padding: 0 }}>
         {children}
       </Button>
       <StyleModal
@@ -47,11 +35,7 @@ const FeedLikeList = ({ children, flList }) => {
               <List key={index} sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
                 <ListItem alignItems="center">
                   <ListItemAvatar>
-                    <Link
-                      to="/memberpage"
-                      state={{ memberId: like.memberEmail.memberEmail }}
-                      style={{ textDecoration: "none" }}
-                    >
+                    <Link to="/memberpage" state={{ memberId: like.memberEmail.memberEmail }} style={{ textDecoration: "none" }}>
                       <Avatar
                         alt={like.memberEmail.memberName}
                         src={"images/" + like.memberEmail.memberSaveimg}
@@ -67,11 +51,6 @@ const FeedLikeList = ({ children, flList }) => {
                       </Typography>
                     }
                   />
-                  {id === like.memberEmail.memberEmail ? null : (
-                    <Button variant="outlined" onClick={() => alert("팔로우 연결")}>
-                      팔로우
-                    </Button>
-                  )}
                 </ListItem>
                 <Divider variant="inset" component="li" />
               </List>
