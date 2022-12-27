@@ -40,7 +40,22 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like }) => {
+const Post = ({
+  memberWriterInfo,
+  memberInfo,
+  feedContent,
+  feedDate,
+  feedCode,
+  file,
+  comment,
+  refreshFeed,
+  like,
+  tag,
+}) => {
+  let tagArr = [];
+  if (tag != null) {
+    tagArr = tag.split(" ");
+  }
   const nav = useNavigate();
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -257,9 +272,14 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
             </Typography>
           </Stack>
-          <Typography variant="body2" color="skyblue" marginBottom={2}>
-            #해쉬 태그 #해쉬 태그 #해쉬 태그 #해쉬 태그
-          </Typography>
+          <Stack direction="row" gap={1} mb={2} alignItems="center">
+            {tagArr &&
+              tagArr.map((tag, index) => (
+                <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                  #{tag}
+                </Typography>
+              ))}
+          </Stack>
           {comment.length >= 1 ? (
             comment.length > 4 ? (
               <Box>

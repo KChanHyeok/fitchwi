@@ -3,9 +3,6 @@ import React from "react";
 import Post from "./Post";
 
 const Feed = ({ data, memberInfo, refreshFeed }) => {
-  console.log(data);
-
-  console.log(memberInfo);
   return (
     <Box flex={4} p={2}>
       {data.length === 0 ? (
@@ -15,6 +12,7 @@ const Feed = ({ data, memberInfo, refreshFeed }) => {
       ) : (
         data.map((data) => (
           <Post
+            tag={data.feedTag}
             key={data.feedCode}
             memberWriterInfo={data.memberEmail}
             feedDate={data.feedDate}
