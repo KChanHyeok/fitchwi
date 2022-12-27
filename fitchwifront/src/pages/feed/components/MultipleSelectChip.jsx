@@ -15,7 +15,7 @@ function getStyles(name, tagForm, theme) {
   };
 }
 
-export default function MultipleSelectChip({ insertForm, setInsertForm, tagForm, setTagForm }) {
+export default function MultipleSelectChip({ tagForm, setTagForm }) {
   const [tagList, setTagList] = useState(["25", "셀피", "맛집투어", "연말모임", "전시", "인생네컷"]);
 
   const theme = useTheme();

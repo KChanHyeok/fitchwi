@@ -1,57 +1,43 @@
-import { Backdrop, Box, CircularProgress, Stack } from "@mui/material";
-import FeedAdd from "./components/FeedAdd";
+import { Box, Stack } from "@mui/material";
 import Feed from "./components/Feed";
 import Rightbar from "./components/Rightbar";
 import Sidebar from "../../layout/Sidebar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 function Feedindex() {
-  const id = sessionStorage.getItem("id");
-  const [feeds, setFeeds] = useState([]);
+  const [feedList, setFeedList] = useState([]);
   const [profil, setProfil] = useState({});
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    getAllFeedList();
-  }, []);
-
-  useEffect(() => {
-    if (id !== null) {
-      axios
-        .get("/getMemberInfo", { params: { userId: id } })
-        .then((response) => {
-          setProfil(response.data);
-        })
-        .catch((error) => console.log(error));
-    }
-  }, [id]);
-
-  const getAllFeedList = () => {
-    axios
+  const getAllFeedList = async () => {
+    await axios
       .get("/getAllFeedList")
       .then((response) => {
-        setFeeds(response.data);
-        setLoading(false);
-        console.log(response.data);
+        setFeedList(response.data);
       })
       .catch((error) => console.log(error));
   };
 
+  const getMemberInfo = useCallback(() => {
+    if (sessionStorage.getItem("id") != null) {
+      axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((response) => {
+        setProfil(response.data);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    getAllFeedList();
+    getMemberInfo();
+  }, [getMemberInfo]);
+
   return (
     <Box>
-      {loading ? (
-        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        <Stack direction="row" spacing={7} justifyContent="space-between">
-          <Sidebar />
-          {feeds === [] ? <Feed /> : <Feed data={feeds} memberInfo={profil} refreshFeed={getAllFeedList} />}
-          <Rightbar />
-          <FeedAdd memberInfo={profil} refreshFeed={getAllFeedList} />
-        </Stack>
-      )}
+      <Stack direction="row" spacing={7} justifyContent="space-between">
+        <Sidebar pageurl={"share"} />
+        <Feed data={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />
+        <Rightbar />
+      </Stack>
     </Box>
   );
 }

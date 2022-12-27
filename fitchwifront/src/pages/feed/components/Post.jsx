@@ -16,14 +16,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
 import { FavoriteBorder, Favorite, ChatOutlined } from "@mui/icons-material";
 import Carousel from "react-material-ui-carousel";
 import { Box } from "@mui/system";
 import LongMenu from "./Longmenu";
-
 import axios from "axios";
-
 import { Link, useNavigate } from "react-router-dom";
 import Comments from "./Comments";
 import FeedLikeList from "./FeedLikeList";
@@ -40,12 +37,8 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like, tag }) => {
-  let tagArr = [];
-  if (tag != null) {
-    tagArr = tag.split(" ");
-  }
-  const nav = useNavigate();
+const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like, tag, information }) => {
+  // 피드 작성시간
   const toDay = new Date();
   const toDayD = toDay.getTime();
 
@@ -57,8 +50,11 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   let minute = String(Math.floor(((date - day) * 24 - hour) * 60));
   let second = String(Math.floor((((date - day) * 24 - hour) * 60 - minute) * 60));
 
+  const nav = useNavigate();
   const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
+  const [tagList, setTagList] = useState([]);
+
   const [flist, setFlist] = useState([
     {
       feedFileCode: "",
@@ -69,6 +65,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     },
   ]);
 
+  // 피드 댓글 입력 양식 구성
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -92,31 +89,6 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
       },
     },
   ]);
-
-  useEffect(() => {
-    if (file.length > 0) {
-      let FeedFileList = [];
-      for (let i = 0; i < file.length; i++) {
-        const FeedFile = {
-          ...file[i],
-          image: "images/" + file[i].feedFileSaveimg,
-        };
-        FeedFileList.push(FeedFile);
-      }
-      setFlist(FeedFileList);
-    }
-    if (comment.length > 0) {
-      let FeedCommentList = [];
-      for (let i = 0; i < comment.length; i++) {
-        const FeedComment = {
-          ...comment[i],
-          image: "images/" + comment[i].memberEmail.memberSaveimg,
-        };
-        FeedCommentList.push(FeedComment);
-      }
-      setClist(FeedCommentList);
-    }
-  }, [file, comment]);
 
   const handleChange = useCallback(
     (event) => {
@@ -165,15 +137,6 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     return result;
   };
 
-  useEffect(() => {
-    for (let i = 0; i < like.length; i++) {
-      if (like[i].memberEmail.memberEmail === memberInfo.memberEmail) {
-        setIsLike(true);
-        console.log(like[i].memberEmail.memberEmail);
-      }
-    }
-  }, [like, memberInfo.memberEmail]);
-
   const onLike = useCallback(
     (isLike) => {
       if (memberInfo.memberEmail === undefined) {
@@ -194,6 +157,45 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     },
     [feedCode, memberInfo.memberEmail, refreshFeed, nav]
   );
+
+  const getTagList = useCallback(() => {
+    setTagList(tag.split(" "));
+  }, [tag]);
+
+  useEffect(() => {
+    getTagList();
+    // 파일에 해당되는 이미지 불러오기
+    if (file.length > 0) {
+      let FeedFileList = [];
+      for (let i = 0; i < file.length; i++) {
+        const FeedFile = {
+          ...file[i],
+          image: "images/" + file[i].feedFileSaveimg,
+        };
+        FeedFileList.push(FeedFile);
+      }
+      setFlist(FeedFileList);
+    }
+    //  피드 댓글 불러오기
+    if (comment.length > 0) {
+      let FeedCommentList = [];
+      for (let i = 0; i < comment.length; i++) {
+        const FeedComment = {
+          ...comment[i],
+          image: "images/" + comment[i].memberEmail.memberSaveimg,
+        };
+        FeedCommentList.push(FeedComment);
+      }
+      setClist(FeedCommentList);
+    }
+    // 피드 출력 시 로그인한 유저가 해당 피드를 좋아요 했는지 여부 판단
+    for (let i = 0; i < like.length; i++) {
+      if (like[i].memberEmail.memberEmail === memberInfo.memberEmail) {
+        setIsLike(true);
+      }
+    }
+  }, [file, comment, getTagList, like, memberInfo.memberEmail]);
+
   return (
     <div>
       <Card sx={{ margin: 5, border: 1 }}>
@@ -203,7 +205,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe" src={"images/" + memberWriterInfo.memberSaveimg}></Avatar>
             </Link>
           }
-          action={<LongMenu />}
+          action={<LongMenu refreshFeed={refreshFeed} flist={flist} information={information} />}
           title={<b>{memberWriterInfo.memberNickname}</b>}
           subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
         />
@@ -240,8 +242,8 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
             <Typography variant="body6">{feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}</Typography>
           </Stack>
           <Stack direction="row" gap={1} mb={2} alignItems="center">
-            {tagArr &&
-              tagArr.map((tag, index) => (
+            {tagList &&
+              tagList.map((tag, index) => (
                 <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
                   #{tag}
                 </Typography>
@@ -293,7 +295,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
         </CardContent>
       </Card>
 
-      {/* 피드 상세보기 모달 */}
+      {/* 피드 상세페이지 */}
       <StyleModal
         open={open}
         onClose={(e) => setOpen(false)}
@@ -325,7 +327,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                     <b>{memberWriterInfo.memberNickname}</b> {}
                   </Typography>
                 </Box>
-                <LongMenu />
+                <LongMenu refreshFeed={refreshFeed} flist={flist} information={information} />
               </UserBox>
               <Divider />
               <Box mt={1}>
@@ -342,8 +344,8 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               </Box>
               <Box height={90} mb={1}>
                 <Stack direction="row" gap={1} mb={1} alignItems="center">
-                  {tagArr &&
-                    tagArr.map((tag, index) => (
+                  {tagList &&
+                    tagList.map((tag, index) => (
                       <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
                         #{tag}
                       </Typography>
@@ -386,7 +388,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                 />
                 <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} />
               </Stack>
-              {like.length === 0 ? <Box height={25}></Box> : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
+              {like.length === 0 ? <Box height={2}></Box> : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
               <Typography color="grey" variant="body2" mb={1} mt={1}>
                 {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
               </Typography>

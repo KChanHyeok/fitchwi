@@ -26,7 +26,7 @@ const Header = ({ lstate, onLogout }) => {
         </Box>
         <Box>
           <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/feed"}>
-            피드
+            공유해요
           </Link>
           <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/together"}>
             함께해요

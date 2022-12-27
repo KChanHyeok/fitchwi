@@ -191,29 +191,22 @@ public class FeedService {
         return result;
     }
 
-    public String updateFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
+    public String updateFeed(Feed newFeed) {
         log.info("feedService.updateFeed()");
         log.info("newFeed : " + newFeed);
         String result = null;
 
         try {
-            Feed saveFeed = feedRepository.findById(newFeed.getFeedCode()).get();
-            FeedTag feedTag = feedTagRepository.findByFeedCode(saveFeed.getFeedCode());
-            feedTag.setFeedCode(newFeed.getFeedCode());
+            FeedTag feedTag = feedTagRepository.findByFeedCode(newFeed.getFeedCode());
             feedTag.setFeedTagContent(newFeed.getFeedTag());
             feedTagRepository.save(feedTag);
-            if (files != null){
-                List<FeedFile> feedFiles = fileUpload(newFeed,files,session);
-                log.info("feedFiles : " + newFeed);
-                saveFeed.setFfList(feedFiles);
-            }
-            log.info("newFead : " + newFeed);
-            log.info("saveFeed : " + saveFeed);
-            log.info("등록 성공");
+            feedRepository.save(newFeed);
+            log.info("saveFeed : " + newFeed);
+            log.info("수정 성공");
             result = "ok";
         } catch (Exception e){
             e.printStackTrace();
-            log.info("등록 실패");
+            log.info("수정 실패");
             result = "fail";
         }
         return result;
