@@ -6,6 +6,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -21,7 +22,7 @@ import {
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import axios from "axios";
-import React, { useCallback, useEffect, useMemo, useRef, /*useMemo,*/ useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Postcode from "../../join/components/Postcode";
 export default function UpdateMember({ member }) {
@@ -160,10 +161,13 @@ export default function UpdateMember({ member }) {
     game: false,
     etc: false,
   });
-  const interArray = useRef([]);
+  let interArray = useMemo(() => memberInterest, [memberInterest]);
+  // console.log(interArray !== undefined ? interArray : null);
   useEffect(() => {
-    if (typeof memberInterest == "string") {
-      interArray.current = memberInterest.split(" ");
+    if (interArray !== undefined ? interArray : null) {
+      console.log("typeof");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      interArray = interArray.split(" ");
       const temporaryChecked = {
         culture: false,
         activity: false,
@@ -175,7 +179,7 @@ export default function UpdateMember({ member }) {
         etc: false,
       };
 
-      interArray.current.forEach((e) => {
+      interArray.forEach((e) => {
         switch (e) {
           case "문화∙예술":
             temporaryChecked.culture = true;
@@ -209,38 +213,30 @@ export default function UpdateMember({ member }) {
 
       setChecked(temporaryChecked);
     }
-  }, [memberInterest]);
-
-  useEffect(() => {
-    setMemberToUpdate({ ...memberToUpdate, memberInterest: interArray.current });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [interArray.current]);
+  }, [interArray]);
 
   const handleChange = (e) => {
     setChecked({ ...checked, [e.target.name]: e.target.checked });
   };
 
-  const interestArr = useMemo(() => memberInterest, [memberInterest]);
-  console.log(interestArr);
-
   const onCheckComple = useCallback(() => {
-    let interest = [...memberInterest];
-    interest.join(" ");
+    console.log(interArray);
+    let interest = interArray.join(" ");
     console.log(interest);
     setMemberToUpdate({ ...memberToUpdate, memberInterest: interest });
-  }, [memberInterest, memberToUpdate]);
+  }, [memberToUpdate, interArray]);
 
   const onCheck = useCallback(
     (e) => {
       if (e.target.checked === true) {
-        interestArr.push(e.target.value);
+        interArray.push(e.target.value);
       } else {
-        interestArr.splice(interestArr.indexOf(e.target.value), 1);
+        interArray.splice(interArray.indexOf(e.target.value), 1);
       }
       onCheckComple();
       console.log(memberToUpdate.memberInterest);
     },
-    [memberToUpdate, interestArr, onCheckComple]
+    [interArray, onCheckComple, memberToUpdate]
   );
 
   //이미지 변경
@@ -268,338 +264,343 @@ export default function UpdateMember({ member }) {
   };
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          회원 정보 수정
-        </Typography>
-        {memberSaveimg && (
-          <Box>
-            <Avatar
-              src={file !== "" ? file : `/images/${memberSaveimg}`}
-              sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
-            />
-            {/* <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} /> */}
-            <ButtonGroup>
-              <Button variant="outlined" sx={{ pl: 5 }}>
+      {!memberInterest ? (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            회원 정보 수정
+          </Typography>
+          {memberSaveimg && (
+            <Box>
+              <Avatar
+                src={file !== "" ? file : `/images/${memberSaveimg}`}
+                sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
+              />
+              <ButtonGroup>
+                <Button variant="outlined" sx={{ pl: 5 }}>
+                  <FormControlLabel
+                    control={
+                      <TextField
+                        onChange={fileHandler}
+                        type="file"
+                        label="사진"
+                        variant="standard"
+                        style={{ display: "none" }}
+                      />
+                    }
+                    label="프로필 수정하기"
+                  />
+                </Button>
+                <Button variant="outlined" onClick={() => clearImg()}>
+                  기존 이미지 제거
+                </Button>
+              </ButtonGroup>
+            </Box>
+          )}
+          <Box component="form" onSubmit={(e) => onUpdate(e)} noValidate sx={{ mt: 1 }}>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  value={memberEmail || ""}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="이메일(변경불가)"
+                  name="email"
+                  focused={true}
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  name="memberPwd"
+                  label="비밀번호 변경 시 입력"
+                  type="password"
+                  variant="standard"
+                  focused={true}
+                  onChange={(e) => inputChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  label="비밀번호 확인"
+                  type="password"
+                  variant="standard"
+                  focused={true}
+                  onChange={onCheckPwd}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {correctPwd == null ? null : correctPwd ? (
+                  <Alert
+                    severity="info"
+                    sx={{
+                      width: "100%",
+                      margin: "auto",
+                    }}
+                  >
+                    {msg}
+                  </Alert>
+                ) : (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      width: "100%",
+                      margin: "auto",
+                    }}
+                  >
+                    {msg}
+                  </Alert>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  value={memberNickname || ""}
+                  margin="normal"
+                  focused={true}
+                  required
+                  fullWidth
+                  label="닉네임"
+                  name="memberNickname"
+                  variant="standard"
+                  onChange={(e) => inputChange(e)}
+                />
+              </Grid>{" "}
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  value={memberName || ""}
+                  margin="normal"
+                  fullWidth
+                  focused={true}
+                  label="이름(변경불가)"
+                  name="memberName"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={8}>
+                <FormControl>
+                  <FormLabel id="demo-controlled-radio-buttons-group">성별</FormLabel>
+                  <RadioGroup
+                    // onChange={(e) => inputChange(e)}
+                    row
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="memberGender"
+                    value={memberGender || ""}
+                    onChange={(e) => inputChange(e)}
+                  >
+                    <FormControlLabel value="남" control={<Radio />} label="남성" />
+                    <FormControlLabel value="여" control={<Radio />} label="여성" />
+                    <FormControlLabel value="기타" control={<Radio />} label="기타" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                  <InputLabel id="demo-multiple-name-label">{memberMbti}</InputLabel>
+                  <Select
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    value={userMbTi || ""}
+                    onChange={(e) => setUserMbti(e.target.value)}
+                    input={<OutlinedInput variant="standard" label="Name" />}
+                  >
+                    {options.map((mbti, index) => (
+                      <MenuItem key={index} value={mbti}>
+                        {mbti}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  value={memberBirth || ""}
+                  type="date"
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="생일"
+                  name="memberBirth"
+                  variant="standard"
+                  focused={true}
+                  onChange={(e) => inputChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  value={memberPhone || ""}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="연락처"
+                  multiline
+                  name="memberPhone"
+                  variant="standard"
+                  focused={true}
+                  onChange={(e) => inputChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={8}>
+                <TextField
+                  value={memberAddr || ""}
+                  margin="normal"
+                  required
+                  fullWidth
+                  label="주소"
+                  multiline
+                  name="memberAddr"
+                  variant="standard"
+                  focused={true}
+                  onChange={(e) => inputChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Postcode insertAddr={insertAddr} />
+              </Grid>
+              <Grid item xs={12} sm={12}>
                 <FormControlLabel
                   control={
-                    <TextField
-                      onChange={fileHandler}
-                      type="file"
-                      label="사진"
-                      variant="standard"
-                      style={{ display: "none" }}
+                    <Checkbox
+                      checked={checked.culture}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="culture"
+                      value="문화∙예술"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                     />
                   }
-                  label="프로필 수정하기"
+                  label={<Typography style={{ position: "relative" }}>문화∙예술</Typography>}
                 />
-              </Button>
-              <Button variant="outlined" onClick={() => clearImg()}>
-                기본이미지 사용
-              </Button>
-            </ButtonGroup>
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.activity}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="activity"
+                      value="운동∙액티비티"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>운동∙액티비티</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.food}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="food"
+                      value="요리∙음식"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>요리∙음식</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.travel}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="travel"
+                      value="여행"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>여행</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.grownup}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="grownup"
+                      value="성장∙자기계발"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>성장∙자기계발</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.making}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="making"
+                      value="공예∙수공예"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>공예∙수공예</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.game}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="game"
+                      value="게임∙오락"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>게임∙오락</Typography>}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked.etc}
+                      onClick={handleChange}
+                      onChange={onCheck}
+                      name="etc"
+                      value="기타"
+                      icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
+                      checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
+                    />
+                  }
+                  label={<Typography style={{ position: "relative" }}>기타</Typography>}
+                />
+              </Grid>
+            </Grid>
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              수정하기
+            </Button>
+            <Button onClick={onCheckComple}> 테스트</Button>
           </Box>
-        )}
-        <Box component="form" onSubmit={(e) => onUpdate(e)} noValidate sx={{ mt: 1 }}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} sm={12}>
-              <TextField
-                value={memberEmail || ""}
-                margin="normal"
-                required
-                fullWidth
-                label="이메일(변경불가)"
-                name="email"
-                focused={true}
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                margin="normal"
-                fullWidth
-                name="memberPwd"
-                label="비밀번호 변경 시 입력"
-                type="password"
-                variant="standard"
-                focused={true}
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                margin="normal"
-                fullWidth
-                label="비밀번호 확인"
-                type="password"
-                variant="standard"
-                focused={true}
-                onChange={onCheckPwd}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              {correctPwd == null ? null : correctPwd ? (
-                <Alert
-                  severity="info"
-                  sx={{
-                    width: "100%",
-                    margin: "auto",
-                  }}
-                >
-                  {msg}
-                </Alert>
-              ) : (
-                <Alert
-                  severity="error"
-                  sx={{
-                    width: "100%",
-                    margin: "auto",
-                  }}
-                >
-                  {msg}
-                </Alert>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                value={memberNickname || ""}
-                margin="normal"
-                focused={true}
-                required
-                fullWidth
-                label="닉네임"
-                name="memberNickname"
-                variant="standard"
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>{" "}
-            <Grid item xs={12} sm={12}>
-              <TextField
-                value={memberName || ""}
-                margin="normal"
-                fullWidth
-                focused={true}
-                label="이름(변경불가)"
-                name="memberName"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <FormControl>
-                <FormLabel id="demo-controlled-radio-buttons-group">성별</FormLabel>
-                <RadioGroup
-                  // onChange={(e) => inputChange(e)}
-                  row
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="memberGender"
-                  value={memberGender || ""}
-                  onChange={(e) => inputChange(e)}
-                >
-                  <FormControlLabel value="남" control={<Radio />} label="남성" />
-                  <FormControlLabel value="여" control={<Radio />} label="여성" />
-                  <FormControlLabel value="기타" control={<Radio />} label="기타" />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-name-label">{memberMbti}</InputLabel>
-                <Select
-                  labelId="demo-multiple-name-label"
-                  id="demo-multiple-name"
-                  value={userMbTi || ""}
-                  onChange={(e) => setUserMbti(e.target.value)}
-                  input={<OutlinedInput variant="standard" label="Name" />}
-                >
-                  {options.map((mbti, index) => (
-                    <MenuItem key={index} value={mbti}>
-                      {mbti}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                value={memberBirth || ""}
-                type="date"
-                margin="normal"
-                required
-                fullWidth
-                label="생일"
-                name="memberBirth"
-                variant="standard"
-                focused={true}
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                value={memberPhone || ""}
-                margin="normal"
-                required
-                fullWidth
-                label="연락처"
-                multiline
-                name="memberPhone"
-                variant="standard"
-                focused={true}
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <TextField
-                value={memberAddr || ""}
-                margin="normal"
-                required
-                fullWidth
-                label="주소"
-                multiline
-                name="memberAddr"
-                variant="standard"
-                focused={true}
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Postcode insertAddr={insertAddr} />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.culture}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="culture"
-                    value="문화∙예술"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>문화∙예술</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.activity}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="activity"
-                    value="운동∙액티비티"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>운동∙액티비티</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.food}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="food"
-                    value="요리∙음식"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>요리∙음식</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.travel}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="travel"
-                    value="여행"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>여행</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.grownup}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="grownup"
-                    value="성장∙자기계발"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>성장∙자기계발</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.making}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="making"
-                    value="공예∙수공예"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>공예∙수공예</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.game}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="game"
-                    value="게임∙오락"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>게임∙오락</Typography>}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked.etc}
-                    onClick={handleChange}
-                    onChange={onCheck}
-                    name="etc"
-                    value="기타"
-                    icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
-                    checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
-                  />
-                }
-                label={<Typography style={{ position: "relative" }}>기타</Typography>}
-              />
-            </Grid>
-          </Grid>
-
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            수정하기
-          </Button>
-          <Button onClick={onCheckComple}> 테스트</Button>
         </Box>
-      </Box>
+      )}
     </Container>
   );
 }
