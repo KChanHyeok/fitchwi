@@ -4,9 +4,10 @@ import TogetherMain from "./components/togetherMain";
 import { Box, Stack } from "@mui/material";
 import TogetherAdd from "./components/togetherAdd";
 import axios from "axios";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import TogetherArt from "./components/togetherArt";
 import TogetherInfo from "./components/togetherInfo";
+import AddButton from "./components/common/addButton";
 
 
 const Together = () => {
@@ -44,8 +45,9 @@ const Together = () => {
                     <Route path="/*" element={<TogetherMain togetherList={togetherList}/>}/>
                     <Route path="art" element={<TogetherArt />} />
                     <Route path="/:togetherPageCode" element={<TogetherInfo refreshTogetherJoinList={getAllTogetherJoinList} togetherJoinList={togetherJoinList} togetherList={togetherList} />} />
+                    <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />}/>
                 </Routes>
-                <TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />
+                <AddButton/>
             </Stack>
         </Box>
     );

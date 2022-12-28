@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
@@ -6,14 +6,14 @@ import TogetherJoin from "./togetherJoin";
 const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList}) => {
     
     let { togetherPageCode } = useParams()
-    const [togetherInfo, setTogetherInfo] = useState();
-    const [togetherJoinMember, setTogetherJoinMember] = useState()
+    const [togetherInfo, setTogetherInfo] = useState(null);
+    const [togetherJoinMember, setTogetherJoinMember] = useState(null);
 
     useEffect(()=> {
         setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode*1))[0])
         setTogetherJoinMember(togetherJoinList.filter(data=>(data.togetherCode.togetherCode===(togetherPageCode*1) && data.togetherJoinState==="가입중")))
     },[togetherJoinList, togetherList, togetherPageCode])
-
+    
     return (
         <Stack
         flex={4} p={2}
@@ -23,8 +23,12 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
         spacing={2}
         >
             { !togetherInfo || !togetherJoinMember ? (<h1>로딩중</h1>) : 
-            (<Box>
-            <h1>{togetherInfo.togetherTitle}</h1>
+            (
+            <Box>
+                <Stack flex={2} direction={"row"}>
+                    <h1>{togetherInfo.togetherTitle}</h1>
+                    {togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <Button sx={{fontSize:20,ml:60}}>설정</Button>:null}
+                </Stack>
             <Box sx={{maxWidth:900}}>
                 {
                     togetherInfo.togetherSaveimg&& (<Box 
@@ -62,7 +66,7 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
                 모집일정 : {togetherInfo.togetherRecruitStartDate} 부터 {togetherInfo.togetherRecruitEndDate}까지<br/> 
                 장소 : {togetherInfo.togetherPosition}
             </Box>
-                <Box>
+                <Box sx={{mt:2}}>
                 {
                 togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <TogetherJoin togetherPayState={togetherInfo.togetherState} togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo} togetherJoinMember={togetherJoinMember} >최종결제</TogetherJoin>
                 : togetherJoinList.filter(data=>data.memberEmail.memberEmail===sessionStorage.getItem("id")).length===0 ? <TogetherJoin refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo}>참여신청하기</TogetherJoin> 
