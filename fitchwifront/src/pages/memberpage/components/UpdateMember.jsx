@@ -147,7 +147,7 @@ export default function UpdateMember({ member }) {
     },
     [memberToUpdate, setMemberToUpdate]
   );
-  const interArray = useRef([]);
+
   //관심사 처리
   const [checked, setChecked] = useState({
     culture: false,
@@ -159,9 +159,12 @@ export default function UpdateMember({ member }) {
     game: false,
     etc: false,
   });
-
+  const interArray = useRef([]); //문자열 변환해서 저장
   useEffect(() => {
-    if (typeof memberInterest == "string") {
+    const a = [...memberInterest];
+  }, []);
+  useEffect(() => {
+    if (typeof memberInterest === "string") {
       interArray.current = memberInterest.split(" ");
       const temporaryChecked = {
         culture: false,
@@ -205,7 +208,7 @@ export default function UpdateMember({ member }) {
             break;
         }
       });
-      console.log(memberToUpdate);
+
       setChecked(temporaryChecked);
     }
   }, [memberInterest, checked, memberToUpdate]);
@@ -222,7 +225,12 @@ export default function UpdateMember({ member }) {
   };
 
   const interestArr = useMemo(() => memberInterest, [memberInterest]);
-  console.log(interestArr);
+
+  const onCheckComple = useCallback(() => {
+    let interest = interestArr.join(" ");
+    console.log(interest);
+    setMemberToUpdate({ ...memberToUpdate, memberInterest: interest });
+  }, [memberToUpdate, interestArr]);
   const onCheck = useCallback(
     (e) => {
       if (e.target.checked === true) {
@@ -230,14 +238,9 @@ export default function UpdateMember({ member }) {
       } else {
         interestArr.splice(interestArr.indexOf(e.target.value), 1);
       }
-      const memberToUpdateObj = {
-        ...memberToUpdate,
-        memberInterest: interestArr,
-      };
-      setMemberToUpdate(memberToUpdateObj);
-      console.log(memberToUpdate.memberInterest);
+      onCheckComple();
     },
-    [memberToUpdate, setMemberToUpdate, interestArr]
+    [interestArr, onCheckComple]
   );
 
   //이미지 변경
@@ -255,12 +258,6 @@ export default function UpdateMember({ member }) {
       setFile("");
       setFileForm("");
     }
-  };
-  const onCheckComple = () => {
-    let interest = interestArr.join(" ");
-    console.log(interest);
-
-    setMemberToUpdate({ ...memberToUpdate, memberInterest: interest });
   };
 
   return (
