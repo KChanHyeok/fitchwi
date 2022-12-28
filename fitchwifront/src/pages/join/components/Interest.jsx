@@ -33,10 +33,6 @@ export default function Interest({ joinForm, setJoinForm }) {
   };
   const interestArr = useMemo(() => [], []);
 
-  // useEffect(() => {
-  //   console.log(interestArr);
-  // }, [interestArr]);
-
   const onCheck = useCallback(
     (e) => {
       if (e.target.checked === true) {
@@ -199,12 +195,11 @@ export default function Interest({ joinForm, setJoinForm }) {
       />
 
       <br />
-
-      <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
-        <Link to="/join/mbti" style={{ textDecoration: "none" }}>
+      <Link to="/join/mbti" style={{ textDecoration: "none" }}>
+        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
           다음
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }

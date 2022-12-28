@@ -108,7 +108,6 @@ export default function UserInfo({ onChange, joinForm, setJoinForm }) {
         <Grid item xs={12}>
           <TextField
             onChange={onCheckPwd}
-            name="memberPwd"
             sx={{ mb: 5 }}
             type="password"
             label="비밀번호 확인"
@@ -154,7 +153,6 @@ export default function UserInfo({ onChange, joinForm, setJoinForm }) {
           />
         </Grid>
         <Grid item xs={12}>
-          {" "}
           <Postcode insertAddr={insertAddr} />
         </Grid>
         <Grid item xs={12}>
