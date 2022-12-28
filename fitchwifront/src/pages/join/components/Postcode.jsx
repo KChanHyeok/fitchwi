@@ -1,21 +1,10 @@
 import { Button } from "@mui/material";
-import React, { useCallback } from "react";
+import React from "react";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 
-const Postcode = ({ joinForm, setJoinForm }) => {
+const Postcode = ({ insertAddr }) => {
   const open = useDaumPostcodePopup(
     "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
-  );
-
-  const insertAddr = useCallback(
-    (addr) => {
-      const joinObj = {
-        ...joinForm,
-        memberAddr: addr,
-      };
-      setJoinForm(joinObj);
-    },
-    [joinForm, setJoinForm]
   );
 
   const handleComplete = (data) => {
@@ -41,7 +30,7 @@ const Postcode = ({ joinForm, setJoinForm }) => {
   };
 
   return (
-    <Button variant="contained" onClick={handleClick}>
+    <Button variant="outlined" onClick={handleClick}>
       주소 검색
     </Button>
   );
