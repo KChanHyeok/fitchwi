@@ -312,6 +312,14 @@ public class MemberService {
     String result="result";
     System.out.println("memberToUpdate = " + memberToUpdate);
     System.out.println("pic = " + pic);
+    //기존 이미지 사용
+    //새 이미지 적용
+    //기존 이미지 제거
+
+
+    //새 비밀번호 입력
+    //기존 비밀번호 사용
+
     return result;
   }
 }

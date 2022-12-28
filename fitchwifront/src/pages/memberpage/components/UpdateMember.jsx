@@ -4,6 +4,7 @@ import {
   Alert,
   Avatar,
   Button,
+  ButtonGroup,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -38,7 +39,7 @@ export default function UpdateMember({ member }) {
     memberNickname,
     memberAddr,
     memberGender,
-    // memberImg,
+    //memberImg,
     memberBirth,
     memberPhone,
   } = memberToUpdate;
@@ -208,7 +209,7 @@ export default function UpdateMember({ member }) {
 
       setChecked(temporaryChecked);
     }
-  }, [memberInterest, checked, memberToUpdate]);
+  }, [memberInterest]);
 
   useEffect(() => {
     setMemberToUpdate({ ...memberToUpdate, memberInterest: interArray.current });
@@ -223,10 +224,12 @@ export default function UpdateMember({ member }) {
   console.log(interestArr);
 
   const onCheckComple = useCallback(() => {
-    let interest = interestArr.join(" ");
+    let interest = [...memberInterest];
+    interest.join(" ");
     console.log(interest);
     setMemberToUpdate({ ...memberToUpdate, memberInterest: interest });
-  }, [memberToUpdate, interestArr]);
+  }, [memberInterest, memberToUpdate]);
+
   const onCheck = useCallback(
     (e) => {
       if (e.target.checked === true) {
@@ -256,7 +259,13 @@ export default function UpdateMember({ member }) {
       setFileForm("");
     }
   };
+  const clearImg = () => {
+    console.log(file);
 
+    setMemberToUpdate({ ...memberToUpdate, memberImg: "" });
+    setFile();
+    console.log(file);
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -273,24 +282,29 @@ export default function UpdateMember({ member }) {
         {memberSaveimg && (
           <Box>
             <Avatar
-              src={file ? file : `/images/${memberSaveimg}`}
-              sx={{ width: 100, height: 100 }}
+              src={file !== "" ? file : `/images/${memberSaveimg}`}
+              sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
             />
             {/* <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} /> */}
-            <Button variant="outlined" sx={{ pl: 5 }}>
-              <FormControlLabel
-                control={
-                  <TextField
-                    onChange={fileHandler}
-                    type="file"
-                    label="사진"
-                    variant="standard"
-                    style={{ display: "none" }}
-                  />
-                }
-                label="프로필 수정하기"
-              />
-            </Button>{" "}
+            <ButtonGroup>
+              <Button variant="outlined" sx={{ pl: 5 }}>
+                <FormControlLabel
+                  control={
+                    <TextField
+                      onChange={fileHandler}
+                      type="file"
+                      label="사진"
+                      variant="standard"
+                      style={{ display: "none" }}
+                    />
+                  }
+                  label="프로필 수정하기"
+                />
+              </Button>
+              <Button variant="outlined" onClick={() => clearImg()}>
+                기본이미지 사용
+              </Button>
+            </ButtonGroup>
           </Box>
         )}
         <Box component="form" onSubmit={(e) => onUpdate(e)} noValidate sx={{ mt: 1 }}>
