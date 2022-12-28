@@ -159,12 +159,9 @@ export default function UpdateMember({ member }) {
     game: false,
     etc: false,
   });
-  const interArray = useRef([]); //문자열 변환해서 저장
+  const interArray = useRef([]);
   useEffect(() => {
-    const a = [...memberInterest];
-  }, []);
-  useEffect(() => {
-    if (typeof memberInterest === "string") {
+    if (typeof memberInterest == "string") {
       interArray.current = memberInterest.split(" ");
       const temporaryChecked = {
         culture: false,
@@ -219,12 +216,11 @@ export default function UpdateMember({ member }) {
   }, [interArray.current]);
 
   const handleChange = (e) => {
-    console.log(e.target.checked);
     setChecked({ ...checked, [e.target.name]: e.target.checked });
-    console.log(e.target.name);
   };
 
   const interestArr = useMemo(() => memberInterest, [memberInterest]);
+  console.log(interestArr);
 
   const onCheckComple = useCallback(() => {
     let interest = interestArr.join(" ");
@@ -239,8 +235,9 @@ export default function UpdateMember({ member }) {
         interestArr.splice(interestArr.indexOf(e.target.value), 1);
       }
       onCheckComple();
+      console.log(memberToUpdate.memberInterest);
     },
-    [interestArr, onCheckComple]
+    [memberToUpdate, interestArr, onCheckComple]
   );
 
   //이미지 변경

@@ -99,4 +99,12 @@ public class MemberController {
     return memberService.checkPwd(memberToCheck);
 
   }
+
+  @PostMapping("/updateMemberInfo")
+  private String updateMemberInfo(@RequestPart(value = "data", required = true) Member memberToUpdate,
+                                  @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
+                                  HttpSession session){
+    log.info("memberController.updateMemberInfo");
+    return memberService.updateMemberInfo(memberToUpdate, pic, session);
+  }
 }

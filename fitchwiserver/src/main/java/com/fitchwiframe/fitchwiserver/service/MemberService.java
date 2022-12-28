@@ -32,6 +32,7 @@ public class MemberService {
   //회원가입 - 이미지 기본 이름 추가 필요
   public String joinMember(Member newMember, MultipartFile pic, HttpSession session) {
     log.info("memberService.joinmember");
+    System.out.println("pic = " + pic);
     String result = null;
     String cryptPwd = encoder.encode(newMember.getMemberPwd());
     newMember.setMemberPwd(cryptPwd);
@@ -303,6 +304,14 @@ public class MemberService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    return result;
+  }
+
+  public String updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
+    log.info("memberService.updateMemberInfo();");
+    String result="result";
+    System.out.println("memberToUpdate = " + memberToUpdate);
+    System.out.println("pic = " + pic);
     return result;
   }
 }
