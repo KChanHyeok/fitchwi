@@ -245,12 +245,12 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               <MenuItem value={facilities}>
                 <em>-</em>
               </MenuItem>
-              {data.map((data) => (
+              {data.filter(data=>data.facilitiesCode!==0).map((data) => (
                 <MenuItem value={data} key={data.facilitiesCode}>
                   {data.facilitiesName}
                   <br />
                   가격 : {data.facilitiesPrice}원<br />
-                  담당자 : {data.facilitiesGrade}
+                  담당자 : {data.facilitiesManager}
                   <br />
                   연락처 : {data.facilitiesPhone}
                   <br />

@@ -52,5 +52,11 @@ public class TogetherController {
         return togetherService.getAllTogetherJoinList();
     }
 
+    @DeleteMapping("/deleteTogetherJoin")
+    public String deleteTogetherJoin(@RequestParam String memberEmail, long togetherCode) {
+        log.info("deleteTogetherJoin()");
+        return togetherService.deleteTogetherJoin(memberEmail, togetherCode);
+    }
+
 
 }

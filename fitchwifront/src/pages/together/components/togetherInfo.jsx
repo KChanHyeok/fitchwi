@@ -39,12 +39,17 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
             <Box component="span">
                 {togetherInfo.togetherContent}
             </Box>
-            <h3>멤버 소개</h3>
-            <Box>
+            <Box sx={{mt:2, mb:2}}>
+                <h3>멤버 소개</h3><br/>
+                <h4>방장</h4>
+                {!togetherInfo.togetherOpenedCode.memberEmail.memberNickname ? togetherInfo.togetherOpenedCode.memberEmail.memberEmail : togetherInfo.togetherOpenedCode.memberEmail.memberNickname}님
+            </Box>
+            <Box sx={{mb:2}}>
+                <h4>참여중인 회원</h4>
                 {togetherJoinMember.length === 0 ? <Box component="span">현재 참여중인 멤버가 없습니다</Box> :
                 togetherJoinMember.map((data) =>  
                 <Box key={data.togetherJoinCode}>
-                    {data.memberEmail.memberName}
+                    {!data.memberEmail.memberNickname ? data.memberEmail.memberEmail:data.memberEmail.memberNickname}
                 </Box>
                 )}
             </Box>
@@ -59,7 +64,7 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
             </Box>
                 <Box>
                 {
-                togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <TogetherJoin togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo}>삭제하기</TogetherJoin>
+                togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <TogetherJoin togetherPayState={togetherInfo.togetherState} togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo} togetherJoinMember={togetherJoinMember} >최종결제</TogetherJoin>
                 : togetherJoinList.filter(data=>data.memberEmail.memberEmail===sessionStorage.getItem("id")).length===0 ? <TogetherJoin refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo}>참여신청하기</TogetherJoin> 
                 : <TogetherJoin  togetherJoinState={togetherJoinList.filter(data=>data.memberEmail.memberEmail===sessionStorage.getItem("id"))[0].togetherJoinState} refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo}/>
                 }

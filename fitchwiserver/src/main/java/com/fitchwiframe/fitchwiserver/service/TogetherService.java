@@ -1,13 +1,7 @@
 package com.fitchwiframe.fitchwiserver.service;
 
-import com.fitchwiframe.fitchwiserver.entity.Together;
-import com.fitchwiframe.fitchwiserver.entity.TogetherJoin;
-import com.fitchwiframe.fitchwiserver.entity.TogetherOpened;
-import com.fitchwiframe.fitchwiserver.entity.TogetherTag;
-import com.fitchwiframe.fitchwiserver.repository.TogetherJoinRepository;
-import com.fitchwiframe.fitchwiserver.repository.TogetherOpenedRepository;
-import com.fitchwiframe.fitchwiserver.repository.TogetherRepository;
-import com.fitchwiframe.fitchwiserver.repository.TogetherTagRepository;
+import com.fitchwiframe.fitchwiserver.entity.*;
+import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +25,9 @@ public class TogetherService {
 
     @Autowired
     TogetherJoinRepository togetherJoinRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
         String result = null;
@@ -103,5 +100,22 @@ public class TogetherService {
         log.info("getAllTogetherJoinList()");
         Iterable<TogetherJoin> togetherJoinList = togetherJoinRepository.findAll();
         return togetherJoinList;
+    }
+
+    public String deleteTogetherJoin(String memberEmail, long togetherCode) {
+        String result = null;
+        try {
+            Member loginMember = memberRepository.findById(memberEmail).get();
+            Together joinTogether = togetherRepository.findById(togetherCode).get();
+
+            TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
+            togetherJoinRepository.delete(joinTogetherMember);
+            result="삭제성공";
+        }catch (Exception e) {
+            e.printStackTrace();
+            result="삭제실패";
+        }
+
+        return result;
     }
 }
