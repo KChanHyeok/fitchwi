@@ -11,7 +11,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
 
-    const [inputTalkOp, setInputTalkOp] = useState({
+    const [insertTalkOp, setInsertTalkOp] = useState({
         memberEmail: {
             memberEmail: memberEmail,
         },
@@ -28,11 +28,11 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     const onChange = useCallback(
         (e) => {
             const inputTo = {
-                ...inputTalkOp,
+                ...insertTalkOp,
                 [e.target.name]: e.target.value,
             };
-            setInputTalkOp(inputTo);
-        }, [inputTalkOp]);
+            setInsertTalkOp(inputTo);
+        }, [insertTalkOp]);
 
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
@@ -62,11 +62,11 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
 
     //작성 내용 전송 함수
     const onTalkOpened = (e) => {
-        console.log(inputTalkOp);
+        console.log(insertTalkOp);
         e.preventDefault();
         formData.append(
             "data",
-            new Blob([JSON.stringify(inputTalkOp)],
+            new Blob([JSON.stringify(insertTalkOp)],
                 { type: "application/json" })
         );
         formData.append("uploadImage", fileForm[0]);
@@ -89,7 +89,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     };
 
     //로그인 했을 때만 개설 가능하게 처리
-    const insertTalkOp = () => {
+    const isLogin = () => {
         if (memberEmail === null) {
             alert("로그인이 필요한 서비스입니다.");
             nav("/login");
@@ -116,11 +116,12 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     return (
         <div>
             <Tooltip
-                onClick={insertTalkOp}
+                onClick={isLogin}
                 title="Add"
                 sx={{
                     position: "fixed",
                     bottom: 20,
+                    marginLeft: 7,
                     left: { xs: "calc(50% - 25px)", md: 30 },
                 }}
             >
@@ -144,7 +145,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <FormControl sx={{ mt: 2 }} fullWidth>
                             <InputLabel>모임 카테고리 선정</InputLabel>
                             <Select label="모임 카테고리 선정"
-                                name="talkCategory" value={inputTalkOp.talkCategory}
+                                name="talkCategory" value={insertTalkOp.talkCategory}
                                 onChange={onChange}
                                 required>
                                 <MenuItem value="문화∙예술">문화∙예술</MenuItem>

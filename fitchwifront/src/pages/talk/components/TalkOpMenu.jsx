@@ -68,7 +68,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-function TalkOpMenu(refreshTalkList) {
+function TalkOpMenu({ talkList, refreshTalkList }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -78,29 +78,33 @@ function TalkOpMenu(refreshTalkList) {
         setAnchorEl(null);
     };
 
-    let formData = new FormData();
     const imgEl = document.querySelector(".talk_img_box");
-    let { talkCode } = useParams();
     const nav = useNavigate();
 
     //수정 모달창
     const [talkUpModal, setTalkUpModal] = useState(false);
 
-    const [updateTalk, setUpdateTalk] = useState({
-        talkTitle: "",
-        talkMax: 0,
-        talkCategory: "",
-        talkContent: "",
-        talkTagContent: "",
-    });
+    const [updateTalk, setUpdateTalk] = useState({});
+
+    // useEffect(() => {
+    //     setUpdateTalk();
+    // }, []);
+    // const {
+    //     talkTitle,
+    //     talkMax,
+    //     talkCategory,
+    //     talkContent,
+    //     talkTagContent,
+    // } = updateTalk;
+
+    const onTalkUpdate = () => { };
 
     const onChange = useCallback(
         (e) => {
-            const updateTo = {
-                ...talkUpModal,
-                [e.target.name]: e.target.value,
-            };
-            setUpdateTalk(updateTo);
+            setUpdateTalk({
+                ...updateTalk,
+                [e.target.name]: e.target.value
+            });
         }, [updateTalk]);
 
     //파일 업로드
@@ -131,32 +135,32 @@ function TalkOpMenu(refreshTalkList) {
 
 
     //수정하기
-    const onTalkUpdate = (e) => {
-        console.log(updateTalk);
-        e.preventDefault();
-        formData.append(
-            "data",
-            new Blob([JSON.stringify(updateTalk)],
-                { type: "application/json" })
-        );
-        formData.append("uploadImage", fileForm[0]);
+    // const onTalkUpdate = (e) => {
+    //     console.log(updateTalk);
+    //     e.preventDefault();
+    //     formData.append(
+    //         "data",
+    //         new Blob([JSON.stringify(updateTalk)],
+    //             { type: "application/json" })
+    //     );
+    //     formData.append("uploadImage", fileForm[0]);
 
-        const config = {
-            headers: { "Content-Type": "multipart/form-data" },
-        };
+    //     const config = {
+    //         headers: { "Content-Type": "multipart/form-data" },
+    //     };
 
-        axios.get("/updateTalk", formData, config)
-            .then((res) => {
-                if (res.data === "ok") {
-                    setUpdateTalk(false);
-                    alert("개설 성공");
-                    refreshTalkList();
-                } else {
-                    alert("개설 실패");
-                }
-            })
-            .catch((error) => console.log(error));
-    };
+    //     axios.get("/updateTalk", formData, config)
+    //         .then((res) => {
+    //             if (res.data === "ok") {
+    //                 setUpdateTalk(false);
+    //                 alert("개설 성공");
+    //                 refreshTalkList();
+    //             } else {
+    //                 alert("개설 실패");
+    //             }
+    //         })
+    //         .catch((error) => console.log(error));
+    // };
 
     //삭제하기
     const deleteTalk = useCallback(
@@ -170,8 +174,8 @@ function TalkOpMenu(refreshTalkList) {
                         alert("삭제 불가");
                     }
                 });
-        }
-    )
+        }, [nav]
+    );
 
     return (
         <div>
@@ -219,7 +223,8 @@ function TalkOpMenu(refreshTalkList) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 sx={{ mt: 5 }}>
-                <Box width={400} height={600} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                <Box component="form"
+                    width={400} height={600} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
                     <Typography variant="h6" color="gray" textAlign="center">
                         얘기해요 수정하기
                     </Typography>
@@ -247,7 +252,7 @@ function TalkOpMenu(refreshTalkList) {
                     <FormControl sx={{ mt: 2 }} fullWidth>
                         <InputLabel>모임 카테고리 선정</InputLabel>
                         <Select label="모임 카테고리 선정"
-                            name="talkCategory" value={updateTalk.talkCategory}
+                            name="talkCategory"
                             // onChange={onChange}
                             required>
                             <MenuItem value="문화∙예술">문화∙예술</MenuItem>
@@ -277,7 +282,7 @@ function TalkOpMenu(refreshTalkList) {
                     <input type="text" name="talkTagContent"
                         // onChange={onChange}
                         required></input>
-                    <Button onClick={onTalkUpdate}>수정하기</Button>
+                    <Button type="submit">수정하기</Button>
                 </Box>
             </StyleModal>
         </div>

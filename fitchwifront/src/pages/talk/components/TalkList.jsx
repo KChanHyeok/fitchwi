@@ -19,18 +19,13 @@ const TalkList = ({ talkList }) => {
 
     return (
         <Link to={`/talk/${talkCode}`} underline="none">
-            <div className="talkListShow">
-                <p>{talkTitle}</p>
-                <p>{talkCategory}</p>
-                <p>{talkContent}</p>
-            </div>
-            {/* <Card sx={{ mb: 3 }}>
+            <Card sx={{ mb: 3, maxWidth: 300 }}>
                 <CardActionArea>
                     <CardMedia
                         component="img"
-                        height="200"
+                        height="300"
                         src={`images/${talkSaveimg}`}
-                        alt="green iguana" />
+                        alt="talkimg" />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
                             {talkTitle}
@@ -41,7 +36,7 @@ const TalkList = ({ talkList }) => {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-            </Card> */}
+            </Card>
         </Link>
     )
 }
