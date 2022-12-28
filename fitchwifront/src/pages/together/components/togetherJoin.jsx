@@ -71,7 +71,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
     return (
         <>
-            { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>: 
+            { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>:
             togetherJoinState==="거절" ? <Button variant={"contained"} disabled>신청이 거절되었습니다</Button>:
             togetherJoinState==="가입중" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>참여취소하기</Button>:
             togetherPayState==="결제완료" ? <Button variant={"contained"} disabled>결제가 완료되었습니다</Button>:
@@ -128,7 +128,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 </Typography>
 
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
-                    최종결제 진행 하시겠습니까?
+                    {togetherJoinMember.length===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
                 <Button type="submit" variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} disabled={!(togetherJoinMember.length===togetherInfo.togetherMax)} >결제하기</Button>
                 <Button type="submit" variant="contained" onClick={handleClose}>나가기</Button>
