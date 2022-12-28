@@ -84,7 +84,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
             >
-                {togetherJoinState==="대기" ? <Box sx={style} component="form">
+                {togetherJoinState==="대기" ? <Box sx={style}>
                     <UserBox>
                         <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
@@ -95,10 +95,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                         신청을 취소하시겠습니까?
                     </Typography>
-                    <Button type="submit" variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >신청취소</Button>
-                    <Button type="submit" variant="contained" onClick={handleClose}>나가기</Button>
+                    <Button variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >신청취소</Button>
+                    <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
-                togetherJoinState==="가입중" ? <Box sx={style} component="form">
+                togetherJoinState==="가입중" ? <Box sx={style}>
                 <UserBox>
                     <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                     <Typography fontWeight={500} variant="span">
@@ -109,10 +109,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     환불하시겠습니까?
                 </Typography>
-                <Button type="submit" variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >환불하기</Button>
-                <Button type="submit" variant="contained" onClick={handleClose}>나가기</Button>
+                <Button variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >환불하기</Button>
+                <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
-                togetherPayState==="결제대기" ? <Box sx={style} component="form">
+                togetherPayState==="결제대기중" ? <Box sx={style}>
                 <UserBox>
                     <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                     <Typography fontWeight={500} variant="span">
@@ -122,7 +122,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <hr/>
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*결제전 진행 사항*/}
                     함께해요 이름 : {togetherInfo.togetherTitle}<br/>
-                    참여중인 멤버수 : {togetherJoinMember.length}명 / {togetherInfo.togetherMax}명<br/>
+                    참여중인 멤버수 : {togetherJoinMember.length+1}명 / {togetherInfo.togetherMax}명<br/>
                     장소 : {togetherInfo.togetherPosition}<br/>
                     총 결제금액 : {togetherInfo.togetherTotalPrice}원 <br/>
                 </Typography>
@@ -130,8 +130,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     {togetherJoinMember.length===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
-                <Button type="submit" variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} disabled={!(togetherJoinMember.length===togetherInfo.togetherMax)} >결제하기</Button>
-                <Button type="submit" variant="contained" onClick={handleClose}>나가기</Button>
+                <Button variant="contained" sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
+                <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 <Box sx={style} component="form">
                     <UserBox>

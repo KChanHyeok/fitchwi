@@ -1,4 +1,4 @@
-import { Box, Stack, Button } from "@mui/material";
+import { Box, Stack, Button, styled, Avatar, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
@@ -13,6 +13,13 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
         setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode*1))[0])
         setTogetherJoinMember(togetherJoinList.filter(data=>(data.togetherCode.togetherCode===(togetherPageCode*1) && data.togetherJoinState==="가입중")))
     },[togetherJoinList, togetherList, togetherPageCode])
+
+    const UserBox = styled(Box)({
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        marginBottom: "20px",
+      });
     
     return (
         <Stack
@@ -27,7 +34,7 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
             <Box>
                 <Stack flex={2} direction={"row"}>
                     <h1>{togetherInfo.togetherTitle}</h1>
-                    {togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <Button sx={{fontSize:20,ml:60}}>설정</Button>:null}
+                    {togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <Button sx={{fontSize:20,ml:60}} >설정</Button>:null}
                 </Stack>
             <Box sx={{maxWidth:900}}>
                 {
@@ -46,15 +53,23 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
             <Box sx={{mt:2, mb:2}}>
                 <h3>멤버 소개</h3><br/>
                 <h4>방장</h4>
-                {!togetherInfo.togetherOpenedCode.memberEmail.memberNickname ? togetherInfo.togetherOpenedCode.memberEmail.memberEmail : togetherInfo.togetherOpenedCode.memberEmail.memberNickname}님
+                <UserBox>
+                    <Avatar src={`/images/${togetherInfo.togetherOpenedCode.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                    <Typography fontWeight={500} variant="span">
+                        {!togetherInfo.togetherOpenedCode.memberEmail.memberNickname ? togetherInfo.togetherOpenedCode.memberEmail.memberEmail: togetherInfo.togetherOpenedCode.memberEmail.memberNickname}님
+                    </Typography>
+                </UserBox>
             </Box>
             <Box sx={{mb:2}}>
                 <h4>참여중인 회원</h4>
                 {togetherJoinMember.length === 0 ? <Box component="span">현재 참여중인 멤버가 없습니다</Box> :
                 togetherJoinMember.map((data) =>  
-                <Box key={data.togetherJoinCode}>
-                    {!data.memberEmail.memberNickname ? data.memberEmail.memberEmail:data.memberEmail.memberNickname}
-                </Box>
+                <UserBox key={data.togetherJoinCode}>
+                    <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                    <Typography fontWeight={500} variant="span">
+                        {!data.memberEmail.memberNickname ? data.memberEmail.memberEmail:data.memberEmail.memberNickname}님
+                    </Typography>
+                </UserBox>
                 )}
             </Box>
             <h3>안내사항</h3>

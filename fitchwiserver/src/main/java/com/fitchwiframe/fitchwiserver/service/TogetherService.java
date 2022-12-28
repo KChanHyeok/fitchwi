@@ -86,7 +86,11 @@ public class TogetherService {
     public String insertTogetherJoinInfo(TogetherJoin togetherJoin) {
         String result = null;
         try {
+            if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
+                togetherJoin.setTogetherJoinState("가입중");
+            }
             togetherJoinRepository.save(togetherJoin);
+
             result="성공";
         }catch (Exception e) {
             e.printStackTrace();

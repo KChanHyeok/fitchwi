@@ -117,8 +117,8 @@ const TogetherAdd = ({ data }) => {
   };
 
   return (
-    <Stack flex={7} p={2}>
-      <Box height={700} bgcolor="white" p={3} sx={{ mb: 10 }}>
+    <Stack height={800} flex={7} p={3}>
+      <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
