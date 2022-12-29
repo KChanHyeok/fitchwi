@@ -23,8 +23,9 @@ const TalkList = ({ talkList }) => {
                 <CardActionArea>
                     <CardMedia
                         component="img"
+                        width="300"
                         height="300"
-                        src={`images/${talkSaveimg}`}
+                        src={`/images/${talkSaveimg}`}
                         alt="talkimg" />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">

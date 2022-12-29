@@ -12,15 +12,25 @@ function Home() {
     console.log(id);
 
     const [talkList, setTalkList] = useState([]);
+    const [talkJoinList, setTalkJoinList] = useState([]);
 
     useEffect(() => {
         getAllTalkList();
+        getTalkJoinList();
     }, []);
 
     const getAllTalkList = async () => {
         await axios.get("/getAllTalkList").then((res) => {
             setTalkList(res.data)
-        }).catch((error) => console.log(error))
+        })
+        .catch((error) => console.log(error));
+    }
+
+    const getTalkJoinList = async () => {
+        await axios.get("/getTalkJoinList").then((res) => {
+            setTalkJoinList(res.data)
+        })
+        .catch((error) => console.log(error));
     }
 
     return (
@@ -29,7 +39,8 @@ function Home() {
             <Sidebar pageurl={"talk"} />
             <Routes>
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
-                <Route path="/:talkPageCode" element={<TalkInfo talkList={talkList}/>} />
+                <Route path="/:talkPageCode"
+                element={<TalkInfo talkList={talkList} talkJoinList={talkJoinList} refreshTalkJoinInfo={getTalkJoinList} />} />
             </Routes>
             
             <TalkOpened memberEmail={id} refreshTalkList={getAllTalkList} />

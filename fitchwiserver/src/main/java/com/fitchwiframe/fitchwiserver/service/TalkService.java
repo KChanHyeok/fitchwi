@@ -1,8 +1,10 @@
 package com.fitchwiframe.fitchwiserver.service;
 
 import com.fitchwiframe.fitchwiserver.entity.Talk;
+import com.fitchwiframe.fitchwiserver.entity.TalkJoin;
 import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
 import com.fitchwiframe.fitchwiserver.entity.TalkTag;
+import com.fitchwiframe.fitchwiserver.repository.TalkJoinRepository;
 import com.fitchwiframe.fitchwiserver.repository.TalkOpenedRepository;
 import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
 import com.fitchwiframe.fitchwiserver.repository.TalkTagRepository;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.List;
 
 @Service
 @Log
@@ -26,6 +29,9 @@ public class TalkService {
 
     @Autowired
     private TalkTagRepository talkTagRepository;
+
+    @Autowired
+    private TalkJoinRepository talkJoinRepository;
 
     public String addTalk(Talk newTalk, TalkTag talkTag , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
@@ -139,5 +145,28 @@ public class TalkService {
             result = "fail";
         }
         return result;
+    }
+
+    public String insertTalkJoinInfo(TalkJoin talkJoin) {
+        log.info("talkService.insertTalkJoinInfo()");
+        String result = null;
+
+        try {
+            if (talkJoin.getTalkCode().getTalkType().equals("선착순")) {
+                talkJoin.setTalkJoinState("가입중");
+            }
+            talkJoinRepository.save(talkJoin);
+            result = "ok";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "fail";
+        }
+        return result;
+    }
+
+    public Iterable<TalkJoin> getTalkJoinList() {
+        log.info("talkService.getTalkJoinList()");
+        Iterable<TalkJoin> talkJoinList = talkJoinRepository.findAll();
+        return talkJoinList;
     }
 }
