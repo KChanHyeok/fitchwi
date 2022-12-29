@@ -31,7 +31,7 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-export default function LongMenu({ flist, refreshFeed, information }) {
+export default function LongMenu({ flist, refreshFeed, information, Modal }) {
   const [feedToUpdate, setFeedUpdate] = useState({});
 
   useEffect(() => {
@@ -86,6 +86,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
           refreshFeed();
           setTagForm([]);
           setFeedUpdate({});
+          Modal(false);
         } else {
           alert("실패");
         }
@@ -226,7 +227,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                     <CardMedia
                       key={item.feedCode}
                       component="img"
-                      src={item.image}
+                      src={"/images/" + item.feedFileSaveimg}
                       alt={item.feedFileImg}
                       sx={{ backgroundSize: "cover" }}
                     />
@@ -234,7 +235,14 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                 </Carousel>
               </Box>
             ) : (
-              <Box key={flist[0].feedCode} component="img" height={420} width={420} src={flist[0].image} alt={flist[0].feedFileImg} />
+              <Box
+                key={flist[0].feedCode}
+                component="img"
+                height={420}
+                width={420}
+                src={"/images/" + flist[0].feedFileSaveimg}
+                alt={flist[0].feedFileImg}
+              />
             )}
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 350, height: 400 }} mt={1}>
