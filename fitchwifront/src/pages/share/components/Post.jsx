@@ -220,7 +220,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               />
             )}
             <CardContent>
-              <Stack direction="row" gap={2} mb={2}>
+              <Stack direction="row" gap={2} mb={1}>
                 <Checkbox checked={isLike} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onClick={() => onLike(isLike)} />
                 <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} onClick={(e) => setOpen(true)} />
               </Stack>
@@ -236,7 +236,13 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               <Stack direction="row" gap={1} mb={2} alignItems="center">
                 {tagList &&
                   tagList.map((tag, index) => (
-                    <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                    <Typography
+                      sx={{ cursor: "pointer" }}
+                      variant="body6"
+                      color="grey"
+                      onClick={() => console.log("검색으로 이동")}
+                      key={index}
+                    >
                       #{tag}
                     </Typography>
                   ))}
@@ -335,7 +341,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                         <b>{memberWriterInfo.memberNickname}</b> {}
                       </Typography>
                     </Box>
-                    <LongMenu refreshFeed={refreshFeed} flist={file} information={information} />
+                    <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={information} />
                   </UserBox>
                   <Divider />
                   <Box mt={1}>
@@ -396,7 +402,13 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                     />
                     <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} />
                   </Stack>
-                  {like.length === 0 ? <Box height={2}></Box> : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
+                  {like.length === 0 ? (
+                    <Box visibility="hidden" height={24.5}>
+                      좋아요 영역
+                    </Box>
+                  ) : (
+                    <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>
+                  )}
                   <Typography color="grey" variant="body2" mb={1} mt={1}>
                     {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
                   </Typography>

@@ -9,32 +9,24 @@ const Feed = ({ feedList, memberInfo, refreshFeed }) => {
 
   useEffect(() => {
     setFeedCategory(feedList);
+    setLoading(false);
   }, [feedList, memberInfo]);
-
-  useEffect(() => {
-    if (feedCategory !== undefined) {
-      if (feedCategory.length !== 0) {
-        setLoading(false);
-      }
-    }
-  }, [feedCategory]);
 
   return (
     <>
       <Box flex={4} p={2}>
-        {!feedCategory ? (
-          <Typography textAlign="center" height={100} lineHeight={40}>
-            😀 피드가 존재하지 않습니다 ⚠️ 피드를 작성해주세요!!
-          </Typography>
-        ) : loading ? (
+        {loading ? (
           <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
+        ) : feedCategory.length === 0 ? (
+          <Typography textAlign="center" height={100} lineHeight={40}>
+            😀 피드가 존재하지 않습니다 ⚠️ 피드를 작성해주세요!!
+          </Typography>
         ) : (
           feedCategory.map((data) => (
             <Post
               key={data.feedCode}
-              feedInfo={data}
               tag={data.feedTag}
               information={data}
               memberWriterInfo={data.memberEmail}
