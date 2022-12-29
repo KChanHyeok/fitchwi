@@ -26,10 +26,8 @@ export default function Interest({ joinForm, setJoinForm }) {
     etc: false,
   });
 
-  const handleChange = (e) => {
-    console.log(e.target.checked);
+  const handleClick = (e) => {
     setChecked({ ...checked, [e.target.name]: e.target.checked });
-    console.log(e.target.name);
   };
   const interestArr = useMemo(() => [], []);
 
@@ -70,7 +68,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.culture}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="culture"
             value="문화∙예술"
@@ -86,7 +84,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.activity}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="activity"
             value="운동∙액티비티"
@@ -102,7 +100,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.food}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="food"
             value="요리∙음식"
@@ -118,7 +116,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.travel}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="travel"
             value="여행"
@@ -134,7 +132,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.grownup}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="grownup"
             value="성장∙자기계발"
@@ -150,7 +148,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.making}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="making"
             value="공예∙수공예"
@@ -166,7 +164,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.game}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="game"
             value="게임∙오락"
@@ -182,7 +180,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         control={
           <InterestCheckBox
             checked={checked.etc}
-            onClick={handleChange}
+            onClick={handleClick}
             onChange={onCheck}
             name="etc"
             value="기타"

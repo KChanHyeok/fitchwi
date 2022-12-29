@@ -19,7 +19,7 @@ const Header = ({ lstate, onLogout }) => {
       <StyledToolbar>
         <Box>
           <Link to={homeLink} style={{ textDecoration: "none" }}>
-            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
+            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
               FITCHWI
             </Typography>
           </Link>
