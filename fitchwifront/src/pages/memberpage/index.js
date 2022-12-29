@@ -5,7 +5,6 @@ import MemberPage from "./components/MemberPage";
 import UpdateMember from "./components/UpdateMember";
 export default function MemberPageIndex({ onLogout }) {
   const location = useLocation();
-  console.log(location);
   const nav = useNavigate();
   const [member, setMember] = useState({});
 

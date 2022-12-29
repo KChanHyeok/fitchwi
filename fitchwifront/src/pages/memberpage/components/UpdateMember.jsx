@@ -21,13 +21,13 @@ import {
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import axios from "axios";
-import React, { useCallback, useEffect, useMemo, useRef, /*useMemo,*/ useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Postcode from "../../join/components/Postcode";
 export default function UpdateMember({ member }) {
   const [memberToUpdate, setMemberToUpdate] = useState({});
   useEffect(() => {
-    setMemberToUpdate(member);
+    setMemberToUpdate({ ...member });
   }, [member]);
 
   const {
@@ -77,7 +77,11 @@ export default function UpdateMember({ member }) {
 
   const inputChange = useCallback(
     (e) => {
+      console.log("inputChange");
+      console.log(memberToUpdate);
       setMemberToUpdate({ ...memberToUpdate, [e.target.name]: e.target.value });
+      console.log(memberToUpdate);
+      console.log("inputChange");
     },
     [memberToUpdate]
   );
@@ -160,10 +164,19 @@ export default function UpdateMember({ member }) {
     game: false,
     etc: false,
   });
-  const interArray = useRef([]);
+  let interestArray = useMemo(() => memberInterest, [memberInterest]);
+  const [isMemberInterest, setIsMemberInterest] = useState(false);
   useEffect(() => {
+    if (memberInterest) {
+      setIsMemberInterest(true);
+    }
+  }, [memberInterest]);
+
+  useEffect(() => {
+    console.log("check type");
     if (typeof memberInterest == "string") {
-      interArray.current = memberInterest.split(" ");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      interestArray = memberInterest.split(" ");
       const temporaryChecked = {
         culture: false,
         activity: false,
@@ -175,7 +188,7 @@ export default function UpdateMember({ member }) {
         etc: false,
       };
 
-      interArray.current.forEach((e) => {
+      interestArray.forEach((e) => {
         switch (e) {
           case "문화∙예술":
             temporaryChecked.culture = true;
@@ -209,39 +222,75 @@ export default function UpdateMember({ member }) {
 
       setChecked(temporaryChecked);
     }
-  }, [memberInterest]);
+  }, [isMemberInterest]);
 
-  useEffect(() => {
-    setMemberToUpdate({ ...memberToUpdate, memberInterest: interArray.current });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [interArray.current]);
-
-  const handleChange = (e) => {
+  const onClickInterest = (e) => {
+    console.log("setChecked");
     setChecked({ ...checked, [e.target.name]: e.target.checked });
   };
 
-  const interestArr = useMemo(() => memberInterest, [memberInterest]);
-  console.log(interestArr);
+  const [selectedInterest, setSelectedInterest] = useState([]);
 
-  const onCheckComple = useCallback(() => {
-    let interest = [...memberInterest];
-    interest.join(" ");
-    console.log(interest);
-    setMemberToUpdate({ ...memberToUpdate, memberInterest: interest });
-  }, [memberInterest, memberToUpdate]);
+  useEffect(() => {
+    // if (checked) {
+    console.log(" setSelectedInterest(selectedValue);");
+    console.log(checked);
+    let arrKeys = Object.keys(checked);
+    let arrValues = Object.values(checked);
+    let selectedIndex = [];
+    let selectedValue = [];
+    let index = arrValues.indexOf(true);
+    while (index !== -1) {
+      selectedIndex.push(index);
+      index = arrValues.indexOf(true, index + 1);
+    }
+    selectedIndex.forEach((v) => {
+      selectedValue.push(arrKeys[v]);
+    });
+    console.log(selectedValue);
+    setSelectedInterest(selectedValue);
+    // }
+  }, [checked]);
 
-  const onCheck = useCallback(
-    (e) => {
-      if (e.target.checked === true) {
-        interestArr.push(e.target.value);
-      } else {
-        interestArr.splice(interestArr.indexOf(e.target.value), 1);
+  console.log("render");
+
+  useEffect(() => {
+    console.log("selectedInterest.forEach((e");
+    let stringInterest = "";
+    selectedInterest.forEach((e) => {
+      switch (e) {
+        case "culture":
+          stringInterest += "문화∙예술 ";
+          break;
+        case "activity":
+          stringInterest += "운동∙액티비티 ";
+          break;
+        case "food":
+          stringInterest += "요리∙음식 ";
+          break;
+        case "travel":
+          stringInterest += "여행 ";
+          break;
+        case "grownup":
+          stringInterest += "성장∙자기계발 ";
+          break;
+        case "making":
+          stringInterest += "공예∙수공예 ";
+          break;
+        case "game":
+          stringInterest += "게임∙오락 ";
+          break;
+        case "etc":
+          stringInterest += "기타 ";
+          break;
+
+        default:
+          break;
       }
-      onCheckComple();
-      console.log(memberToUpdate.memberInterest);
-    },
-    [memberToUpdate, interestArr, onCheckComple]
-  );
+    });
+    setMemberToUpdate({ ...memberToUpdate, memberInterest: stringInterest.slice(0, -1) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedInterest]);
 
   //이미지 변경
   const [file, setFile] = useState("");
@@ -255,7 +304,7 @@ export default function UpdateMember({ member }) {
       };
       reader.readAsDataURL(event.target.files[0]);
     } else {
-      setFile("");
+      setFile();
       setFileForm("");
     }
   };
@@ -263,7 +312,7 @@ export default function UpdateMember({ member }) {
     console.log(file);
 
     setMemberToUpdate({ ...memberToUpdate, memberImg: "" });
-    setFile();
+    setFile("/images/DefaultProfileImageSystemName.jpg");
     console.log(file);
   };
   return (
@@ -285,7 +334,6 @@ export default function UpdateMember({ member }) {
               src={file !== "" ? file : `/images/${memberSaveimg}`}
               sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
             />
-            {/* <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} /> */}
             <ButtonGroup>
               <Button variant="outlined" sx={{ pl: 5 }}>
                 <FormControlLabel
@@ -476,8 +524,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.culture}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="culture"
                     value="문화∙예술"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -491,8 +538,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.activity}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="activity"
                     value="운동∙액티비티"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -506,8 +552,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.food}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="food"
                     value="요리∙음식"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -521,8 +566,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.travel}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="travel"
                     value="여행"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -536,8 +580,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.grownup}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="grownup"
                     value="성장∙자기계발"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -551,8 +594,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.making}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="making"
                     value="공예∙수공예"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -566,8 +608,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.game}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="game"
                     value="게임∙오락"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -581,8 +622,7 @@ export default function UpdateMember({ member }) {
                 control={
                   <Checkbox
                     checked={checked.etc}
-                    onClick={handleChange}
-                    onChange={onCheck}
+                    onChange={(e) => onClickInterest(e)}
                     name="etc"
                     value="기타"
                     icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
@@ -597,7 +637,6 @@ export default function UpdateMember({ member }) {
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             수정하기
           </Button>
-          <Button onClick={onCheckComple}> 테스트</Button>
         </Box>
       </Box>
     </Container>
