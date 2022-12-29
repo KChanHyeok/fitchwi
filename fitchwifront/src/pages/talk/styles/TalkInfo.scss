@@ -7,10 +7,30 @@ button#demo-customized-button:hover {
     background-color: #fc9e6f;
 }
 
-.talkOpMenu {
+.talkMenu {
     float: right;
 }
 
 .reportBtn {
     float: right;
+}
+
+.modalCloseBtn {
+    float: right;
+    border: none;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: transparent;
+    font-size: 20px;
+}
+
+.modalCloseBtn:hover {
+    cursor: pointer;
+}
+
+.talkSticky {
+    position: sticky !important;
+    bottom: 0;
+    width: 100%;
+    background-color: #F8AA83 !important;
+    color: white !important;
 }

@@ -46,7 +46,7 @@ const JoinIndex = () => {
     e.preventDefault();
     console.log(joinForm.memberInterest);
     formData.append("data", new Blob([JSON.stringify(joinForm)], { type: "application/json" }));
-    formData.append("uploadImage", fileForm[0]);
+    formData.append("uploadImage", fileForm);
 
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
@@ -78,10 +78,7 @@ const JoinIndex = () => {
       <Routes>
         <Route path="/" element={<Name onChange={onChange} />}></Route>
         <Route path="/nickname" element={<Nickname onChange={onChange} />}></Route>
-        <Route
-          path="/userimg"
-          element={<UserImg fileForm={fileForm} setFileForm={setFileForm} />}
-        ></Route>
+        <Route path="/userimg" element={<UserImg setFileForm={setFileForm} />}></Route>
         <Route
           path="/gender"
           element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}

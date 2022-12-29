@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, /*useEffect,*/ useMemo, useState } from "react";
 
 import { Button, Checkbox, FormControlLabel, styled, Typography } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
@@ -31,33 +31,32 @@ export default function Interest({ joinForm, setJoinForm }) {
     setChecked({ ...checked, [e.target.name]: e.target.checked });
     console.log(e.target.name);
   };
+  const interestArr = useMemo(() => [], []);
 
   const onCheck = useCallback(
     (e) => {
-      console.log(e.target.checked);
-
+      if (e.target.checked === true) {
+        interestArr.push(e.target.value);
+      } else {
+        interestArr.splice(interestArr.indexOf(e.target.value), 1);
+      }
       const joinObj = {
         ...joinForm,
-        memberInterest: joinForm.memberInterest,
+        memberInterest: interestArr,
       };
-      if (e.target.checked === true) {
-        joinForm.memberInterest.push(e.target.value);
-      } else {
-        joinForm.memberInterest.splice(joinForm.memberInterest.indexOf(e.target.value), 1);
-      }
       setJoinForm(joinObj);
       console.log(joinForm.memberInterest);
     },
-    [joinForm, setJoinForm]
+    [joinForm, setJoinForm, interestArr]
   );
 
   const onCheckComple = () => {
+    let interest = interestArr.join(" ");
     const joinObj = {
       ...joinForm,
-      memberInterest: joinForm.memberInterest.join(" "),
+      memberInterest: interest,
     };
     setJoinForm(joinObj);
-    console.log(setJoinForm);
   };
 
   return (
@@ -196,12 +195,11 @@ export default function Interest({ joinForm, setJoinForm }) {
       />
 
       <br />
-
-      <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
-        <Link to="/join/mbti" style={{ textDecoration: "none" }}>
+      <Link to="/join/mbti" style={{ textDecoration: "none" }}>
+        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
           다음
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }

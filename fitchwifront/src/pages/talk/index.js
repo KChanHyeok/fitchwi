@@ -17,8 +17,8 @@ function Home() {
         getAllTalkList();
     }, []);
 
-    const getAllTalkList = () => {
-        axios.get("/getAllTalkList").then((res) => {
+    const getAllTalkList = async () => {
+        await axios.get("/getAllTalkList").then((res) => {
             setTalkList(res.data)
         }).catch((error) => console.log(error))
     }
@@ -29,7 +29,7 @@ function Home() {
             <Sidebar pageurl={"talk"} />
             <Routes>
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
-                <Route path="/:talkCode" element={<TalkInfo />} />
+                <Route path="/:talkPageCode" element={<TalkInfo talkList={talkList}/>} />
             </Routes>
             
             <TalkOpened memberEmail={id} refreshTalkList={getAllTalkList} />
