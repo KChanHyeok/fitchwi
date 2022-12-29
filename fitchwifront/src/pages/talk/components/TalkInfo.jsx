@@ -20,11 +20,12 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkInfo = ({ talkList }) => {
+const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
 
     let { talkPageCode } = useParams();
     const nav = useNavigate();
     const [talkInfo, setTalkInfo] = useState([]);
+    const [talkJoinMember, setTalkJoinMember] = useState(null);
 
     // const getTalkInfo = () => {
     //     axios.get("/getTalk", { params: { talkCode: talkPageCode } })
@@ -34,9 +35,11 @@ const TalkInfo = ({ talkList }) => {
     useEffect(() => {
         // getTalkInfo();
         setTalkInfo(talkList.filter(data => data.talkCode === (talkPageCode * 1))[0]);
-    }, [talkList, talkPageCode]);
+        setTalkJoinMember(talkJoinList.filter
+            (data => (data.talkCode.talkCode === (talkPageCode * 1)
+                && data.talkJoinState === "가입중")));
+    }, [talkList, talkJoinList, talkPageCode]);
 
-    const tlist = talkList.filter(data => data.talkCode === (talkPageCode * 1))[0];
     //문의하기 모달창
     const [inquiryModal, setInquiryMoal] = useState(false);
 
@@ -59,7 +62,7 @@ const TalkInfo = ({ talkList }) => {
             alignItems="stretch"
             spacing={2}
         >
-            {talkList.length === 0 || !talkInfo ? <h1>로딩중</h1> :
+            {talkList.length === 0 || !talkInfo || !talkJoinMember ? <h1>로딩중</h1> :
                 <Box>
                     <Box>
                         <span>mbti 취미&nbsp;</span>
@@ -67,7 +70,7 @@ const TalkInfo = ({ talkList }) => {
                         <span>남은 자리 0/{talkInfo.talkMax}&nbsp;</span>
                         <span>유형 - {talkInfo.talkType}</span>
                         <Box className="talkMenu">
-                            {tlist.talkOpenCode.memberEmail.memberEmail === id
+                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === id
                                 ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} />)
                                 : (<Button id="demo-customized-button"
                                     aria-haspopup="true"
@@ -84,17 +87,26 @@ const TalkInfo = ({ talkList }) => {
                             component="img"
                             sx={{ maxHeight: 400, textAlign: "center" }}
                             src={`/images/${talkInfo.talkSaveimg}`}
-                            alt="green iguana"
+                            alt="talkimg"
                         ></Box>)}
-                    </Box><h3>함께해요 소개</h3><Box component="span">
+                    </Box><h3>얘기해요 소개</h3><Box component="span">
                         {talkInfo.talkContent}
-                        <p>방장<br />
-                            {tlist.talkOpenCode.memberEmail.memberName}</p>
+                        <h4>방장<br />
+                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberName}</h4>
                         <Avatar
-                            src={`/images/${tlist.talkOpenCode.memberEmail.memberSaveimg}`}
+                            src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
                             sx={{ width: 40, height: 40, mr: 2 }}
                         />
-                        <p>멤버소개</p>
+                        <h4>참여중인 회원</h4>
+                        {talkJoinMember.length === 0
+                            ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
+                            : talkJoinMember.map((data) =>
+                                <UserBox key={data.talkJoinCode}>
+                                    <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                    <Typography fontWeight={500} variant="span">
+                                        {!data.memberEmail.memberNickname ? data.memberEmail.memberName : data.memberEmail.memberNickname}님
+                                    </Typography>
+                                </UserBox>)}
                         <Box>
                         </Box>
                         <Box>
@@ -105,15 +117,21 @@ const TalkInfo = ({ talkList }) => {
                         <div>dd</div>
                         <div>dd</div>
                         <div>dd</div>
+                        <div>dd</div>
+                        <div>dd</div>
+                        <div>dd</div>
                     </Box>
-                    {tlist.talkOpenCode.memberEmail.memberEmail === id
-                        ? (<TalkJoin />)
-                        : (<Button className="talkSticky">참여하기</Button>)}
+                    {talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
+                        ? (<Button className="talkSticky">삭제하기</Button>)
+                        : talkJoinList.filter((data) => data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
+                            ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}>참여하기</TalkJoin>
+                            : (<TalkJoin talkInfo={talkInfo}
+                                talkJoinState={talkJoinList.filter((data) => data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
+                                refreshTalkJoinList={refreshTalkJoinList} />)}
                 </Box>
             }
-            {talkList.length === 0 || !talkInfo ? <h1>로딩중</h1> :
+            {!talkInfo ? <h1>로딩중</h1> :
                 <StyleModal open={inquiryModal}
-                    onClose={() => setInquiryMoal(false)}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                     sx={{ mt: 5 }}>
