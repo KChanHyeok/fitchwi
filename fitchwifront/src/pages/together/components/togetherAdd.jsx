@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
 
@@ -36,6 +36,7 @@ const facilities = {
 
 const TogetherAdd = ({ data }) => {
   const nav = useNavigate();
+  const location = useLocation();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -46,7 +47,7 @@ const TogetherAdd = ({ data }) => {
     togetherCategory: "",
     togetherPosition: "",
     togetherDate: "",
-    togetherMax: 2,
+    togetherMax: 0,
     togetherContent: "",
     togetherRecruitStartDate: "", // 모집 시작일
     togetherRecruitEndDate: "", // 모집 마감일
@@ -61,9 +62,14 @@ const TogetherAdd = ({ data }) => {
   
   useEffect(() => {
     preview();
-    
+    try{
+      if(location) {
+        setInsertForm(location.state.togetherInfo)
+      }
+    }catch(e){
+    }
     return () => preview();
-  });
+  },[location]);
   
   const preview = () => {
     if (!fileForm) return false
@@ -72,6 +78,7 @@ const TogetherAdd = ({ data }) => {
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
+    console.log(render)
   };
 
   const onLoadFile = useCallback((event) => {
@@ -134,6 +141,7 @@ const TogetherAdd = ({ data }) => {
           label="모임명"
           sx={{ mt: 3 }}
           id="fullWidth"
+          value={insertForm.togetherTitle}
           onChange={handleChange}
           name="togetherTitle"
         />
@@ -143,6 +151,7 @@ const TogetherAdd = ({ data }) => {
           sx={{ mt: 3 }}
           type="date"
           id="fullWidth"
+          value={insertForm.togetherDate}
           onChange={handleChange}
           name="togetherDate"
           focused
@@ -154,6 +163,7 @@ const TogetherAdd = ({ data }) => {
           sx={{ mt: 3 }}
           type="number"
           id="fullWidth"
+          value={insertForm.togetherMax}
           onChange={handleChange}
           name="togetherMax"
         />
@@ -183,6 +193,7 @@ const TogetherAdd = ({ data }) => {
           sx={{ mt: 3 }}
           type="date"
           id="fullWidth"
+          value={insertForm.togetherRecruitStartDate}
           onChange={handleChange}
           name="togetherRecruitStartDate"
           focused
@@ -196,6 +207,7 @@ const TogetherAdd = ({ data }) => {
           focused
           type="date"
           onChange={handleChange}
+          value={insertForm.togetherRecruitEndDate}
           name="togetherRecruitEndDate"
           id="fullWidth"
         />
@@ -204,7 +216,7 @@ const TogetherAdd = ({ data }) => {
           <Select
             labelId="demo-simple-select-autowidth-label"
             id="demo-simple-select-autowidth"
-            value={insertForm.facilitiesCode}
+            value={insertForm.facilitiesCode || facilities}
             name="facilitiesCode"
             onChange={handleChange}
             label="시설이용료"
@@ -231,6 +243,7 @@ const TogetherAdd = ({ data }) => {
           label="모이는 장소의 주소"
           sx={{ mt: 3 }}
           id="fullWidth"
+          value={insertForm.togetherPosition}
           onChange={handleChange}
           name="togetherPosition"
         />
@@ -240,6 +253,7 @@ const TogetherAdd = ({ data }) => {
           type="number"
           sx={{ mt: 3 }}
           id="fullWidth"
+          value={insertForm.togetherPrice}
           name="togetherPrice"
           onChange={handleChange}
         />
@@ -275,6 +289,7 @@ const TogetherAdd = ({ data }) => {
           label="유저 신청시 질문내용 작성(승인제)"
           sx={{ mt: 3 }}
           name="togetherInquiry"
+          value={insertForm.togetherInquiry}
           onChange={handleChange}
           id="fullWidth"
         />
@@ -283,6 +298,7 @@ const TogetherAdd = ({ data }) => {
           label="모임 소개 말"
           sx={{ mt: 3 }}
           id="fullWidth"
+          value={insertForm.togetherContent}
           name="togetherContent"
           onChange={handleChange}
         />
@@ -293,10 +309,11 @@ const TogetherAdd = ({ data }) => {
           id="fullWidth"
           name="togetherTagContent"
           onChange={handleChange}
+          value={insertForm.togetherTagContent || ''}
         />
-        <Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>
-          개설하기
-        </Button>
+        
+          {location.state ? <Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>:<Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>}
+        
         <Button variant={"contained"} sx={{ mt: 2 }}>
           취소
         </Button>
