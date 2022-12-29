@@ -1,7 +1,7 @@
 import {
   Button,
   ButtonGroup,
-  Paper,
+  Container,
   styled,
   Table,
   TableBody,
@@ -31,7 +31,7 @@ export default function Facilities() {
   };
 
   const BasicTableRow = styled(TableRow)({
-    ":hover": { backgroundColor: `#e9e9e9`, transition: `0.3s` },
+    ":hover": { backgroundColor: `#ffd2e2`, transition: `0.3s` },
   });
 
   const deleteFacilities = (facilitiesCode) => {
@@ -42,36 +42,43 @@ export default function Facilities() {
   };
 
   return (
-    <Box align="center" maxWidth={800} sx={{ pl: 30 }}>
-      <Typography variant="h5">시설 관리</Typography>
-      <Link to="/manager/facilities/insertFacilities">시설 등록</Link>
-      <TableContainer component={Paper} sx={{ boxShadow: "5px 5px 10px #d9d9d9", maxWidth: 1440 }}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 30 }}>
+      <Box>
+        <Typography variant="h4">시설 관리</Typography>
+
+        <Link to="/manager/facilities/insertFacilities" style={{ textDecoration: "none" }}>
+          <Button variant="contained" style={{ float: "right", marginTop: 10 }}>
+            시설 등록
+          </Button>
+        </Link>
+      </Box>
+      <TableContainer component="main" sx={{ width: "100%" }}>
+        <Table sx={{ width: "100%", mt: 2 }} aria-label="simple table">
           <TableHead style={{ borderBottom: "2px solid black" }}>
-            <BasicTableRow>
-              <TableCell align="right">시설번호</TableCell>
-              <TableCell align="right">시설 명</TableCell>
-              <TableCell align="right">담당자명</TableCell>
+            <TableRow>
+              <TableCell align="center">시설번호</TableCell>
+              <TableCell align="center">시설 명</TableCell>
+              <TableCell align="center">담당자명</TableCell>
               <TableCell align="center">상태</TableCell>
-              <TableCell align="center">Action</TableCell>
-            </BasicTableRow>
+              <TableCell align="center">수정/삭제</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {facilities &&
               facilities.map((facilities, index) => (
                 <BasicTableRow key={index}>
-                  <TableCell align="right">{index + 1}</TableCell>
+                  <TableCell align="center">{index + 1}</TableCell>
 
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Link
                       to={`/manager/facilities/getFacilitiesInfo/${facilities.facilitiesCode}`}
-                      style={{ textDecoration: "none" }}
+                      style={{ textDecoration: "none", color: "black" }}
                     >
                       {facilities.facilitiesName}{" "}
                     </Link>
                   </TableCell>
 
-                  <TableCell align="right">{facilities.facilitiesManager}</TableCell>
+                  <TableCell align="center">{facilities.facilitiesManager}</TableCell>
                   <TableCell align="center">{facilities.facilitiesGrade}</TableCell>
                   <TableCell align="center">
                     <ButtonGroup>
@@ -91,6 +98,6 @@ export default function Facilities() {
           </TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </Container>
   );
 }

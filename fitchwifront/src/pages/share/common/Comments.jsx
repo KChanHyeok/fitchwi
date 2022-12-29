@@ -12,11 +12,7 @@ const Comments = ({ data }) => {
       mt={2}
     >
       <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
-        <Avatar
-          alt={data.memberEmail.memberName}
-          src={"images/" + data.memberEmail.memberSaveimg}
-          sx={{ width: 30, height: 30, mr: 1 }}
-        />
+        <Avatar alt={data.memberEmail.memberName} src={"/images/" + data.memberEmail.memberSaveimg} sx={{ width: 30, height: 30, mr: 1 }} />
       </Link>
       <Typography variant="span" color="text.secondary">
         <b>{data.memberEmail.memberNickname}</b> {data.feedCommentContent}

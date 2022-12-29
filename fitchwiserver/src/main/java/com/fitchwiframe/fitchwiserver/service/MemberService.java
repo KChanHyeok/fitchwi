@@ -39,10 +39,10 @@ public class MemberService {
 
     try {
       if (pic != null) {
-        newMember = fileUpload(newMember, pic, session);
+        fileUpload(newMember, pic, session);
       } else {
-        newMember.setMemberImg("이미지 원래 이름");
-        newMember.setMemberSaveimg("저장된 기본이미지 이름");
+        newMember.setMemberImg("DefaultProfileImage.jpg");
+        newMember.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
       }
 
       memberRepository.save(newMember);
@@ -156,7 +156,7 @@ public class MemberService {
 
   //회원 탈퇴시 이미지 삭제
   private void deleteFile(String filsSysname, HttpSession session) {
-    if (filsSysname.equals("기본이미지로 저장된 이름")) {
+    if (filsSysname.equals("DefaultProfileImageSystemName.jpg")) {
       return;
     }
     String realPath = session.getServletContext().getRealPath("/");
@@ -274,8 +274,8 @@ public class MemberService {
         member.setMemberBirth("2022-12-26");
         String cryptPwd = encoder.encode("0000");
         member.setMemberPwd(cryptPwd);
-        member.setMemberImg("기본이미지.jpg");
-        member.setMemberSaveimg("기본이미지저장.jpg");
+        member.setMemberImg("DefaultProfileImage.jpg");
+        member.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
         member.setMemberMbti("ISFP");
         member.setMemberAddr("경기도 시흥시");
         member.setMemberPhone("000-0000-0000");
@@ -309,16 +309,35 @@ public class MemberService {
 
   public String updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
     log.info("memberService.updateMemberInfo();");
-    String result="result";
+    String result = "fail";
     System.out.println("memberToUpdate = " + memberToUpdate);
     System.out.println("pic = " + pic);
-    //기존 이미지 사용
-    //새 이미지 적용
-    //기존 이미지 제거
-
 
     //새 비밀번호 입력
-    //기존 비밀번호 사용
+    if (!memberToUpdate.getMemberPwd().equals("")) {
+      String cryptPwd = encoder.encode(memberToUpdate.getMemberPwd());
+      memberToUpdate.setMemberPwd(cryptPwd);
+      //기존 비밀번호 사용
+    } else {
+      memberToUpdate.setMemberPwd(memberRepository.findById(memberToUpdate.getMemberEmail()).get().getMemberPwd());
+    }
+    try {
+      //기본 이미지 사용
+      if (pic == null) {
+        if (memberToUpdate.getMemberImg().equals("")) {
+          deleteFile(memberToUpdate.getMemberSaveimg(), session);
+          memberToUpdate.setMemberImg("DefaultProfileImage.jpg");
+          memberToUpdate.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
+        }
+      } else {//새이미지사용
+        deleteFile(memberToUpdate.getMemberSaveimg(), session);
+        fileUpload(memberToUpdate, pic, session);
+      }
+      memberRepository.save(memberToUpdate);
+      result = "ok";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     return result;
   }

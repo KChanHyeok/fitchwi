@@ -3,9 +3,7 @@ import React from "react";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const Postcode = ({ insertAddr }) => {
-  const open = useDaumPostcodePopup(
-    "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
-  );
+  const open = useDaumPostcodePopup("http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
 
   const handleComplete = (data) => {
     let fullAddress = data.address;
@@ -30,7 +28,7 @@ const Postcode = ({ insertAddr }) => {
   };
 
   return (
-    <Button variant="outlined" onClick={handleClick}>
+    <Button variant="outlined" onClick={handleClick} style={{ width: "40%" }} sx={{ mb: 1 }}>
       주소 검색
     </Button>
   );

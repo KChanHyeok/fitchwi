@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/home";
-import Feed from "./pages/feed";
+import Share from "./pages/share";
 import LoginMember from "./pages/login";
 import JoinMember from "./pages/join";
 import Talk from "./pages/talk";
@@ -10,7 +10,8 @@ import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
 import TalkInfo from "./pages/talk/components/TalkInfo";
 import Manager from "./pages/manager";
-
+import "react-calendar/dist/Calendar.css"; // css import
+import "./pages/manager/components/facilities/CalendarApp.scss";
 function App() {
   const nav = useNavigate();
 
@@ -61,7 +62,7 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
-        <Route path="/feed" element={<Feed />}></Route>
+        <Route path="/share/*" element={<Share />}></Route>
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/talk/info" element={<TalkInfo />}></Route>
         <Route path="/together/*" element={<Together />}></Route>

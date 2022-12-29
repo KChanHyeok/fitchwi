@@ -1,26 +1,9 @@
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  Home,
-  Palette,
-  RunCircle,
-  Fastfood,
-  Flight,
-  LocalLibrary,
-  AutoAwesome,
-  Extension,
-  MoreHoriz,
-} from "@mui/icons-material";
+import { Home, Palette, RunCircle, Fastfood, Flight, LocalLibrary, AutoAwesome, Extension, MoreHoriz } from "@mui/icons-material";
 
-const Sidebar = ({pageurl}) => {
+const Sidebar = ({ pageurl }) => {
   return (
     <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
       <Box position="fixed">
@@ -30,7 +13,7 @@ const Sidebar = ({pageurl}) => {
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
-              <ListItemText primary="메인페이지" />
+              <ListItemText primary="HOME" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>

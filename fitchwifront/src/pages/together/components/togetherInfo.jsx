@@ -1,7 +1,8 @@
-import { Box, Stack, Button, styled, Avatar, Typography } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
+import TogetherSettingMenu from "./togetherSettingMenu";
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList }) => {
 
