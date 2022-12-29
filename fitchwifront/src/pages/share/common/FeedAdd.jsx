@@ -22,7 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
 import MultipleSelectChip from "./MultipleSelectChip";
-import "./FeedAdd.scss";
+import "../styles/FeedAdd.scss";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -38,6 +38,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
   const [tagForm, setTagForm] = useState([]);
+  const imageInput = useRef();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -55,13 +56,8 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
       nav("/login");
     } else {
       setOpen(true);
-      preview();
     }
   };
-
-  useEffect(() => {
-    preview();
-  }, [fileForm]);
 
   const preview = useCallback(
     (e) => {
@@ -188,15 +184,13 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     setOpen(false);
   };
 
-  const snackBarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const imageInput = useRef();
   const onClickImageInput = () => {
     imageInput.current.click();
-    preview();
   };
+
+  useEffect(() => {
+    preview();
+  }, [preview]);
 
   return (
     <>
@@ -224,15 +218,15 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
                 RESET
               </Button>
             </ButtonGroup>
-            <Typography variant="h5" textAlign="center">
-              피드 작성
+            <Typography variant="button" textAlign="center">
+              DO SHARE!
             </Typography>
             <ButtonGroup>
               <Button color="success" onClick={saveFeed}>
                 SAVE
               </Button>
-              <Snackbar open={SnackbarOpen} autoHideDuration={6000} onClose={snackBarClose}>
-                <Alert onClose={snackBarClose} severity="success" sx={{ width: "100%" }}>
+              <Snackbar open={SnackbarOpen} autoHideDuration={6000}>
+                <Alert severity="success" sx={{ width: "100%" }}>
                   피드 저장 완료!
                 </Alert>
               </Snackbar>

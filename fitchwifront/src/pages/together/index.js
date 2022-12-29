@@ -9,33 +9,41 @@ import TogetherArt from "./components/togetherArt";
 import TogetherInfo from "./components/togetherInfo";
 import AddButton from "./components/common/addButton";
 
-
 const Together = () => {
-    const [facilitiesList, setFacilitiesList] = useState([]);
-    const [togetherList, setTogetherList] = useState([]);
-    const [togetherJoinList, setTogetherJoinList] = useState([]);
-    
-    useEffect(() => {
-        getAllFacilitiesList();
-        getAllTogetherList();
-        getAllTogetherJoinList();
-    },[])
+  const [facilitiesList, setFacilitiesList] = useState([]);
+  const [togetherList, setTogetherList] = useState([]);
+  const [togetherJoinList, setTogetherJoinList] = useState([]);
 
-    const getAllFacilitiesList = async () => {
-        await axios.get("/getAllFacilitiesList").then((res) => {
-            setFacilitiesList(res.data)
-        }).catch((error) => console.log(error))
-    }    
-    const getAllTogetherList = async () => {
-        await axios.get("/getAllTogetherList").then((res) => {
-            setTogetherList(res.data)
-        }).catch((error) => console.log(error))
-    }
-    const getAllTogetherJoinList = async () => {
-        await axios.get("/getAllTogetherJoinList").then((res) => {
-            setTogetherJoinList(res.data)
-        }).catch((error) => console.log(error))
-    }
+  useEffect(() => {
+    getAllFacilitiesList();
+    getAllTogetherList();
+    getAllTogetherJoinList();
+  }, []);
+
+  const getAllFacilitiesList = async () => {
+    await axios
+      .get("/getAllFacilitiesList")
+      .then((res) => {
+        setFacilitiesList(res.data);
+      })
+      .catch((error) => console.log(error));
+  };
+  const getAllTogetherList = async () => {
+    await axios
+      .get("/getAllTogetherList")
+      .then((res) => {
+        setTogetherList(res.data);
+      })
+      .catch((error) => console.log(error));
+  };
+  const getAllTogetherJoinList = async () => {
+    await axios
+      .get("/getAllTogetherJoinList")
+      .then((res) => {
+        setTogetherJoinList(res.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
     return (
         <Box>
@@ -52,5 +60,6 @@ const Together = () => {
         </Box>
     );
 }
+
 
 export default Together;

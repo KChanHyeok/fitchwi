@@ -3,16 +3,20 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 
+
 const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList}) => {
     
     let { togetherPageCode } = useParams()
     const [togetherInfo, setTogetherInfo] = useState(null);
     const [togetherJoinMember, setTogetherJoinMember] = useState(null);
 
-    useEffect(()=> {
-        setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode*1))[0])
-        setTogetherJoinMember(togetherJoinList.filter(data=>(data.togetherCode.togetherCode===(togetherPageCode*1) && data.togetherJoinState==="가입중")))
-    },[togetherJoinList, togetherList, togetherPageCode])
+
+  useEffect(() => {
+    setTogetherInfo(togetherList.filter((data) => data.togetherCode === togetherPageCode * 1)[0]);
+    setTogetherJoinMember(
+      togetherJoinList.filter((data) => data.togetherCode.togetherCode === togetherPageCode * 1 && data.togetherJoinState === "가입중")
+    );
+  }, [togetherJoinList, togetherList, togetherPageCode]);
 
     const UserBox = styled(Box)({
         display: "flex",
@@ -86,11 +90,18 @@ const TogetherInfo = ({togetherJoinList, togetherList, refreshTogetherJoinList})
                 togetherInfo.togetherOpenedCode.memberEmail.memberEmail===sessionStorage.getItem("id") ? <TogetherJoin togetherPayState={togetherInfo.togetherState} togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo} togetherJoinMember={togetherJoinMember} >최종결제</TogetherJoin>
                 : togetherJoinList.filter(data=>data.memberEmail.memberEmail===sessionStorage.getItem("id")).length===0 ? <TogetherJoin refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo}>참여신청하기</TogetherJoin> 
                 : <TogetherJoin  togetherJoinState={togetherJoinList.filter(data=>data.memberEmail.memberEmail===sessionStorage.getItem("id"))[0].togetherJoinState} refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo= {togetherInfo}/>
+
                 }
-                </Box>
-            </Box>)}
-        </Stack>    
-    );
-}
+                refreshTogetherJoinList={refreshTogetherJoinList}
+                togetherPageCode={togetherPageCode}
+                togetherInfo={togetherInfo}
+              />
+            )}
+          </Box>
+        </Box>
+      )}
+    </Stack>
+  );
+};
 
 export default TogetherInfo;

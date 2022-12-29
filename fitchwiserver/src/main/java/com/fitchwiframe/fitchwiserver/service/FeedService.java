@@ -140,7 +140,6 @@ public class FeedService {
             feed.setFfList(feedFileList);
             memberFeedList.add(feed);
         }
-
         return memberFeedList;
     }
 
@@ -191,31 +190,65 @@ public class FeedService {
         return result;
     }
 
-    public String updateFeed(Feed newFeed, List<MultipartFile> files, HttpSession session) {
+    public String updateFeed(Feed newFeed) {
         log.info("feedService.updateFeed()");
         log.info("newFeed : " + newFeed);
         String result = null;
 
         try {
-            Feed saveFeed = feedRepository.findById(newFeed.getFeedCode()).get();
-            FeedTag feedTag = feedTagRepository.findByFeedCode(saveFeed.getFeedCode());
-            feedTag.setFeedCode(newFeed.getFeedCode());
+            FeedTag feedTag = feedTagRepository.findByFeedCode(newFeed.getFeedCode());
             feedTag.setFeedTagContent(newFeed.getFeedTag());
             feedTagRepository.save(feedTag);
-            if (files != null){
-                List<FeedFile> feedFiles = fileUpload(newFeed,files,session);
-                log.info("feedFiles : " + newFeed);
-                saveFeed.setFfList(feedFiles);
-            }
-            log.info("newFead : " + newFeed);
-            log.info("saveFeed : " + saveFeed);
-            log.info("등록 성공");
+            feedRepository.save(newFeed);
+            log.info("saveFeed : " + newFeed);
+            log.info("수정 성공");
             result = "ok";
         } catch (Exception e){
             e.printStackTrace();
-            log.info("등록 실패");
+            log.info("수정 실패");
             result = "fail";
         }
         return result;
+    }
+
+    public String deleteFeed(Feed feed, HttpSession session) {
+        String result = "fail";
+        log.info("feedService.deleteFeed()");
+        try {
+            deleteFeedFile(feed, session);
+            feedCommentRepository.deleteAllByFeedCode(feed.getFeedCode());
+            feedLikeRepository.deleteAllByFeedCode(feed.getFeedCode());
+            feedTagRepository.deleteAllByFeedCode(feed.getFeedCode());
+            feedRepository.deleteById(feed.getFeedCode());
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void deleteFeedFile(Feed feed, HttpSession session) {
+        log.info("deleteFeedFile()");
+        try {
+            List<FeedFile> feedFiles= feed.getFfList();
+            System.out.println("feedFiles = " + feedFiles);
+            if (feedFiles.isEmpty()){
+                return;
+            }
+            feedFileRepository.deleteAllByFeedCode(feed.getFeedCode());
+            String realPath = session.getServletContext().getRealPath("/");
+            realPath += "images/";
+
+            for (FeedFile file : feedFiles) {
+                File fileToDelete = new File(realPath + file.getFeedFileSaveimg());
+                System.out.println("fileToDelete = " + fileToDelete);
+                if (fileToDelete.exists()) {
+                    fileToDelete.delete();
+                    log.info("파일 삭제 성공");
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
