@@ -10,7 +10,8 @@ import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
 import TalkInfo from "./pages/talk/components/TalkInfo";
 import Manager from "./pages/manager";
-
+import "react-calendar/dist/Calendar.css"; // css import
+import "./pages/manager/components/facilities/CalendarApp.scss";
 function App() {
   const nav = useNavigate();
 

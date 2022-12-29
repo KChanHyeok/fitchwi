@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import CalendarApp from "./CalendarApp";
 export default function EditFacilities() {
   const nav = useNavigate();
   const { facilitiesCode } = useParams();
@@ -129,12 +130,21 @@ export default function EditFacilities() {
             value={facilitiesPhone}
             onChange={(e) => onInputChange(e)}
           />
+          <Grid item xs={12} sx={{ mb: 2, mt: 5 }}>
+            <Typography variant="p">*이용 불가능 일 설정</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            {/* 캘린더 */}
+            <CalendarApp facilitiesCode={facilitiesCode} />
+          </Grid>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 수정하기
               </Button>
             </Grid>
+
             <Grid item xs={6}>
               <Button
                 color="error"
