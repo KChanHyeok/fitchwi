@@ -74,4 +74,12 @@ public class FeedController {
         log.info("newFeed : "+ newFeed);
         return feedService.updateFeed(newFeed);
     }
+
+    // 피드 삭제
+    @DeleteMapping("/deleteFeed")
+    private String deleteFeed(@RequestBody Feed feed, HttpSession session){
+        log.info("deleteFeed()");
+        return feedService.deleteFeed(feed, session);
+    }
+
 }

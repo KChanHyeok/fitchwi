@@ -22,6 +22,7 @@ import MultipleSelectChip from "./MultipleSelectChip";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import axios from "axios";
+import Report from "../../../components/common/Report";
 
 const ITEM_HEIGHT = 48;
 const StyleModal = styled(Modal)({
@@ -74,7 +75,6 @@ export default function LongMenu({ flist, refreshFeed, information }) {
   };
 
   const sendFeed = () => {
-    console.log(feedToUpdate);
     formdata.append("data", new Blob([JSON.stringify(feedToUpdate)], { type: "application/json" }));
 
     axios
@@ -126,6 +126,22 @@ export default function LongMenu({ flist, refreshFeed, information }) {
     });
   };
 
+  const deleteFeed = () => {
+    if (window.confirm("해당 피드를 삭제하시겠습니까?")) {
+      console.log(information);
+      axios.delete("/deleteFeed", { data: information }).then((response) => {
+        if (response.data === "ok") {
+          alert("삭제 완료");
+          refreshFeed();
+        } else {
+          alert("실패");
+        }
+      });
+    } else {
+      alert("취소합니다.");
+    }
+  };
+
   return (
     <div>
       <IconButton
@@ -138,7 +154,6 @@ export default function LongMenu({ flist, refreshFeed, information }) {
       >
         <MoreVertIcon />
       </IconButton>
-
       {sessionStorage.getItem("id") === information.memberEmail.memberEmail ? (
         <Menu
           id="long-menu"
@@ -156,8 +171,8 @@ export default function LongMenu({ flist, refreshFeed, information }) {
           }}
         >
           <MenuItem onClick={handleOpen}>수정하기</MenuItem>
-          <MenuItem onClick={() => alert("삭제하기")}>삭제하기</MenuItem>
-          <MenuItem onClick={() => alert("신고하기")}>신고하기</MenuItem>
+          <MenuItem onClick={deleteFeed}>삭제하기</MenuItem>
+          <Report />
         </Menu>
       ) : (
         <Menu
@@ -175,8 +190,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
             },
           }}
         >
-          <MenuItem onClick={() => alert("삭제하기")}>삭제하기</MenuItem>
-          <MenuItem onClick={() => alert("신고하기")}>신고하기</MenuItem>
+          <Report />
         </Menu>
       )}
       <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

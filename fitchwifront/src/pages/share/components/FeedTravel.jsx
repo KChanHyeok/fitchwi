@@ -1,30 +1,30 @@
-import { Box, Typography, Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import FeedAdd from "./FeedAdd";
+import FeedAdd from "../common/FeedAdd";
 import Post from "./Post";
 
-const Feed = ({ data, memberInfo, refreshFeed }) => {
-  console.log(data);
+const FeedTravel = ({ feedList, memberInfo, refreshFeed }) => {
   const [loading, setLoading] = useState(true);
-  const [state, setState] = useState();
+  const [feedTravel, setFeedTravel] = useState();
 
   useEffect(() => {
-    setState(data, memberInfo);
+    setFeedTravel(feedList.filter((data) => data.feedCategory === "여행"));
     setLoading(false);
-  }, [data, memberInfo]);
+  }, [feedList, memberInfo]);
+
   return (
     <>
       <Box flex={4} p={2}>
-        {data.length === 0 ? (
-          <Typography textAlign="center" height={100} lineHeight={40}>
-            😀 피드가 존재하지 않습니다 ⚠️ 피드를 작성해주세요!!
-          </Typography>
-        ) : loading ? (
+        {loading ? (
           <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
             <CircularProgress color="inherit" />
           </Backdrop>
+        ) : feedTravel.length === 0 ? (
+          <Typography textAlign="center" height={100} lineHeight={40}>
+            😀 피드가 존재하지 않습니다 ⚠️ 피드를 작성해주세요!!
+          </Typography>
         ) : (
-          data.map((data) => (
+          feedTravel.map((data) => (
             <Post
               key={data.feedCode}
               tag={data.feedTag}
@@ -48,4 +48,4 @@ const Feed = ({ data, memberInfo, refreshFeed }) => {
   );
 };
 
-export default Feed;
+export default FeedTravel;
