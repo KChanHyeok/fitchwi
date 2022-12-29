@@ -1,10 +1,13 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
+import com.fitchwiframe.fitchwiserver.entity.Noday;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Log
@@ -39,5 +42,11 @@ public class AdminController {
     public String updateFacilities(@RequestBody Facilities newFacilities, @PathVariable Long facilitiesCode) {
         log.info("adminController.updateFacilities();");
         return adminService.updateFacilities(newFacilities, facilitiesCode);
+    }
+
+    @GetMapping("/getNodayList")
+    public List<String> getNodayList(@RequestParam Long facilitiesCode){
+        log.info("adminFacilities.getNoday()");
+        return adminService.getNodayList(facilitiesCode);
     }
 }

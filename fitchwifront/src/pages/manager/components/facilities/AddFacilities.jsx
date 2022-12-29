@@ -42,17 +42,17 @@ export default function AddFacilities() {
   const onSubmit = (e) => {
     e.preventDefault();
     axios.post("/insertFacilities", facilities).then((res) => {
-      if (res === "ok") {
-        alert(res.data);
+      if (res.data === "ok") {
+        alert("시설 등록에 성공했습니다.");
         nav("/manager/facilities/");
       } else {
-        alert(res.data);
+        alert("시설 등록에 실패했습니다.");
       }
     });
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" alignItems="center">
       <Box
         sx={{
           marginTop: 8,
