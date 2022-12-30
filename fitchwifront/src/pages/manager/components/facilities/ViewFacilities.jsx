@@ -17,6 +17,7 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import PlaceIcon from "@mui/icons-material/Place";
 import HouseIcon from "@mui/icons-material/House";
+import CalendarApp from "./CalendarApp";
 export default function ViewFacilities() {
   const { facilitiesCode } = useParams();
 
@@ -52,77 +53,84 @@ export default function ViewFacilities() {
       style={{ margin: "auto" }}
       sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
     >
-      <nav aria-label="main mailbox folders">
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <HouseIcon />
-              </ListItemIcon>
-              <ListItemText secondary="시설 명" primary={facilitiesName} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <PlaceIcon />
-              </ListItemIcon>
-              <ListItemText secondary="시설 위치" primary={facilitiesPosition} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <PaymentIcon />
-              </ListItemIcon>
-              <ListItemText secondary="1인당 이용료" primary={facilitiesPrice} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <HandshakeIcon />
-              </ListItemIcon>
-              <ListItemText secondary="등급" primary={facilitiesGrade} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText secondary="담당자" primary={facilitiesManager} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <PhoneAndroidIcon />
-              </ListItemIcon>
-              <ListItemText secondary="담당자 연락처" primary={facilitiesPhone} />
-            </ListItemButton>
-          </ListItem>
-          <Divider variant="middle" component="li" />
-        </List>
-      </nav>
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <HouseIcon />
+            </ListItemIcon>
+            <ListItemText secondary="시설 명" primary={facilitiesName} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <PlaceIcon />
+            </ListItemIcon>
+            <ListItemText secondary="시설 위치" primary={facilitiesPosition} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <PaymentIcon />
+            </ListItemIcon>
+            <ListItemText secondary="1인당 이용료" primary={facilitiesPrice} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <HandshakeIcon />
+            </ListItemIcon>
+            <ListItemText secondary="등급" primary={facilitiesGrade} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <Person />
+            </ListItemIcon>
+            <ListItemText secondary="담당자" primary={facilitiesManager} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <PhoneAndroidIcon />
+            </ListItemIcon>
+            <ListItemText secondary="담당자 연락처" primary={facilitiesPhone} />
+          </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" component="li" />
+      </List>
 
-      <nav aria-label="secondary mailbox folders">
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="이용 불가 날짜 관련 추가" />
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Link to="/manager/facilities">
-          <Button>뒤로가기</Button>
-        </Link>
-      </nav>
+      <List>
+        <ListItem disablePadding sx={{ mb: 3 }}>
+          <ListItemText primary="이용 불가능 날짜 추가" />
+        </ListItem>
+        <Divider variant="middle" component="li" sx={{ mb: 3 }} />
+        <ListItem disablePadding>
+          <CalendarApp facilitiesCode={facilitiesCode} />
+        </ListItem>
+      </List>
+      <Link to="/manager/facilities" style={{ textDecoration: "none" }}>
+        <Button
+          align="center"
+          color="info"
+          type="button"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          취소하기
+        </Button>
+      </Link>
     </Box>
   );
 }

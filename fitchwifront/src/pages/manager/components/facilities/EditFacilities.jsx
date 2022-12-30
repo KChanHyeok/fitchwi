@@ -145,18 +145,7 @@ export default function EditFacilities() {
               </Button>
             </Grid>
 
-            <Grid item xs={6}>
-              <Button
-                color="error"
-                type="reset"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                초기화
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Link to="/manager/facilities" style={{ textDecoration: "none" }}>
                 <Button
                   align="center"

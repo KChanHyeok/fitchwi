@@ -49,4 +49,14 @@ public class AdminController {
         log.info("adminFacilities.getNoday()");
         return adminService.getNodayList(facilitiesCode);
     }
+    @GetMapping("/addNodayList")
+    public String addNodayList(@RequestParam List<String> noDayToSend, @RequestParam Long facilitiesCode){
+        log.info("adminController.addNodayList()");
+        return adminService.addNodayList(noDayToSend, facilitiesCode);
+    }
+    @DeleteMapping("/deleteNodayList")
+    public String deleteNodayList (@RequestParam List<String> noDayToSend, @RequestParam Long facilitiesCode){
+        log.info("adminController.deleteNodayList()");
+        return adminService.deleteNodayList(noDayToSend, facilitiesCode);
+    }
 }
