@@ -13,6 +13,7 @@ import { Avatar, FormControl, InputLabel, Modal, Select, TextField, Typography }
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import TalkOpened from './TalkOpened';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -218,73 +219,6 @@ function TalkOpMenu({ talkList, refreshTalkList }) {
                     얘기해요 삭제
                 </MenuItem>
             </StyledMenu>
-            <StyleModal open={talkUpModal}
-                onClose={(e) => setTalkUpModal(false)}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                sx={{ mt: 5 }}>
-                <Box component="form"
-                    width={400} height={600} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
-                    <Typography variant="h6" color="gray" textAlign="center">
-                        얘기해요 수정하기
-                    </Typography>
-                    <UserBox>
-                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                        <Typography fontWeight={500} variant="span">
-                            {sessionStorage.getItem("id")}
-                        </Typography>
-                    </UserBox>
-                    <hr />
-                    <TextField fullWidth
-                        label="얘기해요 모임명"
-                        name="talkTitle"
-                        sx={{ mt: 3 }}
-                        onChange={onChange}
-
-                    />
-                    <TextField fullWidth
-                        label="최대 참여인원"
-                        type="number"
-                        name="talkMax"
-                        sx={{ mt: 3 }}
-                        onChange={onChange}
-                    />
-                    <FormControl sx={{ mt: 2 }} fullWidth>
-                        <InputLabel>모임 카테고리 선정</InputLabel>
-                        <Select label="모임 카테고리 선정"
-                            name="talkCategory"
-                            // onChange={onChange}
-                            required>
-                            <MenuItem value="문화∙예술">문화∙예술</MenuItem>
-                            <MenuItem value="운동∙액티비티">운동∙액티비티</MenuItem>
-                            <MenuItem value="요리∙음식">요리∙음식</MenuItem>
-                            <MenuItem value="여행">여행</MenuItem>
-                            <MenuItem value="성장∙자기계발">성장∙자기계발</MenuItem>
-                            <MenuItem value="공예∙수공예">공예∙수공예</MenuItem>
-                            <MenuItem value="게임∙오락">게임∙오락</MenuItem>
-                            <MenuItem value="기타">기타</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <p className="talkInput">애기해요 사진 첨부</p>
-                    <div className="talk_img_box">
-                        <img src="" alt="" />
-                    </div>
-                    <input type="file" name="talkImg"
-                        onChange={onLoadFile}
-                        multiple required></input>
-                    <TextField fullWidth
-                        label="얘기해요 소개 말"
-                        name="talkContent"
-                        sx={{ mt: 3 }}
-                        multiline
-                        rows={3} />
-                    <p className="talkInput">애기해요 태그</p>
-                    <input type="text" name="talkTagContent"
-                        // onChange={onChange}
-                        required></input>
-                    <Button type="submit">수정하기</Button>
-                </Box>
-            </StyleModal>
         </div>
     );
 }

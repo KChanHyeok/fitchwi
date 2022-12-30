@@ -1,15 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
-import TalkOpenedModal from "./TalkOpenedModal";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Fab, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Stack, styled } from "@mui/system";
+
+const UserBox = styled(Box)({
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
+});
 
 function TalkOpened({ memberEmail, refreshTalkList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
+    const location = useLocation();
 
     const [insertTalkOp, setInsertTalkOp] = useState({
         memberEmail: {
@@ -39,9 +46,16 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
 
     useEffect(() => {
         preview();
+        try {
+            if (location) {
+                setInsertTalkOp(location.state.talkInfo)
+            }
+        } catch (e) {
+
+        }
 
         return () => preview();
-    });
+    }, [location]);
 
     const preview = () => {
         if (!fileForm) return false;
@@ -78,8 +92,8 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         axios.post("/addTalk", formData, config)
             .then((res) => {
                 if (res.data === "ok") {
-                    setTalkOpened(false);
                     alert("개설 성공");
+                    nav("/talk");
                     refreshTalkList();
                 } else {
                     alert("개설 실패");
@@ -88,16 +102,6 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
             .catch((error) => console.log(error));
     };
 
-    //로그인 했을 때만 개설 가능하게 처리
-    const isLogin = () => {
-        if (memberEmail === null) {
-            alert("로그인이 필요한 서비스입니다.");
-            nav("/login");
-        } else {
-            setTalkOpened(!talkOpened);
-        }
-    }
-
     //승인제일 경우 가입질문 disabled false 처리
     const onDisabled = (e) => {
         if (e.target.value === "승인제") {
@@ -105,47 +109,45 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         } else {
             setDisabled(true);
         }
-        // console.log(e.target.value);
     }
 
     const [disabled, setDisabled] = useState(true);
 
-    //모달창
-    const [talkOpened, setTalkOpened] = useState(false);
-
     return (
-        <div>
-            <Tooltip
-                onClick={isLogin}
-                title="Add"
-                sx={{
-                    position: "fixed",
-                    bottom: 20,
-                    marginLeft: 7,
-                    left: { xs: "calc(50% - 25px)", md: 30 },
-                }}
-            >
-                <Fab color="secondary" aria-label="add">
-                    <AddIcon className="talkOpenedBtn" />
-                </Fab>
-            </Tooltip>
-            {talkOpened && (
-                <TalkOpenedModal closeModal={() => setTalkOpened(!talkOpened)}>
+        <>
+
+            <Stack height={800} flex={7} p={3}>
+                <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
+                    <Typography variant="h6" textAlign="center">
+                        얘기해요 개설
+                    </Typography>
+                    <UserBox>
+                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Typography fontWeight={500} variant="span">
+                            {sessionStorage.getItem("id")}
+                        </Typography>
+                    </UserBox>
+                    <hr />
                     <form onSubmit={onTalkOpened}>
-                        <div>얘기해요 개설하기</div>
-                        <hr />
-                        <TextField fullWidth label="얘기해요 모임명"
-                            name="talkTitle" sx={{ mt: 3 }}
+                        <TextField fullWidth
+                            label="얘기해요 모임명"
+                            name="talkTitle"
+                            sx={{ mt: 3 }}
                             onChange={onChange}
-                            autoFocus required />
-                        <TextField fullWidth label="최대 참여인원"
-                            type="number" name="talkMax" sx={{ mt: 3 }}
+                            required
+                            autoFocus />
+                        <TextField fullWidth
+                            label="최대 참여인원"
+                            type="number"
+                            name="talkMax"
+                            sx={{ mt: 3 }}
                             onChange={onChange}
                             required />
                         <FormControl sx={{ mt: 2 }} fullWidth>
                             <InputLabel>모임 카테고리 선정</InputLabel>
                             <Select label="모임 카테고리 선정"
-                                name="talkCategory" value={insertTalkOp.talkCategory}
+                                name="talkCategory"
+                                value={insertTalkOp.talkCategory}
                                 onChange={onChange}
                                 required>
                                 <MenuItem value="문화∙예술">문화∙예술</MenuItem>
@@ -195,14 +197,20 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <textarea name="talkContent"
                             onChange={onChange}
                             placeholder="모임을 소개해주세요" required></textarea>
-                        <p className="talkInput">애기해요 태그</p>
-                        <input type="text" name="talkTagContent"
-                            onChange={onChange} required></input>
-                        <button type="submit">개설하기</button>
+                        <TextField fullWidth
+                            label="애기해요 태그"
+                            name="talkMax"
+                            sx={{ mt: 3 }}
+                            onChange={onChange}
+                            required />
+                        {location.state
+                            ? <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
+                            : <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>}
+                        <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
                     </form>
-                </TalkOpenedModal>
-            )}
-        </div>
+                </Box>
+            </Stack>
+        </>
     );
 }
 

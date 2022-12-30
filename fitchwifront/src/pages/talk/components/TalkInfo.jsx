@@ -44,6 +44,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
     const [inquiryModal, setInquiryMoal] = useState(false);
 
     const id = sessionStorage.getItem("id");
+
     //로그인 조건
     const isLogin = () => {
         if (id === null) {
@@ -67,13 +68,14 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                     <Box>
                         <span>mbti 취미&nbsp;</span>
                         <span>{talkInfo.talkCategory}&nbsp;</span>
-                        <span>남은 자리 0/{talkInfo.talkMax}&nbsp;</span>
+                        <span>남은 자리 {1 + talkJoinMember.length}/{talkInfo.talkMax}&nbsp;</span>
                         <span>유형 - {talkInfo.talkType}</span>
                         <Box className="talkMenu">
                             {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === id
                                 ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} />)
                                 : (<Button id="demo-customized-button"
                                     aria-haspopup="true"
+                                    color="primary"
                                     variant="contained"
                                     disableElevation
                                     onClick={isLogin}
@@ -121,13 +123,17 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                         <div>dd</div>
                         <div>dd</div>
                     </Box>
-                    {talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
-                        ? (<Button className="talkSticky">삭제하기</Button>)
-                        : talkJoinList.filter((data) => data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                            ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}>참여하기</TalkJoin>
-                            : (<TalkJoin talkInfo={talkInfo}
-                                talkJoinState={talkJoinList.filter((data) => data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
-                                refreshTalkJoinList={refreshTalkJoinList} />)}
+                    {!talkJoinMember
+                        ? <h2>로딩중</h2>
+                        : talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
+                            ? (<Button className="talkSticky">삭제하기</Button>)
+                            : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
+                                && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
+                                ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}>참여하기</TalkJoin>
+                                : (<TalkJoin talkInfo={talkInfo}
+                                    talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
+                                        && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
+                                    refreshTalkJoinList={refreshTalkJoinList} />)}
                 </Box>
             }
             {!talkInfo ? <h1>로딩중</h1> :
