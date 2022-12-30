@@ -35,7 +35,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
                     <Box>
                         <Stack flex={2} direction={"row"}>
                             <h1>{togetherInfo.togetherTitle}</h1>
-                            {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? <Button sx={{ fontSize: 20, ml: 60 }} >설정</Button> : null}
+                            {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? <TogetherSettingMenu sx={{ fontSize: 20, ml: 60 }} /> : null}
                         </Stack>
                         <Box sx={{ maxWidth: 900 }}>
                             {
@@ -85,8 +85,8 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
                         <Box sx={{ mt: 2 }}>
                             {
                                 togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? <TogetherJoin togetherPayState={togetherInfo.togetherState} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo} togetherJoinMember={togetherJoinMember} >최종결제</TogetherJoin>
-                                    : togetherJoinList.filter(data => data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0 ? <TogetherJoin refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo}>참여신청하기</TogetherJoin>
-                                        : <TogetherJoin togetherJoinState={togetherJoinList.filter(data => data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].togetherJoinState} refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo} />
+                                    : togetherJoinList.filter(data => data.togetherCode.togetherCode === (togetherPageCode * 1) && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0 ? <TogetherJoin refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo}>참여신청하기</TogetherJoin>
+                                        : <TogetherJoin togetherJoinState={togetherJoinList.filter(data => data.togetherCode.togetherCode === (togetherPageCode * 1) && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].togetherJoinState} refreshTogetherJoinList={refreshTogetherJoinList} togetherPageCode={togetherPageCode} togetherInfo={togetherInfo} />
                             }
                         </Box>
                     </Box>)}
