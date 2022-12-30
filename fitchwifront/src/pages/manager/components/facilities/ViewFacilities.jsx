@@ -112,7 +112,7 @@ export default function ViewFacilities() {
 
       <List>
         <ListItem disablePadding sx={{ mb: 3 }}>
-          <ListItemText primary="이용 불가능 날짜 추가" />
+          <ListItemText primary="이용 불가능 날짜 수정" />
         </ListItem>
         <Divider variant="middle" component="li" sx={{ mb: 3 }} />
         <ListItem disablePadding>
