@@ -57,6 +57,11 @@ public class TogetherController {
         log.info("deleteTogetherJoin()");
         return togetherService.deleteTogetherJoin(memberEmail, togetherCode);
     }
+    @PutMapping("/deleteTogetherState")
+    public String deleteTogetherState(@RequestBody Together together) {
+        log.info("전달받은 together"+ together);
+        return togetherService.deleteTogetherState(together);
+    }
 
 
 }

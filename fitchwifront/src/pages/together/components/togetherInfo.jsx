@@ -11,8 +11,14 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
     const [togetherJoinMember, setTogetherJoinMember] = useState(null);
 
     useEffect(() => {
-        setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode * 1))[0])
-        setTogetherJoinMember(togetherJoinList.filter(data => (data.togetherCode.togetherCode === (togetherPageCode * 1) && data.togetherJoinState === "가입중")))
+        try {
+            if(togetherList && togetherJoinList) {
+                setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode * 1))[0])
+                setTogetherJoinMember(togetherJoinList.filter(data => (data.togetherCode.togetherCode === (togetherPageCode * 1) && data.togetherJoinState === "가입중")))
+            }
+        }catch(e) {
+                
+            }
     }, [togetherJoinList, togetherList, togetherPageCode])
 
     const UserBox = styled(Box)({
@@ -35,7 +41,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
                     <Box>
                         <Stack flex={2} direction={"row"}>
                             <h1>{togetherInfo.togetherTitle}</h1>
-                            {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? <TogetherSettingMenu sx={{ fontSize: 20, ml: 60 }} /> : null}
+                            {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? <TogetherSettingMenu togetherJoinMember={togetherJoinMember} refreshTogetherJoinList={refreshTogetherJoinList} togetherInfo={togetherInfo} sx={{ fontSize: 20, ml: 60 }} /> : null}
                         </Stack>
                         <Box sx={{ maxWidth: 900 }}>
                             {

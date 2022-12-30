@@ -122,4 +122,17 @@ public class TogetherService {
 
         return result;
     }
+
+    public String deleteTogetherState(Together together) {
+        String result = null;
+        log.info("deleteTogetherState()");
+        try{
+            together.setTogetherState("삭제신청중");
+            togetherRepository.save(together);
+            result="성공";
+        }catch (Exception e) {
+            result="실패";
+        }
+        return result;
+    }
 }
