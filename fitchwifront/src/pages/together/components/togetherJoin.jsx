@@ -2,8 +2,20 @@ import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/mater
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember}) => {
+    const IMP = window.IMP; // 생략 가능
+    IMP.init("imp54355175");
+
+    useEffect(()=> {
+        getMemberInfo();
+    },[])
+    const getMemberInfo = () => {
+        axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
+        .catch((error)=> console.log(error))
+    }
+    
     const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
     const [insertForm,setInsertFrom] = useState({
         togetherJoinDate: nowdate,
@@ -52,16 +64,52 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
-          axios.post("/insertTogetherJoinInfo", insertForm)
+        requestPay()
+      }
+
+      const requestPay = () => {
+        IMP.request_pay({ // param
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: 'merchant_' + new Date().getTime(),
+          name: togetherInfo.togetherTitle,
+          amount: 100,
+          buyer_email: sessionStorage.getItem("id"),
+          buyer_name: (insertForm.memberEmail.memberName),
+          buyer_tel: (insertForm.memberEmail.memberPhone),
+          buyer_addr: (insertForm.memberEmail.memberAddr),
+          buyer_postcode: "01181"
+        }, rsp => { // callback
+          if (rsp.success) {
+            console.log(rsp);
+            //결재정보 저장 함수 만들 예정
+
+            axios.post("/insertTogetherJoinInfo", insertForm)
               .then((res) => {
                   setOpen(false);
                   alert(res.data);
                   refreshTogetherJoinList();
               })
               .catch((Error) => console.log(Error))
-      }
+          } else {
+            alert("결제실패")
+          }
+        });
+    }
+
+
       const deleteTogetherJoinInfo = (e) => {
         e.preventDefault();
+            axios({
+                url: "https://api.iamport.kr/users/getToken",
+                method: "post", // POST method
+                headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+                data: {
+                imp_key: "5177641603268324", // REST API키
+                imp_secret: "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1" // REST API Secret
+                }
+            });
+
             axios.delete("/deleteTogetherJoin",{ params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
                 setOpen(false);
