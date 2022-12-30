@@ -69,8 +69,12 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) =>
                 }
             })
             .then((res) => {
+                if (talkJoinState === "대기") {
+                    alert("신청 취소 완료");
+                } else {
+                    alert(res.data);
+                }
                 setOpenModal(false);
-                alert(res.data);
                 refreshTalkJoinList();
             })
             .catch((error) => console.log(error));
@@ -85,18 +89,26 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) =>
 
     return (
         <>
-            {talkJoinState === "가입중"
-                ? <Button onClick={() => setOpenModal(true)} className="talkSticky">탈퇴하기</Button>
-                : <Button onClick={() => setOpenModal(true)} className="talkSticky">{children}</Button>
+            {talkJoinState === "대기"
+                ? <Button onClick={() => setOpenModal(true)}
+                    color="primary" variant="contained"
+                    className="talkSticky">신청 취소하기</Button>
+                : talkJoinState === "가입중"
+                    ? <Button onClick={() => setOpenModal(true)}
+                        color="primary" variant="contained"
+                        className="talkSticky">탈퇴하기</Button>
+                    : <Button onClick={() => setOpenModal(true)}
+                        color="primary" variant="contained"
+                        className="talkSticky">{children}</Button>
             }
             <StyleModal open={openModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 sx={{ mt: 5 }}>
-                {talkJoinState === "가입중"
+                {talkJoinState === "대기"
                     ? <Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
                         <Typography variant="h6" color="gray" textAlign="center">
-                            얘기해요 탈퇴하기
+                            얘기해요 신청 취소
                             <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
                                 ✖
                             </button>
@@ -109,34 +121,53 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) =>
                             </Typography>
                         </UserBox>
                         <hr />
-                        <p>정말로 모임을 탈퇴 하시겠습니까?</p>
-                        <Button type="submit" onClick={deleteTalkJoinInfo}>탈퇴하기</Button>
+                        <p>현재 승인 대기중인 상태입니다.<br /> 취소하시겠습니까?</p>
+                        <Button type="submit" onClick={deleteTalkJoinInfo}>취소하기</Button>
                     </Box>
-                    : <Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
-                        <Typography variant="h6" color="gray" textAlign="center">
-                            얘기해요 참여하기
-                            <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
-                                ✖
-                            </button>
-                        </Typography>
-
-                        <UserBox>
-                            <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                            <Typography fontWeight={500} variant="span">
-                                {sessionStorage.getItem("id")}
+                    : talkJoinState === "가입중"
+                        ? <Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                            <Typography variant="h6" color="gray" textAlign="center">
+                                얘기해요 탈퇴하기
+                                <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
+                                    ✖
+                                </button>
                             </Typography>
-                        </UserBox>
-                        <hr />
-                        <Box>{talkInfo.talkTitle}</Box>
-                        <Box>가입질문</Box>
-                        <TextField fullWidth
-                            label="답변"
-                            name="talkJoinAnswer"
-                            value={insertTalkJoin.talkJoinAnswer}
-                            onChange={onChange} />
-                        <Box>승인제일 경우 승인대기 상태로 방장의 승인을 기다려야 합니다.</Box>
-                        <Button type="submit" onClick={onTalkJoin}>참여하기</Button>
-                    </Box>
+
+                            <UserBox>
+                                <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                <Typography fontWeight={500} variant="span">
+                                    {sessionStorage.getItem("id")}
+                                </Typography>
+                            </UserBox>
+                            <hr />
+                            <p>정말로 모임을 탈퇴 하시겠습니까?</p>
+                            <Button type="submit" onClick={deleteTalkJoinInfo}>탈퇴하기</Button>
+                        </Box>
+                        : <Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                            <Typography variant="h6" color="gray" textAlign="center">
+                                얘기해요 참여하기
+                                <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
+                                    ✖
+                                </button>
+                            </Typography>
+
+                            <UserBox>
+                                <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                <Typography fontWeight={500} variant="span">
+                                    {sessionStorage.getItem("id")}
+                                </Typography>
+                            </UserBox>
+                            <hr />
+                            <Box>{talkInfo.talkTitle}</Box>
+                            <Box>가입질문</Box>
+                            <TextField fullWidth
+                                label="답변"
+                                name="talkJoinAnswer"
+                                value={insertTalkJoin.talkJoinAnswer}
+                                onChange={onChange} />
+                            <Box>승인제일 경우 승인대기 상태로 방장의 승인을 기다려야 합니다.</Box>
+                            <Button type="submit" onClick={onTalkJoin}>참여하기</Button>
+                        </Box>
                 }
 
             </StyleModal>
