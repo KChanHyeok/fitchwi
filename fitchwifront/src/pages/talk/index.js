@@ -20,15 +20,17 @@ function Home() {
     }, []);
 
     const getAllTalkList = async () => {
-        await axios.get("/getAllTalkList").then((res) => {
-            setTalkList(res.data)
+        await axios.get("/getAllTalkList")
+        .then((res) => {
+            setTalkList(res.data);
         })
         .catch((error) => console.log(error));
     }
 
     const getTalkJoinList = async () => {
-        await axios.get("/getTalkJoinList").then((res) => {
-            setTalkJoinList(res.data)
+        await axios.get("/getTalkJoinList")
+        .then((res) => {
+            setTalkJoinList(res.data);
         })
         .catch((error) => console.log(error));
     }
@@ -40,7 +42,9 @@ function Home() {
             <Routes>
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
                 <Route path="/:talkPageCode"
-                element={<TalkInfo talkList={talkList} talkJoinList={talkJoinList} refreshTalkJoinInfo={getTalkJoinList} />} />
+                element={<TalkInfo
+                    refreshTalkJoinInfo={getTalkJoinList()}
+                    talkList={talkList} talkJoinList={talkJoinList} />} />
             </Routes>
             
             <TalkOpened memberEmail={id} refreshTalkList={getAllTalkList} />

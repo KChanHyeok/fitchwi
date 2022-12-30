@@ -76,4 +76,11 @@ public class TalkController {
         log.info("talkController.getTalkJoinList()");
         return talkService.getTalkJoinList();
     }
+
+    //가입 데이터 삭제
+    @DeleteMapping("/deleteTalkJoinInfo")
+    public String deleteTalkJoinInfo(@RequestParam String memberEmail, long talkCode) {
+        log.info("talkController.deleteTalkJoinInfo()");
+        return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
+    }
 }
