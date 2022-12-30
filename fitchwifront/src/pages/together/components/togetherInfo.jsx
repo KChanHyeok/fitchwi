@@ -1,26 +1,32 @@
-import { Box, Stack, styled, Avatar, Typography } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 import TogetherSettingMenu from "./togetherSettingMenu";
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList }) => {
+  let { togetherPageCode } = useParams();
+  const [togetherInfo, setTogetherInfo] = useState(null);
+  const [togetherJoinMember, setTogetherJoinMember] = useState(null);
 
-    let { togetherPageCode } = useParams()
-    const [togetherInfo, setTogetherInfo] = useState(null);
-    const [togetherJoinMember, setTogetherJoinMember] = useState(null);
+  useEffect(() => {
+    setTogetherInfo(togetherList.filter((data) => data.togetherCode === togetherPageCode * 1)[0]);
+    setTogetherJoinMember(
+      togetherJoinList.filter(
+        (data) =>
+          data.togetherCode.togetherCode === togetherPageCode * 1 &&
+          data.togetherJoinState === "가입중"
+      )
+    );
+  }, [togetherJoinList, togetherList, togetherPageCode]);
 
-    useEffect(() => {
-        setTogetherInfo(togetherList.filter(data => data.togetherCode === (togetherPageCode * 1))[0])
-        setTogetherJoinMember(togetherJoinList.filter(data => (data.togetherCode.togetherCode === (togetherPageCode * 1) && data.togetherJoinState === "가입중")))
-    }, [togetherJoinList, togetherList, togetherPageCode])
+  const UserBox = styled(Box)({
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
+  });
 
-    const UserBox = styled(Box)({
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        marginBottom: "20px",
-    });
 
     return (
         <Stack
@@ -93,5 +99,6 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
         </Stack>
     );
 }
+
 
 export default TogetherInfo;

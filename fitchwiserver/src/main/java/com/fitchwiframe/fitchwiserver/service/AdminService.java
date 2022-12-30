@@ -80,8 +80,8 @@ public class AdminService {
     log.info("adminService.getNoday()");
     List<String> nodayDateList = new ArrayList<>();
     try {
-  List<Noday> nodayList = nodayRepository.findAllByFacilitiesCode(facilitiesRepository.findById(facilitiesCode).orElseGet(Facilities::new));
-      for(Noday noday : nodayList){
+      List<Noday> nodayList = nodayRepository.findAllByFacilitiesCode(facilitiesRepository.findById(facilitiesCode).orElseGet(Facilities::new));
+      for (Noday noday : nodayList) {
         nodayDateList.add(noday.getNodayDate());
       }
     } catch (Exception e) {
@@ -91,4 +91,42 @@ public class AdminService {
   }
 
 
+  public String addNodayList(List<String> noDayToSend, Long facilitiesCode) {
+    log.info("adminService.addNodayList()");
+    String result = "fail";
+    try {
+      Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
+      for (String date : noDayToSend) {
+        Noday noday = new Noday();
+        noday.setNodayDate(date);
+        noday.setFacilitiesCode(facilities);
+        nodayRepository.save(noday);
+
+      }
+      result = "ok";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  public String deleteNodayList(List<String> noDayToSend, Long facilitiesCode) {
+    log.info("adminService.deleteNodayList()");
+    String result = "fail";
+    try {
+      Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
+      List<Noday> allByFacilitiesCode = nodayRepository.findAllByFacilitiesCode(facilities);
+      for (String date : noDayToSend) {
+        for (Noday noday : allByFacilitiesCode) {
+          if (noday.getNodayDate().equals(date)) {
+            nodayRepository.delete(noday);
+          }
+        }
+        result = "ok";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
 }
