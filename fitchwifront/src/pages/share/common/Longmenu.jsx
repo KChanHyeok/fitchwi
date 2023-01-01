@@ -173,7 +173,6 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
         >
           <MenuItem onClick={handleOpen}>수정하기</MenuItem>
           <MenuItem onClick={deleteFeed}>삭제하기</MenuItem>
-          <Report />
         </Menu>
       ) : (
         <Menu
@@ -191,12 +190,35 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
             },
           }}
         >
-          <Report />
+          <Report
+            type="MenuItem"
+            target={information.feedCode}
+            targetMember={information.memberEmail.memberEmail}
+            category="share"
+          />
         </Menu>
       )}
-      <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box width={850} height={500} bgcolor="white" p={3} borderRadius={5} sx={{ display: "flex", flexDirection: "column" }}>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <StyleModal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          width={850}
+          height={500}
+          bgcolor="white"
+          p={3}
+          borderRadius={5}
+          sx={{ display: "flex", flexDirection: "column" }}
+        >
+          <Stack
+            direction="row"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
             <Button color="error" onClick={handleClose}>
               CANCEL
             </Button>
@@ -207,7 +229,11 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
               <Button color="success" onClick={saveFeed}>
                 SAVE
               </Button>
-              {state === false ? <Button disabled>UPDATE</Button> : <Button onClick={sendFeed}>UPDATE</Button>}
+              {state === false ? (
+                <Button disabled>UPDATE</Button>
+              ) : (
+                <Button onClick={sendFeed}>UPDATE</Button>
+              )}
             </ButtonGroup>
           </Stack>
           <Divider />
@@ -290,7 +316,12 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
-              <MultipleSelectChip insertForm={feedToUpdate} setInsertForm={setFeedUpdate} tagForm={tagForm} setTagForm={setTagForm} />
+              <MultipleSelectChip
+                insertForm={feedToUpdate}
+                setInsertForm={setFeedUpdate}
+                tagForm={tagForm}
+                setTagForm={setTagForm}
+              />
               <TextField
                 sx={{ mt: 2 }}
                 fullWidth
