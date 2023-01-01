@@ -7,6 +7,8 @@ import Facilities from "./components/facilities/Facilities";
 import ViewFacilities from "./components/facilities/ViewFacilities";
 import Manager from "./components/Manager";
 import ManagerSideBar from "./components/ManagerSideBar";
+import ReportDetail from "./components/report/ReportDetail";
+import ReportManagement from "./components/report/ReportManagement";
 
 export default function index() {
   return (
@@ -19,6 +21,8 @@ export default function index() {
         <Route path="/facilities/insertFacilities" element={<AddFacilities />} />
         <Route path="/facilities/updateFacilities/:facilitiesCode" element={<EditFacilities />} />
         <Route path="/facilities/getFacilitiesInfo/:facilitiesCode" element={<ViewFacilities />} />
+        <Route path="/report" element={<ReportManagement />} />
+        <Route path="/report/detail/:reportCode" element={<ReportDetail />} />
       </Routes>
     </Box>
   );

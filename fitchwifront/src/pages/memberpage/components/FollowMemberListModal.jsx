@@ -18,7 +18,7 @@ const style = {
   p: 4,
 };
 
-export default function FollowMemberListModal({ children, followList }) {
+export default function FollowMemberListModal({ children, followList, lstate }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -27,7 +27,7 @@ export default function FollowMemberListModal({ children, followList }) {
   }, [followList]);
 
   let interestArr = [];
-
+  const { logid } = lstate;
   followList.map((member) => (interestArr = member.memberInterest.split(" ")));
 
   return (
@@ -75,9 +75,9 @@ export default function FollowMemberListModal({ children, followList }) {
                       <ListItemText
                         primary={
                           <Typography>
-                            {member.memberNickname == null
-                              ? `${member.memberName}`
-                              : `${member.memberNickname}(${member.memberName})`}
+                            {logid === member.memberEmail
+                              ? `${member.memberNickname}(나)`
+                              : `${member.memberNickname}`}
                           </Typography>
                         }
                         secondary={interestArr.map((interest, index) => (

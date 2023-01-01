@@ -26,18 +26,19 @@ import {
 import axios from "axios";
 import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Report from "../../../components/common/Report";
 import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
 
-export default function MemberPage({ member, onLogout, pageOwner }) {
+export default function MemberPage({ member, onLogout, lstate }) {
   //페이지 기본 데이터
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
   const getAllFeedList = useCallback(() => {
     axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
   }, [member]);
-
+  const { logid } = lstate;
   const {
     memberEmail,
     memberName,
@@ -51,8 +52,6 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
     // memberBirth,
     // memberPhone,
   } = member;
-
-  const loginId = sessionStorage.getItem("id");
 
   let interestArr = [];
   if (memberInterest != null) {
@@ -70,15 +69,15 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
   const [followerList, setFollowerList] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
   const getFollow = useCallback(() => {
-    axios.get("/getFollowList", { params: { pageOwner: pageOwner } }).then((res) => {
+    axios.get("/getFollowList", { params: { pageOwner: memberEmail } }).then((res) => {
       setFollowList(() => res.data.follow);
       setFollowerList(() => res.data.follower);
     });
-  }, [pageOwner]);
+  }, [memberEmail]);
 
   useEffect(() => {
     for (let i = 0; i < followerList.length; i++) {
-      if (followerList[i].memberEmail === loginId) {
+      if (followerList[i].memberEmail === logid) {
         setIsFollow(true);
         console.log(followerList[i].memberEmail);
       } else {
@@ -86,7 +85,7 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
       }
     }
     console.log(followerList);
-  }, [followerList, loginId]);
+  }, [followerList, logid]);
 
   const onFollow = useCallback(
     (isFollow) => {
@@ -95,25 +94,25 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
         return;
       }
       if (isFollow === false) {
-        console.log(pageOwner.memberEmail);
-        axios.get("/follow", { params: { loginId: loginId, pageOwner: pageOwner } }).then((res) => {
+        // console.log(pageOwner.memberEmail);
+        axios.get("/follow", { params: { loginId: logid, pageOwner: memberEmail } }).then((res) => {
           console.log(res.data);
-          alert(`${pageOwner}님을 팔로우했습니다.`);
+          alert(`${memberNickname}님을 팔로우했습니다.`);
           setIsFollow(true);
         });
       } else {
         axios
           .delete("/unfollow", {
-            params: { loginId: loginId, pageOwner: pageOwner, isFollow: isFollow },
+            params: { loginId: logid, pageOwner: memberEmail, isFollow: isFollow },
           })
           .then((res) => {
             console.log(res.data);
-            alert(`${pageOwner}님 팔로우를 취소했습니다.`);
+            alert(`${memberNickname}님 팔로우를 취소했습니다.`);
             setIsFollow(false);
           });
       }
     },
-    [loginId, pageOwner]
+    [logid, memberEmail, memberNickname]
   );
   //console.log(isFollow);
 
@@ -172,7 +171,7 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
             <Divider variant="middle" component="li" />
           </List>
 
-          {loginId === pageOwner ? (
+          {logid === memberEmail ? (
             <Box component="form" sx={{ mt: 30 }}>
               <List>
                 <ListItem disablePadding sx={{ justifyContent: "space-around" }}>
@@ -181,6 +180,7 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
                     openCheckPwd={openCheckPwd}
                     setOpenCheckPwd={setOpenCheckPwd}
                     member={member}
+                    lstate={lstate}
                   >
                     정보수정
                   </CheckPwdModal>
@@ -237,16 +237,18 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
                   title={
                     <Typography sx={{ fontSize: 25 }}>
                       {" "}
-                      {loginId === pageOwner
-                        ? memberNickname == null
-                          ? `${memberName}`
-                          : `${memberNickname}(${memberName})`
-                        : memberNickname == null
-                        ? `${memberName}`
+                      {logid === memberEmail
+                        ? `${memberNickname}(${memberName})`
                         : `${memberNickname}`}
                     </Typography>
                   }
-                  subheader={loginId === pageOwner ? memberEmail : null}
+                  subheader={
+                    logid === memberEmail ? (
+                      memberEmail
+                    ) : (
+                      <Report targetMember={member.memberEmail} category="member" target="0" />
+                    )
+                  }
                 />
               )}
               <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
@@ -273,15 +275,15 @@ export default function MemberPage({ member, onLogout, pageOwner }) {
                   </Grid>
                   {followList && (
                     <Grid item xs={4}>
-                      <FollowMemberListModal followList={followerList}>
+                      <FollowMemberListModal lstate={lstate} followList={followerList}>
                         팔로워 {followerList.length}
                       </FollowMemberListModal>
 
-                      <FollowMemberListModal followList={followList}>
+                      <FollowMemberListModal lstate={lstate} followList={followList}>
                         팔로우 {followList.length}
                       </FollowMemberListModal>
 
-                      {loginId === pageOwner ? null : (
+                      {logid === memberEmail ? null : (
                         <Checkbox
                           checked={isFollow}
                           icon={<FavoriteBorder />}
