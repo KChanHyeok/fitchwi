@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.util.List;
 
 @Service
 @Log
@@ -129,17 +128,23 @@ public class TalkService {
         return result;
     }
 
-    public String deleteTalk(Talk talk, TalkOpened talkOpened, TalkTag talkTag) {
-        String result = null;
+    public String deleteTalk(Talk talk) {
+        log.info("talkService.deleteTalk()");
+        String result = "fail";
+        log.info("talk value: " + talk);
 
         try {
+            //talkCode가 담긴 객체를 보내야함
+            talkTagRepository.deleteAllByTalkCode(talk);
+            talkJoinRepository.deleteAllByTalkCode(talk);
             talkRepository.deleteById(talk.getTalkCode());
-            talkOpenedRepository.deleteById(talkOpened.getTalkOpenCode());
-            talkTagRepository.deleteById(talkTag.getTalkTagCode());
+            talkRepository.deleteAllByTalkOpenCode(talk.getTalkOpenCode());
+            talkOpenedRepository.deleteById(talk.getTalkOpenCode().getTalkOpenCode());
+
+
             result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
-            result = "fail";
         }
         return result;
     }

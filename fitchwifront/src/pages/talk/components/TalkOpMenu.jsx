@@ -9,11 +9,11 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Avatar, FormControl, InputLabel, Modal, Select, TextField, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import TalkOpened from './TalkOpened';
+import { useNavigate } from 'react-router-dom';
+import "../styles/TalkOpMenu.scss";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -69,7 +69,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-function TalkOpMenu({ talkList, refreshTalkList }) {
+function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -82,8 +82,8 @@ function TalkOpMenu({ talkList, refreshTalkList }) {
     const imgEl = document.querySelector(".talk_img_box");
     const nav = useNavigate();
 
-    //수정 모달창
-    const [talkUpModal, setTalkUpModal] = useState(false);
+    //회원관리 모달창
+    const [openList, setOpenList] = useState(false);
 
     const [updateTalk, setUpdateTalk] = useState({});
 
@@ -134,7 +134,7 @@ function TalkOpMenu({ talkList, refreshTalkList }) {
             console.log(e.target.file);
         }, []);
 
-
+    console.log(talkJoinMember);
     //수정하기
     // const onTalkUpdate = (e) => {
     //     console.log(updateTalk);
@@ -163,20 +163,42 @@ function TalkOpMenu({ talkList, refreshTalkList }) {
     //         .catch((error) => console.log(error));
     // };
 
+    console.log(talkInfo);
+
     //삭제하기
     const deleteTalk = useCallback(
         () => {
-            axios.delete("/deleteTalk")
+            axios.delete("/deleteTalk", { data: talkInfo })
                 .then((res) => {
                     if (res.data === "ok") {
                         alert("얘기해요 삭제 완료");
-                        nav("/");
+                        nav("/talk");
                     } else {
                         alert("삭제 불가");
                     }
                 });
         }, [nav]
     );
+
+    //삭제 모달 창
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+    const isDelete = () => {
+        setOpenDeleteModal(true);
+        setAnchorEl(false);
+    };
+
+    const modalClose = () => {
+        setOpenDeleteModal(false);
+        setOpenApplyMember(false);
+    };
+
+    const [openApplyMember, setOpenApplyMember] = useState(false);
+
+    const applyMemberCheck = () => {
+        setOpenApplyMember(true);
+        setAnchorEl(false);
+    }
 
     return (
         <div>
@@ -201,25 +223,98 @@ function TalkOpMenu({ talkList, refreshTalkList }) {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem onClick={() => setOpenList(true)} disableRipple>
                     <ManageAccountsIcon />
-                    가입멤버 관리
+                    가입회원 관리
                 </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    <FactCheckIcon />
-                    문의사항 확인
-                </MenuItem>
+                {talkInfo.talkType === "승인제" &&
+                    <MenuItem onClick={applyMemberCheck} disableRipple>
+                        <FactCheckIcon />
+                        신청회원 확인
+                    </MenuItem>}
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={(e) => setTalkUpModal(true)} disableRipple>
+                <MenuItem onClick={() => nav("/talk/opened", { state: { talkInfo } })} disableRipple>
                     <BuildIcon />
                     얘기해요 수정
                 </MenuItem>
-                <MenuItem onClick={() => deleteTalk()} disableRipple>
+                <MenuItem onClick={isDelete} disableRipple>
                     <DeleteIcon />
                     얘기해요 삭제
                 </MenuItem>
             </StyledMenu>
-        </div>
+            <div>
+                <Dialog
+                    open={openApplyMember}
+                    onClose={modalClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title" className="applyBox">
+                        {"얘기해요 회원 관리"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            대기중인 멤버
+                            <Button onClick={modalClose}>취소</Button>
+                            <Button onClick={deleteTalk} autoFocus>
+                                삭제
+                            </Button>
+                        </DialogContentText>
+                    </DialogContent>
+
+                </Dialog>
+            </div>
+            <div>
+                <Dialog
+                    open={openDeleteModal}
+                    onClose={modalClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"얘기해요 삭제하기"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {talkJoinMember.length >= 1
+                                && "현재 가입된 회원이 있습니다."}<br />
+                            정말로 삭제하시겠습니까?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={modalClose}>취소</Button>
+                        <Button onClick={deleteTalk} autoFocus>
+                            삭제
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+            {/* <StyleModal open={openList}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                sx={{ mt: 5 }}>
+                <Typography variant="h6" color="gray" textAlign="center">
+                    얘기해요 회원 관리
+                    <button className="modalCloseBtn" onClick={() => setOpenList(false)}>
+                        ✖
+                    </button>
+                </Typography>
+                <UserBox>
+                    <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                    <Typography fontWeight={500} variant="span">
+                        {sessionStorage.getItem("id")}
+                    </Typography>
+                </UserBox>
+                <hr />
+                {talkJoinMember.map((data) =>
+                    <UserBox key={data.talkJoinCode}>
+                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Typography fontWeight={500} variant="span">
+                            {!data.memberEmail.memberNickname ? data.memberEmail.memberName : data.memberEmail.memberNickname}님
+                        </Typography>
+                    </UserBox>)}
+            </StyleModal> */}
+        </div >
     );
 }
 

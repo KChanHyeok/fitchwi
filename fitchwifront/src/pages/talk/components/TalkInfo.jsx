@@ -72,7 +72,8 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                         <span>유형 - {talkInfo.talkType}</span>
                         <Box className="talkMenu">
                             {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === id
-                                ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} />)
+                                ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo}
+                                    talkJoinMember={talkJoinMember} />)
                                 : (<Button id="demo-customized-button"
                                     aria-haspopup="true"
                                     color="primary"
@@ -129,7 +130,8 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                             ? (<Button className="talkSticky">삭제하기</Button>)
                             : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                 && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                                ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}>참여하기</TalkJoin>
+                                ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
+                                    talkJoinMember={talkJoinMember}>참여하기</TalkJoin>
                                 : (<TalkJoin talkInfo={talkInfo}
                                     talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                         && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}

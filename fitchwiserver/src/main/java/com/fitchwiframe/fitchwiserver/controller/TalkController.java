@@ -56,11 +56,9 @@ public class TalkController {
 
     //얘기해요 삭제
     @DeleteMapping("/deleteTalk")
-    public String deleteTalk(@RequestBody Talk talk,
-                             @RequestBody TalkOpened talkOpened,
-                             @RequestBody TalkTag talkTag) {
+    public String deleteTalk(@RequestBody Talk talk) {
         log.info("talkController.deleteTalk()");
-        return talkService.deleteTalk(talk, talkOpened, talkTag);
+        return talkService.deleteTalk(talk);
     }
 
     //얘기해요 가입

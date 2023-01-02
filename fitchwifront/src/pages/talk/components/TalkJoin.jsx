@@ -3,6 +3,7 @@ import { Avatar, Button, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 
 const StyleModal = styled(Modal)({
@@ -18,10 +19,11 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) => {
+const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talkJoinMember }) => {
     const nowdate = new Date().getFullYear() + "-"
-        + new Date().getMonth() + "-"
+        + (new Date().getMonth() + 1) + "-"
         + new Date().getDate();
+    const nav = useNavigate();
 
     const [insertTalkJoin, setInsertTalkJoin] = useState({
         memberEmail: {
@@ -82,10 +84,20 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) =>
 
     //참여 모달창
     const [openModal, setOpenModal] = useState(false);
+
     useEffect(() => {
         console.log(talkJoinState);
     }, [talkJoinState])
     // console.log("talkJoin : " + talkJoinState);
+
+    //최대인원 설정
+    const isTalkMax = () => {
+        if (1 + talkJoinMember.length === talkInfo.talkMax) {
+            alert("최대인원 초과로 현재 참여가 불가능합니다.");
+        } else {
+            setOpenModal(true);
+        }
+    }
 
     return (
         <>
@@ -97,7 +109,7 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList }) =>
                     ? <Button onClick={() => setOpenModal(true)}
                         color="primary" variant="contained"
                         className="talkSticky">탈퇴하기</Button>
-                    : <Button onClick={() => setOpenModal(true)}
+                    : <Button onClick={isTalkMax}
                         color="primary" variant="contained"
                         className="talkSticky">{children}</Button>
             }
