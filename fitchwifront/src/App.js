@@ -9,6 +9,7 @@ import Header from "./layout/Header";
 import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
 import TalkInfo from "./pages/talk/components/TalkInfo";
+import Search from "./pages/search";
 import Manager from "./pages/manager";
 import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
@@ -18,16 +19,19 @@ function App() {
   //로그인 상태 저장
   const [lstate, setLstate] = useState({
     logid: "",
+    nickName: "",
     flink: "/login",
   });
 
   useEffect(() => {
     //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
     const id = sessionStorage.getItem("id");
+    const nickName = sessionStorage.getItem("nickName");
     //console.log(mid);
     if (id !== null) {
       const newState = {
         logid: id,
+        nickName: nickName,
         flink: "/memberpage",
       };
       setLstate(newState);
@@ -35,9 +39,10 @@ function App() {
   }, []);
 
   //로그인 성공 시 로그인 상태 변경 함수
-  const sucLogin = useCallback((id) => {
+  const sucLogin = useCallback((id, nickName) => {
     const newState = {
       logid: id,
+      nickName: nickName,
       flink: "/memberpage",
     };
     setLstate(newState);
@@ -53,6 +58,7 @@ function App() {
     setLstate(newState);
     //로그아웃 시 로그인 상태 및 페이지번호 삭제
     sessionStorage.removeItem("id");
+    sessionStorage.removeItem("nickName");
     nav("/"); //첫페이지로 돌아감.
   };
   return (
@@ -66,7 +72,8 @@ function App() {
         <Route path="/talk/*" element={<Talk />}></Route>
         {/* <Route path="/talk/info" element={<TalkInfo />}></Route> */}
         <Route path="/together/*" element={<Together />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} />}></Route>
+        <Route path="/search/*" element={<Search />}></Route>
+        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
       </Routes>
     </>

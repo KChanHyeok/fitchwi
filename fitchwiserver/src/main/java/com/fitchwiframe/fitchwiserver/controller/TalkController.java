@@ -1,9 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
-import com.fitchwiframe.fitchwiserver.entity.Talk;
-import com.fitchwiframe.fitchwiserver.entity.TalkJoin;
-import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
-import com.fitchwiframe.fitchwiserver.entity.TalkTag;
+import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.service.TalkService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +77,11 @@ public class TalkController {
     public String deleteTalkJoinInfo(@RequestParam String memberEmail, long talkCode) {
         log.info("talkController.deleteTalkJoinInfo()");
         return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
+    }
+
+    @GetMapping("/getTalkListBySearch")
+    public List<Talk> getTalkListBySearch(@RequestParam String searchText){
+        log.info("getTalkListBySearch()");
+        return talkService.getTalkListBySearch(searchText);
     }
 }

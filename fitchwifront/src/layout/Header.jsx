@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Button, InputBase, Stack, styled, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, InputBase, Stack, styled, Toolbar } from "@mui/material";
 import { alpha, Box } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -13,9 +13,9 @@ const StyledToolbar = styled(Toolbar)({
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.black, 0.15),
+  backgroundColor: alpha(theme.palette.common.black, 1),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.black, 0.25),
+    backgroundColor: alpha(theme.palette.common.black, 0.75),
   },
   marginLeft: 0,
   width: "100%",
@@ -46,16 +46,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
       "&:focus": {
-        width: "20ch",
+        width: "18ch",
       },
     },
   },
 }));
 
 const Header = ({ lstate, onLogout }) => {
-  const { logid, flink } = lstate;
+  const { logid, nickName, flink } = lstate;
   //로고 클릭(로그인 후 main, 로그인 전 home)
   const homeLink = logid === "" ? "/" : "/";
+
+  const [searchText, setSearchText] = useState("");
+
+  const handleChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
   return (
     <AppBar position="sticky">
@@ -63,9 +69,12 @@ const Header = ({ lstate, onLogout }) => {
         <Stack direction="row" spacing={7} justifyContent="space-between"></Stack>
         <Box flex={1} p={2}>
           <Link to={homeLink} style={{ textDecoration: "none" }}>
-            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
+            {/*Monday Feelings by Essentials Studio*/}
+            <img src="/images/logo.png" alt="logo" width="100"></img>
+
+            {/* <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
               FITCHWI
-            </Typography>
+            </Typography> */}
           </Link>
         </Box>
         <Box flex={4} p={2}>
@@ -79,16 +88,19 @@ const Header = ({ lstate, onLogout }) => {
             얘기해요
           </Link>
         </Box>
-        <Search>
+        <Search sx={{ height: 36.5 }}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+          <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} onChange={handleChange} />
+          <Link to={`/search/${searchText}`} style={{ textDecoration: "none" }}>
+            <Button variant="error">검색</Button>
+          </Link>
         </Search>
         <Box flex={2} p={2}>
           <Link to={flink} style={{ textDecoration: "none" }}>
             <Button color="primary" variant="contained">
-              {logid !== "" ? `${logid}님` : "로그인"}
+              {logid !== "" ? `${nickName} 님` : "로그인"}
             </Button>
           </Link>
           {logid !== "" ? (

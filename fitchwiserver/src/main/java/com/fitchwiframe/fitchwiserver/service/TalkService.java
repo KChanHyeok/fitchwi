@@ -10,6 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Service
 @Log
 public class TalkService {
@@ -187,4 +191,20 @@ public class TalkService {
         }
         return result;
     }
+
+    public List<Talk> getTalkListBySearch(String searchText) {
+        log.info("getTalkListBySearch()");
+        List<Talk> talkList = new ArrayList<>();
+
+        String searchTag = "%"+searchText+"%";
+
+        try {
+            log.info("searchTag : " + searchTag);
+            talkList = talkRepository.findByTalkTitleLike(searchTag);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkList;
+    }
+
 }

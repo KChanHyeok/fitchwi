@@ -104,23 +104,28 @@ public class MemberService {
 
 
   //로그인
-  public String loginMember(Member inputMember) {
-    String result = null;
+  public String[] loginMember(Member inputMember) {
     log.info("memberService.loginMember()");
-
+    String[] result = new String[3];
     Member dbMember = null;
     try {
       dbMember = memberRepository.findById(inputMember.getMemberEmail()).orElseGet(Member::new);
-      if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
-        dbMember.setMemberPwd("");
-      } else {
-        dbMember.setMemberEmail("");
+      if (dbMember.getMemberEmail() != null) {
+        if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
+          result[0] = "ok";
+          result[1] = dbMember.getMemberEmail();
+          result[2] = dbMember.getMemberNickname();
+        } else {
+          result[0] = "wrong pwd";
+        }
+      }else{
+        result[0] = "no data";
       }
     } catch (Exception e) {
       e.printStackTrace();
-      dbMember.setMemberEmail("");
+
     }
-    return dbMember.getMemberEmail();
+    return result;
 
   }
   //회원 정보 수정

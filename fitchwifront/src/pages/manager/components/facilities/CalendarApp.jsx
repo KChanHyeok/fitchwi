@@ -1,6 +1,6 @@
 // import { Typography } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { Button, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
@@ -8,8 +8,8 @@ import Calendar from "react-calendar";
 import "./CalendarApp.scss";
 export default function CalendarApp({ facilitiesCode }) {
   // const [value, onChange] = useState(new Date());
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [noDayList, setNodayList] = useState([]);
   const onChangeDate = (e) => {
     const startDateFormat = moment(e[0]).format("YYYY-MM-DD");
@@ -25,9 +25,15 @@ export default function CalendarApp({ facilitiesCode }) {
       setNodayList(result.data);
     });
     //변경필요.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noDayToSend]);
 
   const addNoday = () => {
+    if (startDate === "" || endDate === "") {
+      alert("시작일과 종료일을 모두 선택해주세요.");
+      return;
+    }
+
     console.log(noDayToSend);
     let checkArray = noDayList.filter((n) => noDayToSend.indexOf(n) > 0);
     if (checkArray.length !== 0) {
@@ -55,6 +61,10 @@ export default function CalendarApp({ facilitiesCode }) {
   };
 
   const deleteNoday = () => {
+    if (startDate === "" || endDate === "") {
+      alert("시작일과 종료일을 모두 선택해주세요.");
+      return;
+    }
     console.log(noDayToSend);
     // noDayList.filter((n) => noDayToSend.indexOf(n) < 0);
     let checkArray = noDayToSend.filter((n) => noDayList.indexOf(n) < 0);
@@ -89,7 +99,6 @@ export default function CalendarApp({ facilitiesCode }) {
     let range = (endDate.getTime() - startDate.getTime() + 1) / aDay;
     let daysArray = [];
 
-    console.log(moment(startDate).format("YYYY-MM-DD"));
     let nextDay = startDate.getTime();
     for (let i = 0; i < range; i++) {
       daysArray.push(moment(nextDay).format("YYYY-MM-DD"));
@@ -103,16 +112,30 @@ export default function CalendarApp({ facilitiesCode }) {
 
     setNoDayToSend(() => dates);
   }, [startDate, endDate]);
-  console.log("noDayList");
-  console.log(noDayList);
-  console.log("noDayToSend");
-  console.log(noDayToSend);
-
+  // console.log("noDayList");
+  // console.log(noDayList);
+  // console.log("noDayToSend");
+  // console.log(noDayToSend);
+  // console.log("startDate");
+  // console.log(startDate);
+  // console.log("endDate");
+  // console.log(endDate);
+  const onClickDay = (v) => {
+    if (startDate !== "" && endDate !== "") {
+      setStartDate(v);
+      setEndDate("");
+    }
+    if (startDate === "") {
+      console.log(v);
+      setStartDate(v);
+    }
+  };
   return (
     <div>
       <Calendar
         onChange={onChangeDate}
         selectRange={true}
+        // /  allowPartialRange={true}
         className=" CalendrApp"
         formatDay={(locale, date) => moment(date).format("DD")}
         tileContent={({ date, view }) => {
@@ -120,10 +143,27 @@ export default function CalendarApp({ facilitiesCode }) {
             return <Close />;
           }
         }}
+        onClickDay={(v) => onClickDay(moment(v).format("YYYY-MM-DD"))}
       />
-      <TextField value={startDate || ""} />
-      <Button onClick={addNoday}>등록</Button> <Button onClick={deleteNoday}>삭제</Button>
-      <TextField value={endDate || ""} />
+      <Grid container justifyContent="space-evenly">
+        <Grid item xs={4}>
+          <TextField margin="normal" label="시작일" value={startDate || ""} />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField margin="normal" label="종료일" value={endDate || ""} />
+        </Grid>
+
+        <Grid item xs={4}>
+          <Box sx={{ mt: 3 }}>
+            <Button onClick={addNoday} variant="outlined" color="info">
+              등록
+            </Button>
+            <Button onClick={deleteNoday} variant="outlined">
+              삭제
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
     </div>
   );
 }

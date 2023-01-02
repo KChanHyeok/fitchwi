@@ -40,7 +40,7 @@ public class MemberController {
 
   //로그인
   @PostMapping("/loginmember")
-  private String loginMember(@RequestBody Member member) {
+  private String[] loginMember(@RequestBody Member member) {
     log.info("memberController.loginMember()");
     return memberService.loginMember(member);
   }

@@ -6,8 +6,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Button, InputAdornment, Snackbar } from "@mui/material";
+import axios from "axios";
 
 function getStyles(name, tagForm, theme) {
   return {
@@ -16,13 +17,28 @@ function getStyles(name, tagForm, theme) {
 }
 
 export default function MultipleSelectChip({ tagForm, setTagForm }) {
+  // useEffect(() => {
+  //   getTagList();
+  // }, []);
+  // const getTagList = async () => {
+  //   await axios
+  //     .get("/getTagList")
+  //     .then((response) => {
+  //       setTagList(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  // const [tagList, setTagList] = useState([]);
+
   const [tagList, setTagList] = useState(["25", "셀피", "맛집투어", "연말모임", "전시", "인생네컷"]);
 
   const theme = useTheme();
 
   const handleChange = useCallback(
     (event) => {
-      console.log(event.target.value);
       setTagForm(event.target.value);
     },
     [setTagForm]
@@ -53,6 +69,7 @@ export default function MultipleSelectChip({ tagForm, setTagForm }) {
     setOpen(false);
   };
 
+  console.log(tagList);
   return (
     <div>
       <FormControl sx={{ mt: 2 }} fullWidth>

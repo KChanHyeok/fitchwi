@@ -13,4 +13,10 @@ public interface FeedRepository extends CrudRepository<Feed, Long> {
 
     List<Feed> findAllByMemberEmail(Member member);
 
+    List<Feed> findAll(Pageable feedPageable);
+
+    List<Feed> findAllByFeedCategoryContains(String feedCategory, Pageable feedPageable);
+
+    List<Feed> findByFeedTagLike(String searchText);
+
 }
