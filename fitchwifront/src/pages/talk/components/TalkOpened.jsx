@@ -112,15 +112,21 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     }
 
     const [disabled, setDisabled] = useState(true);
+    console.log(insertTalkOp);
 
     return (
         <>
 
             <Stack height={800} flex={7} p={3}>
                 <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
-                    <Typography variant="h6" textAlign="center">
-                        얘기해요 개설
-                    </Typography>
+                    {location.state
+                        ? <Typography variant="h6" textAlign="center">
+                            얘기해요 수정
+                        </Typography>
+                        : <Typography variant="h6" textAlign="center">
+                            얘기해요 개설
+                        </Typography>
+                    }
                     <UserBox>
                         <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
@@ -132,6 +138,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <TextField fullWidth
                             label="얘기해요 모임명"
                             name="talkTitle"
+                            value={insertTalkOp.talkTitle}
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             required
@@ -140,9 +147,10 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             label="최대 참여인원"
                             type="number"
                             name="talkMax"
+                            value={insertTalkOp.talkMax}
                             sx={{ mt: 3 }}
                             onChange={onChange}
-                            required />
+                        />
                         <FormControl sx={{ mt: 2 }} fullWidth>
                             <InputLabel>모임 카테고리 선정</InputLabel>
                             <Select label="모임 카테고리 선정"
@@ -164,7 +172,12 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             <span className="talkInput talkTypeSt">가입유형</span>
                             <span className="talkInput talkInqSt">가입질문</span>
                             <div>
-                                <select onChange={onChange} onClick={onDisabled} name="talkType" required>
+                                <select
+                                    name="talkType"
+                                    value={insertTalkOp.talkType}
+                                    onChange={onChange}
+                                    onClick={onDisabled}
+                                    required>
                                     <option value="">선택</option>
                                     <option value="승인제">승인제</option>
                                     <option value="선착순">선착순</option>
@@ -193,13 +206,16 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <input type="file" name="talkImg"
                             onChange={onLoadFile}
                             multiple required></input>
-                        <p className="talkInput">얘기해요 소개 말</p>
-                        <textarea name="talkContent"
+                        <TextField fullWidth
+                            label="모임을 소개해주세요"
+                            name="talkContent"
+                            sx={{ mt: 3 }}
                             onChange={onChange}
-                            placeholder="모임을 소개해주세요" required></textarea>
+                            multiline
+                            required />
                         <TextField fullWidth
                             label="애기해요 태그"
-                            name="talkMax"
+                            name="talkTagContent"
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             required />
