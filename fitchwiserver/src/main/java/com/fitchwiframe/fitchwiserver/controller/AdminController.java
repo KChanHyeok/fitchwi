@@ -81,9 +81,9 @@ public class AdminController {
     log.info("adminController.getReportList()");
     return adminService.getReportList();
   }
-//  @GetMapping("/report/detail/{reportCode}")
-//  public Report getReport(@PathVariable Long reportCode){
-//    log.info("adminController.getReport()");
-//    return adminService.getReport(reportCode);
-//  }
+@GetMapping("/restrictMember")
+  public String restrictMember(String restrictDate, String targetMemberEmail){
+    log.info("adminController.restrictMember");
+    return adminService.restrictMember(restrictDate, targetMemberEmail);
+}
 }

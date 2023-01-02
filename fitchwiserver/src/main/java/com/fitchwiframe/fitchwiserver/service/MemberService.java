@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -106,10 +108,30 @@ public class MemberService {
   //로그인
   public String[] loginMember(Member inputMember) {
     log.info("memberService.loginMember()");
+
     String[] result = new String[3];
+
     Member dbMember = null;
     try {
       dbMember = memberRepository.findById(inputMember.getMemberEmail()).orElseGet(Member::new);
+      if(dbMember.getMemberRestriction()!=null){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        Date restriction = dateFormat.parse(dbMember.getMemberRestriction());
+
+        if(restriction.compareTo(today)>0){
+          result[0] = "reported";
+          result[1] = dbMember.getMemberRestriction();
+        }else{
+          result[0] = "released";
+          result[1] = dbMember.getMemberRestriction();
+
+          dbMember.setMemberRestriction(null);
+          memberRepository.save(dbMember);
+        }
+        return result;
+
+      }
       if (dbMember.getMemberEmail() != null) {
         if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
           result[0] = "ok";
