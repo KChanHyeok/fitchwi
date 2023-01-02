@@ -56,6 +56,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
   const [tagList, setTagList] = useState([]);
+  const [flist, setFlist] = useState();
   // 피드 댓글 입력 양식 구성
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
@@ -65,21 +66,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     feedCommentContent: "",
   });
 
-  const [clist, setClist] = useState([
-    {
-      feedCode: "",
-      feedCommentCode: "",
-      feedCommentContent: "",
-      feedCommentDate: "",
-      image: "",
-      memberEmail: {
-        memberEmail: sessionStorage.getItem("id"),
-        memberName: "",
-        memberNickname: "",
-        memberSaveimg: "",
-      },
-    },
-  ]);
+  const [clist, setClist] = useState([]);
 
   const handleChange = useCallback(
     (event) => {
@@ -109,7 +96,8 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               feedCode: feedCode,
               feedCommentContent: "",
             });
-            refreshFeed();
+            window.location.reload();
+            // refreshFeed();
           } else {
             alert("실패");
           }
@@ -137,12 +125,14 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
       if (isLike === false) {
         axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {
           setIsLike(!isLike);
-          refreshFeed();
+          window.location.reload();
+          // refreshFeed();
         });
       } else {
         axios.delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } }).then((res) => {
           setIsLike(!isLike);
-          refreshFeed();
+          window.location.reload();
+          // refreshFeed();
         });
       }
     },
@@ -150,35 +140,32 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   );
 
   useEffect(() => {
-    if (comment.length > 0) {
-      let FeedCommentList = [];
-      for (let i = 0; i < comment.length; i++) {
-        const FeedComment = {
-          ...comment[i],
-          image: "/images/" + comment[i].memberEmail.memberSaveimg,
-        };
-        FeedCommentList.push(FeedComment);
-      }
-      setClist(FeedCommentList);
-    }
-  }, [comment]);
-
-  useEffect(() => {
-    for (let i = 0; i < like.length; i++) {
-      if (like[i].memberEmail.memberEmail === memberInfo.memberEmail) {
-        setIsLike(true);
+    if (like !== undefined) {
+      for (let i = 0; i < like.length; i++) {
+        if (like[i].memberEmail.memberEmail === memberInfo.memberEmail) {
+          setIsLike(true);
+        }
       }
     }
   }, [like, memberInfo.memberEmail]);
 
   useEffect(() => {
-    setTagList(tag.split(" "));
-    setLoading(false);
-  }, [tag, file]);
+    if (tag !== undefined && comment !== undefined && file !== undefined) {
+      setTagList(tag.split(" "));
+      setClist(comment);
+      setFlist(file);
+      setLoading(false);
+    }
+  }, [tag, file, comment]);
+
+  console.log(loading);
+  console.log(clist);
+  console.log(tagList);
+  console.log(flist);
 
   return (
     <div>
-      {loading || file === undefined ? (
+      {file === undefined && comment === undefined && like === undefined ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
           <CircularProgress color="inherit" />
         </Backdrop>
@@ -247,8 +234,8 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                     </Typography>
                   ))}
               </Stack>
-              {comment.length >= 1 ? (
-                comment.length > 4 ? (
+              {clist.length >= 1 ? (
+                clist.length > 4 ? (
                   <Box>
                     <Typography
                       variant="body2"

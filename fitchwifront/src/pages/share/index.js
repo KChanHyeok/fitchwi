@@ -46,7 +46,7 @@ function Feedindex() {
         <Sidebar pageurl={"share"} />
         <Routes>
           <Route path="/*" element={<Feed feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="culture" element={<FeedCulture feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
+          <Route path="culture" element={<FeedCulture feedList={feedList} memberInfo={profil} />} />
           <Route path="exercise" element={<FeedExercise feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
           <Route path="food" element={<FeedFood feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
           <Route path="travel" element={<FeedTravel feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
