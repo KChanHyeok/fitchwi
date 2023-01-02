@@ -1,9 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
-import com.fitchwiframe.fitchwiserver.entity.Together;
-import com.fitchwiframe.fitchwiserver.entity.TogetherJoin;
-import com.fitchwiframe.fitchwiserver.entity.TogetherOpened;
-import com.fitchwiframe.fitchwiserver.entity.TogetherTag;
+import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.service.TogetherService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +34,11 @@ public class TogetherController {
     }
 
     @PostMapping("/insertTogetherJoinInfo")
-    public String insertTogetherJoinInfo(@RequestBody TogetherJoin togetherJoin) {
+    public String insertTogetherJoinInfo(@RequestBody TogetherJoinPayment togetherJoinPayment) {
         log.info("insertTogetherJoinInfo()");
-        return togetherService.insertTogetherJoinInfo(togetherJoin);
+        log.info("전달 받은 데이터"+togetherJoinPayment.getTogetherJoinCode());
+        log.info("전달 받은 데이터"+togetherJoinPayment);
+        return togetherService.insertTogetherJoinInfo(togetherJoinPayment);
     }
 
     @GetMapping("/getAllTogetherList")

@@ -76,7 +76,6 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
                 },
                 }}
             >
-                <MenuItem onClick={() => nav("/together/add",{state:{togetherInfo}})}>수정하기</MenuItem>
                 <MenuItem onClick={handleOpen}>삭제하기</MenuItem>
                 <MenuItem onClick={() => alert("신고하기")}>신고하기</MenuItem>
             </Menu>

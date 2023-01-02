@@ -81,10 +81,16 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
           buyer_postcode: "01181"
         }, rsp => { // callback
           if (rsp.success) {
-            console.log(rsp);
-            //결재정보 저장 함수 만들 예정
-
-            axios.post("/insertTogetherJoinInfo", insertForm)
+            const insertPayForm = {
+                togetherJoinPayCode: rsp.merchant_uid,
+                togetherJoinCode: insertForm,
+                togetherJoinImp: rsp.imp_uid,
+                togetherJoinPayPrice: rsp.paid_amount,
+                togetherJoinPayMethod: rsp.pay_method,
+                togetherJoinPayStatus: "",
+            }
+            
+            axios.post("/insertTogetherJoinInfo", insertPayForm)
               .then((res) => {
                   setOpen(false);
                   alert(res.data);
@@ -100,15 +106,21 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
       const deleteTogetherJoinInfo = (e) => {
         e.preventDefault();
-            axios({
-                url: "https://api.iamport.kr/users/getToken",
-                method: "post", // POST method
-                headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-                data: {
-                imp_key: "5177641603268324", // REST API키
-                imp_secret: "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1" // REST API Secret
-                }
-            });
+            // axios({
+            //     url: "https://api.iamport.kr/users/getToken",
+            //     method: "post", // POST method
+            //     headers: { 
+            //         post: {
+            //             'Access-Control-Allow-Origin': '*',
+            //             "Content-Type": "application/json" 
+            //         }
+            //     }, // "Content-Type": "application/json"
+            //     data: {
+            //     imp_key: "5177641603268324", // REST API키
+            //     imp_secret: "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1" // REST API Secret
+            //     }
+            // }).then(res=>console.log(res.data))
+
 
             axios.delete("/deleteTogetherJoin",{ params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
@@ -117,6 +129,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 refreshTogetherJoinList();
             })
       }
+
+      console.log(togetherJoinMember)
     return (
         <>
             { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>:
