@@ -15,6 +15,9 @@ public class TogetherPayment {
     @JoinColumn(name = "togetherCode")
     private Together togetherCode;
 
+    @Column(nullable = false, length = 50)
+    private  String togetherImp;
+
     @Column(nullable = false)
     private int togetherPayPrice;
 

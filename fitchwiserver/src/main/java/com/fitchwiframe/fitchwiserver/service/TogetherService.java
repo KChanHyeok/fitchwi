@@ -1,14 +1,24 @@
 package com.fitchwiframe.fitchwiserver.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Log
@@ -27,7 +37,12 @@ public class TogetherService {
     TogetherJoinRepository togetherJoinRepository;
 
     @Autowired
+    TogetherJoinPayRepository togetherJoinPayRepository;
+
+    @Autowired
     MemberRepository memberRepository;
+
+
 
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
         String result = null;
@@ -83,13 +98,17 @@ public class TogetherService {
         return togetherList;
     }
 
-    public String insertTogetherJoinInfo(TogetherJoin togetherJoin) {
+    public String insertTogetherJoinInfo(TogetherJoinPayment togetherJoinPayment) {
         String result = null;
         try {
-            if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
-                togetherJoin.setTogetherJoinState("가입중");
+            if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
+                togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
             }
-            togetherJoinRepository.save(togetherJoin);
+            togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
+
+            togetherJoinPayment.setTogetherJoinCode(togetherJoinRepository.findById(togetherJoinPayment.getTogetherJoinCode().getTogetherJoinCode()).get());
+            togetherJoinPayment.setTogetherJoinPayStatus("결제완료");
+            togetherJoinPayRepository.save(togetherJoinPayment);
 
             result="성공";
         }catch (Exception e) {
@@ -108,17 +127,57 @@ public class TogetherService {
 
     public String deleteTogetherJoin(String memberEmail, long togetherCode) {
         String result = null;
-        try {
-            Member loginMember = memberRepository.findById(memberEmail).get();
-            Together joinTogether = togetherRepository.findById(togetherCode).get();
 
-            TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
-            togetherJoinRepository.delete(joinTogetherMember);
-            result="삭제성공";
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String,String> body = new HashMap<>();
+            body.put("imp_key", "5177641603268324");
+            body.put("imp_secret", "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1");
+        try {
+            HttpEntity<Map> tokenEntity = new HttpEntity<>(body,headers);
+            ResponseEntity<Map> token = restTemplate.postForEntity("https://api.iamport.kr/users/getToken",tokenEntity,Map.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            TokenDto tokenDto = mapper.convertValue(token.getBody().get("response"), TokenDto.class);
+
+            try {
+                if(tokenDto.getAccess_token().equals("")){
+                    throw new Exception();
+                }
+                Member loginMember = memberRepository.findById(memberEmail).get();
+                Together joinTogether = togetherRepository.findById(togetherCode).get();
+
+                TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
+
+
+                TogetherJoinPayment togetherJoinPayment = togetherJoinPayRepository.findByTogetherJoinCode(joinTogetherMember);
+
+                headers.clear();
+                headers.add("Authorization",tokenDto.getAccess_token());
+                body.clear();
+                body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
+                body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
+                body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
+
+                HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
+                cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
+
+                togetherJoinPayRepository.delete(togetherJoinPayment);
+                togetherJoinRepository.delete(joinTogetherMember);
+                log.info(cancle+"");
+                result="삭제성공";
+            }catch (Exception e) {
+                e.printStackTrace();
+                result="삭제실패";
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
-            result="삭제실패";
         }
+
 
         return result;
     }
