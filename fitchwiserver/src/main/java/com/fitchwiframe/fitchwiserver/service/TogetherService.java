@@ -20,6 +20,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Service
 @Log
 public class TogetherService {
@@ -193,5 +197,20 @@ public class TogetherService {
             result="실패";
         }
         return result;
+    }
+
+    public List<Together> getTogetherListBySearch(String searchText) {
+        log.info("getTogetherListBySearch()");
+        List<Together> togetherList = null;
+
+        String searchTag = "%"+searchText+"%";
+
+        try {
+            log.info("searchTag : " + searchTag);
+            togetherList = togetherRepository.findByTogetherTitleLike(searchTag);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return togetherList;
     }
 }
