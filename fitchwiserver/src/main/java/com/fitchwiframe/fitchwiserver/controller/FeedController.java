@@ -42,6 +42,8 @@ public class FeedController {
         log.info("getFeedList()");
         return feedService.getFeedList(page, category, session);
     }
+
+
     //멤버가 작성한 피드 조회
     @PostMapping("/getMemberFeed")
     private List<Feed>getMemberFeed(@RequestBody Member member){
@@ -85,6 +87,18 @@ public class FeedController {
     private String deleteFeed(@RequestBody Feed feed, HttpSession session){
         log.info("deleteFeed()");
         return feedService.deleteFeed(feed, session);
+    }
+
+    @GetMapping("/getTagList")
+    private List<Tag> getTagList(){
+        log.info("getTagList()");
+        return feedService.getTagList();
+    }
+
+    @GetMapping("/getFeedListBySearch")
+    private List<Feed> getFeedListBySearch(@RequestParam String searchText){
+        log.info("getFeedListBySearch()");
+        return feedService.getFeedListBySearch(searchText);
     }
 
 //    @GetMapping("/createFeed")

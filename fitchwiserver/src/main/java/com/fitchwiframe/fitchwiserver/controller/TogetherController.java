@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @Log
@@ -61,6 +62,12 @@ public class TogetherController {
     public String deleteTogetherState(@RequestBody Together together) {
         log.info("전달받은 together"+ together);
         return togetherService.deleteTogetherState(together);
+    }
+
+    @GetMapping("/getTogetherListBySearch")
+    public List<Together> getTogetherListBySearch(@RequestParam String searchText){
+        log.info("getTogetherListBySearch()");
+        return togetherService.getTogetherListBySearch(searchText);
     }
 
 

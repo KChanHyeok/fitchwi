@@ -46,7 +46,6 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
 
   let divide = 1000 * 60 * 60 * 24;
   let date = (toDayD - feedDate) / divide;
-  const [loading, setLoading] = useState(true);
   let day = String(Math.floor(date));
   let hour = String(Math.floor((date - day) * 24));
   let minute = String(Math.floor(((date - day) * 24 - hour) * 60));
@@ -56,7 +55,6 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
   const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
   const [tagList, setTagList] = useState([]);
-  const [flist, setFlist] = useState();
   // 피드 댓글 입력 양식 구성
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
@@ -136,7 +134,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
         });
       }
     },
-    [feedCode, memberInfo.memberEmail, refreshFeed, nav]
+    [feedCode, memberInfo.memberEmail, nav]
   );
 
   useEffect(() => {
@@ -153,15 +151,8 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     if (tag !== undefined && comment !== undefined && file !== undefined) {
       setTagList(tag.split(" "));
       setClist(comment);
-      setFlist(file);
-      setLoading(false);
     }
   }, [tag, file, comment]);
-
-  console.log(loading);
-  console.log(clist);
-  console.log(tagList);
-  console.log(flist);
 
   return (
     <div>
