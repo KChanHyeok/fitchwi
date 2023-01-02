@@ -246,7 +246,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                     logid === memberEmail ? (
                       memberEmail
                     ) : (
-                      <Report targetMember={member.memberEmail} category="member" target="0" />
+                      <Report targetMember={member.memberEmail} category="memberpage" target="0" />
                     )
                   }
                 />

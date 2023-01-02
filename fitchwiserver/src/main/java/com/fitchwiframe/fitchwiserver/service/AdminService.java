@@ -245,6 +245,24 @@ public class AdminService {
     return reportWithDetailList;
   }
 
+  public String restrictMember(String restrictDate, String targetMemberEmail) {
+    log.info("restrictMemberEmail()");
+    System.out.println("restrictDate = " + restrictDate);
+    System.out.println("targetMemberEmail = " + targetMemberEmail);
+    String result = "fail";
+    try{
+      Member targetMember = memberRepository.findById(targetMemberEmail).get();
+      targetMember.setMemberRestriction(restrictDate);
+      System.out.println("targetMember = " + targetMember);
+      memberRepository.save(targetMember);
+      result="ok";
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return result;
+
+  }
+
 
 //  public Report getReport(Long reportCode) {
 //    log.info("adminService.getReport()");

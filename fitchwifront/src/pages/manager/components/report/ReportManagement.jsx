@@ -6,7 +6,12 @@ import {
   Button,
   ButtonGroup,
   Container,
+  Divider,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +22,9 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import moment from "moment/moment";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 export default function ReportManagement() {
   const [reportList, setReportList] = useState([]);
   console.log("상세");
@@ -33,9 +40,29 @@ export default function ReportManagement() {
     });
   };
 
+  const onRistrict = (period, memberEmail) => {
+    let today = moment().format("YYYY-MM-DD");
+    let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
+    // restrictDate.format("YYYY-MM-DD");
+    console.log(today);
+    console.log(restrictDate);
+    // console.log(restrictDate.format("YYYY-MM-DD"));
+    axios
+      .get("/restrictMember", {
+        params: { restrictDate: restrictDate, targetMemberEmail: memberEmail },
+      })
+      .then((result) => console.log(result));
+  };
+  const [restrictDate, setRestrictDate] = useState("2");
+  useEffect(() => {});
+
+  const onSelectDate = useCallback((e) => {
+    console.log(e);
+    setRestrictDate(e.target.value);
+  }, []);
   return (
     <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 40 }}>
-      <Box>
+      <Box sx={{ mb: 5 }}>
         <Typography variant="h4">신고 관리</Typography>
       </Box>
 
@@ -44,7 +71,7 @@ export default function ReportManagement() {
           expandIcon={<Remove />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          backgroundColor="white"
+          // backgroundColor="white"
           disabled
           style={{ opacity: "1" }}
         >
@@ -68,7 +95,7 @@ export default function ReportManagement() {
 
       {reportList &&
         reportList.map((report, index) => (
-          <div key={index}>
+          <div key={report.reportCode}>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMore />}
@@ -79,9 +106,22 @@ export default function ReportManagement() {
                   {report.reportCode}
                 </Typography>
 
-                <Typography align="center" sx={{ width: "100%" }}>
-                  {report.reportCategory}
-                </Typography>
+                {report.reportTarget === 0 ? (
+                  <Link
+                    to={`/${report.reportCategory}`}
+                    state={{ memberId: report.memberEmail.memberEmail }}
+                  >
+                    <Typography align="center" sx={{ width: "100%" }}>
+                      {report.reportCategory}
+                    </Typography>
+                  </Link>
+                ) : (
+                  <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
+                    <Typography align="center" sx={{ width: "100%" }}>
+                      {report.reportCategory}
+                    </Typography>
+                  </Link>
+                )}
 
                 <Typography align="center" sx={{ width: "100%" }}>
                   {report.memberEmail.memberEmail}
@@ -104,7 +144,10 @@ export default function ReportManagement() {
                     </TableHead>
                     <TableBody>
                       {report.reportDetailList.map((reportDetail) => (
-                        <TableRow key={index} sx={{ backgroundColor: "#eee" }}>
+                        <TableRow
+                          key={reportDetail.reportDetailCode}
+                          sx={{ backgroundColor: "#eee" }}
+                        >
                           <TableCell align="center">{reportDetail.reportDetailDate}</TableCell>
                           <TableCell align="center">
                             {reportDetail.memberEmail.memberEmail}
@@ -117,12 +160,28 @@ export default function ReportManagement() {
                 </TableContainer>
                 <Grid container>
                   <Grid item xs={6}>
-                    <ButtonGroup>
-                      <Button>1일 정지</Button>
-                      <Button>7일 정지</Button>
-                      <Button>3개월 정지</Button>
-                      <Button>6개월 정지</Button>
-                    </ButtonGroup>
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                      <InputLabel id="demo-select-small">이용 제한 일</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={restrictDate}
+                        label="restrictDate"
+                        onChange={(e) => onSelectDate(e)}
+                      >
+                        <MenuItem value={2}>1일</MenuItem>
+                        <MenuItem value={8}>7일</MenuItem>
+                        <MenuItem value={31}>30일</MenuItem>
+                        <MenuItem value={91}>90일</MenuItem>
+                        <MenuItem value={181}>180일</MenuItem>
+                        <MenuItem value={361}>360일</MenuItem>
+                      </Select>
+                      <Button
+                        onClick={() => onRistrict(restrictDate, report.memberEmail.memberEmail)}
+                      >
+                        제한하기
+                      </Button>
+                    </FormControl>
                   </Grid>
                   <Grid item xs={6}>
                     <ButtonGroup>
@@ -133,6 +192,7 @@ export default function ReportManagement() {
                 </Grid>
               </AccordionDetails>
             </Accordion>
+            <Divider variant="middle" component={"li"} style={{ listStyle: "none" }} />
           </div>
         ))}
     </Container>

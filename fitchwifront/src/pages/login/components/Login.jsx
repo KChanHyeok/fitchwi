@@ -38,18 +38,31 @@ export default function Login({ sucLogin }) {
         console.log(res.data[1]);
         console.log(res.data[2]);
         console.log(res.data);
-        if (res.data[0] === "ok") {
-          sucLogin(res.data[1], res.data[2]);
-          sessionStorage.setItem("id", res.data[1]);
-          sessionStorage.setItem("nickName", res.data[2]);
-          alert(res.data[2] + "님 환영합니다.");
-          nav("/");
-        } else {
-          if (res.data[0] === "wrong pwd") {
+
+        switch (res.data[0]) {
+          case "ok":
+            sucLogin(res.data[1], res.data[2]);
+            sessionStorage.setItem("id", res.data[1]);
+            sessionStorage.setItem("nickName", res.data[2]);
+            alert(res.data[2] + "님 환영합니다.");
+            nav("/");
+            break;
+
+          case "wrong pwd":
             alert("비밀번호가 틀렸습니다.");
-          } else {
+            break;
+          case "no data":
             alert("아이디와 일치하는 회원정보가 없습니다.");
-          }
+            break;
+          case "reported":
+            alert(res.data[1] + "부터 이용 가능");
+            nav("/");
+            break;
+          case "released":
+            alert(res.data[1] + "부로 이용 제한 해제");
+            break;
+          default:
+            break;
         }
       });
     },

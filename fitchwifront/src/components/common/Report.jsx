@@ -10,11 +10,13 @@ import MenuItem from "@mui/material/MenuItem";
 import { Box } from "@mui/material";
 import moment from "moment/moment";
 import axios from "axios";
+import { useNavigate } from "react-router";
 //category : 함께해요-together / 얘기해요 - talk / 공유해요 - share / 회원 - memberpage / 댓글-comment
 //target : togerther / talk / feed /각 키값  //  회원신고는 target="0"
 //type : MenuItem으로 쓸거면 prop으로 MenuItem 전달 / 기본값은 버튼
 export default function Report({ targetMember, target, category, type }) {
   const [open, setOpen] = useState(false);
+  const nav = useNavigate();
   const [reportDetail, setReportDetail] = useState([
     {
       memberEmail: {
@@ -37,6 +39,11 @@ export default function Report({ targetMember, target, category, type }) {
   const [isReported, setIsReported] = useState(false);
 
   const handleClickOpen = () => {
+    if (reportDetail[0].memberEmail.memberEmail == null) {
+      alert("로그인 후 이용 가능합니다.");
+      nav("/login");
+      return;
+    }
     axios
       .get("/checkReported", {
         params: {
