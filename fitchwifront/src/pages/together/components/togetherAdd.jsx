@@ -36,7 +36,6 @@ const facilities = {
 
 const TogetherAdd = ({ data, getAllTogetherList }) => {
   const nav = useNavigate();
-  const location = useLocation();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -62,14 +61,9 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
   
   useEffect(() => {
     preview();
-    try{
-      if(location.state.togetherInfo) {
-        setInsertForm(location.state.togetherInfo)
-      }
-    }catch(e){
-    }
+
     return () => preview();
-  },[location]);
+  });
   
   const preview = () => {
     if (!fileForm) return false
@@ -123,13 +117,8 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
-  const saveTogether = () => {
-    alert("저장되었습니다")
-  }
 
-  const updateTogether = () => {
-    alert("업데이트")
-  }
+  
   console.log(insertForm)
 
   return (
@@ -321,8 +310,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherTagContent || ''}
         />
         
-        {location.state ? <Button onClick={updateTogether} variant={"contained"} sx={{ mt: 2, mr:4 }} disabled>수정하기</Button>:<Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>}
-        <Button onClick={saveTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>저장하기</Button>
+        <Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
         <Button variant={"contained"} sx={{ mt: 2 }}>
           취소
         </Button>
