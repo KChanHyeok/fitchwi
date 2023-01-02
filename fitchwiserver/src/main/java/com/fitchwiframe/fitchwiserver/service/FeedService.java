@@ -255,4 +255,65 @@ public class FeedService {
         }
     }
 
+    public List<Feed> getFeedList(Integer page, String category, HttpSession session) {
+        log.info("feedService.getFeedList()");
+
+        int listCnt = 5;
+
+        if (page == null){
+            page = 1;
+        }
+
+        Pageable feedPageable = PageRequest.of(page -1, listCnt, Sort.Direction.DESC, "feedDate");
+        List<Feed> feedList;
+        List<Feed> newList = new ArrayList<>();
+
+        switch (category){
+            case "all" :
+                feedList = feedRepository.findAll(feedPageable);
+                for (Feed a : feedList){
+                    List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                    List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+                    List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
+                    a.setFfList(feedFiles);
+                    a.setFcList(feedComments);
+                    a.setFlList(feedLikes);
+                    newList.add(a);
+                }
+                break;
+            default:
+                feedList = feedRepository.findAllByFeedCategoryContains(category, feedPageable);
+                for (Feed a : feedList){
+                    List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                    List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+                    List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
+                    a.setFfList(feedFiles);
+                    a.setFcList(feedComments);
+                    a.setFlList(feedLikes);
+                    newList.add(a);
+                }
+        }
+
+        return newList;
+    }
+
+//    public String createFeed() {
+//        String result = null;
+//        Member member = new Member();
+//
+//        String[] category = {"문화·예술", "운동·액티비티","공예·수공예","요리·음식", "게임·오락", "성장·자기계발", "여행", "기타" };
+//        try {
+//            for (int i = 0; i <= 9; i++){
+//                Feed feed = new Feed();
+//                feed.setFeedCode(i);
+//                feed.setFeedCategory(category[i]);
+//                feed.setFeedClassificationcode("함께해요"+i);
+//                feed.setFeedContent("테스트 피드" + i);
+//                feed.setFeedTag("태그" + i);
+//                feed.setFeedDate("20221229"+i);
+//                feed.setMemberEmail();
+//            }
+//        }
+//
+//    }
 }

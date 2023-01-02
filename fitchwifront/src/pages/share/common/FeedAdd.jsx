@@ -141,7 +141,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          refreshFeed();
+          window.location.reload();
           setFileForm("");
           setTagForm([]);
           setInsertForm({});

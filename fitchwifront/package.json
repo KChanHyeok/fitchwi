@@ -19,6 +19,7 @@
     "react-daum-postcode": "^3.1.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-intersection-observer": "^9.4.1",
     "react-material-ui-carousel": "^3.4.2",
     "react-mui-fileuploader": "^0.3.0",
     "react-router-dom": "^6.4.5",

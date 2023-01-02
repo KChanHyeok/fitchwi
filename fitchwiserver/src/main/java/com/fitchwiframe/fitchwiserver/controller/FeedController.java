@@ -37,6 +37,11 @@ public class FeedController {
         return feedService.getAllFeedList();
     }
 
+    @GetMapping("/getFeedList")
+    private List<Feed> getFeedList(@RequestParam Integer page, String category, HttpSession session){
+        log.info("getFeedList()");
+        return feedService.getFeedList(page, category, session);
+    }
     //멤버가 작성한 피드 조회
     @PostMapping("/getMemberFeed")
     private List<Feed>getMemberFeed(@RequestBody Member member){
@@ -81,5 +86,11 @@ public class FeedController {
         log.info("deleteFeed()");
         return feedService.deleteFeed(feed, session);
     }
+
+//    @GetMapping("/createFeed")
+//    private String createFeed(){
+//        log.info("createFeed()");
+//        return feedService.createFeed();
+//    }
 
 }
