@@ -2,7 +2,7 @@ import { Box, Stack, styled, Avatar, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
-import TogetherSettingMenu from "./togetherSettingMenu";
+import TogetherOpMenu from "./togetherOpMenu";
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList }) => {
   let { togetherPageCode } = useParams();
@@ -33,16 +33,18 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
         <h1>로딩중</h1>
       ) : (
         <Box>
-          <Stack flex={2} direction={"row"}>
+          <Stack flex={2} direction={"row"} justifyContent="space-between">
             <h1>{togetherInfo.togetherTitle}</h1>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
-              <TogetherSettingMenu
-                togetherJoinMember={togetherJoinMember}
-                refreshTogetherJoinList={refreshTogetherJoinList}
-                togetherInfo={togetherInfo}
-                sx={{ fontSize: 20, ml: 60 }}
-              />
-            ) : null}
+                <TogetherOpMenu
+                  togetherJoinMember={togetherJoinMember}
+                  refreshTogetherJoinList={refreshTogetherJoinList}
+                  togetherInfo={togetherInfo}
+                  sx={{ fontSize: 20, ml: 60 }}
+                  />
+              ) : null
+              }
+            <Box></Box>
           </Stack>
           <Box sx={{ maxWidth: 900 }}>
             {togetherInfo.togetherSaveimg && (

@@ -1,11 +1,56 @@
 import MenuItem from "@mui/material/MenuItem";
-import { Button, Menu, Modal, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, Divider, Menu, Modal, styled, Typography } from "@mui/material";
+import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 
-const ITEM_HEIGHT = 48;
+const StyledMenu = styled((props) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color:
+            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
+        },
+    },
+}));
+
+
 const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJoinList}) => {
     const style = {
         position: "absolute",
@@ -50,35 +95,41 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
     return (
         <div>
             <Button
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? "long-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
+                id="demo-customized-button"
+                aria-controls={open ? "demo-customized-menu" : undefined}
                 aria-haspopup="true"
-                onClick={handleClick}
+                aria-expanded={open ? "true" : undefined}
                 variant="contained"
-                sx={{ml:54}}
+                disableElevation
+                onClick={handleClick}
+                endIcon={<KeyboardArrowDownIcon />}
             >
-                설정하기
+                함께해요 관리
             </Button>
-            <Menu
-                id="long-menu"
+            <StyledMenu
+                id="demo-customized-menu"
                 MenuListProps={{
-                "aria-labelledby": "long-button",
+                    "aria-labelledby": "demo-customized-button",
                 }}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                PaperProps={{
-                style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: "10ch",
-                },
-                }}
             >
-                <MenuItem onClick={handleOpen}>삭제하기</MenuItem>
+                <MenuItem disableRipple>
+                    <ManageAccountsIcon />
+                    가입회원 관리
+                </MenuItem>
+                <MenuItem disableRipple>
+                        <FactCheckIcon />
+                        신청회원 확인
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={handleOpen}>
+                    <DeleteIcon />
+                    삭제신청하기
+                </MenuItem>
                 <MenuItem onClick={() => alert("신고하기")}>신고하기</MenuItem>
-            </Menu>
+            </StyledMenu>
             <Modal
             keepMounted
             open={opendelete}
