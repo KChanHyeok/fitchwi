@@ -1,12 +1,3 @@
-//얘기해요 관리버튼
-button#demo-customized-button {
-    background-color: #F8AA83;
-}
-
-button#demo-customized-button:hover {
-    background-color: #fc9e6f;
-}
-
 .talkMenu {
     float: right;
 }
@@ -31,6 +22,6 @@ button#demo-customized-button:hover {
     position: sticky !important;
     bottom: 0;
     width: 100%;
-    background-color: #F8AA83 !important;
+    background-color: #FF0456 !important;
     color: white !important;
 }

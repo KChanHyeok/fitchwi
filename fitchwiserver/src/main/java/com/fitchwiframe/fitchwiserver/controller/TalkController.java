@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @Log
@@ -59,5 +60,26 @@ public class TalkController {
                              @RequestBody TalkTag talkTag) {
         log.info("talkController.deleteTalk()");
         return talkService.deleteTalk(talk, talkOpened, talkTag);
+    }
+
+    //얘기해요 가입
+    @PostMapping("/insertTalkJoinInfo")
+    public String insertTalkJoinInfo(@RequestBody TalkJoin talkJoin) {
+        log.info("talkController.insertTalkJoinInfo()");
+        return talkService.insertTalkJoinInfo(talkJoin);
+    }
+
+    //가입 데이터 조회
+    @GetMapping("/getTalkJoinList")
+    public Iterable<TalkJoin> getTalkJoinList() {
+        log.info("talkController.getTalkJoinList()");
+        return talkService.getTalkJoinList();
+    }
+
+    //가입 데이터 삭제
+    @DeleteMapping("/deleteTalkJoinInfo")
+    public String deleteTalkJoinInfo(@RequestParam String memberEmail, long talkCode) {
+        log.info("talkController.deleteTalkJoinInfo()");
+        return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
     }
 }

@@ -33,15 +33,23 @@ export default function Login({ sucLogin }) {
     (e) => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
+        //0: result /1:id / 2:nickname
+        console.log(res.data[0]);
+        console.log(res.data[1]);
+        console.log(res.data[2]);
         console.log(res.data);
-        if (res.data !== "") {
-          const id = res.data;
-          sucLogin(id);
-          sessionStorage.setItem("id", res.data);
-          alert(res.data + "님 환영합니다.");
+        if (res.data[0] === "ok") {
+          sucLogin(res.data[1], res.data[2]);
+          sessionStorage.setItem("id", res.data[1]);
+          sessionStorage.setItem("nickName", res.data[2]);
+          alert(res.data[2] + "님 환영합니다.");
           nav("/");
         } else {
-          alert("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인하세요.");
+          if (res.data[0] === "wrong pwd") {
+            alert("비밀번호가 틀렸습니다.");
+          } else {
+            alert("아이디와 일치하는 회원정보가 없습니다.");
+          }
         }
       });
     },

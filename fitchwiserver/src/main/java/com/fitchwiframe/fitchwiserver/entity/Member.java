@@ -52,4 +52,7 @@ public class Member {
   @Column(nullable = false, length = 50)
   private String memberInterest ;
 
+  @Column(length = 20)
+  private String memberRestriction;
+
 }

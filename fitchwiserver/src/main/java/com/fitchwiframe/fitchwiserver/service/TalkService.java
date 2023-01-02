@@ -1,11 +1,7 @@
 package com.fitchwiframe.fitchwiserver.service;
 
-import com.fitchwiframe.fitchwiserver.entity.Talk;
-import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
-import com.fitchwiframe.fitchwiserver.entity.TalkTag;
-import com.fitchwiframe.fitchwiserver.repository.TalkOpenedRepository;
-import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
-import com.fitchwiframe.fitchwiserver.repository.TalkTagRepository;
+import com.fitchwiframe.fitchwiserver.entity.*;
+import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.List;
 
 @Service
 @Log
@@ -26,6 +23,12 @@ public class TalkService {
 
     @Autowired
     private TalkTagRepository talkTagRepository;
+
+    @Autowired
+    private TalkJoinRepository talkJoinRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     public String addTalk(Talk newTalk, TalkTag talkTag , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
@@ -137,6 +140,45 @@ public class TalkService {
         } catch (Exception e) {
             e.printStackTrace();
             result = "fail";
+        }
+        return result;
+    }
+
+    public String insertTalkJoinInfo(TalkJoin talkJoin) {
+        log.info("talkService.insertTalkJoinInfo()");
+        String result = null;
+
+        try {
+            if (talkJoin.getTalkCode().getTalkType().equals("선착순")) {
+                talkJoin.setTalkJoinState("가입중");
+            }
+            talkJoinRepository.save(talkJoin);
+            result = "가입 신청 완료";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "가입 실패";
+        }
+        return result;
+    }
+
+    public Iterable<TalkJoin> getTalkJoinList() {
+        log.info("talkService.getTalkJoinList()");
+        Iterable<TalkJoin> talkJoinList = talkJoinRepository.findAll();
+        return talkJoinList;
+    }
+
+    public String deleteTalkJoinInfo(String memberEmail, long talkCode) {
+        String result = null;
+
+        try {
+            Member loginMember = memberRepository.findById(memberEmail).get();
+            Talk joinTalk = talkRepository.findById(talkCode).get();
+            TalkJoin joinTalkMember =  talkJoinRepository.findByMemberEmailAndTalkCode(loginMember, joinTalk);
+            talkJoinRepository.delete(joinTalkMember);
+            result = "모임 탈퇴 완료";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "모임 탈퇴 실패";
         }
         return result;
     }

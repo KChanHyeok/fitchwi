@@ -2,12 +2,14 @@ package com.fitchwiframe.fitchwiserver.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @Table(name = "talkJoin")
+@DynamicInsert
 public class TalkJoin {
     @Id
     private long talkJoinCode = System.currentTimeMillis();

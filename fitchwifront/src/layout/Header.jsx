@@ -53,7 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = ({ lstate, onLogout }) => {
-  const { logid, flink } = lstate;
+  const { logid, nickName, flink } = lstate;
   //로고 클릭(로그인 후 main, 로그인 전 home)
   const homeLink = logid === "" ? "/" : "/";
 
@@ -63,9 +63,12 @@ const Header = ({ lstate, onLogout }) => {
         <Stack direction="row" spacing={7} justifyContent="space-between"></Stack>
         <Box flex={1} p={2}>
           <Link to={homeLink} style={{ textDecoration: "none" }}>
-            <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
+            {/*Monday Feelings by Essentials Studio*/}
+            <img src="/images/logo.png" alt="logo" width="100"></img>
+
+            {/* <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
               FITCHWI
-            </Typography>
+            </Typography> */}
           </Link>
         </Box>
         <Box flex={4} p={2}>
@@ -88,7 +91,7 @@ const Header = ({ lstate, onLogout }) => {
         <Box flex={2} p={2}>
           <Link to={flink} style={{ textDecoration: "none" }}>
             <Button color="primary" variant="contained">
-              {logid !== "" ? `${logid}님` : "로그인"}
+              {logid !== "" ? `${nickName} 님` : "로그인"}
             </Button>
           </Link>
           {logid !== "" ? (

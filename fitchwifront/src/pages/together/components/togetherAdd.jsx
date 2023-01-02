@@ -34,7 +34,7 @@ const facilities = {
   facilitiesPrice: 0
 }
 
-const TogetherAdd = ({ data }) => {
+const TogetherAdd = ({ data, getAllTogetherList }) => {
   const nav = useNavigate();
   const location = useLocation();
   const [insertForm, setInsertForm] = useState({
@@ -63,7 +63,7 @@ const TogetherAdd = ({ data }) => {
   useEffect(() => {
     preview();
     try{
-      if(location) {
+      if(location.state.togetherInfo) {
         setInsertForm(location.state.togetherInfo)
       }
     }catch(e){
@@ -97,6 +97,7 @@ const TogetherAdd = ({ data }) => {
     .then((res)=> 
     {
       alert("개설완료")
+      getAllTogetherList();
       nav("/together")
     }
     )
@@ -122,6 +123,14 @@ const TogetherAdd = ({ data }) => {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+  const saveTogether = () => {
+    alert("저장되었습니다")
+  }
+
+  const updateTogether = () => {
+    alert("업데이트")
+  }
+  console.log(insertForm)
 
   return (
     <Stack height={800} flex={7} p={3}>
@@ -312,8 +321,8 @@ const TogetherAdd = ({ data }) => {
           value={insertForm.togetherTagContent || ''}
         />
         
-          {location.state ? <Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>:<Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>}
-        
+        {location.state ? <Button onClick={updateTogether} variant={"contained"} sx={{ mt: 2, mr:4 }} disabled>수정하기</Button>:<Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>}
+        <Button onClick={saveTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>저장하기</Button>
         <Button variant={"contained"} sx={{ mt: 2 }}>
           취소
         </Button>

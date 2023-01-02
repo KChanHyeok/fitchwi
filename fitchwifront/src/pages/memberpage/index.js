@@ -3,17 +3,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import MemberPage from "./components/MemberPage";
 import UpdateMember from "./components/UpdateMember";
-export default function MemberPageIndex({ onLogout }) {
+export default function MemberPageIndex({ onLogout, lstate }) {
   const location = useLocation();
   const nav = useNavigate();
   const [member, setMember] = useState({});
 
+  const { logid } = lstate;
   let pageOwner = "";
 
   if (location.state != null) {
     pageOwner = location.state.memberId;
   } else {
-    pageOwner = sessionStorage.getItem("id");
+    pageOwner = logid;
   }
 
   const getMemberInfo = useCallback(() => {
@@ -36,7 +37,7 @@ export default function MemberPageIndex({ onLogout }) {
       <Routes>
         <Route
           path="/"
-          element={<MemberPage member={member} onLogout={onLogout} pageOwner={pageOwner} />}
+          element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}
         ></Route>
 
         <Route path="/updateMember" element={<UpdateMember member={member} />}></Route>

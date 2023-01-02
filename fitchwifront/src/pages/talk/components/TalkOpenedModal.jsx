@@ -19,7 +19,7 @@ function TalkOpenedModal(props) {
     }
 
     return (
-        <div className="Modal" onClick={closeModal}>
+        <div className="Modal">
             <div className="modalBody" onClick={(e) => e.stopPropagation()}>
                 <button id="modalCloseBtn" onClick={closeModal}>
                     ✖
