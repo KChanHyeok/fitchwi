@@ -2,6 +2,7 @@ package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
 import com.fitchwiframe.fitchwiserver.entity.Noday;
+import com.fitchwiframe.fitchwiserver.entity.Report;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;

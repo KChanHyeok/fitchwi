@@ -1,9 +1,7 @@
 package com.fitchwiframe.fitchwiserver.service;
 
-import com.fitchwiframe.fitchwiserver.entity.Facilities;
-import com.fitchwiframe.fitchwiserver.entity.Noday;
-import com.fitchwiframe.fitchwiserver.repository.FacilitiesRepository;
-import com.fitchwiframe.fitchwiserver.repository.NodayRepository;
+import com.fitchwiframe.fitchwiserver.entity.*;
+import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Talk;
+import com.fitchwiframe.fitchwiserver.entity.TalkJoin;
 import com.fitchwiframe.fitchwiserver.entity.TalkOpened;
 import com.fitchwiframe.fitchwiserver.entity.TalkTag;
 import com.fitchwiframe.fitchwiserver.service.TalkService;
