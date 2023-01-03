@@ -8,17 +8,20 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
   let { togetherPageCode } = useParams();
   const [togetherInfo, setTogetherInfo] = useState(null);
   const [togetherJoinMember, setTogetherJoinMember] = useState(null);
+  const [togetherAppliedMember, setTogetherAppliedMember] = useState(null);
 
   useEffect(() => {
     try {
-      if (togetherList && togetherJoinList) {
+    //   if (!togetherList || !togetherJoinList) {
         setTogetherInfo(togetherList.filter((data) => data.togetherCode === togetherPageCode * 1)[0]);
         setTogetherJoinMember(
           togetherJoinList.filter((data) => data.togetherCode.togetherCode === togetherPageCode * 1 && data.togetherJoinState === "가입중")
-        );
-      }
+          );
+          setTogetherAppliedMember(togetherJoinList.filter((data)=> data.togetherCode.togetherCode === togetherPageCode * 1));
+
+    //   }
     } catch (e) {}
-  }, [togetherJoinList, togetherList, togetherPageCode]);
+  }, [togetherList, togetherJoinList, togetherPageCode]);
 
   const UserBox = styled(Box)({
     display: "flex",
@@ -26,7 +29,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
     gap: "10px",
     marginBottom: "20px",
   });
-
+  
   return (
     <Stack flex={4} p={2} direction="column" justifyContent="space-around" alignItems="stretch" spacing={2}>
       {!togetherInfo || !togetherJoinMember ? (
@@ -37,6 +40,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
             <h1>{togetherInfo.togetherTitle}</h1>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
                 <TogetherOpMenu
+                  togetherAppliedMember={togetherAppliedMember}
                   togetherJoinMember={togetherJoinMember}
                   refreshTogetherJoinList={refreshTogetherJoinList}
                   togetherInfo={togetherInfo}

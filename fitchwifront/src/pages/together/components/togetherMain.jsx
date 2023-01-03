@@ -1,8 +1,14 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Together from "./together";
+import { useEffect } from "react";
 
-const TogetherMain = ({togetherList}) => {
+const TogetherMain = ({togetherList, refreshTogetherList}) => {
+    useEffect(()=> {
+        refreshTogetherList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[togetherList])
+    
     return (
         <Box flex={4} p={2}>
             {togetherList.filter(data=> data.togetherState!=="삭제신청중").length === 0  ? <Typography textAlign="center" height={100} lineHeight={40}>
