@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Button, InputBase, Stack, styled, Toolbar } from "@mui/material";
 import { alpha, Box } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,7 +7,6 @@ import SearchIcon from "@mui/icons-material/Search";
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
   backgroundColor: "white",
-  // justifyContent: "space-between",
 });
 
 const Search = styled("div")(({ theme }) => ({
@@ -57,12 +56,20 @@ const Header = ({ lstate, onLogout }) => {
   //로고 클릭(로그인 후 main, 로그인 전 home)
   const homeLink = logid === "" ? "/" : "/";
 
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState();
+  const nav = useNavigate();
 
   const handleChange = (event) => {
     setSearchText(event.target.value);
   };
 
+  const onSearch = useCallback(
+    (e) => {
+      e.preventDefault();
+      nav(`/search/${searchText}`);
+    },
+    [searchText, nav]
+  );
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -78,24 +85,26 @@ const Header = ({ lstate, onLogout }) => {
           </Link>
         </Box>
         <Box flex={4} p={2}>
-          <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/share"}>
-            공유해요
-          </Link>
           <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/together"}>
             함께해요
           </Link>
-          <Link style={{ textDecoration: "none" }} to={"/talk"}>
+          <Link style={{ textDecoration: "none", marginRight: 100 }} to={"/talk"}>
             얘기해요
+          </Link>
+          <Link style={{ textDecoration: "none" }} to={"/share"}>
+            공유해요
           </Link>
         </Box>
         <Search sx={{ height: 36.5 }}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} onChange={handleChange} />
-          <Link to={`/search/${searchText}`} style={{ textDecoration: "none" }}>
-            <Button variant="error">검색</Button>
-          </Link>
+          <Box component="form" onSubmit={onSearch}>
+            <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} onChange={handleChange} />
+            <Button variant="error" onClick={onSearch}>
+              검색
+            </Button>
+          </Box>
         </Search>
         <Box flex={2} p={2}>
           <Link to={flink} style={{ textDecoration: "none" }}>

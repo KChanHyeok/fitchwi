@@ -17,24 +17,22 @@ function getStyles(name, tagForm, theme) {
 }
 
 export default function MultipleSelectChip({ tagForm, setTagForm }) {
-  // useEffect(() => {
-  //   getTagList();
-  // }, []);
-  // const getTagList = async () => {
-  //   await axios
-  //     .get("/getTagList")
-  //     .then((response) => {
-  //       setTagList(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  useEffect(() => {
+    getTagList();
+  }, []);
 
-  // const [tagList, setTagList] = useState([]);
+  const getTagList = async () => {
+    await axios
+      .get("/getTagList")
+      .then((response) => {
+        setTagList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  const [tagList, setTagList] = useState(["25", "셀피", "맛집투어", "연말모임", "전시", "인생네컷"]);
-
+  const [tagList, setTagList] = useState([]);
   const theme = useTheme();
 
   const handleChange = useCallback(
@@ -55,21 +53,25 @@ export default function MultipleSelectChip({ tagForm, setTagForm }) {
       alert("내용을 입력하세요!");
       return;
     }
-    setTagList(tagList.concat(tag));
+    axios
+      .get("/insertTag", {
+        params: {
+          tag: tag,
+        },
+      })
+      .then(() => getTagList());
     setTag("");
     setOpen(true);
-  }, [tag, tagList]);
-  const [open, setOpen] = React.useState(false);
+  }, [tag]);
+  const [open, setOpen] = useState(false);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
 
-  console.log(tagList);
   return (
     <div>
       <FormControl sx={{ mt: 2 }} fullWidth>
@@ -90,8 +92,8 @@ export default function MultipleSelectChip({ tagForm, setTagForm }) {
           )}
         >
           {tagList.map((name) => (
-            <MenuItem key={name} value={name} style={getStyles(name, tagForm, theme)}>
-              {name}
+            <MenuItem key={name.tagCode} value={name.tagContent} style={getStyles(name.tagContent, tagForm, theme)}>
+              {name.tagContent}
             </MenuItem>
           ))}
         </Select>
