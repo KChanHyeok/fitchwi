@@ -107,4 +107,10 @@ public class FeedController {
         return feedService.getFeedListBySearch(searchText);
     }
 
+    @GetMapping("/getFeedInfo")
+    private Feed getFeedInfo(@RequestParam Long feedCode){
+        log.info("getFeedInfo()");
+        return feedService.getFeedInfo(feedCode);
+    }
+
 }

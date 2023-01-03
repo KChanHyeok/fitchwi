@@ -65,6 +65,10 @@ const Header = ({ lstate, onLogout }) => {
 
   const onSearch = useCallback(
     (e) => {
+      if (!searchText || searchText.length < 2) {
+        alert("두 글자 이상 입력해 주세요.");
+        return;
+      }
       e.preventDefault();
       nav(`/search/${searchText}`);
     },

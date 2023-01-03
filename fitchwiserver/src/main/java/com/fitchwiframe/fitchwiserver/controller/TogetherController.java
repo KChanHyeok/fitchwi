@@ -92,6 +92,12 @@ public class TogetherController {
         return togetherService.refusalTogetherMemberState(togetherJoin);
     }
 
+    @GetMapping("/getTogetherJoinListByMember")
+    public List<TogetherJoin> getTogetherJoinListByMember(@RequestParam String memberEmail){
+        log.info("getTogetherJoinListByMember()");
+        return togetherService.getTogetherJoinListByMember(memberEmail);
+    }
+
 
 
 }

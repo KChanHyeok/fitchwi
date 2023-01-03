@@ -4,7 +4,7 @@ import TogetherMain from "./components/togetherMain";
 import { Box, Stack } from "@mui/material";
 import TogetherAdd from "./components/togetherAdd";
 import axios from "axios";
-import { Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import TogetherArt from "./components/togetherArt";
 import TogetherInfo from "./components/togetherInfo";
 import AddButton from "./components/common/addButton";
@@ -44,7 +44,7 @@ const Together = () => {
       })
       .catch((error) => console.log(error));
   };
-
+  
     return (
         <Box>
             <Stack direction="row" spacing={7} justifyContent="space-between">

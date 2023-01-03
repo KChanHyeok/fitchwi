@@ -348,4 +348,17 @@ public class FeedService {
         return result;
     }
 
+    public Feed getFeedInfo(Long feedCode) {
+        log.info("feedService.getFeedInfo()");
+        Feed feed = new Feed();
+
+        try {
+            feed = feedRepository.findById(feedCode).get();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return feed;
+
+    }
 }

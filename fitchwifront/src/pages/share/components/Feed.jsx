@@ -57,8 +57,6 @@ const Feed = ({ memberInfo, refreshFeed }) => {
     }
   }, [getFeedList, page]);
 
-  console.log(feed);
-
   return (
     <>
       <Box flex={4} p={2}>
