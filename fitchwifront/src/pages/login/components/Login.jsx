@@ -37,7 +37,6 @@ export default function Login({ sucLogin }) {
         console.log(res.data[0]);
         console.log(res.data[1]);
         console.log(res.data[2]);
-        console.log(res.data);
 
         switch (res.data[0]) {
           case "ok":
