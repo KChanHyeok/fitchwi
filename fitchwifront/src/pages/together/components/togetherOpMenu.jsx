@@ -51,7 +51,7 @@ const StyledMenu = styled((props) => (
 }));
 
 
-const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember}) => {
+const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList}) => {
 
     const style = {
         position: "absolute",
@@ -118,10 +118,17 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
     }
 
     const approval = (data) => {
-        axios.put("/approvalTogetherMemberState",data)
+        axios.put("/approvalTogetherMemberState", data)
         .then((res)=> {
-            console.log(res.data)
+            refreshTogetherJoinList();
             setOpenAppliedMember(false);
+        }).catch((error) => console.log(error))
+    }
+    const refusal = (data) => {
+        axios.put("/refusalTogetherMemberState", data)
+        .then((res) => {
+            refreshTogetherJoinList();
+            setOpenAppliedMember(false)
         }).catch((error) => console.log(error))
     }
 
@@ -252,7 +259,7 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                                     님
                                 </Typography>
                                 <Button onClick={()=> approval(data)} sx={{ml:2}}>승인</Button>
-                                <Button>거절</Button>
+                                <Button onClick={()=> refusal(data)}>거절</Button>
                             </UserBox>
                         ))}
                     </Box>

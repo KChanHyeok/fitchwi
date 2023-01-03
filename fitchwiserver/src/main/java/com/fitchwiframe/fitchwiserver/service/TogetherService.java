@@ -245,6 +245,18 @@ public class TogetherService {
         }
         return result;
     }
+    public String refusalTogetherMemberState(TogetherJoin togetherJoin) {
+        String result = null;
+        log.info("refusalTogetherMemberState()");
+        try {
+            togetherJoin.setTogetherJoinState("거절");
+            togetherJoinRepository.save(togetherJoin);
+            result ="성공";
+        }catch (Exception e) {
+            result ="실패";
+        }
+        return result;
+    }
 
     public List<Together> getTogetherListBySearch(String searchText) {
         log.info("getTogetherListBySearch()");

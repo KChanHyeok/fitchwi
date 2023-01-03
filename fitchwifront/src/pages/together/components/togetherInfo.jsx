@@ -118,7 +118,8 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
               </TogetherJoin>
             ) : togetherJoinList.filter(
                 (data) =>
-                  data.togetherCode.togetherCode === togetherPageCode * 1 && data.memberEmail.memberEmail === sessionStorage.getItem("id")
+                data.togetherCode.togetherCode === togetherPageCode * 1 &&
+                data.memberEmail.memberEmail === sessionStorage.getItem("id")
               ).length === 0 ? (
               <TogetherJoin
                 refreshTogetherJoinList={refreshTogetherJoinList}

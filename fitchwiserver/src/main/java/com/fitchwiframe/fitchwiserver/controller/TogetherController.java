@@ -86,6 +86,12 @@ public class TogetherController {
         return togetherService.approvalTogetherMemberState(togetherJoin);
     }
 
+    @PutMapping("/refusalTogetherMemberState")
+    public String refusalTogetherMemberState(@RequestBody TogetherJoin togetherJoin) {
+        log.info("refusalTogetherMemberState()");
+        return togetherService.refusalTogetherMemberState(togetherJoin);
+    }
+
 
 
 }
