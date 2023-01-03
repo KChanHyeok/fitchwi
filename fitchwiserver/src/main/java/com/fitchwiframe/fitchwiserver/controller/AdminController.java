@@ -1,7 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
-import com.fitchwiframe.fitchwiserver.entity.Noday;
 import com.fitchwiframe.fitchwiserver.entity.Report;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
 import lombok.extern.java.Log;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @Log
@@ -20,9 +18,14 @@ public class AdminController {
   private AdminService adminService;
 
   @GetMapping("/getAllFacilitiesList")
-  public Map<String, Object> getAllFacilitiesList(@RequestParam Integer pageNum) {
-    log.info("adminController.getAllFacilitiesList() pageNum = " + pageNum);
-    return adminService.getAllFacilitiesList(pageNum);
+  public Iterable<Facilities> getAllFacilitiesList() {
+    log.info("adminController.getAllFacilitiesList()");
+    return adminService.getAllFacilitiesList();
+  }
+  @GetMapping("/getFacilitiesList")
+  public Map<String, Object> getFacilitiesList(@RequestParam Integer pageNum) {
+    log.info("adminController.getFacilitiesList() pageNum = " + pageNum);
+    return adminService.getFacilitiesList(pageNum);
   }
 
   @PostMapping("/insertFacilities")

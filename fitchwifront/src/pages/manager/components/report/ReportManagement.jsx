@@ -76,7 +76,7 @@ export default function ReportManagement() {
     console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
       alert(result.data);
-      getReports();
+      getReports(rPageNum);
     });
   };
   return (

@@ -65,7 +65,7 @@ function App() {
     <>
       <Header lstate={lstate} onLogout={onLogout} />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/*" element={<Home />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/share/*" element={<Share />}></Route>
@@ -73,7 +73,10 @@ function App() {
         {/* <Route path="/talk/info" element={<TalkInfo />}></Route> */}
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
+        <Route
+          path="/memberpage/*"
+          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
+        ></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
       </Routes>
     </>
