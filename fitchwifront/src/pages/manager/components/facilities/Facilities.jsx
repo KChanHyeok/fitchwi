@@ -27,7 +27,7 @@ export default function Facilities() {
 
   const loadFacilities = (fPageNumInSessionStg) => {
     axios
-      .get("/getAllFacilitiesList", { params: { pageNum: fPageNumInSessionStg } })
+      .get("/getFacilitiesList", { params: { pageNum: fPageNumInSessionStg } })
       .then((result) => {
         const { facilitiesList, totalPage, pageNum } = result.data;
         setTotalFPage(totalPage);
@@ -53,7 +53,7 @@ export default function Facilities() {
   const deleteFacilities = (facilitiesCode) => {
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       alert(result.data);
-      loadFacilities();
+      loadFacilities(fPageNum);
     });
   };
   // console.log(totalFPage);

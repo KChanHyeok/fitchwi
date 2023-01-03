@@ -102,7 +102,7 @@ public class TogetherService {
         return togetherList;
     }
 
-    public String insertTogetherJoinInfo(TogetherJoinPayment togetherJoinPayment) {
+    public String insertTogetherPayJoinInfo(TogetherJoinPayment togetherJoinPayment) {
         String result = null;
         try {
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
@@ -123,13 +123,48 @@ public class TogetherService {
         return result;
     }
 
+    public String insertTogetherFreeJoinInfo(TogetherJoin togetherJoin) {
+        String result = null;
+        log.info("insertTogetherFreeJoinInfo()");
+        try {
+            if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
+                togetherJoin.setTogetherJoinState("가입중");
+            }
+            togetherJoinRepository.save(togetherJoin);
+            result = "가입성공";
+        }catch (Exception e) {
+            result = "가입실패";
+        }
+        return result;
+    }
+
     public Iterable<TogetherJoin> getAllTogetherJoinList() {
         log.info("getAllTogetherJoinList()");
         Iterable<TogetherJoin> togetherJoinList = togetherJoinRepository.findAll();
         return togetherJoinList;
     }
 
-    public String deleteTogetherJoin(String memberEmail, long togetherCode) {
+    public String deleteTogetherFreeJoinInfo(String memberEmail, long togetherCode) {
+        String result = null;
+        try {
+            Member loginMember = memberRepository.findById(memberEmail).get();
+            Together joinTogether = togetherRepository.findById(togetherCode).get();
+
+            TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
+
+            togetherJoinRepository.delete(joinTogetherMember);
+            result = "취소성공";
+        }catch (Exception e) {
+            result = "취소 실패";
+        }
+
+
+
+        return result;
+    }
+
+
+    public String deleteTogetherPayJoinInfo(String memberEmail, long togetherCode) {
         String result = null;
 
         RestTemplate restTemplate = new RestTemplate();
@@ -198,6 +233,30 @@ public class TogetherService {
         }
         return result;
     }
+    public String approvalTogetherMemberState(TogetherJoin togetherJoin) {
+        String result = null;
+        log.info("approvalTogetherMemberState()");
+        try {
+            togetherJoin.setTogetherJoinState("가입중");
+            togetherJoinRepository.save(togetherJoin);
+            result="성공";
+        }catch (Exception e) {
+            result="실패";
+        }
+        return result;
+    }
+    public String refusalTogetherMemberState(TogetherJoin togetherJoin) {
+        String result = null;
+        log.info("refusalTogetherMemberState()");
+        try {
+            togetherJoin.setTogetherJoinState("거절");
+            togetherJoinRepository.save(togetherJoin);
+            result ="성공";
+        }catch (Exception e) {
+            result ="실패";
+        }
+        return result;
+    }
 
     public List<Together> getTogetherListBySearch(String searchText) {
         log.info("getTogetherListBySearch()");
@@ -226,4 +285,5 @@ public class TogetherService {
         }
         return togetherList;
     }
+
 }

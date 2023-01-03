@@ -73,7 +73,10 @@ function App() {
         {/* <Route path="/talk/info" element={<TalkInfo />}></Route> */}
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
+        <Route
+          path="/memberpage/*"
+          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
+        ></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
       </Routes>
     </>

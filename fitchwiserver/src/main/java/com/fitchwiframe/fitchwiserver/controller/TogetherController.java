@@ -33,12 +33,18 @@ public class TogetherController {
         return togetherService.addTogetherOpened(togetherOpened, together, togetherTag, pic,session);
     }
 
-    @PostMapping("/insertTogetherJoinInfo")
-    public String insertTogetherJoinInfo(@RequestBody TogetherJoinPayment togetherJoinPayment) {
+    @PostMapping("/insertTogetherPayJoinInfo")
+    public String insertTogetherPayJoinInfo(@RequestBody TogetherJoinPayment togetherJoinPayment) {
         log.info("insertTogetherJoinInfo()");
         log.info("전달 받은 데이터"+togetherJoinPayment.getTogetherJoinCode());
         log.info("전달 받은 데이터"+togetherJoinPayment);
-        return togetherService.insertTogetherJoinInfo(togetherJoinPayment);
+        return togetherService.insertTogetherPayJoinInfo(togetherJoinPayment);
+    }
+
+    @PostMapping("/insertTogetherFreeJoinInfo")
+    public String insertTogetherFreeJoinInfo(@RequestBody TogetherJoin togetherJoin) {
+        log.info("insertTogetherFreeJoinInfo()");
+        return togetherService.insertTogetherFreeJoinInfo(togetherJoin);
     }
 
     @GetMapping("/getAllTogetherList")
@@ -51,22 +57,39 @@ public class TogetherController {
         log.info("getAllTogetherJoinList");
         return togetherService.getAllTogetherJoinList();
     }
-
-    @DeleteMapping("/deleteTogetherJoin")
-    public String deleteTogetherJoin(@RequestParam String memberEmail, long togetherCode) {
-        log.info("deleteTogetherJoin()");
-        return togetherService.deleteTogetherJoin(memberEmail, togetherCode);
+    @GetMapping("/getTogetherListBySearch")
+    public List<Together> getTogetherListBySearch(@RequestParam String searchText){
+        log.info("getTogetherListBySearch()");
+        return togetherService.getTogetherListBySearch(searchText);
     }
+
+    @DeleteMapping("/deleteTogetherPayJoinInfo")
+    public String deleteTogetherPayJoinInfo(@RequestParam String memberEmail, long togetherCode) {
+        log.info("deleteTogetherPayJoinInfo()");
+        return togetherService.deleteTogetherPayJoinInfo(memberEmail, togetherCode);
+    }
+
+    @DeleteMapping("/deleteTogetherFreeJoinInfo")
+    public String deleteTogetherFreeJoinInfo(@RequestParam String memberEmail, long togetherCode) {
+        log.info("deleteTogetherFreeJoinInfo()");
+        return togetherService.deleteTogetherFreeJoinInfo(memberEmail, togetherCode);
+    }
+
     @PutMapping("/deleteTogetherState")
     public String deleteTogetherState(@RequestBody Together together) {
         log.info("전달받은 together"+ together);
         return togetherService.deleteTogetherState(together);
     }
+    @PutMapping("/approvalTogetherMemberState")
+    public String approvalTogetherMemberState(@RequestBody TogetherJoin togetherJoin) {
+        log.info("approvalTogetherMemberState()");
+        return togetherService.approvalTogetherMemberState(togetherJoin);
+    }
 
-    @GetMapping("/getTogetherListBySearch")
-    public List<Together> getTogetherListBySearch(@RequestParam String searchText){
-        log.info("getTogetherListBySearch()");
-        return togetherService.getTogetherListBySearch(searchText);
+    @PutMapping("/refusalTogetherMemberState")
+    public String refusalTogetherMemberState(@RequestBody TogetherJoin togetherJoin) {
+        log.info("refusalTogetherMemberState()");
+        return togetherService.refusalTogetherMemberState(togetherJoin);
     }
 
     @GetMapping("/getTogetherJoinListByMember")
@@ -74,6 +97,7 @@ public class TogetherController {
         log.info("getTogetherJoinListByMember()");
         return togetherService.getTogetherJoinListByMember(memberEmail);
     }
+
 
 
 }

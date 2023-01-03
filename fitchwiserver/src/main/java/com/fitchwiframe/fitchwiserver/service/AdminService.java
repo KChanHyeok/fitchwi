@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -29,24 +28,32 @@ public class AdminService {
   @Autowired
   private ReportDetailRepository reportDetailRepository;
 
-  public Map<String, Object> getAllFacilitiesList(Integer pageNum) {
-    log.info("getAllFacilitiesList()");
-    if(pageNum ==null){
-      pageNum=1;
-    }
-    int listCount = 7;
-    Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"facilitiesCode");
-    Page<Facilities> result = facilitiesRepository.findAll(pageable);
-    List<Facilities> facilitiesList = result.getContent();
-    int totlaPage = result.getTotalPages();
+  public Iterable<Facilities> getAllFacilitiesList() {
+    log.info("adminController.getAllFacilitiesList()");
+    return facilitiesRepository.findAll();
+  }
 
-    Map<String, Object> mapToReturn  = new HashMap<>();
+
+  public Map<String, Object> getFacilitiesList(Integer pageNum) {
+   log.info("getFacilitiesList()");
+    if(pageNum ==null){
+    pageNum=1;
+  }
+  int listCount = 7;
+  Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"facilitiesCode");
+  Page<Facilities> result = facilitiesRepository.findAll(pageable);
+  List<Facilities> facilitiesList = result.getContent();
+  int totlaPage = result.getTotalPages();
+
+  Map<String, Object> mapToReturn  = new HashMap<>();
     mapToReturn.put("totalPage", totlaPage);
     mapToReturn.put("pageNum", pageNum);
     mapToReturn.put("facilitiesList", facilitiesList);
 
     return mapToReturn;
   }
+
+
 
   //시설 추가
   public String insertFacilities(Facilities facilities) {

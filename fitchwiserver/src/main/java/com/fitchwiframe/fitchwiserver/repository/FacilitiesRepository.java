@@ -7,7 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface FacilitiesRepository extends CrudRepository<Facilities, Long> {
 
-
-
   Page<Facilities> findAll(Pageable pageable);
 }
