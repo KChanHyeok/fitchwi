@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @Log
@@ -18,8 +20,9 @@ public class AdminController {
   private AdminService adminService;
 
   @GetMapping("/getAllFacilitiesList")
-  public Iterable<Facilities> getAllFacilitiesList() {
-    return adminService.getAllFacilitiesList();
+  public Map<String, Object> getAllFacilitiesList(@RequestParam Integer pageNum) {
+    log.info("adminController.getAllFacilitiesList() pageNum = " + pageNum);
+    return adminService.getAllFacilitiesList(pageNum);
   }
 
   @PostMapping("/insertFacilities")
@@ -77,13 +80,20 @@ public class AdminController {
   }
 
   @GetMapping("/getReports")
-  public List<Report> getReportList() {
-    log.info("adminController.getReportList()");
-    return adminService.getReportList();
+  public Map<String, Object> getReportList(@RequestParam Integer pageNum) {
+    log.info("adminController.getReportList() pageNum = "+pageNum);
+    return adminService.getReportList(pageNum);
   }
-@GetMapping("/restrictMember")
-  public String restrictMember(String restrictDate, String targetMemberEmail){
+
+  @GetMapping("/restrictMember")
+  public String restrictMember(String restrictDate, String targetMemberEmail) {
     log.info("adminController.restrictMember");
     return adminService.restrictMember(restrictDate, targetMemberEmail);
-}
+  }
+
+  @DeleteMapping("/deleteReport")
+  public String deleteReport(Long reportCode) {
+    log.info("adminController.deleteReport()");
+    return adminService.deleteReport(reportCode);
+  }
 }
