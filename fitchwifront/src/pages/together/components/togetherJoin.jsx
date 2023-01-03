@@ -2,15 +2,15 @@ import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/mater
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useState } from "react";
-import { useEffect } from "react";
 
 const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember}) => {
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp54355175");
 
-    useEffect(()=> {
-        getMemberInfo();
-    },[])
+    // useEffect(()=> {
+    //   getMemberInfo()
+    //   return() =>  getMemberInfo();
+    // })
     const getMemberInfo = () => {
         axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
@@ -26,9 +26,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         }
     })
     const [open, setOpen] = React.useState(false);
+    const [disabled,setdisabled] = useState(true)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [disabled,setdisabled] = useState(true)
 
     const style = {
         position: "absolute",
@@ -64,7 +64,13 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
-        requestPay()
+        getMemberInfo();
+
+        if(togetherInfo.togetherPrice===0) {
+            insertTogetherFreeJoinInfo();
+        }else {
+            requestPay()
+        }
       }
 
       const requestPay = () => {
@@ -90,7 +96,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 togetherJoinPayStatus: "",
             }
             
-            axios.post("/insertTogetherJoinInfo", insertPayForm)
+            axios.post("/insertTogetherPayJoinInfo", insertPayForm)
               .then((res) => {
                   setOpen(false);
                   alert(res.data);
@@ -103,26 +109,21 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         });
     }
 
+    const insertTogetherFreeJoinInfo = () => {
+        axios.post("/insertTogetherFreeJoinInfo", insertForm)
+              .then((res) => {
+                  setOpen(false);
+                  alert(res.data);
+                  refreshTogetherJoinList();
+              })
+              .catch((Error) => console.log(Error))
+    }
 
-      const deleteTogetherJoinInfo = (e) => {
+
+      const deleteTogetherPayJoinInfo = (e) => {
         e.preventDefault();
-            // axios({
-            //     url: "https://api.iamport.kr/users/getToken",
-            //     method: "post", // POST method
-            //     headers: { 
-            //         post: {
-            //             'Access-Control-Allow-Origin': '*',
-            //             "Content-Type": "application/json" 
-            //         }
-            //     }, // "Content-Type": "application/json"
-            //     data: {
-            //     imp_key: "5177641603268324", // REST API키
-            //     imp_secret: "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1" // REST API Secret
-            //     }
-            // }).then(res=>console.log(res.data))
 
-
-            axios.delete("/deleteTogetherJoin",{ params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
+            axios.delete("/deleteTogetherPayJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
                 setOpen(false);
                 alert(res.data);
@@ -130,7 +131,16 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             })
       }
 
-      console.log(togetherJoinMember)
+      const deleteTogetherFreeJoinInfo = (e) => {
+        e.preventDefault();
+            axios.delete("/deleteTogetherFreeJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
+            .then((res) => {
+                setOpen(false);
+                alert(res.data);
+                refreshTogetherJoinList();
+            })
+      }
+
     return (
         <>
             { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>:
@@ -155,9 +165,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     </UserBox>
                     <hr/>
                     <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
-                        신청을 취소하시겠습니까?
+                        환불 및 신청을 취소하시겠습니까?
                     </Typography>
-                    <Button variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >신청취소</Button>
+                    {togetherInfo.togetherPrice === 0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >신청취소</Button>:
+                    <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불신청취소</Button>}
                     <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 togetherJoinState==="가입중" ? <Box sx={style}>
@@ -169,9 +180,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 </UserBox>
                 <hr/>
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
-                    환불하시겠습니까?
+                    환불 및 취소 하시겠습니까?
                 </Typography>
-                <Button variant="contained" onClick={deleteTogetherJoinInfo} sx={{mr:3}} >환불하기</Button>
+                {togetherInfo.togetherPrice === 0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >취소하기</Button>:
+                <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불하기</Button>}
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 togetherPayState==="결제대기중" ? <Box sx={style}>
@@ -190,7 +202,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 </Typography>
 
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
-                    {togetherJoinMember.length===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
+                    {togetherJoinMember.length+1===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
                 <Button variant="contained" sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
                 <Button variant="contained" onClick={handleClose}>나가기</Button>

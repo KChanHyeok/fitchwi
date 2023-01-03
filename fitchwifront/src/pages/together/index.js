@@ -50,7 +50,7 @@ const Together = () => {
             <Stack direction="row" spacing={7} justifyContent="space-between">
                 <Sidebar pageurl={"together"}/>
                 <Routes>
-                    <Route path="/*" element={<TogetherMain togetherList={togetherList}/>}/>
+                    <Route path="/*" element={<TogetherMain refreshTogetherList={getAllTogetherList} togetherList={togetherList}/>}/>
                     <Route path="art" element={<TogetherArt />} />
                     <Route path="/:togetherPageCode" element={<TogetherInfo refreshTogetherJoinList={getAllTogetherJoinList} togetherJoinList={togetherJoinList} togetherList={togetherList} />} />
                     <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />}/>
