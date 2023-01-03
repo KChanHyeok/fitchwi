@@ -1,5 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
-import { Button, Divider, Menu, Modal, styled, Typography } from "@mui/material";
+import { Avatar, Button, Divider, Menu, Modal, styled, Typography } from "@mui/material";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +51,8 @@ const StyledMenu = styled((props) => (
 }));
 
 
-const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJoinList}) => {
+const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList}) => {
+
     const style = {
         position: "absolute",
         top: "50%",
@@ -64,14 +65,36 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
         p: 4,
       };
 
+      const UserBox = styled(Box)({
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        marginBottom: "20px",
+      });
+
     const nav = useNavigate();
 
     const [opendelete, setOpendelete] = React.useState(false);
-    const handleOpen = () => 
+    const [openJoinMember, setOpenJoinMember] = React.useState(false);
+    const [openAppliedMember, setOpenAppliedMember] = React.useState(false);
+
+    const deleteOpen = () => 
     {
-        setOpendelete(true)
         setAnchorEl(null)
-    };
+        setOpendelete(true)
+    }
+
+    const joinMemberOpen = () =>
+    {
+        setAnchorEl(null)
+        setOpenJoinMember(true)
+    }
+
+    const appliedMemberOpen = () => 
+    {
+        setAnchorEl(null)
+        setOpenAppliedMember(true)
+    }
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -82,18 +105,35 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
     {
       setAnchorEl(null);
       setOpendelete(false)
+      setOpenJoinMember(false)
+      setOpenAppliedMember(false)
     };
-    const deleteRequestTogether = () => {
+    const deleteRequestTogether = (e) => {
+        e.preventDefault();
         axios.put("/deleteTogetherState", togetherInfo).then((res)=> console.log(res.data)).catch((error) => console.log(error))
 
         alert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.")
         setOpendelete(false)
         nav("/together");
-        refreshTogetherJoinList();
+    }
+
+    const approval = (data) => {
+        axios.put("/approvalTogetherMemberState", data)
+        .then((res)=> {
+            refreshTogetherJoinList();
+            setOpenAppliedMember(false);
+        }).catch((error) => console.log(error))
+    }
+    const refusal = (data) => {
+        axios.put("/refusalTogetherMemberState", data)
+        .then((res) => {
+            refreshTogetherJoinList();
+            setOpenAppliedMember(false)
+        }).catch((error) => console.log(error))
     }
 
     return (
-        <div>
+        <>
             <Button
                 id="demo-customized-button"
                 aria-controls={open ? "demo-customized-menu" : undefined}
@@ -115,16 +155,16 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem disableRipple>
+                <MenuItem onClick={joinMemberOpen}>
                     <ManageAccountsIcon />
                     가입회원 관리
                 </MenuItem>
-                <MenuItem disableRipple>
-                        <FactCheckIcon />
-                        신청회원 확인
-                </MenuItem>
+                {togetherInfo.togetherType==="선착순" ? null:<MenuItem onClick={appliedMemberOpen}>
+                    <FactCheckIcon />
+                    신청회원 확인
+                </MenuItem>}
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleOpen}>
+                <MenuItem onClick={deleteOpen}>
                     <DeleteIcon />
                     삭제신청하기
                 </MenuItem>
@@ -137,7 +177,7 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
             >
-                <Box sx={style}>
+                <Box sx={style} component="form" onSubmit={deleteRequestTogether}>
                     <Typography variant="h4" component="div">
                         삭제하시겠습니까?
                     </Typography>
@@ -154,13 +194,78 @@ const TogetherSettingMenu = ({togetherInfo, togetherJoinMember, refreshTogetherJ
                         삭제 하시면 이러이러한 약관에 <br/>
                     </Typography>
                     <Typography component="div" sx={{mt:2}}>
-                        <Button sx={{mr:3}} onClick={deleteRequestTogether}>삭제신청하기</Button>
+                        <Button type="submit" sx={{mr:3}}>삭제신청하기</Button>
                         <Button onClick={handleClose}>취소하기</Button>
                     </Typography>
                 </Box>
-
             </Modal>
-        </div>
+
+            <Modal
+            open={openJoinMember}
+            onClose={handleClose}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography variant="h5" component="div">
+                        함께해요 참여자 명단
+                    </Typography>
+                    <hr/>
+                    <Box sx={{mt:5}}>
+                        {togetherJoinMember.length===0 ? <Typography>현재 참여중인 인원이 없습니다</Typography> :
+                        togetherJoinMember.map((data)=>(
+                            <UserBox key={data.togetherJoinCode}>
+                                <Avatar
+                                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                                    alt={"profil.memberImg"}
+                                    sx={{ width: 30, height: 30 }}
+                                />
+                                <Typography fontWeight={500} variant="span">
+                                    {!data.memberEmail.memberNickname
+                                    ? data.memberEmail.memberEmail
+                                    : data.memberEmail.memberNickname}
+                                    님
+                                </Typography>
+                            </UserBox>
+                        ))}
+                    </Box>
+                </Box>
+            </Modal>
+            
+            <Modal
+            open={openAppliedMember}
+            onClose={handleClose}
+            aria-labelledby="keep-mounted-modal-title"
+            aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography variant="h5" component="div">
+                        함께해요 신청자 명단
+                    </Typography>
+                    <hr/>
+                    <Box sx={{mt:5}}>
+                        {togetherAppliedMember.length===0 || togetherAppliedMember.filter(data=>data.togetherJoinState==="대기").length===0 ? <Typography>현재 신청중인 인원이 없습니다</Typography> :
+                        togetherAppliedMember.filter(data=>data.togetherJoinState!=="가입중").map((data)=>(
+                            <UserBox key={data.togetherJoinCode}>
+                                <Avatar
+                                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                                    alt={"profil.memberImg"}
+                                    sx={{ width: 30, height: 30 }}
+                                />
+                                <Typography fontWeight={500} variant="span">
+                                    {!data.memberEmail.memberNickname
+                                    ? data.memberEmail.memberEmail
+                                    : data.memberEmail.memberNickname}
+                                    님
+                                </Typography>
+                                <Button onClick={()=> approval(data)} sx={{ml:2}}>승인</Button>
+                                <Button onClick={()=> refusal(data)}>거절</Button>
+                            </UserBox>
+                        ))}
+                    </Box>
+                </Box>
+            </Modal>
+        </>
     )
 }
-export default TogetherSettingMenu;
+export default TogetherOpMenu;

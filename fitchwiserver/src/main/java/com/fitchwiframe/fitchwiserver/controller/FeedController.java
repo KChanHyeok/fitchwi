@@ -95,16 +95,22 @@ public class FeedController {
         return feedService.getTagList();
     }
 
+    @GetMapping("/insertTag")
+    private String insertTag(@RequestParam String tag){
+        log.info("insertTag()");
+        return feedService.insertTag(tag);
+    }
+
     @GetMapping("/getFeedListBySearch")
     private List<Feed> getFeedListBySearch(@RequestParam String searchText){
         log.info("getFeedListBySearch()");
         return feedService.getFeedListBySearch(searchText);
     }
 
-//    @GetMapping("/createFeed")
-//    private String createFeed(){
-//        log.info("createFeed()");
-//        return feedService.createFeed();
-//    }
+    @GetMapping("/getFeedInfo")
+    private Feed getFeedInfo(@RequestParam Long feedCode){
+        log.info("getFeedInfo()");
+        return feedService.getFeedInfo(feedCode);
+    }
 
 }

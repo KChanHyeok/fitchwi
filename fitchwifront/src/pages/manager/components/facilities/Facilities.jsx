@@ -2,6 +2,8 @@ import {
   Button,
   ButtonGroup,
   Container,
+  Pagination,
+  Stack,
   styled,
   Table,
   TableBody,
@@ -13,22 +15,34 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 export default function Facilities() {
   const [facilities, setFacilities] = useState([]);
-  console.log("상세");
-  useEffect(() => {
-    loadFacilities();
-    console.log("axios");
-  }, []);
 
-  const loadFacilities = () => {
-    axios.get("/getAllFacilitiesList").then((result) => {
-      console.log(result.data);
-      setFacilities(result.data);
+  const [pageNum, setPageNum] = useState(1);
+
+  const [totalPage, setTotalPage] = useState(0);
+  let pageNumInSessionStg = sessionStorage.getItem("pageNum");
+
+  const loadFacilities = (pageNumInSessionStg) => {
+    axios.get("/getFacilitiesList", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
+      const { facilitiesList, totalPage, pageNum } = result.data;
+      setTotalPage(totalPage);
+      setPageNum(pageNum);
+      setFacilities(facilitiesList);
+
+      sessionStorage.setItem("pageNum", pageNum);
     });
   };
+  useEffect(() => {
+    pageNumInSessionStg !== null ? loadFacilities(pageNumInSessionStg) : loadFacilities(1);
+    console.log("axios");
+  }, [pageNumInSessionStg]);
+
+  const handlepageNum = useCallback((value) => {
+    loadFacilities(value);
+  }, []);
 
   const BasicTableRow = styled(TableRow)({
     ":hover": { backgroundColor: `#ffd2e2`, transition: `0.3s` },
@@ -37,12 +51,19 @@ export default function Facilities() {
   const deleteFacilities = (facilitiesCode) => {
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       alert(result.data);
-      loadFacilities();
+      loadFacilities(pageNum);
     });
   };
+  // console.log(totalPage);
+  // console.log(pageNum);
 
   return (
-    <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 30 }}>
+    <Container
+      component="main"
+      style={{ maxWidth: "1200px" }}
+      align="center"
+      sx={{ margin: "auto", ml: 40 }}
+    >
       <Box>
         <Typography variant="h4">시설 관리</Typography>
 
@@ -67,7 +88,7 @@ export default function Facilities() {
             {facilities &&
               facilities.map((facilities, index) => (
                 <BasicTableRow key={index}>
-                  <TableCell align="center">{index + 1}</TableCell>
+                  <TableCell align="center">{facilities.facilitiesCode}</TableCell>
 
                   <TableCell align="center">
                     <Link
@@ -98,6 +119,15 @@ export default function Facilities() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Stack spacing={2} alignItems="center" mt={3}>
+        <Pagination
+          sx={{ mb: 10 }}
+          count={totalPage}
+          onChange={(e, value) => handlepageNum(value)}
+          color="primary"
+          page={pageNum}
+        />
+      </Stack>
     </Container>
   );
 }

@@ -13,6 +13,7 @@ import FeedTravel from "./components/FeedTravel";
 import FeedGrowth from "./components/FeedGrowth";
 import FeedGame from "./components/FeedGame";
 import FeedOther from "./components/FeedOther";
+import FeedInfo from "./common/FeedInfo";
 
 function Feedindex() {
   const [feedList, setFeedList] = useState([]);
@@ -54,6 +55,7 @@ function Feedindex() {
           <Route path="art" element={<FeedArt feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
           <Route path="game" element={<FeedGame feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
           <Route path="other" element={<FeedOther feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
+          <Route path="/:feedCode" element={<FeedInfo memberInfo={profil} refreshFeed={getAllFeedList} />} />
         </Routes>
         <Rightbar />
       </Stack>

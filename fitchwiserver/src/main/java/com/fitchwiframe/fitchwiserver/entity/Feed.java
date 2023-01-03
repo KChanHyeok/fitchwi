@@ -30,6 +30,9 @@ public class Feed {
     @Column(nullable = false, length = 2000)
     private String feedContent;
 
+    @Column(nullable = false, length = 50)
+    private String feedTag;
+
     @Transient
     private List<FeedFile> ffList;
 
@@ -39,10 +42,9 @@ public class Feed {
     @Transient
     private List<FeedLike> flList;
 
-    @Transient
-    private List<FeedTag> ftList;
+//    @Transient
+//    private List<FeedTag> ftList;
 
-    @Column(nullable = false, length = 50)
-    private String feedTag;
+
 
 }

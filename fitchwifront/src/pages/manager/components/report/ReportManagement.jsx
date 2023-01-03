@@ -11,7 +11,9 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -27,39 +29,56 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 export default function ReportManagement() {
   const [reportList, setReportList] = useState([]);
-  console.log("상세");
-  useEffect(() => {
-    getReports();
-    console.log("axios");
-  }, []);
 
-  const getReports = () => {
-    axios.get("/getReports").then((result) => {
+  const [pageNum, setPageNum] = useState(1);
+
+  const [totalPage, setTotalPage] = useState(0);
+
+  let pageNumInSessionStg = sessionStorage.getItem("pageNum");
+
+  useEffect(() => {
+    pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
+    console.log("axios");
+  }, [pageNumInSessionStg]);
+
+  const getReports = (pageNumInSessionStg) => {
+    axios.get("/getReports", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
+      const { reportList, totalPage, pageNum } = result.data;
       console.log(result.data);
-      setReportList(result.data);
+      setReportList(reportList);
+      setPageNum(pageNum);
+      setTotalPage(totalPage);
+      sessionStorage.setItem("pageNum", pageNum);
     });
   };
-
+  const handlepageNum = useCallback((value) => {
+    getReports(value);
+  }, []);
   const onRistrict = (period, memberEmail) => {
-    let today = moment().format("YYYY-MM-DD");
+    console.log(period);
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
-    // restrictDate.format("YYYY-MM-DD");
-    console.log(today);
-    console.log(restrictDate);
-    // console.log(restrictDate.format("YYYY-MM-DD"));
+
     axios
       .get("/restrictMember", {
         params: { restrictDate: restrictDate, targetMemberEmail: memberEmail },
       })
       .then((result) => console.log(result));
   };
-  const [restrictDate, setRestrictDate] = useState("2");
-  useEffect(() => {});
+
+  const [restrictDateMap, setRestrictDateMap] = useState(new Map());
 
   const onSelectDate = useCallback((e) => {
-    console.log(e);
-    setRestrictDate(e.target.value);
+    console.log(e.target.value);
+    setRestrictDateMap((prev) => new Map(prev).set(e.target.name, e.target.value));
   }, []);
+
+  const deleteReport = (reportCode) => {
+    console.log(reportCode);
+    axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
+      alert(result.data);
+      getReports(pageNum);
+    });
+  };
   return (
     <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 40 }}>
       <Box sx={{ mb: 5 }}>
@@ -102,43 +121,57 @@ export default function ReportManagement() {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography align="center" sx={{ width: "100%" }}>
-                  {report.reportCode}
-                </Typography>
-
-                {report.reportTarget === 0 ? (
-                  <Link
-                    to={`/${report.reportCategory}`}
-                    state={{ memberId: report.memberEmail.memberEmail }}
-                  >
-                    <Typography align="center" sx={{ width: "100%" }}>
-                      {report.reportCategory}
-                    </Typography>
-                  </Link>
-                ) : (
-                  <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
-                    <Typography align="center" sx={{ width: "100%" }}>
-                      {report.reportCategory}
-                    </Typography>
-                  </Link>
-                )}
-
-                <Typography align="center" sx={{ width: "100%" }}>
-                  {report.memberEmail.memberEmail}
-                </Typography>
-
-                <Typography align="center" sx={{ width: "100%" }}>
-                  {report.reportDetailList.length}
-                </Typography>
+                <Grid container>
+                  <Grid item xs={3}>
+                    {" "}
+                    {report.reportCode}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {" "}
+                    {report.reportTarget === 0 ? (
+                      <Link
+                        to={`/${report.reportCategory}`}
+                        state={{ memberId: report.memberEmail.memberEmail }}
+                      >
+                        <Typography align="center" sx={{ width: "100%" }}>
+                          {report.reportCategory}
+                        </Typography>
+                      </Link>
+                    ) : (
+                      <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
+                        <Typography align="center" sx={{ width: "100%" }}>
+                          {report.reportCategory}
+                        </Typography>
+                      </Link>
+                    )}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {" "}
+                    <Link
+                      to={`/${report.reportCategory}`}
+                      state={{ memberId: report.memberEmail.memberEmail }}
+                    >
+                      <Typography align="center" sx={{ width: "100%" }}>
+                        {report.memberEmail.memberEmail}
+                      </Typography>
+                    </Link>{" "}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {" "}
+                    {report.reportDetailList.length}
+                  </Grid>
+                </Grid>
               </AccordionSummary>
 
               <AccordionDetails>
                 <TableContainer component="main">
                   <Table sx={{ width: "100%" }} aria-label="simple table">
-                    <TableHead style={{ borderBottom: "2px solid black", backgroundColor: "#ddd" }}>
+                    <TableHead
+                      style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
+                    >
                       <TableRow>
                         <TableCell align="center">신고일시</TableCell>
-                        <TableCell align="center">신고자</TableCell>
+                        <TableCell align="center">신고한 유저</TableCell>
                         <TableCell align="center">신고 내용</TableCell>
                       </TableRow>
                     </TableHead>
@@ -146,7 +179,7 @@ export default function ReportManagement() {
                       {report.reportDetailList.map((reportDetail) => (
                         <TableRow
                           key={reportDetail.reportDetailCode}
-                          sx={{ backgroundColor: "#eee" }}
+                          sx={{ backgroundColor: "#f2f2f2" }}
                         >
                           <TableCell align="center">{reportDetail.reportDetailDate}</TableCell>
                           <TableCell align="center">
@@ -165,9 +198,12 @@ export default function ReportManagement() {
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={restrictDate}
+                        name={report.reportCode + ""}
+                        // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
                         label="restrictDate"
+                        defaultValue={2}
                         onChange={(e) => onSelectDate(e)}
+                        size="small"
                       >
                         <MenuItem value={2}>1일</MenuItem>
                         <MenuItem value={8}>7일</MenuItem>
@@ -176,16 +212,21 @@ export default function ReportManagement() {
                         <MenuItem value={181}>180일</MenuItem>
                         <MenuItem value={361}>360일</MenuItem>
                       </Select>
-                      <Button
-                        onClick={() => onRistrict(restrictDate, report.memberEmail.memberEmail)}
-                      >
-                        제한하기
-                      </Button>
                     </FormControl>
+                    <Button
+                      onClick={() =>
+                        onRistrict(
+                          restrictDateMap.get(report.reportCode + ""),
+                          report.memberEmail.memberEmail
+                        )
+                      }
+                    >
+                      제한하기
+                    </Button>
                   </Grid>
                   <Grid item xs={6}>
                     <ButtonGroup>
-                      <Button>신고내역 삭제</Button>
+                      <Button onClick={() => deleteReport(report.reportCode)}>신고내역 삭제</Button>
                       <Button>신고 대상 삭제</Button>
                     </ButtonGroup>
                   </Grid>
@@ -195,6 +236,15 @@ export default function ReportManagement() {
             <Divider variant="middle" component={"li"} style={{ listStyle: "none" }} />
           </div>
         ))}
+      <Stack spacing={2} alignItems="center" mt={3}>
+        <Pagination
+          sx={{ mb: 10 }}
+          count={totalPage}
+          onChange={(e, value) => handlepageNum(value)}
+          color="primary"
+          page={pageNum}
+        />
+      </Stack>
     </Container>
   );
 }

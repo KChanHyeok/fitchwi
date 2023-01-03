@@ -11,7 +11,7 @@ import java.util.List;
 public interface FeedRepository extends CrudRepository<Feed, Long> {
     List<Feed> findAllByOrderByFeedDateDesc();
 
-    List<Feed> findAllByMemberEmail(Member member);
+//    List<Feed> findAllByMemberEmail(Member member);
 
     List<Feed> findAll(Pageable feedPageable);
 
@@ -19,4 +19,7 @@ public interface FeedRepository extends CrudRepository<Feed, Long> {
 
     List<Feed> findByFeedTagLike(String searchText);
 
+
+
+    List<Feed> findAllByMemberEmailOrderByFeedDateDesc(Member member);
 }

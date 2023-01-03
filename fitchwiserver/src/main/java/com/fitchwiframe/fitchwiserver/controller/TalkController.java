@@ -93,4 +93,10 @@ public class TalkController {
         log.info("getTalkListBySearch()");
         return talkService.getTalkListBySearch(searchText);
     }
+
+    @GetMapping("/getTalkJoinListByMember")
+    public List<TalkJoin> getTalkJoinListByMember(@RequestParam String memberEmail){
+        log.info("getTalkJoinListByMember()");
+        return talkService.getTalkJoinListByMember(memberEmail);
+    }
 }

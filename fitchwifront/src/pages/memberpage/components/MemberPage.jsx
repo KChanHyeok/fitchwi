@@ -12,12 +12,10 @@ import {
   Grid,
   ImageList,
   ImageListItem,
-  ImageListItemBar,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Paper,
   styled,
   Typography,
   // ImageList,
@@ -36,7 +34,9 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
   const getAllFeedList = useCallback(() => {
-    axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
+    if (member.memberEmail !== undefined) {
+      axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
+    }
   }, [member]);
   const { logid } = lstate;
   const {
@@ -68,11 +68,14 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const [followList, setFollowList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
+
   const getFollow = useCallback(() => {
-    axios.get("/getFollowList", { params: { pageOwner: memberEmail } }).then((res) => {
-      setFollowList(() => res.data.follow);
-      setFollowerList(() => res.data.follower);
-    });
+    if (memberEmail !== undefined) {
+      axios.get("/getFollowList", { params: { pageOwner: memberEmail } }).then((res) => {
+        setFollowList(() => res.data.follow);
+        setFollowerList(() => res.data.follower);
+      });
+    }
   }, [memberEmail]);
 
   useEffect(() => {
@@ -273,7 +276,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                         ))}
                     </div>
                   </Grid>
-                  {followList && (
+                  {followList !== undefined ? (
                     <Grid item xs={4}>
                       <FollowMemberListModal lstate={lstate} followList={followerList}>
                         팔로워 {followerList.length}
@@ -292,45 +295,27 @@ export default function MemberPage({ member, onLogout, lstate }) {
                         />
                       )}
                     </Grid>
-                  )}
+                  ) : null}
                 </Grid>
               </CardContent>
             </Card>
             <Box sx={{ mt: 5, width: 600, height: 400, overflowY: "scroll" }}>
-              {
-                <ImageList variant="masonry" cols={3} gap={10}>
-                  {feedList !== null ? (
-                    feedList.map((feed, index) =>
-                      feed.ffList.length !== 0 ? (
-                        <ImageListItem key={feed.ffList[0].feedFileCode}>
-                          <img
-                            src={`/images/${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format`}
-                            // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                            alt={feed.ffList[0].feedFileImg}
-                            loading="lazy"
-                          />
-                          <ImageListItemBar
-                            title={feed.feedContent}
-                            subtitle={feed.feedDate}
-                            position="below"
-                          />
-                        </ImageListItem>
-                      ) : (
-                        <ImageListItem key={index}>
-                          <Paper variant="outlined" style={{ width: 161, height: 215 }} />
-                          <ImageListItemBar
-                            title={feed.feedContent}
-                            subtitle={feed.feedDate}
-                            position="below"
-                          />
-                        </ImageListItem>
-                      )
-                    )
-                  ) : (
-                    <Typography>작성한 피드가 없어요</Typography>
-                  )}
-                </ImageList>
-              }
+              <ImageList variant="masonry" cols={3} gap={1}>
+                {feedList !== undefined ? (
+                  feedList.map((feed, index) => (
+                    <ImageListItem key={feed.ffList[0].feedFileCode}>
+                      <img
+                        src={`/images/${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format`}
+                        srcSet={`${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        alt={feed.ffList[0].feedFileImg}
+                        loading="lazy"
+                      />
+                    </ImageListItem>
+                  ))
+                ) : (
+                  <Typography>작성한 피드가 없어요</Typography>
+                )}
+              </ImageList>
             </Box>
           </Grid>
         </Grid>

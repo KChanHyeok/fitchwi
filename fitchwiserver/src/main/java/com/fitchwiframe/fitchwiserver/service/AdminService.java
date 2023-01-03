@@ -4,12 +4,14 @@ import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @Log
@@ -27,10 +29,31 @@ public class AdminService {
   private ReportDetailRepository reportDetailRepository;
 
   public Iterable<Facilities> getAllFacilitiesList() {
-    log.info("getAllFacilitiesList()");
-    Iterable<Facilities> fList = facilitiesRepository.findAll();
-    return fList;
+    log.info("adminController.getAllFacilitiesList()");
+    return facilitiesRepository.findAll();
   }
+
+
+  public Map<String, Object> getFacilitiesList(Integer pageNum) {
+   log.info("getFacilitiesList()");
+    if(pageNum ==null){
+    pageNum=1;
+  }
+  int listCount = 7;
+  Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"facilitiesCode");
+  Page<Facilities> result = facilitiesRepository.findAll(pageable);
+  List<Facilities> facilitiesList = result.getContent();
+  int totlaPage = result.getTotalPages();
+
+  Map<String, Object> mapToReturn  = new HashMap<>();
+    mapToReturn.put("totalPage", totlaPage);
+    mapToReturn.put("pageNum", pageNum);
+    mapToReturn.put("facilitiesList", facilitiesList);
+
+    return mapToReturn;
+  }
+
+
 
   //시설 추가
   public String insertFacilities(Facilities facilities) {
@@ -38,6 +61,17 @@ public class AdminService {
     String result = "fail";
     try {
       facilitiesRepository.save(facilities);
+
+//      for(int i =1;i<=50;i++){
+//        Facilities f = new Facilities();
+//        f.setFacilitiesName("시설명"+i);
+//        f.setFacilitiesGrade("기본"+i);
+//        f.setFacilitiesPhone("101010010");
+//         f.setFacilitiesManager("이름"+i);
+//         f.setFacilitiesPrice(i + 10000);
+//         f.setFacilitiesPosition("위치"+i);
+//         facilitiesRepository.save(f);
+//      }
       result = "ok";
 
     } catch (Exception e) {
@@ -169,6 +203,29 @@ public class AdminService {
         result="ok";
       }
 
+//
+//      for(int i=1;i<=45;i++){
+//        if(i==43){
+//          break;
+//        }
+//        Report report1 = new Report();
+//        report1.setMemberEmail(memberRepository.findById("test"+i+"@test.com").get());
+//        report1.setReportCategory("memberpage");
+//        report1.setReportTarget(0L);
+//        reportRepository.save(report1);
+//
+//        ReportDetail reportDetail = new ReportDetail();
+//        reportDetail.setReportCode(report1);
+//        reportDetail.setMemberEmail(memberRepository.findById("test"+(i+1)+"@test.com").get());
+//        reportDetail.setReportDetailContent("내용"+i);
+//        reportDetail.setReportDetailDate("2023-01-01");
+//        reportDetailRepository.save(reportDetail);
+//      }
+
+
+
+
+
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -222,11 +279,30 @@ public class AdminService {
   }
 
   //신고 목록 조회
-  public List<Report> getReportList() {
+  public Map<String, Object> getReportList(Integer pageNum) {
     log.info("adminService.getReportList()");
+
+
+
+    if(pageNum ==null){
+      pageNum=1;
+    }
+    int listCount = 7;
+    Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"reportCode");
+    Page<Report> result = reportRepository.findAll(pageable);
+    List<Report> reportList = result.getContent();
+    int totlaPage = result.getTotalPages();
+
+
+    Map<String, Object> mapToReturn  = new HashMap<>();
+    mapToReturn.put("totalPage", totlaPage);
+    mapToReturn.put("pageNum", pageNum);
+
+
+
     List<Report> reportWithDetailList = new ArrayList<>();
     try {
-      List<Report> reportList = reportRepository.findAll();
+     // List<Report> reportList = reportRepository.findAll();
 
       for (Report report : reportList) {
         report.getMemberEmail().setMemberPwd("");
@@ -241,8 +317,8 @@ public class AdminService {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
-    return reportWithDetailList;
+    mapToReturn.put("reportList", reportList);
+    return mapToReturn;
   }
 
   public String restrictMember(String restrictDate, String targetMemberEmail) {
@@ -261,6 +337,22 @@ public class AdminService {
     }
     return result;
 
+  }
+@Transactional
+  public String deleteReport(Long reportCode) {
+    String result = "fail";
+    log.info("adminService.deleteReport()");
+    try{
+      Report reportToDelete = reportRepository.findById(reportCode).get();
+
+      reportDetailRepository.deleteAllByReportCode(reportToDelete);
+
+      reportRepository.delete(reportToDelete);
+      result ="ok";
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return result;
   }
 
 

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
 
@@ -25,16 +25,16 @@ const UserBox = styled(Box)({
 });
 
 const facilities = {
-  facilitiesCode: 0,
+  facilitiesCode: null,
   facilitiesGrade: "", 
   facilitiesManager: "" ,
   facilitiesName: "",
   facilitiesPhone: "",
   facilitiesPosition: "",
-  facilitiesPrice: 0
+  facilitiesPrice: null
 }
 
-const TogetherAdd = ({ data, getAllTogetherList }) => {
+const TogetherAdd = ({ data, refreshTogetherList }) => {
   const nav = useNavigate();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
@@ -61,7 +61,6 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
   
   useEffect(() => {
     preview();
-
     return () => preview();
   });
   
@@ -81,6 +80,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
   }, []);
 
   const sendTogether = (e) => {
+    e.preventDefault();
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
     formDate.append("uploadImage", fileForm[0]);
 
@@ -88,14 +88,13 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
       headers: { "Content-Type": "multipart/form-data" },
     };
     axios.post("/addTogether",formDate, config)
-    .then((res)=> 
-    {
-      alert("개설완료")
-      getAllTogetherList();
-      nav("/together")
-    }
-    )
-    .catch((error) => console.log(error))
+    .then((res)=> {
+      alert(res.data);
+      nav("/together");
+      refreshTogetherList(); 
+    }).catch((error) => {
+      console.log(error)
+    })
 
   };
 
@@ -123,7 +122,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
 
   return (
     <Stack height={800} flex={7} p={3}>
-      <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
+      <Box bgcolor="white" p={3} sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
@@ -142,6 +141,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherTitle}
           onChange={handleChange}
           name="togetherTitle"
+          required
         />
         <TextField
           fullWidth
@@ -154,6 +154,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           name="togetherDate"
           focused
           color="grey"
+          required
         />
         <TextField
           fullWidth
@@ -164,6 +165,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherMax}
           onChange={handleChange}
           name="togetherMax"
+          required
         />
         <FormControl sx={{ mt: 2 }} fullWidth>
           <InputLabel>모임카테고리선정</InputLabel>
@@ -174,6 +176,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
             name="togetherCategory"
             onChange={handleChange}
             label="모임카테고리선정"
+            required
           >
             <MenuItem value="문화·예술">문화·예술</MenuItem>
             <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
@@ -195,6 +198,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           onChange={handleChange}
           name="togetherRecruitStartDate"
           focused
+          required
           color="grey"
         />
         <TextField
@@ -208,6 +212,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherRecruitEndDate}
           name="togetherRecruitEndDate"
           id="fullWidth"
+          required
         />
         <FormControl sx={{ mt: 2 }} fullWidth>
           <InputLabel>시설이용료</InputLabel>
@@ -218,6 +223,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
             name="facilitiesCode"
             onChange={handleChange}
             label="시설이용료"
+            required
           >
             <MenuItem value={facilities}>
               <em>-</em>
@@ -244,6 +250,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherPosition}
           onChange={handleChange}
           name="togetherPosition"
+          required
         />
         <TextField
           fullWidth
@@ -254,6 +261,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherPrice}
           name="togetherPrice"
           onChange={handleChange}
+          required
         />
         <FormControl sx={{ mt: 2 }} fullWidth>
           <InputLabel>가입유형</InputLabel>
@@ -264,6 +272,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
             name="togetherType"
             onChange={handleChange}
             label="가입유형"
+            required
           >
             <MenuItem value="선착순">선착순</MenuItem>
             <MenuItem value="승인제">승인제</MenuItem>
@@ -278,6 +287,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           id="fullWidth"
           color="grey"
           onChange={onLoadFile}
+          required
         />
         <div style={imgBoxStyle} className="img_box">
           <img src="" alt="" />
@@ -299,6 +309,7 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           value={insertForm.togetherContent}
           name="togetherContent"
           onChange={handleChange}
+          required
         />
         <TextField
           fullWidth
@@ -307,11 +318,12 @@ const TogetherAdd = ({ data, getAllTogetherList }) => {
           id="fullWidth"
           name="togetherTagContent"
           onChange={handleChange}
-          value={insertForm.togetherTagContent || ''}
+          required
+          value={insertForm.togetherTagContent}
         />
         
-        <Button onClick={sendTogether} variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
-        <Button variant={"contained"} sx={{ mt: 2 }}>
+        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
+        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2 }}>
           취소
         </Button>
       </Box>

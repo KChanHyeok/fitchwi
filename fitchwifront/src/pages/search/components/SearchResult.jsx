@@ -1,22 +1,47 @@
-import { Button, ButtonGroup, Divider, IconButton, InputBase, Paper } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Chip,
+  Grid,
+  ImageList,
+  ImageListItem,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import CancelIcon from "@mui/icons-material/Cancel";
-
+import { Link, useParams } from "react-router-dom";
+import { People, LocationOn, SportsKabaddi, Groups, PermContactCalendar, AssignmentTurnedIn, DateRange } from "@mui/icons-material";
+import moment from "moment";
 const SearchResult = () => {
   let { searchText } = useParams();
-  console.log(searchText);
-  //   const [joinList, setJoinList] = useState();
+
   const [togetherList, setTogetherList] = useState([]);
   const [feedList, setFeedList] = useState([]);
+  const [talkList, setTalkList] = useState([]);
+  const [type, setType] = useState(1);
+
+  function getToday(time) {
+    var date = new Date(time);
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + month + day;
+  }
+
+  let nowTime = (time) => moment(getToday(time)).fromNow();
 
   const searchResult = useCallback(() => {
     axios
       .get("/getTogetherListBySearch", { params: { searchText: searchText } })
       .then((response) => {
+        console.log(response.data);
         setTogetherList(response.data);
       })
       .catch((error) => console.log(error));
@@ -24,7 +49,16 @@ const SearchResult = () => {
     axios
       .get("/getFeedListBySearch", { params: { searchText: searchText } })
       .then((response) => {
+        console.log(response.data);
         setFeedList(response.data);
+      })
+      .catch((error) => console.log(error));
+
+    axios
+      .get("/getTalkListBySearch", { params: { searchText: searchText } })
+      .then((response) => {
+        console.log(response.data);
+        setTalkList(response.data);
       })
       .catch((error) => console.log(error));
   }, [searchText]);
@@ -33,39 +67,178 @@ const SearchResult = () => {
     searchResult();
   }, [searchResult]);
 
-  console.log(togetherList);
-  console.log(feedList);
   return (
     <>
       <Box>
-        <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
-          {/* <Paper component="form" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600, marginTop: 5, marginBottom: 10 }}>
-            <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
-            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Google Maps" inputProps={{ "aria-label": "search google maps" }} />
-            <IconButton type="button" sx={{ p: "10px" }}>
-              <CancelIcon />
-            </IconButton>
-          </Paper> */}
+        <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" mt={4}>
+          <Typography variant="h2">{searchText} 검색결과</Typography>
           <Box width={1000} mt={4}>
             <ButtonGroup variant="outlined" aria-label="outlined button group" size="large" fullWidth sx={{ height: 70 }}>
-              <Button>함께해요</Button>
-              <Button>얘기해요</Button>
-              <Button>공유해요</Button>
+              {type === 1 ? (
+                <Button variant="contained">
+                  <SportsKabaddi sx={{ mr: 1 }} />
+                  함께해요
+                </Button>
+              ) : (
+                <Button onClick={() => setType(1)}>
+                  <SportsKabaddi sx={{ mr: 1 }} />
+                  함께해요
+                </Button>
+              )}
+              {type === 2 ? (
+                <Button variant="contained">
+                  <Groups sx={{ mr: 1 }} />
+                  얘기해요
+                </Button>
+              ) : (
+                <Button onClick={() => setType(2)}>
+                  <Groups sx={{ mr: 1 }} />
+                  얘기해요
+                </Button>
+              )}
+              {type === 3 ? (
+                <Button variant="contained">
+                  <PermContactCalendar sx={{ mr: 1 }} />
+                  공유해요
+                </Button>
+              ) : (
+                <Button onClick={() => setType(3)}>
+                  <PermContactCalendar sx={{ mr: 1 }} />
+                  공유해요
+                </Button>
+              )}
             </ButtonGroup>
-            <Box height={400} border={1} borderRadius={1}>
-              {togetherList.length === 0 ? (
-                <div>함께해요 검색결과가 없습니다</div>
-              ) : (
-                togetherList.map((item, index) => <li key={index}>{item.TogetherTitle}</li>)
-              )}
-              <Divider />
-              {feedList.length === 0 ? (
-                <div>공유해요 검색결과가 없습니다</div>
-              ) : (
-                feedList.map((item, index) => <li key={index}>{item.feedContent}</li>)
-              )}
+
+            <Box height={800} border={1} borderRadius={1} mt={2} sx={{ overflowY: "scroll" }}>
+              {type === 1 &&
+                (togetherList.length === 0 ? (
+                  <div>함께해요 검색결과가 없습니다</div>
+                ) : (
+                  togetherList.map((item, index) => (
+                    <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={index}>
+                      <Card sx={{ maxWidth: 1000, borderBottom: 1 }}>
+                        <CardActionArea>
+                          <CardMedia component="img" height="200" src={`/images/${item.togetherSaveimg}`} alt="green iguana" />
+                          <CardContent>
+                            <Chip
+                              color="primary"
+                              variant="outlined"
+                              label={item.togetherCategory}
+                              style={{
+                                fontSize: 10,
+                                marginBottom: 5,
+                              }}
+                            />
+                            <Typography gutterBottom variant="h4" component="div" mt={1}>
+                              {item.togetherTitle}
+                            </Typography>
+                            <Typography variant="body1" component="div">
+                              {item.togetherContent}
+                            </Typography>
+                            <Box display="flex" alignItems="center">
+                              <LocationOn />
+                              <Typography variant="subtitle1" ml={1} mr={2}>
+                                {item.togetherPosition} · {item.togetherDate}
+                              </Typography>
+                              <People />
+                              <Typography variant="subtitle1" ml={1}>
+                                1/{item.togetherMax}
+                              </Typography>
+                            </Box>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Link>
+                  ))
+                ))}
+
+              {type === 2 &&
+                (talkList.length === 0 ? (
+                  <div>얘기해요 검색결과가 없습니다</div>
+                ) : (
+                  talkList.map((item, index) => (
+                    <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }}>
+                      <Card key={index} sx={{ borderBottom: 1 }}>
+                        <CardContent>
+                          <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
+                            <Grid item>
+                              <Chip
+                                color="primary"
+                                variant="outlined"
+                                label={item.talkCategory}
+                                style={{
+                                  fontSize: 10,
+                                  marginBottom: 5,
+                                }}
+                              />
+                              <Typography color="textPrimary" variant="h4" mt={2}>
+                                {item.talkTitle}
+                              </Typography>
+                              <Typography color="textPrimary" variant="body1">
+                                {item.talkContent}
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Avatar
+                                src={`/images/${item.talkOpenCode.memberEmail.memberSaveimg}`}
+                                sx={{
+                                  height: 150,
+                                  width: 150,
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Box
+                            sx={{
+                              pt: 2,
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <People />
+                            <Typography
+                              sx={{
+                                ml: 1,
+                                mr: 1,
+                              }}
+                              variant="body2"
+                            >
+                              {item.talkMax}명
+                            </Typography>
+                            <AssignmentTurnedIn />
+                            <Typography color="textSecondary" variant="caption" mr={1}>
+                              {item.talkType}
+                            </Typography>
+                            <DateRange />
+                            <Typography color="textSecondary" variant="caption">
+                              {nowTime(1672678868238)}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))
+                ))}
+
+              {type === 3 &&
+                (feedList.length === 0 ? (
+                  <div>공유해요 검색결과가 없습니다</div>
+                ) : (
+                  <ImageList sx={{ width: 1000, height: 800, overflowY: "scroll" }} cols={3} rowHeight={164}>
+                    {feedList.map((item, index) => (
+                      <Link to={`/share/${item.feedCode}`} key={index}>
+                        <ImageListItem>
+                          <img
+                            src={`/images/${item.ffList[0].feedFileSaveimg}`}
+                            srcSet={`/images/${item.ffList[0].feedFileSaveimg}`}
+                            alt={item.feedCode}
+                            loading="lazy"
+                          />
+                        </ImageListItem>
+                      </Link>
+                    ))}
+                  </ImageList>
+                ))}
             </Box>
           </Box>
         </Box>

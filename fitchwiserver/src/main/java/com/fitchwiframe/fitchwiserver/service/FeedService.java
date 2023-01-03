@@ -137,7 +137,7 @@ public class FeedService {
     public List<Feed>getMemberFeed(Member member) {
         log.info("feedService.getMemberFeed");
         //피드 가져오기
-        List<Feed> feedList = feedRepository.findAllByMemberEmail(member);
+        List<Feed> feedList = feedRepository.findAllByMemberEmailOrderByFeedDateDesc(member);
         List<Feed> memberFeedList = new ArrayList<>();
 
         //각 피드에 해당하는 피드파일 가져오기
@@ -315,33 +315,50 @@ public class FeedService {
         log.info("feedService.getFeedListBySearch()");
 
         String searchTag = "%"+searchText+"%";
+        List<Feed> feedList;
+        List<Feed> newList = new ArrayList<>();
 
-        List<Feed> feedList = new ArrayList<>();
         try {
             feedList = feedRepository.findByFeedTagLike(searchTag);
+            for (Feed a : feedList){
+                List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                a.setFfList(feedFiles);
+                newList.add(a);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return feedList;
+        return newList;
     }
 
-//    public String createFeed() {
-//        String result = null;
-//        Member member = new Member();
-//
-//        String[] category = {"문화·예술", "운동·액티비티","공예·수공예","요리·음식", "게임·오락", "성장·자기계발", "여행", "기타" };
-//        try {
-//            for (int i = 0; i <= 9; i++){
-//                Feed feed = new Feed();
-//                feed.setFeedCode(i);
-//                feed.setFeedCategory(category[i]);
-//                feed.setFeedClassificationcode("함께해요"+i);
-//                feed.setFeedContent("테스트 피드" + i);
-//                feed.setFeedTag("태그" + i);
-//                feed.setFeedDate("20221229"+i);
-//                feed.setMemberEmail();
-//            }
-//        }
-//
-//    }
+    public String insertTag(String tag) {
+        log.info("feedService.insertTag()");
+        String result = null;
+
+        try {
+            log.info("tag : "+ tag);
+            Tag newtag = new Tag();
+            newtag.setTagContent(tag);
+            tagRepository.save(newtag);
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+            result = "fail";
+        }
+        return result;
+    }
+
+    public Feed getFeedInfo(Long feedCode) {
+        log.info("feedService.getFeedInfo()");
+        Feed feed = new Feed();
+
+        try {
+            feed = feedRepository.findById(feedCode).get();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return feed;
+
+    }
 }

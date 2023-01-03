@@ -1,7 +1,6 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
-import com.fitchwiframe.fitchwiserver.entity.Noday;
 import com.fitchwiframe.fitchwiserver.entity.Report;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
 import lombok.extern.java.Log;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log
@@ -19,7 +19,13 @@ public class AdminController {
 
   @GetMapping("/getAllFacilitiesList")
   public Iterable<Facilities> getAllFacilitiesList() {
+    log.info("adminController.getAllFacilitiesList()");
     return adminService.getAllFacilitiesList();
+  }
+  @GetMapping("/getFacilitiesList")
+  public Map<String, Object> getFacilitiesList(@RequestParam Integer pageNum) {
+    log.info("adminController.getFacilitiesList() pageNum = " + pageNum);
+    return adminService.getFacilitiesList(pageNum);
   }
 
   @PostMapping("/insertFacilities")
@@ -77,13 +83,20 @@ public class AdminController {
   }
 
   @GetMapping("/getReports")
-  public List<Report> getReportList() {
-    log.info("adminController.getReportList()");
-    return adminService.getReportList();
+  public Map<String, Object> getReportList(@RequestParam Integer pageNum) {
+    log.info("adminController.getReportList() pageNum = "+pageNum);
+    return adminService.getReportList(pageNum);
   }
-@GetMapping("/restrictMember")
-  public String restrictMember(String restrictDate, String targetMemberEmail){
+
+  @GetMapping("/restrictMember")
+  public String restrictMember(String restrictDate, String targetMemberEmail) {
     log.info("adminController.restrictMember");
     return adminService.restrictMember(restrictDate, targetMemberEmail);
-}
+  }
+
+  @DeleteMapping("/deleteReport")
+  public String deleteReport(Long reportCode) {
+    log.info("adminController.deleteReport()");
+    return adminService.deleteReport(reportCode);
+  }
 }

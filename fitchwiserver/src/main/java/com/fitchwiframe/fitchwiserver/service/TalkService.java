@@ -223,6 +223,7 @@ public class TalkService {
         return talkList;
     }
 
+
     public String approveMember(TalkJoin talkJoin) {
         log.info("talkService.approveMember()");
         String result = null;
@@ -235,5 +236,18 @@ public class TalkService {
             result = "가입 처리 실패";
         }
         return result;
+
+    public List<TalkJoin> getTalkJoinListByMember(String memberEmail) {
+        log.info("talkService.getTalkJoinListByMember()");
+        List<TalkJoin> talkJoinList = null;
+
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            talkJoinList = talkJoinRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkJoinList;
+
     }
 }

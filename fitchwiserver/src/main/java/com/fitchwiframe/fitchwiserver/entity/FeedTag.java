@@ -16,11 +16,6 @@ public class FeedTag {
     @Column(nullable = false, length = 50)
     private Long feedCode;
 
-    @ManyToOne
-    @JoinColumn(name = "tagCode")
-    private Tag tagCode;
-
-
     @Column(nullable = false, length = 30)
     private String feedTagContent;
 }

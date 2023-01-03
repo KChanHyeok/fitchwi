@@ -57,29 +57,31 @@ const Feed = ({ memberInfo, refreshFeed }) => {
     }
   }, [getFeedList, page]);
 
-  console.log(feed);
-
   return (
     <>
       <Box flex={4} p={2}>
         {feed && (
           <>
-            {feed.map((data) => (
-              <Post
-                key={data.feedCode}
-                tag={data.feedTag}
-                information={data}
-                memberWriterInfo={data.memberEmail}
-                feedDate={data.feedDate}
-                feedContent={data.feedContent}
-                feedCode={data.feedCode}
-                file={data.ffList}
-                comment={data.fcList}
-                memberInfo={memberInfo}
-                refreshFeed={getFeedList}
-                like={data.flList}
-              />
-            ))}
+            {feed.length === 0 ? (
+              <Box textAlign="center">작성된 공유해요가 없습니다</Box>
+            ) : (
+              feed.map((data) => (
+                <Post
+                  key={data.feedCode}
+                  tag={data.feedTag}
+                  information={data}
+                  memberWriterInfo={data.memberEmail}
+                  feedDate={data.feedDate}
+                  feedContent={data.feedContent}
+                  feedCode={data.feedCode}
+                  file={data.ffList}
+                  comment={data.fcList}
+                  memberInfo={memberInfo}
+                  refreshFeed={getFeedList}
+                  like={data.flList}
+                />
+              ))
+            )}
           </>
         )}
         {loading ? (
