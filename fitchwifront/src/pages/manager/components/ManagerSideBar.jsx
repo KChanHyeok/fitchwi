@@ -10,14 +10,18 @@ import {
 } from "@mui/icons-material";
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 
 export default function ManagerSideBar({ pageurl }) {
+  const resetPageNum = useCallback(() => {
+    sessionStorage.removeItem("pageNum");
+  }, []);
+
   return (
     <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
       <Box position="fixed">
-        <List>
+        <List onClick={() => resetPageNum()}>
           <ListItem disablePadding sx={{ mb: 2 }}>
             <ListItemButton component={Link} to={`/${pageurl}/`}>
               <ListItemIcon>

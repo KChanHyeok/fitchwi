@@ -20,29 +20,27 @@ import { Link } from "react-router-dom";
 export default function Facilities() {
   const [facilities, setFacilities] = useState([]);
 
-  const [fPageNum, setFPageNum] = useState(1);
+  const [pageNum, setPageNum] = useState(1);
 
-  const [totalFPage, setTotalFPage] = useState(0);
-  let fPageNumInSessionStg = sessionStorage.getItem("fPageNum");
+  const [totalPage, setTotalPage] = useState(0);
+  let pageNumInSessionStg = sessionStorage.getItem("pageNum");
 
-  const loadFacilities = (fPageNumInSessionStg) => {
-    axios
-      .get("/getFacilitiesList", { params: { pageNum: fPageNumInSessionStg } })
-      .then((result) => {
-        const { facilitiesList, totalPage, pageNum } = result.data;
-        setTotalFPage(totalPage);
-        setFPageNum(pageNum);
-        setFacilities(facilitiesList);
+  const loadFacilities = (pageNumInSessionStg) => {
+    axios.get("/getFacilitiesList", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
+      const { facilitiesList, totalPage, pageNum } = result.data;
+      setTotalPage(totalPage);
+      setPageNum(pageNum);
+      setFacilities(facilitiesList);
 
-        sessionStorage.setItem("fPageNum", pageNum);
-      });
+      sessionStorage.setItem("pageNum", pageNum);
+    });
   };
   useEffect(() => {
-    fPageNumInSessionStg !== null ? loadFacilities(fPageNumInSessionStg) : loadFacilities(1);
+    pageNumInSessionStg !== null ? loadFacilities(pageNumInSessionStg) : loadFacilities(1);
     console.log("axios");
-  }, [fPageNumInSessionStg]);
+  }, [pageNumInSessionStg]);
 
-  const handleFPageNum = useCallback((value) => {
+  const handlepageNum = useCallback((value) => {
     loadFacilities(value);
   }, []);
 
@@ -53,11 +51,11 @@ export default function Facilities() {
   const deleteFacilities = (facilitiesCode) => {
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       alert(result.data);
-      loadFacilities(fPageNum);
+      loadFacilities(pageNum);
     });
   };
-  // console.log(totalFPage);
-  // console.log(fPageNum);
+  // console.log(totalPage);
+  // console.log(pageNum);
 
   return (
     <Container
@@ -124,10 +122,10 @@ export default function Facilities() {
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
           sx={{ mb: 10 }}
-          count={totalFPage}
-          onChange={(e, value) => handleFPageNum(value)}
+          count={totalPage}
+          onChange={(e, value) => handlepageNum(value)}
           color="primary"
-          page={fPageNum}
+          page={pageNum}
         />
       </Stack>
     </Container>

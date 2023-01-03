@@ -70,10 +70,12 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const [isFollow, setIsFollow] = useState(false);
 
   const getFollow = useCallback(() => {
-    axios.get("/getFollowList", { params: { pageOwner: memberEmail } }).then((res) => {
-      setFollowList(() => res.data.follow);
-      setFollowerList(() => res.data.follower);
-    });
+    if (memberEmail !== undefined) {
+      axios.get("/getFollowList", { params: { pageOwner: memberEmail } }).then((res) => {
+        setFollowList(() => res.data.follow);
+        setFollowerList(() => res.data.follower);
+      });
+    }
   }, [memberEmail]);
 
   useEffect(() => {

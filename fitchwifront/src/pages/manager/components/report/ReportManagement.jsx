@@ -30,28 +30,28 @@ import { Link } from "react-router-dom";
 export default function ReportManagement() {
   const [reportList, setReportList] = useState([]);
 
-  const [rPageNum, setRPageNum] = useState(1);
+  const [pageNum, setPageNum] = useState(1);
 
-  const [totalRPage, setTotalRPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
-  let rPageNumInSessionStg = sessionStorage.getItem("rPageNum");
+  let pageNumInSessionStg = sessionStorage.getItem("pageNum");
 
   useEffect(() => {
-    rPageNumInSessionStg !== null ? getReports(rPageNumInSessionStg) : getReports(1);
+    pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
     console.log("axios");
-  }, [rPageNumInSessionStg]);
+  }, [pageNumInSessionStg]);
 
-  const getReports = (rPageNumInSessionStg) => {
-    axios.get("/getReports", { params: { pageNum: rPageNumInSessionStg } }).then((result) => {
+  const getReports = (pageNumInSessionStg) => {
+    axios.get("/getReports", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
       const { reportList, totalPage, pageNum } = result.data;
       console.log(result.data);
       setReportList(reportList);
-      setRPageNum(pageNum);
-      setTotalRPage(totalPage);
-      sessionStorage.setItem("rPageNum", pageNum);
+      setPageNum(pageNum);
+      setTotalPage(totalPage);
+      sessionStorage.setItem("pageNum", pageNum);
     });
   };
-  const handleRPageNum = useCallback((value) => {
+  const handlepageNum = useCallback((value) => {
     getReports(value);
   }, []);
   const onRistrict = (period, memberEmail) => {
@@ -76,7 +76,7 @@ export default function ReportManagement() {
     console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
       alert(result.data);
-      getReports(rPageNum);
+      getReports(pageNum);
     });
   };
   return (
@@ -239,10 +239,10 @@ export default function ReportManagement() {
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
           sx={{ mb: 10 }}
-          count={totalRPage}
-          onChange={(e, value) => handleRPageNum(value)}
+          count={totalPage}
+          onChange={(e, value) => handlepageNum(value)}
           color="primary"
-          page={rPageNum}
+          page={pageNum}
         />
       </Stack>
     </Container>
