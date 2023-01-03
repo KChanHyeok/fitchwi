@@ -3,7 +3,6 @@ import { Avatar, Button, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 
 const StyleModal = styled(Modal)({
@@ -23,7 +22,7 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
     const nowdate = new Date().getFullYear() + "-"
         + (new Date().getMonth() + 1) + "-"
         + new Date().getDate();
-    const nav = useNavigate();
+    // const nav = useNavigate();
 
     const [insertTalkJoin, setInsertTalkJoin] = useState({
         memberEmail: {
@@ -172,6 +171,7 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
                             <hr />
                             <Box>{talkInfo.talkTitle}</Box>
                             <Box>가입질문</Box>
+                            <p>{talkInfo.talkInquiry}</p>
                             <TextField fullWidth
                                 label="답변"
                                 name="talkJoinAnswer"

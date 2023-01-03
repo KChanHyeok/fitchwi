@@ -9,7 +9,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Typography } from '@mui/material';
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -56,12 +56,6 @@ const StyledMenu = styled((props) => (
     },
 }));
 
-const StyleModal = styled(Modal)({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-});
-
 const UserBox = styled(Box)({
     display: "flex",
     alignItems: "center",
@@ -69,7 +63,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
+function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -85,28 +79,21 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
     //회원관리 모달창
     const [openList, setOpenList] = useState(false);
 
-    const [updateTalk, setUpdateTalk] = useState({});
+    // const [updateTalk, setUpdateTalk] = useState({});
 
     // useEffect(() => {
-    //     setUpdateTalk();
+    //     setUpdateTalk({
+
+    //     });
     // }, []);
-    // const {
-    //     talkTitle,
-    //     talkMax,
-    //     talkCategory,
-    //     talkContent,
-    //     talkTagContent,
-    // } = updateTalk;
 
-    const onTalkUpdate = () => { };
-
-    const onChange = useCallback(
-        (e) => {
-            setUpdateTalk({
-                ...updateTalk,
-                [e.target.name]: e.target.value
-            });
-        }, [updateTalk]);
+    // const onChange = useCallback(
+    //     (e) => {
+    //         setUpdateTalk({
+    //             ...updateTalk,
+    //             [e.target.name]: e.target.value
+    //         });
+    //     }, [updateTalk]);
 
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
@@ -134,7 +121,48 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
             console.log(e.target.file);
         }, []);
 
-    console.log(talkJoinMember);
+    //승인 대기 -> 수락 / 거절
+    const [openApplyMember, setOpenApplyMember] = useState(false);
+
+    const applyMemberCheck = () => {
+        setOpenApplyMember(true);
+        setAnchorEl(false);
+    }
+
+    const [waitingMemberList, setWaitingMemberList] = useState(null);
+
+    useEffect(() => {
+        setWaitingMemberList(talkJoinList.filter
+            (data => (data.talkCode.talkCode === (talkPageCode * 1)
+                && data.talkJoinState === "대기")));
+    }, [talkJoinList, talkPageCode]);
+
+    const [insertJoinState, setInsertJoinState] = useState({
+        talkJoinState: "",
+    });
+
+    const onChange = useCallback(
+        (e) => {
+            const inputTo = {
+                ...insertJoinState,
+            };
+            setInsertJoinState(inputTo);
+        }, [insertJoinState]);
+    console.log(talkJoinList);
+
+    //수락
+    const approve = () => {
+        axios.get("/approveMember", insertJoinState)
+            .then((res) => {
+                if (res.data === "ok") {
+                    alert(res.data);
+                } else {
+                    alert(res.data);
+                }
+            })
+            .catch((error) => console.log(error));
+    }
+
     //수정하기
     // const onTalkUpdate = (e) => {
     //     console.log(updateTalk);
@@ -177,7 +205,7 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
                         alert("삭제 불가");
                     }
                 });
-        }, [nav]
+        }, [talkInfo, nav]
     );
 
     //삭제 모달 창
@@ -192,13 +220,6 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
         setOpenDeleteModal(false);
         setOpenApplyMember(false);
     };
-
-    const [openApplyMember, setOpenApplyMember] = useState(false);
-
-    const applyMemberCheck = () => {
-        setOpenApplyMember(true);
-        setAnchorEl(false);
-    }
 
     return (
         <div>
@@ -233,7 +254,7 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
                         신청회원 확인
                     </MenuItem>}
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => nav("/talk/opened", { state: { talkInfo } })} disableRipple>
+                <MenuItem onClick={() => nav("/talk/update", { state: { talkInfo } })} disableRipple>
                     <BuildIcon />
                     얘기해요 수정
                 </MenuItem>
@@ -250,16 +271,22 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
                     aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title" className="applyBox">
-                        {"얘기해요 회원 관리"}
+                        {"승인 대기 중인 회원"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            대기중인 멤버
-                            <Button onClick={modalClose}>취소</Button>
-                            <Button onClick={deleteTalk} autoFocus>
-                                삭제
-                            </Button>
-                        </DialogContentText>
+                        <Typography variant="span">회원</Typography>
+                        <Typography variant="span" className="subColumn">답변</Typography>
+                        {!waitingMemberList ? <h2>로딩중</h2>
+                            : waitingMemberList.map((data) =>
+                                <UserBox key={data.talkJoinCode}>
+                                    <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                    <Typography fontWeight={500} variant="span">
+                                        <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        {data.talkJoinAnswer}
+                                        <Button className="applyBtn" onChange={onChange} onClick={approve}>승인</Button>
+                                        <Button className="applyBtn" onClick={modalClose}>거절</Button>
+                                    </Typography>
+                                </UserBox>)}
                     </DialogContent>
 
                 </Dialog>
@@ -277,15 +304,13 @@ function TalkOpMenu({ talkInfo, talkList, refreshTalkList, talkJoinMember }) {
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
                             {talkJoinMember.length >= 1
-                                && "현재 가입된 회원이 있습니다."}<br />
+                                && "현재 가입 중인 회원이 있습니다."}<br />
                             정말로 삭제하시겠습니까?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
+                        <Button onClick={deleteTalk}>삭제</Button>
                         <Button onClick={modalClose}>취소</Button>
-                        <Button onClick={deleteTalk} autoFocus>
-                            삭제
-                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

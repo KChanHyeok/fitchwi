@@ -45,17 +45,20 @@ public class TalkController {
     }
 
     //얘기해요 수정
-    @GetMapping("/updateTalk")
-    public String updateTalk(Talk talk, MultipartFile pic, HttpSession session) {
+    @PostMapping("/updateTalk")
+    public String updateTalk(@RequestPart(value = "data", required = true) Talk talk,
+                             @RequestPart(value = "data", required = true)TalkTag talkTag,
+                             @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
+                             HttpSession session) {
         log.info("talkController.updateTalk()");
-        return talkService.updateTalk(talk, pic, session);
+        return talkService.updateTalk(talk, talkTag, pic, session);
     }
 
     //얘기해요 삭제
     @DeleteMapping("/deleteTalk")
-    public String deleteTalk(@RequestBody Talk talk) {
+    public String deleteTalk(@RequestBody Talk talk, HttpSession session) {
         log.info("talkController.deleteTalk()");
-        return talkService.deleteTalk(talk);
+        return talkService.deleteTalk(talk, session);
     }
 
     //얘기해요 가입
@@ -77,6 +80,12 @@ public class TalkController {
     public String deleteTalkJoinInfo(@RequestParam String memberEmail, long talkCode) {
         log.info("talkController.deleteTalkJoinInfo()");
         return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
+    }
+
+    @GetMapping("/approveMember")
+    public String approveMember(@RequestBody TalkJoin talkJoin) {
+        log.info("talkController.approveMember()");
+        return talkService.approveMember(talkJoin);
     }
 
     @GetMapping("/getTalkListBySearch")

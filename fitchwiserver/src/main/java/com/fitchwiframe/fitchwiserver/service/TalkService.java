@@ -4,6 +4,7 @@ import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -99,18 +100,16 @@ public class TalkService {
         return talkInfo;
     }
 
-    public String updateTalk(Talk talk, MultipartFile pic, HttpSession session) {
+    public String updateTalk(Talk talk, TalkTag talkTag, MultipartFile pic, HttpSession session) {
         log.info("talkService.updateTalk()");
+        log.info("talk :" + talk);
         String result = null;
 
-
         try {
-            if (pic != null) {
-                talk = talkFileUpload(talk, pic, session);
-            } else {
-                talk.setTalkImg("이미지 원래 이름");
-                talk.setTalkSaveimg("저장된 기본이미지 이름");
-            }
+            talkTagRepository.save(talkTag);
+            talkRepository.save(talk);
+            log.info("updateTalk : " + talk);
+            log.info("수정 성공");
 //            Talk test = (Talk)session.getAttribute("talkCode");
 //            Talk upTalk = talkRepository.findById(test.getTalkCode()).get();
 //
@@ -120,24 +119,22 @@ public class TalkService {
 //            upTalk.setTalkContent(talk.getTalkContent());
 //            talkRepository.save(upTalk);
 //            session.setAttribute("talkCode", upTalk);
-
-            talkRepository.save(talk);
-
             result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("등록 실패");
+            log.info("수정 실패");
             result = "fail";
         }
         return result;
     }
 
-    public String deleteTalk(Talk talk) {
+    public String deleteTalk(Talk talk, HttpSession session) {
         log.info("talkService.deleteTalk()");
         String result = "fail";
         log.info("talk value: " + talk);
 
         try {
+            deleteTalkFile(talk, session);
             //talkCode가 담긴 객체를 보내야함
             talkTagRepository.deleteAllByTalkCode(talk);
             talkJoinRepository.deleteAllByTalkCode(talk);
@@ -151,6 +148,24 @@ public class TalkService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    private void deleteTalkFile(Talk talk, HttpSession session) {
+        log.info("deleteTalkFile");
+
+        try {
+            String realPath = session.getServletContext().getRealPath("/");
+            realPath += "images/";
+
+            File fileToDelete = new File(realPath + talk.getTalkSaveimg());
+            System.out.println("fileToDelete = " + fileToDelete);
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+                log.info("파일 삭제 성공");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String insertTalkJoinInfo(TalkJoin talkJoin) {
@@ -177,6 +192,7 @@ public class TalkService {
     }
 
     public String deleteTalkJoinInfo(String memberEmail, long talkCode) {
+        log.info("talkService.deleteTalkJoinInfo()");
         String result = null;
 
         try {
@@ -207,6 +223,20 @@ public class TalkService {
         return talkList;
     }
 
+
+    public String approveMember(TalkJoin talkJoin) {
+        log.info("talkService.approveMember()");
+        String result = null;
+        try {
+            talkJoin.setTalkJoinState("가입중");
+            talkJoinRepository.save(talkJoin);
+            result = "가입 처리 완료";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "가입 처리 실패";
+        }
+        return result;
+
     public List<TalkJoin> getTalkJoinListByMember(String memberEmail) {
         log.info("talkService.getTalkJoinListByMember()");
         List<TalkJoin> talkJoinList = null;
@@ -218,5 +248,6 @@ public class TalkService {
             e.printStackTrace();
         }
         return talkJoinList;
+
     }
 }

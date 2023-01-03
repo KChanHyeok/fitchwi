@@ -7,6 +7,7 @@ import Sidebar from "../../layout/Sidebar";
 import TalkInfo from "./components/TalkInfo";
 import TalkMain from "./components/TalkMain";
 import TalkOpened from "./components/TalkOpened";
+import TalkUpdate from "./components/TalkUpdate";
 import { Add as AddIcon } from "@mui/icons-material";
 
 function Home() {
@@ -70,6 +71,8 @@ function Home() {
                     talkList={talkList} talkJoinList={talkJoinList} />} />
                     <Route path="opened"
                     element={<TalkOpened  memberEmail={id} refreshTalkList={getAllTalkList}/>} />
+                    <Route path="update"
+                    element={<TalkUpdate  memberEmail={id} refreshTalkList={getAllTalkList}/>} />
             </Routes>           
         </Stack>
         </>

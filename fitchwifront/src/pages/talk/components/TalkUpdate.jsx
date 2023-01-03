@@ -20,7 +20,7 @@ const imgBoxStyle = {
     backgroundSize: "cover",
 };
 
-function TalkOpened({ memberEmail, refreshTalkList }) {
+function TalkUpdate({ memberEmail, refreshTalkList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
@@ -39,15 +39,6 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         talkTagContent: "",
         talkOpenDate: `${new Date().getTime()}`,
     });
-
-    const onChange = useCallback(
-        (e) => {
-            const inputTo = {
-                ...insertTalkOp,
-                [e.target.name]: e.target.value,
-            };
-            setInsertTalkOp(inputTo);
-        }, [insertTalkOp]);
 
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
@@ -82,34 +73,6 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
             console.log(e.target.file);
         }, []);
 
-    //작성 내용 전송 함수
-    const onTalkOpened = (e) => {
-        console.log(insertTalkOp);
-        e.preventDefault();
-        formData.append(
-            "data",
-            new Blob([JSON.stringify(insertTalkOp)],
-                { type: "application/json" })
-        );
-        formData.append("uploadImage", fileForm[0]);
-
-        const config = {
-            headers: { "Content-Type": "multipart/form-data" },
-        };
-
-        axios.post("/addTalk", formData, config)
-            .then((res) => {
-                if (res.data === "ok") {
-                    alert("개설 성공");
-                    nav("/talk");
-                    refreshTalkList();
-                } else {
-                    alert("개설 실패");
-                }
-            })
-            .catch((error) => console.log(error));
-    };
-
     const [showInquiry, setShowInquiry] = useState(false);
 
     const approveCheck = () => {
@@ -120,13 +83,55 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         setShowInquiry(false);
     }
 
+    const [updateTalk, setUpdateTalk] = useState({});
+
+    useEffect(() => {
+        setUpdateTalk({
+            talkTitle: insertTalkOp.talkTitle,
+            talkMax: insertTalkOp.talkMax,
+            talkCategory: insertTalkOp.talkCategory,
+            talkType: insertTalkOp.talkType,
+            talkInquiry: insertTalkOp.talkInquiry,
+            talkContent: insertTalkOp.talkContent,
+            talkTagContent: insertTalkOp.talkTagContent,
+        });
+    }, [insertTalkOp]);
+
+    const onChange = useCallback(
+        (e) => {
+            setUpdateTalk({
+                ...updateTalk,
+                [e.target.name]: e.target.value
+            });
+        }, [updateTalk]
+    );
+
+    const onTalkUpdate = () => {
+        formData.append("data", new Blob([JSON.stringify(updateTalk)],
+            { type: "application/json" }));
+
+        axios
+            .post("/updateTalk", formData)
+            .then((res) => {
+                if (res.data === "ok") {
+                    alert("수정 성공");
+                    nav("/talk");
+                    refreshTalkList();
+                    setUpdateTalk({});
+                } else {
+                    alert("수정 실패");
+                }
+            })
+            .catch((error) => console.log(error));
+    }
+
     return (
         <>
 
             <Stack height={800} flex={7} p={3}>
                 <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
                     <Typography variant="h6" textAlign="center">
-                        얘기해요 개설
+                        얘기해요 수정
                     </Typography>
                     <UserBox>
                         <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
@@ -135,11 +140,11 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         </Typography>
                     </UserBox>
                     <hr />
-                    <form onSubmit={onTalkOpened}>
+                    <form onSubmit={onTalkUpdate}>
                         <TextField fullWidth
                             label="얘기해요 모임명"
                             name="talkTitle"
-                            value={insertTalkOp.talkTitle}
+                            // value={insertTalkOp.talkTitle}
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             required
@@ -183,8 +188,11 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                                 </Select>
                             </FormControl>
                             {showInquiry && <TextField label="가입질문"
-                                name="talkInquiry" sx={{ mt: 3 }}
-                                onChange={onChange} />}
+                                name="talkInquiry"
+                                value={insertTalkOp.talkInquiry}
+                                sx={{ mt: 3 }}
+                                onChange={onChange}
+                            />}
                         </div>
                         <TextField fullWidth
                             label="얘기해요 대표 사진"
@@ -201,6 +209,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <TextField fullWidth
                             label="모임을 소개해주세요"
                             name="talkContent"
+                            value={insertTalkOp.talkContent}
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             multiline
@@ -208,16 +217,17 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                         <TextField fullWidth
                             label="애기해요 태그"
                             name="talkTagContent"
+                            value={insertTalkOp.talkTagContent}
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             required />
-                        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
+                        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
                         <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
                     </form>
                 </Box>
-            </Stack>
+            </Stack >
         </>
     );
 }
 
-export default TalkOpened;
+export default TalkUpdate;
