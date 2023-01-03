@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ReportDetailRepository extends CrudRepository<ReportDetail, Long> {
 
- ReportDetail findByReportCode(Report report);
+
 
 
 
@@ -18,4 +18,6 @@ public interface ReportDetailRepository extends CrudRepository<ReportDetail, Lon
 
 
  ReportDetail findByReportCodeAndMemberEmail(Report report, Member memberReporting);
+
+ void deleteAllByReportCode(Report reportToDelete);
 }

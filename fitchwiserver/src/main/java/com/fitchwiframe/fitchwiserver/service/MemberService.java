@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -222,7 +223,6 @@ public class MemberService {
     return result;
 
   }
-
   public String unFollowMember(String loginId, String pageOwner) {
     String result = "fail";
     try {
@@ -258,7 +258,6 @@ public class MemberService {
   //나를 팔로우
   public List<Member> getFollowerList(String pageOwner) {
     log.info("memberService.getFollowerList");
-//    Member member = memberRepository.findById(pageOwner).get();
 
     List<Follow> followerList = followRepository.findAllByFollowId(pageOwner);
     List<Member> followerMemberList = new ArrayList<>();
@@ -291,7 +290,7 @@ public class MemberService {
   public String createMember() {
     String result = null;
     try {
-      for (int i = 0; i <= 9; i++) {
+      for (int i = 0; i <= 10; i++) {
         Member member = new Member();
         member.setMemberName("테스트이름" + i);
         member.setMemberEmail("test" + i + "@test.com");
