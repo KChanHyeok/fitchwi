@@ -236,7 +236,7 @@ public class TalkService {
             result = "가입 처리 실패";
         }
         return result;
-
+    }
     public List<TalkJoin> getTalkJoinListByMember(String memberEmail) {
         log.info("talkService.getTalkJoinListByMember()");
         List<TalkJoin> talkJoinList = null;
