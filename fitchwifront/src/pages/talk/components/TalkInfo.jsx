@@ -73,7 +73,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                         <Box className="talkMenu">
                             {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === id
                                 ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo}
-                                    talkJoinMember={talkJoinMember} />)
+                                    talkJoinList={talkJoinList} talkJoinMember={talkJoinMember} />)
                                 : (<Button id="demo-customized-button"
                                     aria-haspopup="true"
                                     color="primary"
@@ -95,7 +95,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                     </Box><h3>얘기해요 소개</h3><Box component="span">
                         {talkInfo.talkContent}
                         <h4>방장<br />
-                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberName}</h4>
+                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}</h4>
                         <Avatar
                             src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
                             sx={{ width: 40, height: 40, mr: 2 }}
@@ -107,7 +107,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                                 <UserBox key={data.talkJoinCode}>
                                     <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                                     <Typography fontWeight={500} variant="span">
-                                        {!data.memberEmail.memberNickname ? data.memberEmail.memberName : data.memberEmail.memberNickname}님
+                                        {data.memberEmail.memberNickname}님
                                     </Typography>
                                 </UserBox>)}
                         <Box>
