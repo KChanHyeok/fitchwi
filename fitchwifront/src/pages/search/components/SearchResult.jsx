@@ -226,14 +226,16 @@ const SearchResult = () => {
                 ) : (
                   <ImageList sx={{ width: 1000, height: 800, overflowY: "scroll" }} cols={3} rowHeight={164}>
                     {feedList.map((item, index) => (
-                      <ImageListItem key={index}>
-                        <img
-                          src={`/images/${item.ffList[0].feedFileSaveimg}`}
-                          srcSet={`/images/${item.ffList[0].feedFileSaveimg}`}
-                          alt={item.feedCode}
-                          loading="lazy"
-                        />
-                      </ImageListItem>
+                      <Link to={`/share/${item.feedCode}`} key={index}>
+                        <ImageListItem>
+                          <img
+                            src={`/images/${item.ffList[0].feedFileSaveimg}`}
+                            srcSet={`/images/${item.ffList[0].feedFileSaveimg}`}
+                            alt={item.feedCode}
+                            loading="lazy"
+                          />
+                        </ImageListItem>
+                      </Link>
                     ))}
                   </ImageList>
                 ))}

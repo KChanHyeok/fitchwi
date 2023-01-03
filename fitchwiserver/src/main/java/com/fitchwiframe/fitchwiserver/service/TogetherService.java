@@ -213,4 +213,17 @@ public class TogetherService {
         }
         return togetherList;
     }
+
+    public List<TogetherJoin> getTogetherJoinListByMember(String memberEmail) {
+        log.info("togetherService.getTogetherJoinListByMember()");
+        List<TogetherJoin> togetherList = null;
+
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            togetherList = togetherJoinRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return togetherList;
+    }
 }

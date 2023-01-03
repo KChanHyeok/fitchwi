@@ -207,4 +207,16 @@ public class TalkService {
         return talkList;
     }
 
+    public List<TalkJoin> getTalkJoinListByMember(String memberEmail) {
+        log.info("talkService.getTalkJoinListByMember()");
+        List<TalkJoin> talkJoinList = null;
+
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            talkJoinList = talkJoinRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkJoinList;
+    }
 }

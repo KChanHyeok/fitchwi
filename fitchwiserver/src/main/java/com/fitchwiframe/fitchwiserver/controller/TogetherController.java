@@ -69,5 +69,11 @@ public class TogetherController {
         return togetherService.getTogetherListBySearch(searchText);
     }
 
+    @GetMapping("/getTogetherJoinListByMember")
+    public List<TogetherJoin> getTogetherJoinListByMember(@RequestParam String memberEmail){
+        log.info("getTogetherJoinListByMember()");
+        return togetherService.getTogetherJoinListByMember(memberEmail);
+    }
+
 
 }

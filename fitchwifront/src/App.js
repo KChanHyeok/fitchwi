@@ -65,7 +65,7 @@ function App() {
     <>
       <Header lstate={lstate} onLogout={onLogout} />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/*" element={<Home />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/share/*" element={<Share />}></Route>
