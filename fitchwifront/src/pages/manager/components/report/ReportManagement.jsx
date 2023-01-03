@@ -166,10 +166,12 @@ export default function ReportManagement() {
               <AccordionDetails>
                 <TableContainer component="main">
                   <Table sx={{ width: "100%" }} aria-label="simple table">
-                    <TableHead style={{ borderBottom: "2px solid black", backgroundColor: "#ddd" }}>
+                    <TableHead
+                      style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
+                    >
                       <TableRow>
                         <TableCell align="center">신고일시</TableCell>
-                        <TableCell align="center">신고자</TableCell>
+                        <TableCell align="center">신고한 유저</TableCell>
                         <TableCell align="center">신고 내용</TableCell>
                       </TableRow>
                     </TableHead>
@@ -177,7 +179,7 @@ export default function ReportManagement() {
                       {report.reportDetailList.map((reportDetail) => (
                         <TableRow
                           key={reportDetail.reportDetailCode}
-                          sx={{ backgroundColor: "#eee" }}
+                          sx={{ backgroundColor: "#f2f2f2" }}
                         >
                           <TableCell align="center">{reportDetail.reportDetailDate}</TableCell>
                           <TableCell align="center">
@@ -201,6 +203,7 @@ export default function ReportManagement() {
                         label="restrictDate"
                         defaultValue={2}
                         onChange={(e) => onSelectDate(e)}
+                        size="small"
                       >
                         <MenuItem value={2}>1일</MenuItem>
                         <MenuItem value={8}>7일</MenuItem>
@@ -209,17 +212,17 @@ export default function ReportManagement() {
                         <MenuItem value={181}>180일</MenuItem>
                         <MenuItem value={361}>360일</MenuItem>
                       </Select>
-                      <Button
-                        onClick={() =>
-                          onRistrict(
-                            restrictDateMap.get(report.reportCode + ""),
-                            report.memberEmail.memberEmail
-                          )
-                        }
-                      >
-                        제한하기
-                      </Button>
                     </FormControl>
+                    <Button
+                      onClick={() =>
+                        onRistrict(
+                          restrictDateMap.get(report.reportCode + ""),
+                          report.memberEmail.memberEmail
+                        )
+                      }
+                    >
+                      제한하기
+                    </Button>
                   </Grid>
                   <Grid item xs={6}>
                     <ButtonGroup>
