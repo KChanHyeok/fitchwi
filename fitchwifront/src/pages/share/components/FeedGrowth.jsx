@@ -70,6 +70,7 @@ const FeedGrowth = ({ memberInfo, refreshFeed }) => {
                   key={data.feedCode}
                   tag={data.feedTag}
                   information={data}
+                  feedClassificationcode={data.feedClassificationcode}
                   memberWriterInfo={data.memberEmail}
                   feedDate={data.feedDate}
                   feedContent={data.feedContent}

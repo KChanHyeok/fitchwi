@@ -8,7 +8,6 @@ import Talk from "./pages/talk";
 import Header from "./layout/Header";
 import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
-import TalkInfo from "./pages/talk/components/TalkInfo";
 import Search from "./pages/search";
 import Manager from "./pages/manager";
 import "react-calendar/dist/Calendar.css"; // css import
@@ -70,13 +69,9 @@ function App() {
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/share/*" element={<Share />}></Route>
         <Route path="/talk/*" element={<Talk />}></Route>
-        {/* <Route path="/talk/info" element={<TalkInfo />}></Route> */}
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route
-          path="/memberpage/*"
-          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
-        ></Route>
+        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
       </Routes>
     </>

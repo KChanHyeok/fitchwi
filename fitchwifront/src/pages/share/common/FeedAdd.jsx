@@ -210,8 +210,6 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
     getTalkJoinList();
   }, [preview, getTalkJoinList]);
 
-  console.log(joinList);
-
   return (
     <>
       <Tooltip

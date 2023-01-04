@@ -41,6 +41,7 @@ const FeedInfo = ({ memberInfo, refreshFeed }) => {
             key={feedInfo.feedCode}
             tag={feedInfo.feedTag}
             memberWriterInfo={feedInfo.memberEmail}
+            feedClassificationcode={feedInfo.feedClassificationcode}
             feedDate={feedInfo.feedDate}
             feedContent={feedInfo.feedContent}
             feedCode={feedInfo.feedCode}

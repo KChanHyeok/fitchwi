@@ -77,6 +77,7 @@ const FeedFood = ({ memberInfo, refreshFeed }) => {
                   feedContent={data.feedContent}
                   feedCode={data.feedCode}
                   file={data.ffList}
+                  feedClassificationcode={data.feedClassificationcode}
                   comment={data.fcList}
                   memberInfo={memberInfo}
                   refreshFeed={getFeedList}
