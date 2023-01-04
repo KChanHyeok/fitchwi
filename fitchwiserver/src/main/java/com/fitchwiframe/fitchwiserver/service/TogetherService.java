@@ -107,7 +107,14 @@ public class TogetherService {
         try {
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
+                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice();
+                int totalPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherTotalPrice();
+
+                togetherJoinPayment.getTogetherJoinCode().getTogetherCode().setTogetherTotalPrice(joinPay+totalPay);
+                Together together = togetherJoinPayment.getTogetherJoinCode().getTogetherCode();
+                togetherRepository.save(together);
             }
+
             togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
 
             togetherJoinPayment.setTogetherJoinCode(togetherJoinRepository.findById(togetherJoinPayment.getTogetherJoinCode().getTogetherJoinCode()).get());
@@ -204,6 +211,10 @@ public class TogetherService {
                 HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
                 cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
 
+                int joinpay = joinTogether.getTogetherPrice();
+                int totalpay = joinTogether.getTogetherTotalPrice();
+                joinTogether.setTogetherTotalPrice(totalpay-joinpay);
+                togetherRepository.save(joinTogether);
                 togetherJoinPayRepository.delete(togetherJoinPayment);
                 togetherJoinRepository.delete(joinTogetherMember);
                 log.info(cancle+"");
@@ -238,6 +249,11 @@ public class TogetherService {
         log.info("approvalTogetherMemberState()");
         try {
             togetherJoin.setTogetherJoinState("가입중");
+            int joinPay = togetherJoin.getTogetherCode().getTogetherPrice();
+            int totalPay = togetherJoin.getTogetherCode().getTogetherTotalPrice();
+            Together together = togetherJoin.getTogetherCode();
+            together.setTogetherTotalPrice(totalPay+joinPay);
+            togetherRepository.save(together);
             togetherJoinRepository.save(togetherJoin);
             result="성공";
         }catch (Exception e) {
