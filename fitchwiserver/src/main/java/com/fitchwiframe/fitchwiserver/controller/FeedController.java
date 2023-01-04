@@ -45,10 +45,10 @@ public class FeedController {
 
 
     //멤버가 작성한 피드 조회
-    @PostMapping("/getMemberFeed")
-    private List<Feed>getMemberFeed(@RequestBody Member member){
+    @GetMapping("/getMemberFeed")
+    private List<Feed>getMemberFeed(@RequestParam String memberEmail){
         log.info("memberController.getMemberFeed");
-        return feedService.getMemberFeed(member);
+        return feedService.getMemberFeed(memberEmail);
     }
 
      // 피드 댓글 등록

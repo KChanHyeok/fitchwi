@@ -11,8 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -269,5 +268,4 @@ public class TalkService {
         return talkJoinList;
 
     }
-
 }

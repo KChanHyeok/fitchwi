@@ -134,8 +134,9 @@ public class FeedService {
     }
 
     //멤버가 작성한 피드 조회
-    public List<Feed>getMemberFeed(Member member) {
+    public List<Feed>getMemberFeed(String memberEmail) {
         log.info("feedService.getMemberFeed");
+        Member member = memberRepository.findById(memberEmail).get();
         //피드 가져오기
         List<Feed> feedList = feedRepository.findAllByMemberEmailOrderByFeedDateDesc(member);
         List<Feed> memberFeedList = new ArrayList<>();

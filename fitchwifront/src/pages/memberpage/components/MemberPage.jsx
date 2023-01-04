@@ -23,21 +23,68 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Report from "../../../components/common/Report";
+
 import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
+import MemberTalk from "./MemberTalk";
+import MemberTogether from "./MemberTogether";
 
 export default function MemberPage({ member, onLogout, lstate }) {
   //페이지 기본 데이터
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
-  const getAllFeedList = useCallback(() => {
-    if (member.memberEmail !== undefined) {
-      axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
-    }
+  const [talkJoinList, setTalkJoinList] = useState([]);
+  const [togetherJoinList, setTogetherJoinList] = useState([]);
+
+  //메뉴 선택 후 해당 정보 조회
+  const [myMenu, setMyMenu] = useState("share");
+
+  console.log(myMenu);
+  const getMemberFeed = useCallback(() => {
+    axios
+      .get("/getMemberFeed", { params: { memberEmail: member.memberEmail } })
+      .then((res) => setFeedList(res.data));
   }, [member]);
+
+  const getMemberTalk = useCallback(() => {
+    axios
+      .get("/getTalkJoinListByMember", { params: { memberEmail: member.memberEmail } })
+      .then((res) => {
+        console.log(res.data);
+        setTalkJoinList(res.data);
+      });
+  }, [member]);
+  const getMemberTogether = useCallback(() => {
+    axios
+      .get("/getTogetherJoinListByMember", { params: { memberEmail: member.memberEmail } })
+      .then((res) => {
+        console.log(res.data);
+        setTogetherJoinList(res.data);
+      });
+  }, [member]);
+
+  useEffect(() => {
+    if (member.memberEmail !== undefined) {
+      switch (myMenu) {
+        case "share":
+          getMemberFeed();
+          break;
+        case "talk":
+          getMemberTalk();
+          break;
+        case "together":
+          getMemberTogether();
+          break;
+        default:
+          break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member.memberEmail, myMenu]);
+
   const { logid } = lstate;
   const {
     memberEmail,
@@ -57,12 +104,6 @@ export default function MemberPage({ member, onLogout, lstate }) {
   if (memberInterest != null) {
     interestArr = memberInterest.split(" ");
   }
-
-  useEffect(() => {
-    if (member !== undefined) {
-      getAllFeedList();
-    }
-  }, [member, getAllFeedList]);
 
   //팔로우 관련
   const [followList, setFollowList] = useState([]);
@@ -150,24 +191,24 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
   return (
-    <Container style={{ width: 1200 }} maxWidth="xl">
-      <Grid container>
-        <Grid item xs={2} sx={{ mt: 10 }}>
+    <Container component="main" maxWidth="xl">
+      <Grid container justifyContent="center">
+        <Grid item xs={2} sx={{ mt: 15 }}>
           <List>
             <ListItem disablePadding>
               <ListItemButton>
-                <CenterListText primary="피드" />
+                <CenterListText primary="공유해요" onClick={() => setMyMenu("share")} />
               </ListItemButton>
             </ListItem>
             <Divider variant="middle" component="li" />
             <ListItem disablePadding>
-              <ListItemButton component="a" href="#simple-list">
+              <ListItemButton onClick={() => setMyMenu("talk")}>
                 <CenterListText primary="애기해요" />
               </ListItemButton>
             </ListItem>
             <Divider variant="middle" component="li" />
             <ListItem disablePadding>
-              <ListItemButton component="a" href="#simple-list">
+              <ListItemButton onClick={() => setMyMenu("together")}>
                 <CenterListText primary="함께해요" />
               </ListItemButton>
             </ListItem>
@@ -175,18 +216,21 @@ export default function MemberPage({ member, onLogout, lstate }) {
           </List>
 
           {logid === memberEmail ? (
-            <Box component="form" sx={{ mt: 30 }}>
+            <Box component="form" sx={{ mt: 50 }}>
               <List>
-                <ListItem disablePadding sx={{ justifyContent: "space-around" }}>
-                  <CheckPwdModal
-                    onClick={() => setOpenCheckPwd(() => true)}
-                    openCheckPwd={openCheckPwd}
-                    setOpenCheckPwd={setOpenCheckPwd}
-                    member={member}
-                    lstate={lstate}
-                  >
-                    정보수정
-                  </CheckPwdModal>
+                <ListItem disablePadding>
+                  <ListItemButton sx={{ justifyContent: "center" }}>
+                    <CheckPwdModal
+                      sx={{ width: "100%" }}
+                      onClick={() => setOpenCheckPwd(() => true)}
+                      openCheckPwd={openCheckPwd}
+                      setOpenCheckPwd={setOpenCheckPwd}
+                      member={member}
+                      lstate={lstate}
+                    >
+                      정보수정
+                    </CheckPwdModal>
+                  </ListItemButton>
                 </ListItem>
                 <Divider variant="middle" component="li" />
 
@@ -221,103 +265,122 @@ export default function MemberPage({ member, onLogout, lstate }) {
 
         <Grid
           item
-          xs={9}
+          xs={7}
           sx={{
+            marginRight: 20,
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Grid container sx={{ alignItems: "center" }}>
-            <Card sx={{ maxWidth: 800, minWidth: 600 }}>
-              {memberSaveimg && (
-                <CardHeader
-                  style={{ background: "linear-gradient(190deg,lightgray, white)" }}
-                  avatar={
-                    <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                  }
-                  title={
-                    <Typography sx={{ fontSize: 25 }}>
-                      {" "}
-                      {logid === memberEmail
-                        ? `${memberNickname}(${memberName})`
-                        : `${memberNickname}`}
-                    </Typography>
-                  }
-                  subheader={
-                    logid === memberEmail ? (
-                      memberEmail
-                    ) : (
-                      <Report targetMember={member.memberEmail} category="memberpage" target="0" />
-                    )
-                  }
-                />
-              )}
-              <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
-              <CardContent sx={{ textAlign: "right" }}>
-                <Grid container justifyContent={"space-between"}>
-                  <Grid item xs={8}>
-                    <div style={{ textAlign: "left" }}>
-                      {interestArr &&
-                        interestArr.map((interest, index) => (
-                          <Chip
-                            onClick={() => console.log("검색으로 이동")}
-                            variant="outlined"
-                            key={index}
-                            label={interest}
-                            style={{
-                              fontSize: 10,
-                              marginLeft: 5,
-                              marginBottom: 5,
-                              boxShadow: "0 3px 5px  lightgray",
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </Grid>
-                  {followList !== undefined ? (
-                    <Grid item xs={4}>
-                      <FollowMemberListModal lstate={lstate} followList={followerList}>
-                        팔로워 {followerList.length}
-                      </FollowMemberListModal>
-
-                      <FollowMemberListModal lstate={lstate} followList={followList}>
-                        팔로우 {followList.length}
-                      </FollowMemberListModal>
-
-                      {logid === memberEmail ? null : (
-                        <Checkbox
-                          checked={isFollow}
-                          icon={<FavoriteBorder />}
-                          checkedIcon={<Favorite />}
-                          onClick={() => onFollow(isFollow)}
+          <Card sx={{ width: "100%", minWidth: 600 }}>
+            {memberSaveimg && (
+              <CardHeader
+                style={{
+                  background: "linear-gradient(190deg,lightgray, white)",
+                }}
+                avatar={
+                  <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                }
+                title={
+                  <Typography sx={{ fontSize: 25 }}>
+                    {" "}
+                    {logid === memberEmail
+                      ? `${memberNickname}(${memberName})`
+                      : `${memberNickname}`}
+                  </Typography>
+                }
+                subheader={
+                  logid === memberEmail ? (
+                    memberEmail
+                  ) : (
+                    <Report targetMember={member.memberEmail} category="memberpage" target="0" />
+                  )
+                }
+              />
+            )}
+            <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
+            <CardContent sx={{ textAlign: "right" }}>
+              <Grid container justifyContent={"space-between"}>
+                <Grid item xs={8}>
+                  <div style={{ textAlign: "left" }}>
+                    {interestArr &&
+                      interestArr.map((interest, index) => (
+                        <Chip
+                          onClick={() => console.log("검색으로 이동")}
+                          variant="outlined"
+                          key={index}
+                          label={interest}
+                          style={{
+                            fontSize: 10,
+                            marginLeft: 5,
+                            marginBottom: 5,
+                            boxShadow: "0 3px 5px  lightgray",
+                          }}
                         />
-                      )}
-                    </Grid>
-                  ) : null}
+                      ))}
+                  </div>
                 </Grid>
-              </CardContent>
-            </Card>
-            <Box sx={{ mt: 5, width: 600, height: 400, overflowY: "scroll" }}>
-              <ImageList variant="masonry" cols={3} gap={1}>
-                {feedList !== undefined ? (
-                  feedList.map((feed, index) => (
-                    <ImageListItem key={feed.ffList[0].feedFileCode}>
+                {followList !== undefined ? (
+                  <Grid item xs={4}>
+                    <FollowMemberListModal lstate={lstate} followList={followerList}>
+                      팔로워 {followerList.length}
+                    </FollowMemberListModal>
+
+                    <FollowMemberListModal lstate={lstate} followList={followList}>
+                      팔로우 {followList.length}
+                    </FollowMemberListModal>
+
+                    {logid === memberEmail ? null : (
+                      <Checkbox
+                        checked={isFollow}
+                        icon={<FavoriteBorder />}
+                        checkedIcon={<Favorite />}
+                        onClick={() => onFollow(isFollow)}
+                      />
+                    )}
+                  </Grid>
+                ) : null}
+              </Grid>
+            </CardContent>
+          </Card>
+          {myMenu === "share" ? (
+            <ImageList
+              sx={{ width: "100%", overflowY: "scroll", height: "550px", mb: 8, mt: 0.5 }}
+              cols={3}
+              rowHeight={164}
+            >
+              {feedList !== undefined ? (
+                feedList.map((feed, index) => (
+                  <Link to={`/share/${feed.feedCode}`} key={index}>
+                    <ImageListItem style={{ height: "275px" }}>
                       <img
-                        src={`/images/${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format`}
-                        srcSet={`${feed.ffList[0].feedFileSaveimg}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                        alt={feed.ffList[0].feedFileImg}
+                        src={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                        srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                        alt={feed.feedCode}
                         loading="lazy"
+                        style={{
+                          width: "100%",
+
+                          height: "100%",
+                        }}
                       />
                     </ImageListItem>
-                  ))
-                ) : (
-                  <Typography>작성한 피드가 없어요</Typography>
-                )}
-              </ImageList>
-            </Box>
-          </Grid>
+                  </Link>
+                ))
+              ) : (
+                <Typography>작성한 피드가 없어요</Typography>
+              )}
+            </ImageList>
+          ) : myMenu === "talk" && talkJoinList[0].talkCode !== undefined ? (
+            <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} />
+          ) : (
+            togetherJoinList !== undefined && (
+              //함께해요
+              <MemberTogether myMenu={myMenu} togetherJoinList={togetherJoinList} />
+            )
+          )}
         </Grid>
       </Grid>
     </Container>
