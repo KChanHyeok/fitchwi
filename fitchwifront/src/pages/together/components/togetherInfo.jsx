@@ -1,4 +1,4 @@
-import { Box, Stack, styled, Avatar, Typography } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
@@ -114,13 +114,13 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
                 togetherInfo={togetherInfo}
                 togetherJoinMember={togetherJoinMember}
               >
-                최종결제
+                최종결제 
               </TogetherJoin>
             ) : togetherJoinList.filter(
                 (data) =>
                 data.togetherCode.togetherCode === togetherPageCode * 1 &&
                 data.memberEmail.memberEmail === sessionStorage.getItem("id")
-              ).length === 0 ? (
+              ).length === 0 && togetherInfo.togetherState==="결제대기중" ? (
               <TogetherJoin
                 refreshTogetherJoinList={refreshTogetherJoinList}
                 togetherPageCode={togetherPageCode}
@@ -128,7 +128,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
               >
                 참여신청하기
               </TogetherJoin>
-            ) : (
+            ) : togetherInfo.togetherState==="결제완료" ? <Button disabled variant="contained">마감</Button>: (
               <TogetherJoin
                 togetherJoinState={
                   togetherJoinList.filter(

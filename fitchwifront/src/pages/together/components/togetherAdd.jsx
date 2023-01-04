@@ -12,10 +12,15 @@ import {
   Stack,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import moment from "moment/moment";
 
 const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+
 
 const UserBox = styled(Box)({
   display: "flex",
@@ -25,17 +30,24 @@ const UserBox = styled(Box)({
 });
 
 const facilities = {
-  facilitiesCode: null,
+  facilitiesCode: 0,
   facilitiesGrade: "", 
   facilitiesManager: "" ,
   facilitiesName: "",
   facilitiesPhone: "",
   facilitiesPosition: "",
-  facilitiesPrice: null
+  facilitiesPrice: 0
 }
 
 const TogetherAdd = ({ data, refreshTogetherList }) => {
+  // const [togetherDatemonet, setTogetherDatemonet] = React.useState(dayjs(nowdate));
+
   const nav = useNavigate();
+  const formDate = new FormData();
+  const [fileForm, setFileForm] = useState("");
+  
+  const imgEl = document.querySelector(".img_box");
+  
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -45,7 +57,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherTitle: "",
     togetherCategory: "",
     togetherPosition: "",
-    togetherDate: "",
+    togetherDate: nowdate,
     togetherMax: 0,
     togetherContent: "",
     togetherRecruitStartDate: "", // 모집 시작일
@@ -55,9 +67,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
     togetherTagContent: "", //태그 내용
   });
-  const formDate = new FormData();
-  const [fileForm, setFileForm] = useState("");
-  const imgEl = document.querySelector(".img_box");
   
   useEffect(() => {
     preview();
@@ -117,7 +126,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     backgroundSize: "cover",
   };
 
-  
   console.log(insertForm)
 
   return (
@@ -143,7 +151,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherTitle"
           required
         />
-        <TextField
+        {/* <TextField
           fullWidth
           label="모이는 일자"
           sx={{ mt: 3 }}
@@ -155,7 +163,26 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           focused
           color="grey"
           required
-        />
+        /> */}
+         <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <StaticDatePicker
+            displayStaticWrapperAs="desktop"
+            label="Week picker"
+            value={insertForm.togetherDate}
+            onChange={(e)=>{
+              setInsertForm({
+                ...insertForm,
+                togetherDate:moment(e.$d).format("YYYY-MM-DD")
+              });
+            }}
+            disablePast
+            // renderDay={renderWeekPickerDay}
+            renderInput={(params) => <TextField {...params} />}
+            inputFormat="'Week of' MMM d"
+          />
+        </LocalizationProvider>
+
+
         <TextField
           fullWidth
           label="최대참여인원"
