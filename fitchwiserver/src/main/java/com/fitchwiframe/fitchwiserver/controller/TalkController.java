@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log
@@ -107,4 +108,11 @@ public class TalkController {
         log.info("ssgetTalkJoinListByMember()");
         return talkService.getTalkJoinListByMember(memberEmail);
     }
+
+    @GetMapping("/getMemberTalk")
+    public Map<String, Object> getMemberTalk(@RequestParam String memberEmail){
+        log.info("getMemberTalk()");
+        return talkService.getMemberTalk(memberEmail);
+    }
+
 }

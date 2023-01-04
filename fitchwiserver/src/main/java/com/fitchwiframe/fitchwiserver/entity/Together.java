@@ -63,4 +63,7 @@ public class Together {
   @ColumnDefault("0")
   private int togetherTotalPrice;
 
+  @Transient
+  private Long togetherMemberCount;
+
 }

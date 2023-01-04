@@ -15,4 +15,7 @@ public interface TalkJoinRepository extends CrudRepository<TalkJoin, Long> {
     void deleteAllByTalkCode(Talk talkCode);
 
     List<TalkJoin> findAllByMemberEmail(Member member);
+
+
+  Long countByTalkCode(Talk talk);
 }
