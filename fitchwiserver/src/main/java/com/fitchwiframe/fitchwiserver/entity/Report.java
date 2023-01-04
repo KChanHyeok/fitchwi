@@ -2,6 +2,7 @@ package com.fitchwiframe.fitchwiserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "report")
+@DynamicInsert
 public class Report {
 
     @Id
@@ -26,4 +28,7 @@ public class Report {
 
     @Transient
     private List<ReportDetail> reportDetailList;
+
+    @Column(columnDefinition = "varchar(10) default '대기'")
+    private String reportState;
 }
