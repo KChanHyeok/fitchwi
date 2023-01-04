@@ -10,4 +10,6 @@ import java.util.List;
 public interface TogetherJoinRepository extends CrudRepository<TogetherJoin, Long> {
     TogetherJoin findByMemberEmailAndTogetherCode(Member member, Together togetherCode);
     List<TogetherJoin> findAllByMemberEmail(Member member);
+
+  Long countByTogetherCode(Together together);
 }

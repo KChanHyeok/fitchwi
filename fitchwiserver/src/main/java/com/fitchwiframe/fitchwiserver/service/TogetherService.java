@@ -343,4 +343,53 @@ public class TogetherService {
         }
         return togetherList;
     }
+
+    public List<TogetherOpened> getTogetherOpenedListByMember(String memberEmail) {
+        log.info("togetherService.getTogetherOpenedListByMember()");
+        List<TogetherOpened> togetherOpenedList = null;
+
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            togetherOpenedList = togetherOpenedRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return togetherOpenedList;
+
+    }
+
+    public Map<String, Object> getMemberTogether(String memberEmail) {
+        log.info("togetherService.getMemberTogether()");
+        Map<String, Object> togetherMap = new HashMap<>();
+        try{
+            List<TogetherJoin> togetherJoinListByMember = getTogetherJoinListByMember(memberEmail);
+            if(!(togetherJoinListByMember.isEmpty())){
+                for(TogetherJoin tj : togetherJoinListByMember){
+                    Together together = tj.getTogetherCode();
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                }
+            }
+
+            List<Together> togetherListWithMemberCount = new ArrayList<>();
+
+
+            List<TogetherOpened> togetherOpenedListByMember = getTogetherOpenedListByMember(memberEmail);
+            if(!(togetherOpenedListByMember.isEmpty())){
+                for(TogetherOpened to : togetherOpenedListByMember){
+                    Together together = togetherRepository.findBytogetherOpenedCode(to);
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                    togetherListWithMemberCount.add(together);
+                }
+
+            }
+
+
+            togetherMap.put("togetherJoinList", togetherJoinListByMember);
+            togetherMap.put("togetherOpenedList", togetherListWithMemberCount);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return togetherMap;
+    }
 }

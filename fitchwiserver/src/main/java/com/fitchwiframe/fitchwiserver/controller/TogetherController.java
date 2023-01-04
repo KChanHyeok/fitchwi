@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log
@@ -98,6 +99,10 @@ public class TogetherController {
         return togetherService.getTogetherJoinListByMember(memberEmail);
     }
 
-
+    @GetMapping("/getMemberTogether")
+    public Map<String, Object> getMemberTogether(@RequestParam String memberEmail){
+        log.info("getMemberTogether()");
+        return togetherService.getMemberTogether(memberEmail);
+    }
 
 }

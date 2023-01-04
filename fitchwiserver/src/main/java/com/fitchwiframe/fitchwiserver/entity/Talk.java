@@ -3,6 +3,7 @@ package com.fitchwiframe.fitchwiserver.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -38,4 +39,8 @@ public class Talk {
 
     @Column(nullable = false)
     private int talkMax;
+
+    @Transient
+    private Long talkMemberCount;
+
 }

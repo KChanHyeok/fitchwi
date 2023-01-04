@@ -30,6 +30,7 @@ import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
 import MemberTalk from "./MemberTalk";
+
 import MemberTogether from "./MemberTogether";
 
 export default function MemberPage({ member, onLogout, lstate }) {
@@ -37,6 +38,8 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
   const [talkJoinList, setTalkJoinList] = useState([]);
+  const [talkOpenedList, setTalkOpenedList] = useState([]);
+  const [togetherOpenedList, setTogetherOpenedList] = useState([]);
   const [togetherJoinList, setTogetherJoinList] = useState([]);
 
   //메뉴 선택 후 해당 정보 조회
@@ -50,20 +53,20 @@ export default function MemberPage({ member, onLogout, lstate }) {
   }, [member]);
 
   const getMemberTalk = useCallback(() => {
-    axios
-      .get("/getTalkJoinListByMember", { params: { memberEmail: member.memberEmail } })
-      .then((res) => {
-        console.log(res.data);
-        setTalkJoinList(res.data);
-      });
+    axios.get("/getMemberTalk", { params: { memberEmail: member.memberEmail } }).then((res) => {
+      const { talkJoinList, talkOpenedList } = res.data;
+      console.log(res.data);
+      setTalkJoinList(talkJoinList);
+      setTalkOpenedList(talkOpenedList);
+    });
   }, [member]);
   const getMemberTogether = useCallback(() => {
-    axios
-      .get("/getTogetherJoinListByMember", { params: { memberEmail: member.memberEmail } })
-      .then((res) => {
-        console.log(res.data);
-        setTogetherJoinList(res.data);
-      });
+    axios.get("/getMemberTogether", { params: { memberEmail: member.memberEmail } }).then((res) => {
+      const { togetherJoinList, togetherOpenedList } = res.data;
+      console.log(res.data);
+      setTogetherJoinList(togetherJoinList);
+      setTogetherOpenedList(togetherOpenedList);
+    });
   }, [member]);
 
   useEffect(() => {
@@ -216,7 +219,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
           </List>
 
           {logid === memberEmail ? (
-            <Box component="form" sx={{ mt: 50 }}>
+            <Box component="form" sx={{ mt: 40 }}>
               <List>
                 <ListItem disablePadding>
                   <ListItemButton sx={{ justifyContent: "center" }}>
@@ -274,7 +277,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
             alignItems: "center",
           }}
         >
-          <Card sx={{ width: "100%", minWidth: 600 }}>
+          <Card sx={{ width: "90%" }}>
             {memberSaveimg && (
               <CardHeader
                 style={{
@@ -347,14 +350,14 @@ export default function MemberPage({ member, onLogout, lstate }) {
           </Card>
           {myMenu === "share" ? (
             <ImageList
-              sx={{ width: "100%", overflowY: "scroll", height: "550px", mb: 8, mt: 0.5 }}
+              sx={{ width: "90%", overflowY: "scroll", height: "480px", mb: 6, mt: 0.5 }}
               cols={3}
               rowHeight={164}
             >
               {feedList !== undefined ? (
                 feedList.map((feed, index) => (
                   <Link to={`/share/${feed.feedCode}`} key={index}>
-                    <ImageListItem style={{ height: "275px" }}>
+                    <ImageListItem style={{ height: "250px" }}>
                       <img
                         src={`/images/${feed.ffList[0].feedFileSaveimg}`}
                         srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
@@ -373,13 +376,34 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 <Typography>작성한 피드가 없어요</Typography>
               )}
             </ImageList>
-          ) : myMenu === "talk" && talkJoinList[0].talkCode !== undefined ? (
-            <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} />
+          ) : myMenu === "talk" ? (
+            <Box width={"100%"} sx={{ margin: "auto", pl: 6 }}>
+              {" "}
+              <Typography variant="h6" gutterBottom>
+                얘기해요 활동 현황
+              </Typography>
+              {talkJoinList !== undefined ? (
+                <MemberTalk
+                  myMenu={myMenu}
+                  talkJoinList={talkJoinList}
+                  talkOpenedList={talkOpenedList}
+                />
+              ) : null}
+            </Box>
           ) : (
-            togetherJoinList !== undefined && (
-              //함께해요
-              <MemberTogether myMenu={myMenu} togetherJoinList={togetherJoinList} />
-            )
+            //함께해요
+            <Box width={"100%"} sx={{ margin: "auto", pl: 6 }}>
+              <Typography variant="h6" gutterBottom>
+                함께해요 활동 현황
+              </Typography>
+              {togetherJoinList !== undefined ? (
+                <MemberTogether
+                  myMenu={myMenu}
+                  togetherJoinList={togetherJoinList}
+                  togetherOpenedList={togetherOpenedList}
+                />
+              ) : null}
+            </Box>
           )}
         </Grid>
       </Grid>

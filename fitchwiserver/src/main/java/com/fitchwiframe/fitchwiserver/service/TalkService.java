@@ -266,6 +266,55 @@ public class TalkService {
             e.printStackTrace();
         }
         return talkJoinList;
+    }
+    public List<TalkOpened> getTalkOpenedListByMember(String memberEmail) {
+        log.info("talkService.getTalkJoinListByMember()");
+        List<TalkOpened> talkOpenedList = null;
 
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            talkOpenedList = talkOpenedRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkOpenedList;
+
+    }
+
+    public Map<String, Object> getMemberTalk(String memberEmail) {
+            Map<String, Object> talkMap = new HashMap<>();
+        try{
+
+            List<TalkJoin> talkJoinListByMember = getTalkJoinListByMember(memberEmail);
+
+
+            if(!(talkJoinListByMember.isEmpty())) {
+                for (TalkJoin tj : talkJoinListByMember) {
+                    Talk talk = tj.getTalkCode();
+                    talk.setTalkMemberCount(talkJoinRepository.countByTalkCode(talk));
+
+                }
+            }
+
+            List<Talk> talkListWithMemberCount = new ArrayList<>();
+
+            List<TalkOpened> talkOpenedListByMember = getTalkOpenedListByMember(memberEmail);
+            if(!talkOpenedListByMember.isEmpty()) {
+                for (TalkOpened to : talkOpenedListByMember) {
+                 Talk   talk = talkRepository.findByTalkOpenCode(to);
+                 talk.setTalkMemberCount(talkJoinRepository.countByTalkCode(talk));
+
+
+                 talkListWithMemberCount.add(talk);
+                }
+            }
+
+            talkMap.put("talkJoinList", talkJoinListByMember);
+            talkMap.put("talkOpenedList", talkListWithMemberCount);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return talkMap;
     }
 }
