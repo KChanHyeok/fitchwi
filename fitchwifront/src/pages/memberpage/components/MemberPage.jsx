@@ -25,19 +25,66 @@ import axios from "axios";
 import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Report from "../../../components/common/Report";
+
 import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
+import MemberTalk from "./MemberTalk";
+import MemberTogether from "./MemberTogether";
 
 export default function MemberPage({ member, onLogout, lstate }) {
   //페이지 기본 데이터
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
-  const getAllFeedList = useCallback(() => {
-    if (member.memberEmail !== undefined) {
-      axios.post("/getMemberFeed", member).then((res) => setFeedList(res.data));
-    }
+  const [talkJoinList, setTalkJoinList] = useState([]);
+  const [togetherJoinList, setTogetherJoinList] = useState([]);
+
+  //메뉴 선택 후 해당 정보 조회
+  const [myMenu, setMyMenu] = useState("share");
+
+  console.log(myMenu);
+  const getMemberFeed = useCallback(() => {
+    axios
+      .get("/getMemberFeed", { params: { memberEmail: member.memberEmail } })
+      .then((res) => setFeedList(res.data));
   }, [member]);
+
+  const getMemberTalk = useCallback(() => {
+    axios
+      .get("/getTalkJoinListByMember", { params: { memberEmail: member.memberEmail } })
+      .then((res) => {
+        console.log(res.data);
+        setTalkJoinList(res.data);
+      });
+  }, [member]);
+  const getMemberTogether = useCallback(() => {
+    axios
+      .get("/getTogetherJoinListByMember", { params: { memberEmail: member.memberEmail } })
+      .then((res) => {
+        console.log(res.data);
+        setTogetherJoinList(res.data);
+      });
+  }, [member]);
+
+  useEffect(() => {
+    if (member.memberEmail !== undefined) {
+      switch (myMenu) {
+        case "share":
+          getMemberFeed();
+          break;
+        case "talk":
+          getMemberTalk();
+          break;
+        case "together":
+          getMemberTogether();
+          break;
+        default:
+          break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member.memberEmail, myMenu]);
+
   const { logid } = lstate;
   const {
     memberEmail,
@@ -57,12 +104,6 @@ export default function MemberPage({ member, onLogout, lstate }) {
   if (memberInterest != null) {
     interestArr = memberInterest.split(" ");
   }
-
-  useEffect(() => {
-    if (member !== undefined) {
-      getAllFeedList();
-    }
-  }, [member, getAllFeedList]);
 
   //팔로우 관련
   const [followList, setFollowList] = useState([]);
@@ -156,18 +197,18 @@ export default function MemberPage({ member, onLogout, lstate }) {
           <List>
             <ListItem disablePadding>
               <ListItemButton>
-                <CenterListText primary="피드" />
+                <CenterListText primary="공유해요" onClick={() => setMyMenu("share")} />
               </ListItemButton>
             </ListItem>
             <Divider variant="middle" component="li" />
             <ListItem disablePadding>
-              <ListItemButton component="a" href="#simple-list">
+              <ListItemButton onClick={() => setMyMenu("talk")}>
                 <CenterListText primary="애기해요" />
               </ListItemButton>
             </ListItem>
             <Divider variant="middle" component="li" />
             <ListItem disablePadding>
-              <ListItemButton component="a" href="#simple-list">
+              <ListItemButton onClick={() => setMyMenu("together")}>
                 <CenterListText primary="함께해요" />
               </ListItemButton>
             </ListItem>
@@ -175,7 +216,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
           </List>
 
           {logid === memberEmail ? (
-            <Box component="form" sx={{ mt: 40 }}>
+            <Box component="form" sx={{ mt: 50 }}>
               <List>
                 <ListItem disablePadding>
                   <ListItemButton sx={{ justifyContent: "center" }}>
@@ -233,7 +274,6 @@ export default function MemberPage({ member, onLogout, lstate }) {
             alignItems: "center",
           }}
         >
-          {/* <Grid container justifyContent="center" sx={{ alignItems: "center" }}> */}
           <Card sx={{ width: "100%", minWidth: 600 }}>
             {memberSaveimg && (
               <CardHeader
@@ -305,34 +345,44 @@ export default function MemberPage({ member, onLogout, lstate }) {
               </Grid>
             </CardContent>
           </Card>
-          {/* <Box sx={{ mt: 5, width: "100%", height: 400, overflowY: "scroll" }}> */}
-          <ImageList
-            sx={{ width: "100%", height: 800, overflowY: "scroll" }}
-            cols={3}
-            rowHeight={164}
-          >
-            {feedList !== undefined ? (
-              feedList.map((feed, index) => (
-                <Link to={`/share/${feed.feedCode}`} key={index}>
-                  <ImageListItem style={{ height: 300 }}>
-                    <img
-                      src={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                      srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                      alt={feed.feedCode}
-                      loading="lazy"
-                      style={{ width: "100%", height: "100%" }}
-                    />
-                  </ImageListItem>
-                </Link>
-              ))
-            ) : (
-              <Typography>작성한 피드가 없어요</Typography>
-            )}
-          </ImageList>
-          {/* </Box> */}
+          {myMenu === "share" ? (
+            <ImageList
+              sx={{ width: "100%", overflowY: "scroll", height: "550px", mb: 8, mt: 0.5 }}
+              cols={3}
+              rowHeight={164}
+            >
+              {feedList !== undefined ? (
+                feedList.map((feed, index) => (
+                  <Link to={`/share/${feed.feedCode}`} key={index}>
+                    <ImageListItem style={{ height: "275px" }}>
+                      <img
+                        src={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                        srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                        alt={feed.feedCode}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+
+                          height: "100%",
+                        }}
+                      />
+                    </ImageListItem>
+                  </Link>
+                ))
+              ) : (
+                <Typography>작성한 피드가 없어요</Typography>
+              )}
+            </ImageList>
+          ) : myMenu === "talk" && talkJoinList[0].talkCode !== undefined ? (
+            <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} />
+          ) : (
+            togetherJoinList !== undefined && (
+              //함께해요
+              <MemberTogether myMenu={myMenu} togetherJoinList={togetherJoinList} />
+            )
+          )}
         </Grid>
       </Grid>
-      {/* </Grid> */}
     </Container>
   );
 }

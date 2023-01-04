@@ -327,5 +327,4 @@ public class TogetherService {
         }
         return togetherList;
     }
-
 }
