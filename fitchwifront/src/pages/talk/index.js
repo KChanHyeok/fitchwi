@@ -67,7 +67,7 @@ function Home() {
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
                 <Route path="/:talkPageCode"
                 element={<TalkInfo
-                    refreshTalkJoinInfo={getTalkJoinList}
+                    refreshTalkJoinList={getTalkJoinList}
                     talkList={talkList} talkJoinList={talkJoinList} />} />
                     <Route path="opened"
                     element={<TalkOpened  memberEmail={id} refreshTalkList={getAllTalkList}/>} />

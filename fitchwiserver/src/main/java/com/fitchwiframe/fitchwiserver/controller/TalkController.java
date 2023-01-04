@@ -82,10 +82,18 @@ public class TalkController {
         return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
     }
 
-    @GetMapping("/approveMember")
-    public String approveMember(@RequestBody TalkJoin talkJoin) {
-        log.info("talkController.approveMember()");
-        return talkService.approveMember(talkJoin);
+    //승인 대기 -> 가입중
+    @PutMapping("/approvalTalkMember")
+    public String approvalTalkMember(@RequestBody TalkJoin talkJoin) {
+        log.info("talkController.approvalTalkMember()");
+        return talkService.approvalTalkMember(talkJoin);
+    }
+
+    //승인 대기 -> 거절
+    @PutMapping("/refusalTalkMember")
+    public String refusalTalkMember(@RequestBody TalkJoin talkJoin) {
+        log.info("talkController.refusalTalkMember()");
+        return talkService.refusalTalkMember(talkJoin);
     }
 
     @GetMapping("/getTalkListBySearch")

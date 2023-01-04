@@ -224,8 +224,8 @@ public class TalkService {
     }
 
 
-    public String approveMember(TalkJoin talkJoin) {
-        log.info("talkService.approveMember()");
+    public String approvalTalkMember(TalkJoin talkJoin) {
+        log.info("talkService.approvalTalkMember()");
         String result = null;
         try {
             talkJoin.setTalkJoinState("가입중");
@@ -237,6 +237,21 @@ public class TalkService {
         }
         return result;
     }
+
+    public String refusalTalkMember(TalkJoin talkJoin) {
+        log.info("talkService.refusalTalkMember()");
+        String result = null;
+        try {
+            talkJoin.setTalkJoinState("거절");
+            talkJoinRepository.save(talkJoin);
+            result = "거절 처리 완료";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "거절 처리 실패";
+        }
+        return result;
+    }
+
     public List<TalkJoin> getTalkJoinListByMember(String memberEmail) {
         log.info("talkService.getTalkJoinListByMember()");
         List<TalkJoin> talkJoinList = null;
@@ -250,4 +265,5 @@ public class TalkService {
         return talkJoinList;
 
     }
+
 }
