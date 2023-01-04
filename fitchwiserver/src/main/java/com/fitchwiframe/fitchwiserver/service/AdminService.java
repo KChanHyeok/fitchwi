@@ -10,13 +10,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
 @Log
 public class AdminService {
-
+  @Autowired
+  private FeedService feedService;
   @Autowired
   private FacilitiesRepository facilitiesRepository;
   @Autowired
@@ -27,6 +29,8 @@ public class AdminService {
   private ReportRepository reportRepository;
   @Autowired
   private ReportDetailRepository reportDetailRepository;
+  @Autowired
+  private TalkService talkService;
 
   public Iterable<Facilities> getAllFacilitiesList() {
     log.info("adminController.getAllFacilitiesList()");
@@ -354,6 +358,47 @@ public class AdminService {
     }
     return result;
   }
+
+  public String updateReportState(Long reportCode) {
+   String result ="fail";
+    log.info("adminService.updateReportState()");
+    try{
+      Report report = reportRepository.findById(reportCode).get();
+      report.setReportState("처리완료");
+      reportRepository.save(report);
+      result ="ok";
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+//  public String deleteReportTarget(Long reportTarget, String reportCategory, HttpSession session) {
+//  log.info("adminService.deleteReportTarget()");
+//  String result = "fail";
+//  switch(reportCategory){
+//    case "share":
+//      try{
+//
+//        Feed feedInfo = feedService.getFeedInfo(reportTarget);
+//        if(feedInfo==null){
+//          result ="no data";
+//        }
+//        feedService.deleteFeed(feedInfo, session );
+//        result="ok";
+//      }catch (Exception e){
+//        e.printStackTrace();
+//      }
+//      break;
+//    case "talk":
+//
+//      deleteTalk
+//
+//      break;
+//
+//  }
+//  return result;
+//  }
 
 
 //  public Report getReport(Long reportCode) {

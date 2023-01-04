@@ -4,7 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  ButtonGroup,
+
   Container,
   Divider,
   FormControl,
@@ -14,6 +14,7 @@ import {
   Pagination,
   Select,
   Stack,
+  styled,
   Table,
   TableBody,
   TableCell,
@@ -27,6 +28,7 @@ import axios from "axios";
 import moment from "moment/moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 export default function ReportManagement() {
   const [reportList, setReportList] = useState([]);
 
@@ -54,15 +56,14 @@ export default function ReportManagement() {
   const handlepageNum = useCallback((value) => {
     getReports(value);
   }, []);
-  const onRistrict = (period, memberEmail) => {
+  const onRistrict = (period, memberEmail, reportCode) => {
     console.log(period);
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
 
-    axios
-      .get("/restrictMember", {
-        params: { restrictDate: restrictDate, targetMemberEmail: memberEmail },
-      })
-      .then((result) => console.log(result));
+    axios.put(`/restrictMember/${restrictDate}/${memberEmail}`).then((result) => {
+      console.log(result);
+      updateReportState(reportCode);
+    });
   };
 
   const [restrictDateMap, setRestrictDateMap] = useState(new Map());
@@ -72,13 +73,104 @@ export default function ReportManagement() {
     setRestrictDateMap((prev) => new Map(prev).set(e.target.name, e.target.value));
   }, []);
 
-  const deleteReport = (reportCode) => {
+  const deleteReport = useCallback((reportCode) => {
     console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
       alert(result.data);
       getReports(pageNum);
     });
+  }, []);
+
+  const deleteReportTarget = useCallback(
+    (reportTarget, reportCategory, memberEmail, reportCode) => {
+      console.log("delete");
+      switch (reportCategory) {
+        case "share":
+          console.log("feed");
+          axios
+            .get("/getFeedInfo", { params: { feedCode: reportTarget } })
+            .then((feed) => {
+              console.log(feed.data);
+              axios
+                .delete("/deleteFeed", { data: feed.data })
+                .then((result) => updateReportState(reportCode))
+                .catch((error) => console.log(error));
+            })
+            .catch((error) => console.log(error));
+
+          break;
+        case "talk":
+          console.log("talk");
+          axios
+            .get("/getTalk", { params: { talkCode: reportTarget } })
+            .then((talk) => {
+              console.log(talk.data);
+              console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
+              if (talk.data.talkOpenCode.memberEmail.memberEmail === memberEmail) {
+                console.log("개설자");
+                axios
+                  .delete("/deleteTalk", { data: talk.data })
+                  .then((result) => {
+                    updateReportState(reportCode);
+                    alert("해당 '얘기해요'를 삭제했습니다.");
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    alert("해당 얘기해요를 삭제할 수 없습니다.");
+                  });
+              } else {
+                console.log("가입자");
+                axios
+                  .get("/getTalkJoinListByMember", { params: { memberEmail: memberEmail } })
+                  .then((result) => {
+                    let targetTalkJoin = result.data.filter(
+                      (talkJoin) => talkJoin.memberEmail.memberEmail === memberEmail
+                    );
+                    console.log(targetTalkJoin);
+                    axios
+                      .delete("/deleteTalkJoinInfo", {
+                        params: {
+                          memberEmail: memberEmail,
+                          talkCode: targetTalkJoin[0].talkCode.talkCode,
+                        },
+                      })
+                      .then((result) => {
+                        updateReportState(reportCode);
+                        alert("해당 '얘기해요'에서 대상을 탈퇴시켰습니다.");
+                      })
+                      .catch((error) => console.log(error));
+                  })
+                  .catch((error) => console.log(error));
+              }
+            })
+            .catch((error) => console.log(error));
+
+          break;
+        default:
+          break;
+      }
+
+      // axios
+      //   .delete("/deleteReportTarget", {
+      //     params: { reportTarget: reportTarget, reportCategory: reportCategory },
+      //   })
+      //   .then((result) => alert(result.data));
+    },
+    []
+  );
+  const updateReportState = (reportCode) => {
+    console.log(reportCode);
+    axios.put(`/updateReportState/${reportCode}`).then((result) => {
+      alert(result.data + "처리 완료");
+      getReports(pageNum);
+    });
   };
+
+  const CenterTableCell = styled(TableCell)({
+    textAlign: "center",
+    width: "33%",
+  });
+
   return (
     <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 40 }}>
       <Box sx={{ mb: 5 }}>
@@ -109,6 +201,9 @@ export default function ReportManagement() {
           <Typography align="center" sx={{ width: "100%" }}>
             신고 건수
           </Typography>
+          <Typography align="center" sx={{ width: "100%" }}>
+            처리 상태
+          </Typography>
         </AccordionSummary>
       </Accordion>
 
@@ -121,58 +216,53 @@ export default function ReportManagement() {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Grid container>
-                  <Grid item xs={3}>
+                <Grid container justifyContent="space-evenly">
+                  <Grid item xs={2}>
                     {" "}
                     {report.reportCode}
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={2}>
                     {" "}
                     {report.reportTarget === 0 ? (
                       <Link
                         to={`/${report.reportCategory}`}
                         state={{ memberId: report.memberEmail.memberEmail }}
                       >
-                        <Typography align="center" sx={{ width: "100%" }}>
-                          {report.reportCategory}
-                        </Typography>
+                        <Typography>{report.reportCategory}</Typography>
                       </Link>
                     ) : (
                       <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
-                        <Typography align="center" sx={{ width: "100%" }}>
-                          {report.reportCategory}
-                        </Typography>
+                        <Typography>{report.reportCategory}</Typography>
                       </Link>
                     )}
                   </Grid>
-                  <Grid item xs={3}>
-                    {" "}
+                  <Grid item xs={2}>
                     <Link
                       to={`/${report.reportCategory}`}
                       state={{ memberId: report.memberEmail.memberEmail }}
                     >
-                      <Typography align="center" sx={{ width: "100%" }}>
-                        {report.memberEmail.memberEmail}
-                      </Typography>
+                      <Typography>{report.memberEmail.memberEmail}</Typography>
                     </Link>{" "}
                   </Grid>
-                  <Grid item xs={3}>
-                    {" "}
-                    {report.reportDetailList.length}
+                  <Grid item xs={2}>
+                    <Typography>{report.reportDetailList.length}</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Typography>{report.reportState}</Typography>
                   </Grid>
                 </Grid>
               </AccordionSummary>
 
               <AccordionDetails>
                 <TableContainer component="main">
-                  <Table sx={{ width: "100%" }} aria-label="simple table">
+                  <Table aria-label="simple table">
                     <TableHead
                       style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
                     >
                       <TableRow>
-                        <TableCell align="center">신고일시</TableCell>
-                        <TableCell align="center">신고한 유저</TableCell>
-                        <TableCell align="center">신고 내용</TableCell>
+                        <CenterTableCell>신고일시</CenterTableCell>
+                        <CenterTableCell>신고한 유저</CenterTableCell>
+                        <CenterTableCell>신고 내용</CenterTableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -181,54 +271,81 @@ export default function ReportManagement() {
                           key={reportDetail.reportDetailCode}
                           sx={{ backgroundColor: "#f2f2f2" }}
                         >
-                          <TableCell align="center">{reportDetail.reportDetailDate}</TableCell>
-                          <TableCell align="center">
-                            {reportDetail.memberEmail.memberEmail}
-                          </TableCell>
-                          <TableCell align="center">{reportDetail.reportDetailContent}</TableCell>
+                          <CenterTableCell>{reportDetail.reportDetailDate}</CenterTableCell>
+                          <CenterTableCell>{reportDetail.memberEmail.memberEmail}</CenterTableCell>
+                          <CenterTableCell>{reportDetail.reportDetailContent}</CenterTableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <Grid container>
+                <Grid container sx={{ mt: 1 }}>
                   <Grid item xs={6}>
-                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                      <InputLabel id="demo-select-small">이용 제한 일</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name={report.reportCode + ""}
-                        // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
-                        label="restrictDate"
-                        defaultValue={2}
-                        onChange={(e) => onSelectDate(e)}
-                        size="small"
-                      >
-                        <MenuItem value={2}>1일</MenuItem>
-                        <MenuItem value={8}>7일</MenuItem>
-                        <MenuItem value={31}>30일</MenuItem>
-                        <MenuItem value={91}>90일</MenuItem>
-                        <MenuItem value={181}>180일</MenuItem>
-                        <MenuItem value={361}>360일</MenuItem>
-                      </Select>
-                    </FormControl>
                     <Button
-                      onClick={() =>
-                        onRistrict(
-                          restrictDateMap.get(report.reportCode + ""),
-                          report.memberEmail.memberEmail
-                        )
-                      }
+                      variant="contained"
+                      sx={{ mt: 1, height: 40 }}
+                      onClick={() => deleteReport(report.reportCode)}
                     >
-                      제한하기
+                      신고내역 삭제
                     </Button>
                   </Grid>
                   <Grid item xs={6}>
-                    <ButtonGroup>
-                      <Button onClick={() => deleteReport(report.reportCode)}>신고내역 삭제</Button>
-                      <Button>신고 대상 삭제</Button>
-                    </ButtonGroup>
+                    {report.reportState === "대기" ? (
+                      report.reportCategory === "share" || report.reportCategory === "talk" ? (
+                        <Button
+                          variant="contained"
+                          sx={{ mt: 1, height: 40 }}
+                          onClick={() =>
+                            deleteReportTarget(
+                              report.reportTarget,
+                              report.reportCategory,
+                              report.memberEmail.memberEmail,
+                              report.reportCode
+                            )
+                          }
+                        >
+                          신고 대상 삭제
+                        </Button>
+                      ) : (
+                        <div>
+                          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                            <InputLabel id="demo-select-small">이용 제한 일</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              name={report.reportCode + ""}
+                              // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
+                              label="restrictDate"
+                              defaultValue={2}
+                              onChange={(e) => onSelectDate(e)}
+                              size="small"
+                            >
+                              <MenuItem value={2}>1일</MenuItem>
+                              <MenuItem value={8}>7일</MenuItem>
+                              <MenuItem value={31}>30일</MenuItem>
+                              <MenuItem value={91}>90일</MenuItem>
+                              <MenuItem value={181}>180일</MenuItem>
+                              <MenuItem value={361}>360일</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <Button
+                            variant="contained"
+                            sx={{ mt: 1, height: 40 }}
+                            onClick={() =>
+                              onRistrict(
+                                restrictDateMap.get(report.reportCode + ""),
+                                report.memberEmail.memberEmail,
+                                report.reportCode
+                              )
+                            }
+                          >
+                            제한하기
+                          </Button>
+                        </div>
+                      )
+                    ) : (
+                      <Typography>이미 처리된 신고 내역입니다.</Typography>
+                    )}
                   </Grid>
                 </Grid>
               </AccordionDetails>

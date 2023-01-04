@@ -3,10 +3,12 @@ package com.fitchwiframe.fitchwiserver.controller;
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
 import com.fitchwiframe.fitchwiserver.entity.Report;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
+import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +18,6 @@ public class AdminController {
 
   @Autowired
   private AdminService adminService;
-
   @GetMapping("/getAllFacilitiesList")
   public Iterable<Facilities> getAllFacilitiesList() {
     log.info("adminController.getAllFacilitiesList()");
@@ -88,15 +89,26 @@ public class AdminController {
     return adminService.getReportList(pageNum);
   }
 
-  @GetMapping("/restrictMember")
-  public String restrictMember(String restrictDate, String targetMemberEmail) {
+  @PutMapping("/restrictMember/{restrictDate}/{memberEmail}")
+  public String restrictMember(@PathVariable  String restrictDate, @PathVariable  String memberEmail) {
     log.info("adminController.restrictMember");
-    return adminService.restrictMember(restrictDate, targetMemberEmail);
+    return adminService.restrictMember(restrictDate, memberEmail);
   }
 
   @DeleteMapping("/deleteReport")
   public String deleteReport(Long reportCode) {
     log.info("adminController.deleteReport()");
     return adminService.deleteReport(reportCode);
+  }
+//  @DeleteMapping("/deleteReportTarget")
+//  public String deleteReportTarget(@RequestParam Long reportTarget, @RequestParam String reportCategory, HttpSession session){
+//    log.info("adminService.deleteReportTarget()");
+//    return adminService.deleteReportTarget(reportTarget, reportCategory, session);
+//  }
+
+  @PutMapping("/updateReportState/{reportCode}")
+  public String updateReportState(@PathVariable Long reportCode) {
+    log.info("adminController.updateReportState()");
+    return adminService.updateReportState(reportCode);
   }
 }
