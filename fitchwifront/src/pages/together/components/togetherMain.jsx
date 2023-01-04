@@ -1,13 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Together from "./together";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
-const TogetherMain = ({togetherList, refreshTogetherList}) => {
-    useEffect(()=> {
-        refreshTogetherList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[togetherList])
+const TogetherMain = ({togetherList}) => {
     
     return (
         <Box flex={4} p={2}>

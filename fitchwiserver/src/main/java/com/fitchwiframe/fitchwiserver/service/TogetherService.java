@@ -248,12 +248,54 @@ public class TogetherService {
     public String refusalTogetherMemberState(TogetherJoin togetherJoin) {
         String result = null;
         log.info("refusalTogetherMemberState()");
+        TogetherJoinPayment togetherJoinPayment = togetherJoinPayRepository.findByTogetherJoinCode(togetherJoin);
+
+        if(togetherJoinPayment==null){
+            togetherJoin.setTogetherJoinState("거절");
+            togetherJoinRepository.save(togetherJoin);
+            result="돈없는그냥거절";
+            return result;
+        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String,String> body = new HashMap<>();
+        body.put("imp_key", "5177641603268324");
+        body.put("imp_secret", "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1");
+
         try {
+            HttpEntity<Map> tokenEntity = new HttpEntity<>(body,headers);
+            ResponseEntity<Map> token = restTemplate.postForEntity("https://api.iamport.kr/users/getToken",tokenEntity,Map.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            TokenDto tokenDto = mapper.convertValue(token.getBody().get("response"), TokenDto.class);
+
+            try {
+                if (tokenDto.getAccess_token().equals("")) {
+                    throw new Exception();
+                }
+                headers.clear();
+                headers.add("Authorization",tokenDto.getAccess_token());
+                body.clear();
+                body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
+                body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
+                body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
+
+                HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
+                cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
+
+                log.info(cancle+"");
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             togetherJoin.setTogetherJoinState("거절");
             togetherJoinRepository.save(togetherJoin);
             result ="성공";
         }catch (Exception e) {
             result ="실패";
+            e.printStackTrace();
         }
         return result;
     }
