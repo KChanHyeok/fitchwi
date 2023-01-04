@@ -355,6 +355,8 @@ public class FeedService {
         try {
             feed = feedRepository.findById(feedCode).get();
 
+            feed.setFfList(feedFileRepository.findByFeedCode(feedCode));
+
         } catch (Exception e){
             e.printStackTrace();
         }
