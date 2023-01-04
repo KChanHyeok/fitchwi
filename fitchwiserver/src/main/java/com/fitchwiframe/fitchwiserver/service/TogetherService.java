@@ -253,7 +253,7 @@ public class TogetherService {
         if(togetherJoinPayment==null){
             togetherJoin.setTogetherJoinState("거절");
             togetherJoinRepository.save(togetherJoin);
-            result="돈없는그냥거절";
+            result="그냥거절";
             return result;
         }
         RestTemplate restTemplate = new RestTemplate();
