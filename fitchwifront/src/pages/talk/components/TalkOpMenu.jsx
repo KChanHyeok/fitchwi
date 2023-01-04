@@ -63,7 +63,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember }) {
+function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refreshTalkJoinList }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -137,28 +137,37 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember }) {
                 && data.talkJoinState === "대기")));
     }, [talkJoinList, talkPageCode]);
 
-    const [insertJoinState, setInsertJoinState] = useState({
-        talkJoinState: "",
-    });
+    // const [insertJoinState, setInsertJoinState] = useState({
+    //     talkJoinState: "",
+    // });
 
-    const onChange = useCallback(
-        (e) => {
-            const inputTo = {
-                ...insertJoinState,
-            };
-            setInsertJoinState(inputTo);
-        }, [insertJoinState]);
-    console.log(talkJoinList);
+    // const onChange = useCallback(
+    //     (e) => {
+    //         const inputTo = {
+    //             ...insertJoinState,
+    //         };
+    //         setInsertJoinState(inputTo);
+    //     }, [insertJoinState]);
+    // console.log(talkJoinList);
 
     //수락
-    const approve = () => {
-        axios.get("/approveMember", insertJoinState)
+    const approval = (data) => {
+        axios.put("/approvalTalkMember", data)
             .then((res) => {
-                if (res.data === "ok") {
-                    alert(res.data);
-                } else {
-                    alert(res.data);
-                }
+                alert(res.data);
+                refreshTalkJoinList();
+                setOpenApplyMember(false);
+            })
+            .catch((error) => console.log(error));
+    }
+
+    //거절
+    const refusal = (data) => {
+        axios.put("/refusalTalkMember", data)
+            .then((res) => {
+                alert(res.data);
+                refreshTalkJoinList();
+                setOpenApplyMember(false);
             })
             .catch((error) => console.log(error));
     }
@@ -273,7 +282,9 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember }) {
                     <DialogTitle id="alert-dialog-title" className="applyBox">
                         {"승인 대기 중인 회원"}
                     </DialogTitle>
+                    <hr />
                     <DialogContent>
+                        {/* {waitingMemberList.length===0 ? } */}
                         <Typography variant="span">회원</Typography>
                         <Typography variant="span" className="subColumn">답변</Typography>
                         {!waitingMemberList ? <h2>로딩중</h2>
@@ -283,8 +294,8 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember }) {
                                     <Typography fontWeight={500} variant="span">
                                         <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         {data.talkJoinAnswer}
-                                        <Button className="applyBtn" onChange={onChange} onClick={approve}>승인</Button>
-                                        <Button className="applyBtn" onClick={modalClose}>거절</Button>
+                                        <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
+                                        <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
                                     </Typography>
                                 </UserBox>)}
                     </DialogContent>
