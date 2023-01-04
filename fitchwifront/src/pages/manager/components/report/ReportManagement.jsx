@@ -4,7 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  ButtonGroup,
+
   Container,
   Divider,
   FormControl,
@@ -28,7 +28,7 @@ import axios from "axios";
 import moment from "moment/moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TalkJoin from "../../../talk/components/TalkJoin";
+
 export default function ReportManagement() {
   const [reportList, setReportList] = useState([]);
 
