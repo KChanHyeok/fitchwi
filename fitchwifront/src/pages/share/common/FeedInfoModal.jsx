@@ -1,8 +1,21 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChatOutlined, Favorite, FavoriteBorder } from "@mui/icons-material";
-import { Avatar, Button, ButtonGroup, CardMedia, Checkbox, Chip, Divider, Modal, styled, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  CardContent,
+  CardMedia,
+  Checkbox,
+  Chip,
+  Divider,
+  Modal,
+  styled,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import Carousel from "react-material-ui-carousel";
 import Comments from "./Comments";
@@ -33,11 +46,20 @@ const FeedInfoModal = ({
   comment,
   like,
   tag,
+  feedClassificationcode,
 }) => {
   const nav = useNavigate();
   const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
   const [tagList, setTagList] = useState([]);
+
+  const [talkInfo, setTalkInfo] = useState();
+
+  const getTalkInfo = useCallback(() => {
+    if (feedClassificationcode !== null) {
+      axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => setTalkInfo(res.data));
+    }
+  }, [feedClassificationcode]);
 
   const [insertCommentForm, setInsertCommentForm] = useState({
     memberEmail: {
@@ -118,8 +140,9 @@ const FeedInfoModal = ({
   useEffect(() => {
     if (tag !== undefined && comment !== undefined && file !== undefined) {
       setTagList(tag.split(" "));
+      getTalkInfo();
     }
-  }, [tag, file, comment]);
+  }, [tag, file, comment, getTalkInfo]);
 
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -133,17 +156,18 @@ const FeedInfoModal = ({
   return (
     <>
       <StyleModal open={!open} onClose={(e) => nav(-1)} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box width={1200} height={600} bgcolor="white" p={3} borderRadius={2}>
+        <Box width={1200} height={700} bgcolor="white" p={3} borderRadius={2}>
           <Stack direction="row" spacing={3} justifyContent="space-between">
-            <Box flex={2}>
+            <Box flex={2} ml={4}>
               {file.length > 1 ? (
-                <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={570}>
+                <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
                   {file.map((item, i) => (
                     <CardMedia
                       key={item.feedCode}
                       component="img"
-                      src={"/images/" + memberWriterInfo.memberSaveimg}
+                      src={"/images/" + item.feedFileSaveimg}
                       alt={item.feedFileImg}
+                      sx={{ width: 700, height: 700 }}
                     />
                   ))}
                 </Carousel>
@@ -151,12 +175,13 @@ const FeedInfoModal = ({
                 <CardMedia
                   key={file[0].feedCode}
                   component="img"
-                  height={600}
+                  height={700}
                   src={"/images/" + file[0].feedFileSaveimg}
                   alt={file[0].feedFileImg}
                 />
               )}
             </Box>
+            <Divider orientation="vertical" flexItem />
             <Box flex={1} p={1}>
               <UserBox display="flex" justifyContent="space-between" mb={1}>
                 <Box display="flex" alignItems="center">
@@ -172,19 +197,20 @@ const FeedInfoModal = ({
                 <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={feedInfo} />
               </UserBox>
               <Divider />
-              <Box mt={1}>
+              <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
                 <UserBox mb={2}>
                   <Avatar
                     alt={memberWriterInfo.memberName}
                     src={"/images/" + memberWriterInfo.memberSaveimg}
                     sx={{ width: 30, height: 30 }}
                   />
-                  <Typography fontWeight={500} variant="span">
-                    <b>{memberWriterInfo.memberNickname}</b> {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+                  <Typography>
+                    <b>{memberWriterInfo.memberNickname}</b>
                   </Typography>
+                  <Typography>{feedContent}</Typography>
                 </UserBox>
               </Box>
-              <Box height={90} mb={1}>
+              <Box height={120} mb={1}>
                 <Stack direction="row" gap={1} mb={1} alignItems="center">
                   {tagList &&
                     tagList.map((tag, index) => (
@@ -193,13 +219,47 @@ const FeedInfoModal = ({
                       </Typography>
                     ))}
                 </Stack>
-                <Box height={60} border={1}>
-                  후기 영역
-                </Box>
+                {!talkInfo ? (
+                  <></>
+                ) : (
+                  <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                    <Box display="flex" flexDirection="row" alignItems="center" border={1} borderRadius={2} height={100}>
+                      <CardMedia
+                        component="img"
+                        sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                        image={`/images/${talkInfo.talkSaveimg}`}
+                      />
+                      <CardContent>
+                        <Typography variant="h6" sx={{ fontSize: 16 }}>
+                          {talkInfo.talkTitle}
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                          {talkInfo.talkContent}
+                        </Typography>
+                        <Box
+                          sx={{
+                            mt: 1,
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Avatar
+                            alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
+                            src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                            sx={{ width: 20, height: 20, mr: 1 }}
+                          />
+                          <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
+                            {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </Box>
+                  </Link>
+                )}
               </Box>
               <Box
-                height={140}
-                mt={1}
+                height={110}
+                mt={2}
                 mb={2}
                 sx={{
                   display: "flex",

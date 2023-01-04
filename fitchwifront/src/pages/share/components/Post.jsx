@@ -176,8 +176,6 @@ const Post = ({
     }
   }, [tag, file, comment, getTalkInfo]);
 
-  console.log(talkInfo);
-
   return (
     <div>
       {file === undefined && comment === undefined && like === undefined ? (
@@ -228,7 +226,11 @@ const Post = ({
             ) : (
               <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
                 <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
-                  <CardMedia component="img" sx={{ width: 100, padding: 1 }} image={`/images/${talkInfo.talkSaveimg}`} />
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                    image={`/images/${talkInfo.talkSaveimg}`}
+                  />
                   <CardContent>
                     <Typography variant="h6" sx={{ fontSize: 16 }}>
                       {talkInfo.talkTitle}
@@ -320,7 +322,16 @@ const Post = ({
                 }}
                 mt={1}
               >
-                <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                {!memberInfo.memberEmail ? (
+                  <>
+                    <Avatar sx={{ width: 30, height: 30, mr: 2 }} />
+                  </>
+                ) : (
+                  <>
+                    <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                  </>
+                )}
+
                 <TextField
                   id="input-with-sx"
                   name="feedCommentContent"
@@ -346,11 +357,17 @@ const Post = ({
           >
             <Box width={1200} height={700} bgcolor="white" p={3} borderRadius={2}>
               <Stack direction="row" spacing={3} justifyContent="space-between">
-                <Box flex={2}>
+                <Box flex={2} ml={4}>
                   {file.length > 1 ? (
                     <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
                       {file.map((item, i) => (
-                        <CardMedia key={item.feedCode} component="img" src={"/images/" + item.feedFileSaveimg} alt={item.feedFileImg} />
+                        <CardMedia
+                          key={item.feedCode}
+                          component="img"
+                          src={"/images/" + item.feedFileSaveimg}
+                          alt={item.feedFileImg}
+                          sx={{ width: 700, height: 700 }}
+                        />
                       ))}
                     </Carousel>
                   ) : (
@@ -406,7 +423,11 @@ const Post = ({
                     ) : (
                       <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
                         <Box display="flex" flexDirection="row" alignItems="center" border={1} borderRadius={2} height={100}>
-                          <CardMedia component="img" sx={{ width: 100, padding: 1 }} image={`/images/${talkInfo.talkSaveimg}`} />
+                          <CardMedia
+                            component="img"
+                            sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                            image={`/images/${talkInfo.talkSaveimg}`}
+                          />
                           <CardContent>
                             <Typography variant="h6" sx={{ fontSize: 16 }}>
                               {talkInfo.talkTitle}

@@ -71,6 +71,7 @@ const FeedOther = ({ memberInfo, refreshFeed }) => {
                 <Post
                   key={data.feedCode}
                   tag={data.feedTag}
+                  feedClassificationcode={data.feedClassificationcode}
                   information={data}
                   memberWriterInfo={data.memberEmail}
                   feedDate={data.feedDate}

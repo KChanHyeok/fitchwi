@@ -79,6 +79,7 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
                   memberInfo={memberInfo}
                   refreshFeed={getFeedList}
                   like={data.flList}
+                  feedClassificationcode={data.feedClassificationcode}
                 />
               ))
             )}
