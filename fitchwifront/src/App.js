@@ -12,6 +12,7 @@ import Search from "./pages/search";
 import Manager from "./pages/manager";
 import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
+import ChannelService from "./components/common/ChannelService";
 function App() {
   const nav = useNavigate();
 
@@ -60,6 +61,13 @@ function App() {
     sessionStorage.removeItem("nickName");
     nav("/"); //첫페이지로 돌아감.
   };
+
+  useEffect(() => {
+    ChannelService.boot({
+      pluginKey: "261174a2-5819-4674-be05-d9bb582cd3b9",
+    });
+  }, []);
+
   return (
     <>
       <Header lstate={lstate} onLogout={onLogout} />
