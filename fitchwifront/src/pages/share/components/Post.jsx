@@ -94,7 +94,9 @@ const Post = ({
 
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
-      axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => setTalkInfo(res.data));
+      axios
+        .get("/getTalk", { params: { talkCode: feedClassificationcode } })
+        .then((res) => setTalkInfo(res.data));
     }
   }, [feedClassificationcode]);
 
@@ -142,17 +144,23 @@ const Post = ({
         return nav("/login");
       }
       if (isLike === false) {
-        axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {
-          setIsLike(!isLike);
-          window.location.reload();
-          // refreshFeed();
-        });
+        axios
+          .get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } })
+          .then((res) => {
+            setIsLike(!isLike);
+            window.location.reload();
+            // refreshFeed();
+          });
       } else {
-        axios.delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } }).then((res) => {
-          setIsLike(!isLike);
-          window.location.reload();
-          // refreshFeed();
-        });
+        axios
+          .delete("/dLikeFeed", {
+            params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike },
+          })
+          .then((res) => {
+            setIsLike(!isLike);
+            window.location.reload();
+            // refreshFeed();
+          });
       }
     },
     [feedCode, memberInfo.memberEmail, nav]
@@ -190,17 +198,36 @@ const Post = ({
             <CardHeader
               avatar={
                 <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }}>
-                  <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe" src={"/images/" + memberWriterInfo.memberSaveimg}></Avatar>
+                  <Avatar
+                    sx={{ bgcolor: "orange" }}
+                    aria-label="recipe"
+                    src={"/images/" + memberWriterInfo.memberSaveimg}
+                  ></Avatar>
                 </Link>
               }
               action={<LongMenu refreshFeed={refreshFeed} flist={file} information={information} />}
               title={<b>{memberWriterInfo.memberNickname}</b>}
-              subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
+              subheader={
+                day > 1
+                  ? day + "일 전"
+                  : hour > 1
+                  ? hour + "시간 전"
+                  : minute > 1
+                  ? minute + "분 전"
+                  : second + "초 전"
+              }
             />
             <Divider />
             {/* 피드 이미지 */}
             {file.length > 1 ? (
-              <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
+              <Carousel
+                next={() => {}}
+                prev={() => {}}
+                autoPlay={false}
+                animation="slide"
+                duration={800}
+                sx={{ height: "100%" }}
+              >
                 {file.map((item, i) => (
                   <CardMedia
                     key={item.feedCode}
@@ -226,9 +253,24 @@ const Post = ({
             {!talkInfo ? (
               <></>
             ) : (
-              <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
-                <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
-                  <CardMedia component="img" sx={{ width: 100, padding: 1 }} image={`/images/${talkInfo.talkSaveimg}`} />
+              <Link
+                to={`/talk/${talkInfo.talkCode}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  alignItems="center"
+                  border={1}
+                  m={2}
+                  borderRadius={2}
+                  height={100}
+                >
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 100, padding: 1 }}
+                    image={`/images/${talkInfo.talkSaveimg}`}
+                  />
                   <CardContent>
                     <Typography variant="h6" sx={{ fontSize: 16 }}>
                       {talkInfo.talkTitle}
@@ -259,17 +301,34 @@ const Post = ({
 
             <CardContent>
               <Stack direction="row" gap={2} mb={1}>
-                <Checkbox checked={isLike} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onClick={() => onLike(isLike)} />
-                <Checkbox checked={true} checkedIcon={<ChatOutlined color="disabled" />} onClick={(e) => setOpen(true)} />
+                <Checkbox
+                  checked={isLike}
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  onClick={() => onLike(isLike)}
+                />
+                <Checkbox
+                  checked={true}
+                  checkedIcon={<ChatOutlined color="disabled" />}
+                  onClick={(e) => setOpen(true)}
+                />
               </Stack>
-              {like.length === 0 ? null : <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>}
+              {like.length === 0 ? null : (
+                <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>
+              )}
               <Stack direction="row" gap={1} mt={1} mb={1} alignItems="center">
-                <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }} style={{ textDecoration: "none" }}>
+                <Link
+                  to="/memberpage"
+                  state={{ memberId: memberWriterInfo.memberEmail }}
+                  style={{ textDecoration: "none" }}
+                >
                   <Typography variant="body1" color="text.primary" sx={{ cursor: "pointer" }}>
                     <b>{memberWriterInfo.memberNickname}</b>
                   </Typography>
                 </Link>
-                <Typography variant="body6">{feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}</Typography>
+                <Typography variant="body6">
+                  {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+                </Typography>
               </Stack>
               <Stack direction="row" gap={1} mb={2} alignItems="center">
                 {tagList &&
@@ -320,7 +379,11 @@ const Post = ({
                 }}
                 mt={1}
               >
-                <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                <Avatar
+                  alt={memberInfo.memberName}
+                  src={"/images/" + memberInfo.memberSaveimg}
+                  sx={{ width: 30, height: 30, mr: 2 }}
+                />
                 <TextField
                   id="input-with-sx"
                   name="feedCommentContent"
@@ -348,9 +411,21 @@ const Post = ({
               <Stack direction="row" spacing={3} justifyContent="space-between">
                 <Box flex={2}>
                   {file.length > 1 ? (
-                    <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
+                    <Carousel
+                      next={() => {}}
+                      prev={() => {}}
+                      autoPlay={false}
+                      animation="slide"
+                      duration={800}
+                      height={670}
+                    >
                       {file.map((item, i) => (
-                        <CardMedia key={item.feedCode} component="img" src={"/images/" + item.feedFileSaveimg} alt={item.feedFileImg} />
+                        <CardMedia
+                          key={item.feedCode}
+                          component="img"
+                          src={"/images/" + item.feedFileSaveimg}
+                          alt={item.feedFileImg}
+                        />
                       ))}
                     </Carousel>
                   ) : (
@@ -376,7 +451,12 @@ const Post = ({
                         <b>{memberWriterInfo.memberNickname}</b> {}
                       </Typography>
                     </Box>
-                    <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={information} />
+                    <LongMenu
+                      Modal={setOpen}
+                      refreshFeed={refreshFeed}
+                      flist={file}
+                      information={information}
+                    />
                   </UserBox>
                   <Divider />
                   <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
@@ -396,7 +476,12 @@ const Post = ({
                     <Stack direction="row" gap={1} mb={1} alignItems="center">
                       {tagList &&
                         tagList.map((tag, index) => (
-                          <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                          <Typography
+                            variant="body6"
+                            color="grey"
+                            onClick={() => console.log("검색으로 이동")}
+                            key={index}
+                          >
                             #{tag}
                           </Typography>
                         ))}
@@ -404,14 +489,32 @@ const Post = ({
                     {!talkInfo ? (
                       <></>
                     ) : (
-                      <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
-                        <Box display="flex" flexDirection="row" alignItems="center" border={1} borderRadius={2} height={100}>
-                          <CardMedia component="img" sx={{ width: 100, padding: 1 }} image={`/images/${talkInfo.talkSaveimg}`} />
+                      <Link
+                        to={`/talk/${talkInfo.talkCode}`}
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          alignItems="center"
+                          border={1}
+                          borderRadius={2}
+                          height={100}
+                        >
+                          <CardMedia
+                            component="img"
+                            sx={{ width: 100, padding: 1 }}
+                            image={`/images/${talkInfo.talkSaveimg}`}
+                          />
                           <CardContent>
                             <Typography variant="h6" sx={{ fontSize: 16 }}>
                               {talkInfo.talkTitle}
                             </Typography>
-                            <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                            <Typography
+                              variant="body1"
+                              color="text.secondary"
+                              sx={{ fontSize: 14 }}
+                            >
                               {talkInfo.talkContent}
                             </Typography>
                             <Box
@@ -448,7 +551,11 @@ const Post = ({
                     {comment.length >= 1 ? (
                       <>
                         {comment.map((comment) => (
-                          <Comments key={comment.feedCommentCode} data={comment} memberWriterInfo={memberWriterInfo} />
+                          <Comments
+                            key={comment.feedCommentCode}
+                            data={comment}
+                            memberWriterInfo={memberWriterInfo}
+                          />
                         ))}
                       </>
                     ) : (
@@ -476,7 +583,13 @@ const Post = ({
                     <FeedLikeList flList={like}>좋아요 {like.length}개</FeedLikeList>
                   )}
                   <Typography color="grey" variant="body2" mb={1} mt={1}>
-                    {day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
+                    {day > 1
+                      ? day + "일 전"
+                      : hour > 1
+                      ? hour + "시간 전"
+                      : minute > 1
+                      ? minute + "분 전"
+                      : second + "초 전"}
                   </Typography>
                   <Divider>
                     <Chip label="Comment" />
@@ -493,7 +606,11 @@ const Post = ({
                     name="feedCommentContent"
                   />
 
-                  <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
+                  <ButtonGroup
+                    fullWidth
+                    variant="contained"
+                    aria-label="outlined primary button group"
+                  >
                     <Button onClick={insertComment}>댓글 등록</Button>
                   </ButtonGroup>
                 </Box>
