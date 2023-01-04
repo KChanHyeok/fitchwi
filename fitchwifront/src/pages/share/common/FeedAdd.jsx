@@ -30,7 +30,7 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-const FeedAdd = ({ memberInfo, refreshFeed }) => {
+const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
   let formdata = new FormData();
   const nav = useNavigate();
   const [state, setState] = useState(false);
@@ -38,6 +38,7 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
   const [tagForm, setTagForm] = useState([]);
+  const [joinList, setJoinList] = useState();
   const imageInput = useRef();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
@@ -188,9 +189,28 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
     imageInput.current.click();
   };
 
+  const getTalkJoinList = useCallback(() => {
+    if (memberEmail !== undefined) {
+      axios
+        .get("/getTalkJoinListByMember", {
+          params: {
+            memberEmail: memberEmail,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setJoinList(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [memberEmail]);
+
   useEffect(() => {
     preview();
-  }, [preview]);
+    getTalkJoinList();
+  }, [preview, getTalkJoinList]);
+
+  console.log(joinList);
 
   return (
     <>
@@ -268,36 +288,54 @@ const FeedAdd = ({ memberInfo, refreshFeed }) => {
             </Box>
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 440, height: 400 }} mt={1}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                  참여한 함께해요
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={insertForm.feedClassificationcode}
-                  name="feedClassificationcode"
-                  onChange={handleChange}
-                  label="함께해요 리스트"
-                >
-                  <MenuItem value="">
-                    <em>선택</em>
-                  </MenuItem>
-                  <MenuItem value="함께해요 1의 코드">함께해요 1</MenuItem>
-                  <MenuItem value="함께해요 2의 코드">함께해요 2</MenuItem>
-                  <MenuItem value="함께해요 3의 코드">함께해요 3</MenuItem>
-                </Select>
-              </FormControl>
+              {joinList === undefined || joinList.length === 0 ? (
+                <FormControl fullWidth disabled>
+                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                    참여중인 얘기해요가 없습니다.
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    value={insertForm.feedClassificationcode}
+                    name="feedClassificationcode"
+                    onChange={handleChange}
+                    label="참여중인 얘기해요"
+                  >
+                    <MenuItem value=""></MenuItem>
+                  </Select>
+                </FormControl>
+              ) : (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                    참여중인 얘기해요
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    value={insertForm.feedClassificationcode}
+                    name="feedClassificationcode"
+                    onChange={handleChange}
+                    label="참여중인 얘기해요"
+                  >
+                    {joinList.map((item, index) => (
+                      <MenuItem key={index} value={item.talkCode.talkCode}>
+                        {item.talkCode.talkTitle}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+
               <br />
               <FormControl sx={{ mt: 2 }} fullWidth>
-                <InputLabel>피드 카테고리</InputLabel>
+                <InputLabel>카테고리</InputLabel>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
                   id="demo-simple-select-autowidth"
                   value={insertForm.feedCategory}
                   name="feedCategory"
                   onChange={handleChange}
-                  label="피드 카테고리"
+                  label="카테고리"
                 >
                   <MenuItem value="">
                     <em>선택</em>
