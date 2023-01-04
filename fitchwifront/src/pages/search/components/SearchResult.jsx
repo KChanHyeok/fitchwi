@@ -35,7 +35,7 @@ const SearchResult = () => {
     return year + month + day;
   }
 
-  let nowTime = (time) => moment(getToday(time)).fromNow();
+  let nowTime = (time) => moment(getToday(Number(time))).fromNow();
 
   const searchResult = useCallback(() => {
     axios
@@ -157,8 +157,8 @@ const SearchResult = () => {
                   <div>얘기해요 검색결과가 없습니다</div>
                 ) : (
                   talkList.map((item, index) => (
-                    <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }}>
-                      <Card key={index} sx={{ borderBottom: 1 }}>
+                    <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }} key={index}>
+                      <Card sx={{ borderBottom: 1 }}>
                         <CardContent>
                           <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
                             <Grid item>
@@ -211,7 +211,7 @@ const SearchResult = () => {
                             </Typography>
                             <DateRange />
                             <Typography color="textSecondary" variant="caption">
-                              {nowTime(1672678868238)}
+                              {nowTime(item.talkOpenCode.talkOpenDate)}
                             </Typography>
                           </Box>
                         </CardContent>

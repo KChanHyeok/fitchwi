@@ -60,6 +60,13 @@ const Feed = ({ memberInfo, refreshFeed }) => {
   return (
     <>
       <Box flex={4} p={2}>
+        {loading ? (
+          <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        ) : (
+          <></>
+        )}
         {feed && (
           <>
             {feed.length === 0 ? (
@@ -74,6 +81,7 @@ const Feed = ({ memberInfo, refreshFeed }) => {
                   feedDate={data.feedDate}
                   feedContent={data.feedContent}
                   feedCode={data.feedCode}
+                  feedClassificationcode={data.feedClassificationcode}
                   file={data.ffList}
                   comment={data.fcList}
                   memberInfo={memberInfo}
@@ -84,15 +92,9 @@ const Feed = ({ memberInfo, refreshFeed }) => {
             )}
           </>
         )}
-        {loading ? (
-          <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        ) : (
-          <></>
-        )}
+
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );

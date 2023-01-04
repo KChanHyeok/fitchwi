@@ -95,8 +95,12 @@ public class TalkService {
 
     public Talk getTalk(long talkCode) {
         log.info("talkService.getTalk()");
-        Talk talkInfo;
-        talkInfo = talkRepository.findById(talkCode).get();
+        Talk talkInfo = new Talk();
+        try {
+            talkInfo = talkRepository.findById(talkCode).get();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return talkInfo;
     }
 

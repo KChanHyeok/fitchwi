@@ -354,7 +354,12 @@ public class FeedService {
 
         try {
             feed = feedRepository.findById(feedCode).get();
-
+            List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(feedCode);
+            List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(feedCode);
+            List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(feedCode);
+            feed.setFfList(feedFiles);
+            feed.setFcList(feedComments);
+            feed.setFlList(feedLikes);
         } catch (Exception e){
             e.printStackTrace();
         }
