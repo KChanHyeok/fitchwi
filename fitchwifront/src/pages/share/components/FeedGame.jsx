@@ -79,6 +79,7 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
                   memberInfo={memberInfo}
                   refreshFeed={getFeedList}
                   like={data.flList}
+                  feedClassificationcode={data.feedClassificationcode}
                 />
               ))
             )}
@@ -92,7 +93,7 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
           <></>
         )}
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );

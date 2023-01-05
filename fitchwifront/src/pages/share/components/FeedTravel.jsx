@@ -72,6 +72,7 @@ const FeedTravel = ({ memberInfo, refreshFeed }) => {
                   key={data.feedCode}
                   tag={data.feedTag}
                   information={data}
+                  feedClassificationcode={data.feedClassificationcode}
                   memberWriterInfo={data.memberEmail}
                   feedDate={data.feedDate}
                   feedContent={data.feedContent}
@@ -94,7 +95,7 @@ const FeedTravel = ({ memberInfo, refreshFeed }) => {
           <></>
         )}
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );

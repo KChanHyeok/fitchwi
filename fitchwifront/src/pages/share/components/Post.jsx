@@ -39,7 +39,20 @@ const UserBox = styled(Box)({
   gap: "10px",
 });
 
-const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, file, comment, refreshFeed, like, tag, information }) => {
+const Post = ({
+  memberWriterInfo,
+  memberInfo,
+  feedContent,
+  feedDate,
+  feedCode,
+  feedClassificationcode,
+  file,
+  comment,
+  refreshFeed,
+  like,
+  tag,
+  information,
+}) => {
   // 피드 작성시간
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -76,6 +89,14 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     },
     [insertCommentForm]
   );
+
+  const [talkInfo, setTalkInfo] = useState();
+
+  const getTalkInfo = useCallback(() => {
+    if (feedClassificationcode !== null) {
+      axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => setTalkInfo(res.data));
+    }
+  }, [feedClassificationcode]);
 
   const insertComment = () => {
     if (sessionStorage.getItem("id") === null) {
@@ -127,11 +148,15 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
           // refreshFeed();
         });
       } else {
-        axios.delete("/dLikeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike } }).then((res) => {
-          setIsLike(!isLike);
-          window.location.reload();
-          // refreshFeed();
-        });
+        axios
+          .delete("/dLikeFeed", {
+            params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail, isLike: isLike },
+          })
+          .then((res) => {
+            setIsLike(!isLike);
+            window.location.reload();
+            // refreshFeed();
+          });
       }
     },
     [feedCode, memberInfo.memberEmail, nav]
@@ -151,8 +176,9 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
     if (tag !== undefined && comment !== undefined && file !== undefined) {
       setTagList(tag.split(" "));
       setClist(comment);
+      getTalkInfo();
     }
-  }, [tag, file, comment]);
+  }, [tag, file, comment, getTalkInfo]);
 
   return (
     <div>
@@ -173,6 +199,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               title={<b>{memberWriterInfo.memberNickname}</b>}
               subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
             />
+            <Divider />
             {/* 피드 이미지 */}
             {file.length > 1 ? (
               <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
@@ -197,6 +224,45 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                 alt={file[0].feedFileImg}
               />
             )}
+            <Divider />
+            {!talkInfo ? (
+              <></>
+            ) : (
+              <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                    image={`/images/${talkInfo.talkSaveimg}`}
+                  />
+                  <CardContent>
+                    <Typography variant="h6" sx={{ fontSize: 16 }}>
+                      {talkInfo.talkTitle}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                      {talkInfo.talkContent}
+                    </Typography>
+                    <Box
+                      sx={{
+                        mt: 1,
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
+                        src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                        sx={{ width: 20, height: 20, mr: 1 }}
+                      />
+                      <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
+                        {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Box>
+              </Link>
+            )}
+
             <CardContent>
               <Stack direction="row" gap={2} mb={1}>
                 <Checkbox checked={isLike} icon={<FavoriteBorder />} checkedIcon={<Favorite />} onClick={() => onLike(isLike)} />
@@ -214,13 +280,7 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
               <Stack direction="row" gap={1} mb={2} alignItems="center">
                 {tagList &&
                   tagList.map((tag, index) => (
-                    <Typography
-                      sx={{ cursor: "pointer" }}
-                      variant="body6"
-                      color="grey"
-                      onClick={() => console.log("검색으로 이동")}
-                      key={index}
-                    >
+                    <Typography sx={{ cursor: "pointer" }} variant="body6" color="grey" onClick={() => nav(`/search/${tag}`)} key={index}>
                       #{tag}
                     </Typography>
                   ))}
@@ -260,7 +320,16 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                 }}
                 mt={1}
               >
-                <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                {!memberInfo.memberEmail ? (
+                  <>
+                    <Avatar sx={{ width: 30, height: 30, mr: 2 }} />
+                  </>
+                ) : (
+                  <>
+                    <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                  </>
+                )}
+
                 <TextField
                   id="input-with-sx"
                   name="feedCommentContent"
@@ -277,23 +346,25 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
             </CardContent>
           </Card>
 
+          {/* 공유해요 상세페이지 */}
           <StyleModal
             open={open}
             onClose={(e) => setOpen(false)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box width={1200} height={600} bgcolor="white" p={3} borderRadius={2}>
+            <Box width={1200} height={700} bgcolor="white" p={3} borderRadius={2}>
               <Stack direction="row" spacing={3} justifyContent="space-between">
-                <Box flex={2}>
+                <Box flex={2} ml={4}>
                   {file.length > 1 ? (
-                    <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={570}>
+                    <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
                       {file.map((item, i) => (
                         <CardMedia
                           key={item.feedCode}
                           component="img"
-                          src={"/images/" + memberWriterInfo.memberSaveimg}
+                          src={"/images/" + item.feedFileSaveimg}
                           alt={item.feedFileImg}
+                          sx={{ width: 700, height: 700 }}
                         />
                       ))}
                     </Carousel>
@@ -301,12 +372,13 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                     <CardMedia
                       key={file[0].feedCode}
                       component="img"
-                      height={600}
+                      height={700}
                       src={"/images/" + file[0].feedFileSaveimg}
                       alt={file[0].feedFileImg}
                     />
                   )}
                 </Box>
+                <Divider orientation="vertical" flexItem />
                 <Box flex={1} p={1}>
                   <UserBox display="flex" justifyContent="space-between" mb={1}>
                     <Box display="flex" alignItems="center">
@@ -322,34 +394,75 @@ const Post = ({ memberWriterInfo, memberInfo, feedContent, feedDate, feedCode, f
                     <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={information} />
                   </UserBox>
                   <Divider />
-                  <Box mt={1}>
+                  <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
                     <UserBox mb={2}>
                       <Avatar
                         alt={memberWriterInfo.memberName}
                         src={"/images/" + memberWriterInfo.memberSaveimg}
                         sx={{ width: 30, height: 30 }}
                       />
-                      <Typography fontWeight={500} variant="span">
-                        <b>{memberWriterInfo.memberNickname}</b> {feedContent.length > 20 ? `${feedContent.slice(0, 20)}...` : feedContent}
+                      <Typography>
+                        <b>{memberWriterInfo.memberNickname}</b>
                       </Typography>
+                      <Typography>{feedContent}</Typography>
                     </UserBox>
                   </Box>
-                  <Box height={90} mb={1}>
+                  <Box height={120} mb={1}>
                     <Stack direction="row" gap={1} mb={1} alignItems="center">
                       {tagList &&
                         tagList.map((tag, index) => (
-                          <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                          <Typography
+                            variant="body6"
+                            sx={{ cursor: "pointer" }}
+                            color="grey"
+                            onClick={() => nav(`/search/${tag}`)}
+                            key={index}
+                          >
                             #{tag}
                           </Typography>
                         ))}
                     </Stack>
-                    <Box height={60} border={1}>
-                      후기 영역
-                    </Box>
+                    {!talkInfo ? (
+                      <></>
+                    ) : (
+                      <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                        <Box display="flex" flexDirection="row" alignItems="center" border={1} borderRadius={2} height={100}>
+                          <CardMedia
+                            component="img"
+                            sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                            image={`/images/${talkInfo.talkSaveimg}`}
+                          />
+                          <CardContent>
+                            <Typography variant="h6" sx={{ fontSize: 16 }}>
+                              {talkInfo.talkTitle}
+                            </Typography>
+                            <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                              {talkInfo.talkContent}
+                            </Typography>
+                            <Box
+                              sx={{
+                                mt: 1,
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Avatar
+                                alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
+                                src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                                sx={{ width: 20, height: 20, mr: 1 }}
+                              />
+                              <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
+                                {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                              </Typography>
+                            </Box>
+                          </CardContent>
+                        </Box>
+                      </Link>
+                    )}
                   </Box>
                   <Box
-                    height={140}
-                    mt={1}
+                    height={110}
+                    mt={2}
                     mb={2}
                     sx={{
                       display: "flex",

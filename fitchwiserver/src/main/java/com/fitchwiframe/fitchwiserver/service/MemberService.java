@@ -1,5 +1,8 @@
 package com.fitchwiframe.fitchwiserver.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fitchwiframe.fitchwiserver.dto.KakaoProfile;
 import com.fitchwiframe.fitchwiserver.entity.Follow;
 import com.fitchwiframe.fitchwiserver.entity.Member;
 
@@ -7,18 +10,19 @@ import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -60,8 +64,8 @@ public class MemberService {
   }
 
 
-  private Member fileUpload(Member member, MultipartFile pic,
-                            HttpSession session)
+  private void fileUpload(Member member, MultipartFile pic,
+                          HttpSession session)
       throws Exception {
     log.info("memberService.fileUpload()");
 
@@ -86,8 +90,6 @@ public class MemberService {
 
     pic.transferTo(file);
 
-
-    return member;
   }
 
 
@@ -107,25 +109,26 @@ public class MemberService {
 
 
   //로그인
-  public String[] loginMember(Member inputMember) {
+  public Map<String, Object> loginMember(Member inputMember) {
     log.info("memberService.loginMember()");
 
-    String[] result = new String[3];
+    Map<String, Object> result = new HashMap<>();
 
     Member dbMember = null;
     try {
       dbMember = memberRepository.findById(inputMember.getMemberEmail()).orElseGet(Member::new);
-      if(dbMember.getMemberRestriction()!=null){
+      if (dbMember.getMemberRestriction() != null) {
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();
         Date restriction = dateFormat.parse(dbMember.getMemberRestriction());
 
-        if(restriction.compareTo(today)>0){
-          result[0] = "reported";
-          result[1] = dbMember.getMemberRestriction();
-        }else{
-          result[0] = "released";
-          result[1] = dbMember.getMemberRestriction();
+        if (restriction.compareTo(today) > 0) {
+          result.put("state", "reported");
+          result.put("memberRestriction", dbMember.getMemberRestriction());
+        } else {
+          result.put("state", "released");
+          result.put("memberRestriction", dbMember.getMemberRestriction());
 
           dbMember.setMemberRestriction(null);
           memberRepository.save(dbMember);
@@ -135,14 +138,15 @@ public class MemberService {
       }
       if (dbMember.getMemberEmail() != null) {
         if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
-          result[0] = "ok";
-          result[1] = dbMember.getMemberEmail();
-          result[2] = dbMember.getMemberNickname();
+          result.put("state", "ok");
+          result.put("memberEmail", dbMember.getMemberEmail());
+          result.put("memberNickname", dbMember.getMemberNickname());
+
         } else {
-          result[0] = "wrong pwd";
+          result.put("state", "wrong pwd");
         }
-      }else{
-        result[0] = "no data";
+      } else {
+        result.put("state", "no data");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -223,6 +227,7 @@ public class MemberService {
     return result;
 
   }
+
   public String unFollowMember(String loginId, String pageOwner) {
     String result = "fail";
     try {
@@ -367,4 +372,139 @@ public class MemberService {
 
     return result;
   }
+
+
+  public String getToken(String code) {
+
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+    MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+    body.add("grant_type", "authorization_code");
+    body.add("client_id", "bad1b060092a0ed86a3dfe34c2fb99f9");
+    body.add("redirect_uri", "http://localhost:3000/login/kakao/callback");
+    body.add("code", code);
+
+
+    HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(body, httpHeaders);
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange("https://kauth.kakao.com/oauth/token", HttpMethod.POST, tokenRequest, String.class);
+    System.out.println("response = " + response);
+    String accessToken = null;
+    try {
+      String responseBody = response.getBody();
+      ObjectMapper objectMapper = new ObjectMapper();
+
+
+      accessToken = objectMapper.readTree(responseBody).get("access_token").asText();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
+    return accessToken;
+
+  }
+
+
+  public JsonNode getMemberInfoFromKaKao(String accessToken) {
+
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+    httpHeaders.add("Authorization", "Bearer " + accessToken);
+
+
+    HttpEntity<MultiValueMap<String, String>> infoRequest = new HttpEntity<>(httpHeaders);
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, infoRequest, String.class);
+    JsonNode jsonNode = null;
+    try {
+      String responseBody = response.getBody();
+      ObjectMapper objectMapper = new ObjectMapper();
+      jsonNode = objectMapper.readTree(responseBody);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return jsonNode;
+  }
+
+  public Map<String, Object> registerOrLogin(String code, HttpSession session) {
+    Map<String, Object> resultMap = new HashMap<>();
+    JsonNode jsonNode = null;
+    KakaoProfile kakaoProfile = null;
+    String accessToken = getToken(code);
+    try {
+      jsonNode = getMemberInfoFromKaKao(accessToken);
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      kakaoProfile = objectMapper.treeToValue(jsonNode, KakaoProfile.class);
+
+
+    } catch (Exception e) {
+      e.printStackTrace();
+
+      resultMap.put("isPresent", "fail");
+      resultMap.put("member", new Member());
+      return resultMap;
+
+    }
+
+
+    Member member = new Member();
+    String memberEmail = kakaoProfile.getKakao_account().getEmail();
+
+
+    Optional<Member> dbMember = memberRepository.findById(memberEmail);
+    if (dbMember.isPresent()) {
+      resultMap.put("isPresent", "ok");
+      resultMap.put("member", dbMember.get());
+      session.setAttribute("at", accessToken);
+      System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
+      return resultMap;
+    }
+
+    member.setMemberEmail(kakaoProfile.getKakao_account().getEmail());
+    member.setMemberNickname(kakaoProfile.getProperties().getNickname());
+    member.setMemberImg(kakaoProfile.getProperties().getProfile_image());
+    member.setMemberSaveimg(kakaoProfile.getProperties().getProfile_image());
+    resultMap.put("isPresent", "no");
+    resultMap.put("member", member);
+    return resultMap;
+
+  }
+
+  public String logoutMember(HttpSession session) {
+    String result = "fail";
+    String accessToken = (String) session.getAttribute("at");
+    if (accessToken == null) {
+      result = "ok";
+      return result;
+    }
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+    httpHeaders.add("Authorization", "Bearer " + accessToken);
+
+
+    HttpEntity<MultiValueMap<String, String>> infoRequest = new HttpEntity<>(httpHeaders);
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v1/user/logout", HttpMethod.POST, infoRequest, String.class);
+
+
+    if (response.getStatusCode().equals(HttpStatus.OK)) {
+      session.removeAttribute("at");
+      System.out.println("session.getAttribute(\"at\").toString() = " + session.getAttribute("at").toString());
+      result = "ok";
+    }
+
+
+    return result;
+  }
+
+
 }

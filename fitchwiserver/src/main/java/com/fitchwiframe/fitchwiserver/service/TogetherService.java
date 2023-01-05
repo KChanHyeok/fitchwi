@@ -107,7 +107,14 @@ public class TogetherService {
         try {
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
+                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice();
+                int totalPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherTotalPrice();
+
+                togetherJoinPayment.getTogetherJoinCode().getTogetherCode().setTogetherTotalPrice(joinPay+totalPay);
+                Together together = togetherJoinPayment.getTogetherJoinCode().getTogetherCode();
+                togetherRepository.save(together);
             }
+
             togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
 
             togetherJoinPayment.setTogetherJoinCode(togetherJoinRepository.findById(togetherJoinPayment.getTogetherJoinCode().getTogetherJoinCode()).get());
@@ -204,6 +211,10 @@ public class TogetherService {
                 HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
                 cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
 
+                int joinpay = joinTogether.getTogetherPrice();
+                int totalpay = joinTogether.getTogetherTotalPrice();
+                joinTogether.setTogetherTotalPrice(totalpay-joinpay);
+                togetherRepository.save(joinTogether);
                 togetherJoinPayRepository.delete(togetherJoinPayment);
                 togetherJoinRepository.delete(joinTogetherMember);
                 log.info(cancle+"");
@@ -238,6 +249,11 @@ public class TogetherService {
         log.info("approvalTogetherMemberState()");
         try {
             togetherJoin.setTogetherJoinState("가입중");
+            int joinPay = togetherJoin.getTogetherCode().getTogetherPrice();
+            int totalPay = togetherJoin.getTogetherCode().getTogetherTotalPrice();
+            Together together = togetherJoin.getTogetherCode();
+            together.setTogetherTotalPrice(totalPay+joinPay);
+            togetherRepository.save(together);
             togetherJoinRepository.save(togetherJoin);
             result="성공";
         }catch (Exception e) {
@@ -248,12 +264,54 @@ public class TogetherService {
     public String refusalTogetherMemberState(TogetherJoin togetherJoin) {
         String result = null;
         log.info("refusalTogetherMemberState()");
+        TogetherJoinPayment togetherJoinPayment = togetherJoinPayRepository.findByTogetherJoinCode(togetherJoin);
+
+        if(togetherJoinPayment==null){
+            togetherJoin.setTogetherJoinState("거절");
+            togetherJoinRepository.save(togetherJoin);
+            result="그냥거절";
+            return result;
+        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String,String> body = new HashMap<>();
+        body.put("imp_key", "5177641603268324");
+        body.put("imp_secret", "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1");
+
         try {
+            HttpEntity<Map> tokenEntity = new HttpEntity<>(body,headers);
+            ResponseEntity<Map> token = restTemplate.postForEntity("https://api.iamport.kr/users/getToken",tokenEntity,Map.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            TokenDto tokenDto = mapper.convertValue(token.getBody().get("response"), TokenDto.class);
+
+            try {
+                if (tokenDto.getAccess_token().equals("")) {
+                    throw new Exception();
+                }
+                headers.clear();
+                headers.add("Authorization",tokenDto.getAccess_token());
+                body.clear();
+                body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
+                body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
+                body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
+
+                HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
+                cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
+
+                log.info(cancle+"");
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             togetherJoin.setTogetherJoinState("거절");
             togetherJoinRepository.save(togetherJoin);
             result ="성공";
         }catch (Exception e) {
             result ="실패";
+            e.printStackTrace();
         }
         return result;
     }
@@ -286,4 +344,52 @@ public class TogetherService {
         return togetherList;
     }
 
+    public List<TogetherOpened> getTogetherOpenedListByMember(String memberEmail) {
+        log.info("togetherService.getTogetherOpenedListByMember()");
+        List<TogetherOpened> togetherOpenedList = null;
+
+        try {
+            Member member = memberRepository.findById(memberEmail).get();
+            togetherOpenedList = togetherOpenedRepository.findAllByMemberEmail(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return togetherOpenedList;
+
+    }
+
+    public Map<String, Object> getMemberTogether(String memberEmail) {
+        log.info("togetherService.getMemberTogether()");
+        Map<String, Object> togetherMap = new HashMap<>();
+        try{
+            List<TogetherJoin> togetherJoinListByMember = getTogetherJoinListByMember(memberEmail);
+            if(!(togetherJoinListByMember.isEmpty())){
+                for(TogetherJoin tj : togetherJoinListByMember){
+                    Together together = tj.getTogetherCode();
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                }
+            }
+
+            List<Together> togetherListWithMemberCount = new ArrayList<>();
+
+
+            List<TogetherOpened> togetherOpenedListByMember = getTogetherOpenedListByMember(memberEmail);
+            if(!(togetherOpenedListByMember.isEmpty())){
+                for(TogetherOpened to : togetherOpenedListByMember){
+                    Together together = togetherRepository.findBytogetherOpenedCode(to);
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                    togetherListWithMemberCount.add(together);
+                }
+
+            }
+
+
+            togetherMap.put("togetherJoinList", togetherJoinListByMember);
+            togetherMap.put("togetherOpenedList", togetherListWithMemberCount);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return togetherMap;
+    }
 }

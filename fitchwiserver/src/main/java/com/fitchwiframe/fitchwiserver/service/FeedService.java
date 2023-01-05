@@ -134,8 +134,9 @@ public class FeedService {
     }
 
     //멤버가 작성한 피드 조회
-    public List<Feed>getMemberFeed(Member member) {
+    public List<Feed>getMemberFeed(String memberEmail) {
         log.info("feedService.getMemberFeed");
+        Member member = memberRepository.findById(memberEmail).get();
         //피드 가져오기
         List<Feed> feedList = feedRepository.findAllByMemberEmailOrderByFeedDateDesc(member);
         List<Feed> memberFeedList = new ArrayList<>();
@@ -355,7 +356,14 @@ public class FeedService {
         try {
             feed = feedRepository.findById(feedCode).get();
 
-            feed.setFfList(feedFileRepository.findByFeedCode(feedCode));
+            List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(feedCode);
+            List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(feedCode);
+            List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(feedCode);
+            feed.setFfList(feedFiles);
+            feed.setFcList(feedComments);
+            feed.setFlList(feedLikes);
+
+
 
         } catch (Exception e){
             e.printStackTrace();

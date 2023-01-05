@@ -1,16 +1,15 @@
 import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember}) => {
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp54355175");
 
-    // useEffect(()=> {
-    //   getMemberInfo()
-    //   return() =>  getMemberInfo();
-    // })
+    useEffect(()=> {
+      getMemberInfo()
+    },[])
     const getMemberInfo = () => {
         axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
@@ -64,8 +63,6 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
-        getMemberInfo();
-
         if(togetherInfo.togetherPrice===0) {
             insertTogetherFreeJoinInfo();
         }else {

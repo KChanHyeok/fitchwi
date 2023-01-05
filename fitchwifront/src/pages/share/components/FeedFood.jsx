@@ -77,6 +77,7 @@ const FeedFood = ({ memberInfo, refreshFeed }) => {
                   feedContent={data.feedContent}
                   feedCode={data.feedCode}
                   file={data.ffList}
+                  feedClassificationcode={data.feedClassificationcode}
                   comment={data.fcList}
                   memberInfo={memberInfo}
                   refreshFeed={getFeedList}
@@ -94,7 +95,7 @@ const FeedFood = ({ memberInfo, refreshFeed }) => {
           <></>
         )}
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );

@@ -4,7 +4,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-
   Container,
   Divider,
   FormControl,
@@ -218,11 +217,9 @@ export default function ReportManagement() {
               >
                 <Grid container justifyContent="space-evenly">
                   <Grid item xs={2}>
-                    {" "}
                     {report.reportCode}
                   </Grid>
                   <Grid item xs={2}>
-                    {" "}
                     {report.reportTarget === 0 ? (
                       <Link
                         to={`/${report.reportCategory}`}
@@ -230,10 +227,14 @@ export default function ReportManagement() {
                       >
                         <Typography>{report.reportCategory}</Typography>
                       </Link>
-                    ) : (
+                    ) : report.reportState === "대기" ? (
                       <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
                         <Typography>{report.reportCategory}</Typography>
                       </Link>
+                    ) : (
+                      <Typography onClick={() => alert("삭제된 게시글입니다.")}>
+                        {report.reportCategory}
+                      </Typography>
                     )}
                   </Grid>
                   <Grid item xs={2}>
@@ -242,7 +243,7 @@ export default function ReportManagement() {
                       state={{ memberId: report.memberEmail.memberEmail }}
                     >
                       <Typography>{report.memberEmail.memberEmail}</Typography>
-                    </Link>{" "}
+                    </Link>
                   </Grid>
                   <Grid item xs={2}>
                     <Typography>{report.reportDetailList.length}</Typography>

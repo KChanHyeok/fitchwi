@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Avatar,
   Button,
   ButtonGroup,
@@ -7,19 +8,32 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Container,
   Grid,
   ImageList,
   ImageListItem,
+  Input,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { People, LocationOn, SportsKabaddi, Groups, PermContactCalendar, AssignmentTurnedIn, DateRange } from "@mui/icons-material";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { People, LocationOn, SportsKabaddi, Groups, PermContactCalendar, AssignmentTurnedIn, DateRange, Search } from "@mui/icons-material";
 import moment from "moment";
+import styled from "@emotion/styled";
+
+const StyledAppbar = styled(AppBar)({
+  backgroundColor: "white",
+  borderBottom: 1,
+  top: 65,
+});
+
 const SearchResult = () => {
+  const nav = useNavigate();
   let { searchText } = useParams();
+  const [newSearchText, setNewSearchText] = useState();
 
   const [togetherList, setTogetherList] = useState([]);
   const [feedList, setFeedList] = useState([]);
@@ -35,7 +49,7 @@ const SearchResult = () => {
     return year + month + day;
   }
 
-  let nowTime = (time) => moment(getToday(time)).fromNow();
+  let nowTime = (time) => moment(getToday(Number(time))).fromNow();
 
   const searchResult = useCallback(() => {
     axios
@@ -67,12 +81,34 @@ const SearchResult = () => {
     searchResult();
   }, [searchResult]);
 
+  const handleChange = (event) => {
+    setNewSearchText(event.target.value);
+  };
+
+  const onSearch = useCallback(
+    (e) => {
+      if (!newSearchText || newSearchText.length < 2) {
+        alert("두 글자 이상 입력해 주세요.");
+        return;
+      }
+      e.preventDefault();
+      nav(`/search/${newSearchText}`);
+    },
+    [newSearchText, nav]
+  );
+
   return (
     <>
-      <Box>
+      <StyledAppbar position="sticky">
+        <Toolbar sx={{ ml: 27.5 }} component="form" onSubmit={onSearch}>
+          <Search sx={{ color: "black", fontSize: 30 }} />
+          <Input onChange={handleChange} disableUnderline={true} defaultValue={searchText} fullWidth sx={{ ml: 2 }} />
+        </Toolbar>
+      </StyledAppbar>
+      <Container>
         <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" mt={4}>
           <Typography variant="h2">{searchText} 검색결과</Typography>
-          <Box width={1000} mt={4}>
+          <Box width={1100} mt={4}>
             <ButtonGroup variant="outlined" aria-label="outlined button group" size="large" fullWidth sx={{ height: 70 }}>
               {type === 1 ? (
                 <Button variant="contained">
@@ -109,7 +145,7 @@ const SearchResult = () => {
               )}
             </ButtonGroup>
 
-            <Box height={800} border={1} borderRadius={1} mt={2} sx={{ overflowY: "scroll" }}>
+            <Box height={800} border={1} borderRadius={1} mt={2}>
               {type === 1 &&
                 (togetherList.length === 0 ? (
                   <div>함께해요 검색결과가 없습니다</div>
@@ -157,8 +193,8 @@ const SearchResult = () => {
                   <div>얘기해요 검색결과가 없습니다</div>
                 ) : (
                   talkList.map((item, index) => (
-                    <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }}>
-                      <Card key={index} sx={{ borderBottom: 1 }}>
+                    <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }} key={index}>
+                      <Card sx={{ borderBottom: 1 }}>
                         <CardContent>
                           <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
                             <Grid item>
@@ -211,7 +247,7 @@ const SearchResult = () => {
                             </Typography>
                             <DateRange />
                             <Typography color="textSecondary" variant="caption">
-                              {nowTime(1672678868238)}
+                              {nowTime(item.talkOpenCode.talkOpenDate)}
                             </Typography>
                           </Box>
                         </CardContent>
@@ -224,15 +260,19 @@ const SearchResult = () => {
                 (feedList.length === 0 ? (
                   <div>공유해요 검색결과가 없습니다</div>
                 ) : (
-                  <ImageList sx={{ width: 1000, height: 800, overflowY: "scroll" }} cols={3} rowHeight={164}>
+                  <ImageList sx={{ width: "100%", height: "800px", overflowY: "scroll" }} cols={3} rowHeight={164}>
                     {feedList.map((item, index) => (
                       <Link to={`/share/${item.feedCode}`} key={index}>
-                        <ImageListItem>
+                        <ImageListItem style={{ height: "300px" }}>
                           <img
                             src={`/images/${item.ffList[0].feedFileSaveimg}`}
                             srcSet={`/images/${item.ffList[0].feedFileSaveimg}`}
                             alt={item.feedCode}
                             loading="lazy"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                            }}
                           />
                         </ImageListItem>
                       </Link>
@@ -242,7 +282,7 @@ const SearchResult = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Container>
     </>
   );
 };

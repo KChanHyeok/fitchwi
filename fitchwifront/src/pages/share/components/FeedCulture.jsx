@@ -72,6 +72,7 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
                   information={data}
                   memberWriterInfo={data.memberEmail}
                   feedDate={data.feedDate}
+                  feedClassificationcode={data.feedClassificationcode}
                   feedContent={data.feedContent}
                   feedCode={data.feedCode}
                   file={data.ffList}
@@ -92,7 +93,7 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
           <></>
         )}
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );

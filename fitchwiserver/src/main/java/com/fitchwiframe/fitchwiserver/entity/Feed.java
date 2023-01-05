@@ -19,7 +19,7 @@ public class Feed {
     private Member memberEmail;
 
     @Column(length = 20)
-    private String feedClassificationcode;
+    private Long feedClassificationcode;
 
     @Column(length = 50)
     private String feedCategory;

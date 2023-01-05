@@ -120,6 +120,7 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
     const approval = (data) => {
         axios.put("/approvalTogetherMemberState", data)
         .then((res)=> {
+            alert(res.data)
             refreshTogetherJoinList();
             setOpenAppliedMember(false);
         }).catch((error) => console.log(error))
@@ -127,6 +128,7 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
     const refusal = (data) => {
         axios.put("/refusalTogetherMemberState", data)
         .then((res) => {
+            alert(res.data)
             refreshTogetherJoinList();
             setOpenAppliedMember(false)
         }).catch((error) => console.log(error))

@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
+import KaKaoLogin from "./KakaoLogin";
 
 export default function Login({ sucLogin }) {
   const nav = useNavigate();
@@ -34,17 +35,14 @@ export default function Login({ sucLogin }) {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
         //0: result /1:id / 2:nickname
-        console.log(res.data[0]);
-        console.log(res.data[1]);
-        console.log(res.data[2]);
 
-        switch (res.data[0]) {
+        switch (res.data.state) {
           case "ok":
-            sucLogin(res.data[1], res.data[2]);
-            sessionStorage.setItem("id", res.data[1]);
-            sessionStorage.setItem("nickName", res.data[2]);
-            alert(res.data[2] + "님 환영합니다.");
-            nav("/");
+            sucLogin(res.data.memberEmail, res.data.memberNickname);
+            sessionStorage.setItem("id", res.data.memberEmail);
+            sessionStorage.setItem("nickName", res.data.memberNickname);
+            alert(res.data.memberNickname + "님 환영합니다.");
+            //   nav("/");
             break;
 
           case "wrong pwd":
@@ -54,11 +52,11 @@ export default function Login({ sucLogin }) {
             alert("아이디와 일치하는 회원정보가 없습니다.");
             break;
           case "reported":
-            alert(res.data[1] + "부터 이용 가능");
+            alert(res.data.memberRestriction + "부터 이용 가능");
             nav("/");
             break;
           case "released":
-            alert(res.data[1] + "부로 이용 제한 해제");
+            alert(res.data.memberRestriction + "부로 이용 제한 해제");
             break;
           default:
             break;
@@ -86,7 +84,7 @@ export default function Login({ sucLogin }) {
           <LoginOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
-          로.그.인.
+          로그인
         </Typography>
         <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }}>
           <TextField
@@ -126,7 +124,7 @@ export default function Login({ sucLogin }) {
           </Button>
 
           <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
-            카카오로그인
+            <KaKaoLogin />
           </Button>
           <Grid container>
             <Grid item xs>
