@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +40,7 @@ public class MemberController {
 
   //로그인
   @PostMapping("/loginmember")
-  private String[] loginMember(@RequestBody Member member) {
+  private Map<String, Object> loginMember(@RequestBody Member member) {
     log.info("memberController.loginMember()");
     return memberService.loginMember(member);
   }
@@ -108,5 +106,17 @@ public class MemberController {
                                   HttpSession session){
     log.info("memberController.updateMemberInfo");
     return memberService.updateMemberInfo(memberToUpdate, pic, session);
+  }
+
+
+  @GetMapping("/login/kakao/callback")
+  public Map<String, Object> kakaoLogin(@RequestParam String code, HttpSession session) {
+
+    return  memberService.registerOrLogin(code, session);
+  }
+
+  @PostMapping("/logout")
+  public String logoutMember( HttpSession session ){
+    return memberService.logoutMember( session);
   }
 }
