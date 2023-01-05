@@ -20,25 +20,27 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
+const TalkInfo = ({ talkList, talkTagList, talkJoinList,
+    refreshTalkTagList, refreshTalkList, refreshTalkJoinList }) => {
 
     let { talkPageCode } = useParams();
     const nav = useNavigate();
     const [talkInfo, setTalkInfo] = useState([]);
+    const [talkTagInfo, setTalkTagInfo] = useState([]);
     const [talkJoinMember, setTalkJoinMember] = useState(null);
 
-    // const getTalkInfo = () => {
-    //     axios.get("/getTalk", { params: { talkCode: talkPageCode } })
-    //         .then((res) => setTalkInfo(res.data));
-    // }
-
     useEffect(() => {
-        // getTalkInfo();
-        setTalkInfo(talkList.filter(data => data.talkCode === (talkPageCode * 1))[0]);
-        setTalkJoinMember(talkJoinList.filter
-            (data => (data.talkCode.talkCode === (talkPageCode * 1)
-                && data.talkJoinState === "가입중")));
-    }, [talkList, talkJoinList, talkPageCode]);
+        try {
+            setTalkInfo(talkList.filter(data => data.talkCode === (talkPageCode * 1))[0]);
+            setTalkTagInfo(talkTagList.filter(data => data.talkCode.talkCode === (talkPageCode * 1))[0]);
+            setTalkJoinMember(talkJoinList.filter
+                (data => (data.talkCode.talkCode === (talkPageCode * 1)
+                    && data.talkJoinState === "가입중")));
+        } catch (e) {
+
+        }
+        // console.log((talkTagList.filter(data => data.talkCode.talkCode === (talkPageCode * 1))[0]));
+    }, [talkList, talkTagList, talkJoinList, talkPageCode]);
 
     //문의하기 모달창
     const [inquiryModal, setInquiryMoal] = useState(false);
@@ -54,6 +56,10 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
             setInquiryMoal(!inquiryModal);
         }
     }
+
+    // console.log(talkTagList);
+    // console.log(talkTagInfo);
+
 
     return (
         <Stack
@@ -72,19 +78,19 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                         <span>유형 - {talkInfo.talkType}</span>
                         <Box className="talkMenu">
                             {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === id
-                                ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo}
-                                    talkJoinList={talkJoinList} talkJoinMember={talkJoinMember} />)
+                                ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} talkTagInfo={talkTagInfo}
+                                    talkJoinList={talkJoinList} talkJoinMember={talkJoinMember}
+                                    refreshTalkTagList={refreshTalkTagList} refreshTalkList={refreshTalkList} />)
                                 : (<Button id="demo-customized-button"
+                                    className="reportBtn"
                                     aria-haspopup="true"
-                                    color="primary"
                                     variant="contained"
                                     disableElevation
                                     onClick={isLogin}
-                                >문의하기</Button>)}
+                                >신고하기</Button>)}
                         </Box>
                     </Box>
                     <h1>{talkInfo.talkTitle}</h1>
-                    <p className="reportBtn">신고하기</p>
                     <Box sx={{ maxWidth: 900 }}>
                         {talkInfo.talkSaveimg && (<Box
                             component="img"
@@ -110,8 +116,12 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                                         {data.memberEmail.memberNickname}님
                                     </Typography>
                                 </UserBox>)}
-                        <Box>
-                        </Box>
+                        {!talkTagInfo ? <h4>로딩</h4>
+                            : <Box>
+                                <h4>태그</h4>
+                                {talkTagInfo.talkTagContent}
+                            </Box>}
+
                         <Box>
                         </Box>
                         <div>얘기해요 피드</div>
@@ -138,7 +148,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                                     refreshTalkJoinList={refreshTalkJoinList} />)}
                 </Box>
             }
-            {!talkInfo ? <h1>로딩중</h1> :
+            {!talkInfo || !talkTagInfo ? <h1>로딩중</h1> :
                 <StyleModal open={inquiryModal}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
@@ -147,7 +157,7 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                     <Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
 
                         <Typography variant="h6" color="gray" textAlign="center">
-                            얘기해요 문의하기
+                            얘기해요 신고하기
                             <button className="modalCloseBtn" onClick={() => setInquiryMoal(false)}>
                                 ✖
                             </button>
@@ -161,12 +171,12 @@ const TalkInfo = ({ talkList, talkJoinList, refreshTalkJoinList }) => {
                         </UserBox>
                         <hr />
                         <Box>
-                            <h2 sx={{ mt: 3 }}>{talkInfo.talkTitle} 문의하기</h2><br />
-                            <h4>문의사항을 입력해주세요</h4>
-                            <p>함께해요 일정에 관련해 모임장에게 궁금한 점을 입력해주세요</p>
+                            <h2 sx={{ mt: 3 }}>{talkInfo.talkTitle} 신고하기</h2><br />
+                            <h4>신고 사유를 선택해 주세요.</h4>
+                            <p>회원님의 소중한 의견은 FITCHWI를 더욱 안전하고 신뢰할 수 있도록 만드는데 큰 도움이 됩니다.</p>
                             <TextField fullWidth
-                                label="문의내용"
-                                name="talkInquiry"
+                                label="신고내용"
+                                name="reportDetailContent"
                                 sx={{ mt: 3 }}
                                 multiline
                                 rows={3}

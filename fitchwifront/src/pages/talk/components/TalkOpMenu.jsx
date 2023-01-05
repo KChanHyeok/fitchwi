@@ -63,7 +63,8 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refreshTalkJoinList }) {
+function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoinMember,
+    refreshTalkTagList, refreshTalkList, refreshTalkJoinList }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -73,53 +74,26 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
         setAnchorEl(null);
     };
 
-    const imgEl = document.querySelector(".talk_img_box");
     const nav = useNavigate();
 
-    //회원관리 모달창
-    const [openList, setOpenList] = useState(false);
+    //가입회원 관리 모달창
+    const [openJoinMemberList, setOpenJoinMemberList] = useState(false);
 
-    // const [updateTalk, setUpdateTalk] = useState({});
+    const joinMemberManagement = () => {
+        setOpenJoinMemberList(true);
+        setAnchorEl(false);
+    }
 
-    // useEffect(() => {
-    //     setUpdateTalk({
-
-    //     });
-    // }, []);
-
-    // const onChange = useCallback(
-    //     (e) => {
-    //         setUpdateTalk({
-    //             ...updateTalk,
-    //             [e.target.name]: e.target.value
-    //         });
-    //     }, [updateTalk]);
-
-    //파일 업로드
-    const [fileForm, setFileForm] = useState("");
-
-    useEffect(() => {
-        preview();
-
-        return () => preview();
-    });
-
-    const preview = () => {
-        if (!fileForm) return false;
-        const render = new FileReader();
-
-        render.onload = () =>
-            (imgEl.style.backgroundImage = `url(${render.result})`);
-        render.readAsDataURL(fileForm[0]);
-        //console.log(render);
-    };
-
-    const onLoadFile = useCallback(
-        (e) => {
-            const file = e.target.files;
-            setFileForm(file);
-            console.log(e.target.file);
-        }, []);
+    //개설자가 가입한 회원 탈퇴 처리
+    const deleteJoinMember = (data) => {
+        axios.put("/deleteJoinMember", data)
+            .then((res) => {
+                alert(res.data);
+                refreshTalkJoinList();
+                setOpenJoinMemberList(false);
+            })
+            .catch((error) => console.log(error));
+    }
 
     //승인 대기 -> 수락 / 거절
     const [openApplyMember, setOpenApplyMember] = useState(false);
@@ -137,24 +111,12 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
                 && data.talkJoinState === "대기")));
     }, [talkJoinList, talkPageCode]);
 
-    // const [insertJoinState, setInsertJoinState] = useState({
-    //     talkJoinState: "",
-    // });
-
-    // const onChange = useCallback(
-    //     (e) => {
-    //         const inputTo = {
-    //             ...insertJoinState,
-    //         };
-    //         setInsertJoinState(inputTo);
-    //     }, [insertJoinState]);
-    // console.log(talkJoinList);
-
     //수락
     const approval = (data) => {
         axios.put("/approvalTalkMember", data)
             .then((res) => {
                 alert(res.data);
+                refreshTalkList();
                 refreshTalkJoinList();
                 setOpenApplyMember(false);
             })
@@ -166,41 +128,12 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
         axios.put("/refusalTalkMember", data)
             .then((res) => {
                 alert(res.data);
+                refreshTalkList();
                 refreshTalkJoinList();
                 setOpenApplyMember(false);
             })
             .catch((error) => console.log(error));
     }
-
-    //수정하기
-    // const onTalkUpdate = (e) => {
-    //     console.log(updateTalk);
-    //     e.preventDefault();
-    //     formData.append(
-    //         "data",
-    //         new Blob([JSON.stringify(updateTalk)],
-    //             { type: "application/json" })
-    //     );
-    //     formData.append("uploadImage", fileForm[0]);
-
-    //     const config = {
-    //         headers: { "Content-Type": "multipart/form-data" },
-    //     };
-
-    //     axios.get("/updateTalk", formData, config)
-    //         .then((res) => {
-    //             if (res.data === "ok") {
-    //                 setUpdateTalk(false);
-    //                 alert("개설 성공");
-    //                 refreshTalkList();
-    //             } else {
-    //                 alert("개설 실패");
-    //             }
-    //         })
-    //         .catch((error) => console.log(error));
-    // };
-
-    console.log(talkInfo);
 
     //삭제하기
     const deleteTalk = useCallback(
@@ -210,6 +143,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
                     if (res.data === "ok") {
                         alert("얘기해요 삭제 완료");
                         nav("/talk");
+                        refreshTalkList();
                     } else {
                         alert("삭제 불가");
                     }
@@ -228,6 +162,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
     const modalClose = () => {
         setOpenDeleteModal(false);
         setOpenApplyMember(false);
+        setOpenJoinMemberList(false);
     };
 
     return (
@@ -253,7 +188,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => setOpenList(true)} disableRipple>
+                <MenuItem onClick={joinMemberManagement} disableRipple>
                     <ManageAccountsIcon />
                     가입회원 관리
                 </MenuItem>
@@ -263,7 +198,9 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
                         신청회원 확인
                     </MenuItem>}
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => nav("/talk/update", { state: { talkInfo } })} disableRipple>
+                <MenuItem
+                    onClick={() => nav("/talk/update", { state: { talkInfo, talkTagInfo } })}
+                    disableRipple>
                     <BuildIcon />
                     얘기해요 수정
                 </MenuItem>
@@ -274,32 +211,58 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
             </StyledMenu>
             <div>
                 <Dialog
+                    open={openJoinMemberList}
+                    onClose={modalClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title" className="memberListBox">
+                        {"얘기해요 참여자 관리"}
+                    </DialogTitle>
+                    <hr />
+                    <DialogContent>
+                        {!talkJoinMember ? <h2>로딩중</h2>
+                            : talkJoinMember.length === 0
+                                ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
+                                : talkJoinMember.map((data) =>
+                                    <UserBox key={data.talkJoinCode}>
+                                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                        <Typography fontWeight={500} variant="span">
+                                            <b>{data.memberEmail.memberNickname}님</b>
+                                            <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
+                                        </Typography>
+                                    </UserBox>)}
+                    </DialogContent>
+                </Dialog>
+            </div>
+            <div>
+                <Dialog
                     open={openApplyMember}
                     onClose={modalClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title" className="applyBox">
+                    <DialogTitle id="alert-dialog-title" className="memberListBox">
                         {"승인 대기 중인 회원"}
                     </DialogTitle>
                     <hr />
                     <DialogContent>
-                        {/* {waitingMemberList.length===0 ? } */}
-                        <Typography variant="span">회원</Typography>
-                        <Typography variant="span" className="subColumn">답변</Typography>
+                        <Typography>회원 / 답변</Typography>
                         {!waitingMemberList ? <h2>로딩중</h2>
-                            : waitingMemberList.map((data) =>
-                                <UserBox key={data.talkJoinCode}>
-                                    <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                            : waitingMemberList.length === 0
+                                ? <Typography>현재 승인 대기 중인 인원이 없습니다.</Typography>
+                                : waitingMemberList.map((data) =>
                                     <Typography fontWeight={500} variant="span">
-                                        <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        {data.talkJoinAnswer}
-                                        <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
-                                        <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
-                                    </Typography>
-                                </UserBox>)}
-                    </DialogContent>
+                                        <UserBox key={data.talkJoinCode}>
+                                            <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                            <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {data.talkJoinAnswer}
+                                            <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
+                                            <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
+                                        </UserBox>
+                                    </Typography>)}
 
+                    </DialogContent>
                 </Dialog>
             </div>
             <div>
@@ -325,32 +288,8 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkJoinList, talkJoinMember, refr
                     </DialogActions>
                 </Dialog>
             </div>
-            {/* <StyleModal open={openList}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                sx={{ mt: 5 }}>
-                <Typography variant="h6" color="gray" textAlign="center">
-                    얘기해요 회원 관리
-                    <button className="modalCloseBtn" onClick={() => setOpenList(false)}>
-                        ✖
-                    </button>
-                </Typography>
-                <UserBox>
-                    <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                    <Typography fontWeight={500} variant="span">
-                        {sessionStorage.getItem("id")}
-                    </Typography>
-                </UserBox>
-                <hr />
-                {talkJoinMember.map((data) =>
-                    <UserBox key={data.talkJoinCode}>
-                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                        <Typography fontWeight={500} variant="span">
-                            {!data.memberEmail.memberNickname ? data.memberEmail.memberName : data.memberEmail.memberNickname}님
-                        </Typography>
-                    </UserBox>)}
-            </StyleModal> */}
         </div >
+
     );
 }
 

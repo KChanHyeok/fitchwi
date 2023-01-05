@@ -14,8 +14,8 @@ const TalkList = ({ talkList }) => {
         talkType,
         talkInquiry,
         talkMax,
+        talkOpenCode,
     } = talkList;
-
 
     return (
         <Link to={`/talk/${talkCode}`} underline="none">
@@ -34,6 +34,9 @@ const TalkList = ({ talkList }) => {
                         <Typography variant="body" color="text.secondary">
                             {talkCategory}<br />
                             {talkContent}
+                            <Typography variant="span" className="talkOpDate">
+                                {talkOpenCode.talkOpenDate}
+                            </Typography>
                         </Typography>
                     </CardContent>
                 </CardActionArea>

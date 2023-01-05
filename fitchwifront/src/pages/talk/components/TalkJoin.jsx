@@ -20,9 +20,8 @@ const UserBox = styled(Box)({
 
 const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talkJoinMember }) => {
     const nowdate = new Date().getFullYear() + "-"
-        + (new Date().getMonth() + 1) + "-"
-        + new Date().getDate();
-    // const nav = useNavigate();
+        + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
+        + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
 
     const [insertTalkJoin, setInsertTalkJoin] = useState({
         memberEmail: {
@@ -104,13 +103,19 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
                 ? <Button onClick={() => setOpenModal(true)}
                     color="primary" variant="contained"
                     className="talkSticky">신청 취소하기</Button>
-                : talkJoinState === "가입중"
-                    ? <Button onClick={() => setOpenModal(true)}
-                        color="primary" variant="contained"
-                        className="talkSticky">탈퇴하기</Button>
-                    : <Button onClick={isTalkMax}
-                        color="primary" variant="contained"
-                        className="talkSticky">{children}</Button>
+                : talkJoinState === "거절"
+                    ? <Button color="primary" variant="contained"
+                        className="talkSticky" disabled>거절됨</Button>
+                    : talkJoinState === "강제탈퇴"
+                        ? <Button color="primary" variant="contained"
+                            className="talkSticky" disabled>가입 불가능</Button>
+                        : talkJoinState === "가입중"
+                            ? <Button onClick={() => setOpenModal(true)}
+                                color="primary" variant="contained"
+                                className="talkSticky">탈퇴하기</Button>
+                            : <Button onClick={isTalkMax}
+                                color="primary" variant="contained"
+                                className="talkSticky">{children}</Button>
             }
             <StyleModal open={openModal}
                 aria-labelledby="modal-modal-title"

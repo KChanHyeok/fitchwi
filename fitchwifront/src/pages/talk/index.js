@@ -15,10 +15,12 @@ function Home() {
     const nav = useNavigate();
 
     const [talkList, setTalkList] = useState([]);
+    const [talkTagList, setTalkTagList] = useState([]);
     const [talkJoinList, setTalkJoinList] = useState([]);
 
     useEffect(() => {
         getAllTalkList();
+        getAllTalkTagList();
         getTalkJoinList();
     }, []);
 
@@ -26,6 +28,14 @@ function Home() {
         await axios.get("/getAllTalkList")
         .then((res) => {
             setTalkList(res.data);
+        })
+        .catch((error) => console.log(error));
+    }
+
+    const getAllTalkTagList = async () => {
+        await axios.get("/getAllTalkTagList")
+        .then((res) => {
+            setTalkTagList(res.data);
         })
         .catch((error) => console.log(error));
     }
@@ -67,12 +77,14 @@ function Home() {
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
                 <Route path="/:talkPageCode"
                 element={<TalkInfo
-                    refreshTalkJoinList={getTalkJoinList}
-                    talkList={talkList} talkJoinList={talkJoinList} />} />
+                    talkList={talkList} talkTagList={talkTagList}
+                    talkJoinList={talkJoinList} refreshTalkList={getAllTalkList}
+                    refreshTalkTagList={getAllTalkTagList} refreshTalkJoinList={getTalkJoinList} />} />
                     <Route path="opened"
                     element={<TalkOpened  memberEmail={id} refreshTalkList={getAllTalkList}/>} />
                     <Route path="update"
-                    element={<TalkUpdate  memberEmail={id} refreshTalkList={getAllTalkList}/>} />
+                    element={<TalkUpdate  memberEmail={id} refreshTalkList={getAllTalkList}
+                    refreshTalkTagList={getAllTalkTagList} />} />
             </Routes>           
         </Stack>
         </>

@@ -2,10 +2,6 @@
     float: right;
 }
 
-.reportBtn {
-    float: right;
-}
-
 .modalCloseBtn {
     float: right;
     border: none;
@@ -24,4 +20,12 @@
     width: 100%;
     background-color: #FF0456 !important;
     color: white !important;
+}
+
+.reportBtn {
+    background-color: orange !important;
+}
+
+.reportBtn:hover {
+    background-color:  rgb(217, 141, 0) !important;
 }
