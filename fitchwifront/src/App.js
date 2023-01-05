@@ -60,10 +60,15 @@ function App() {
 
   //로그아웃함수
   const onLogout = () => {
-    axios
-      .post("/logout", { data: { id: lstate.logid } })
-      .then((result) => console.log(result.data));
-    alert("로그아웃");
+    // axios
+    //   .post("/logout", { data: { id: lstate.logid } })
+    //   .then((result) => console.log(result.data));
+    // alert("로그아웃");
+    const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
+    const REDIRECT_URI = "http://localhost:3000/";
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
+    window.location.href = KAKAO_AUTH_URL;
+
     const newState = {
       logid: "",
       flink: "/login",
