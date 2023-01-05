@@ -27,6 +27,14 @@ function App() {
     //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
     const id = sessionStorage.getItem("id");
     const nickName = sessionStorage.getItem("nickName");
+    ChannelService.boot({
+      pluginKey: "261174a2-5819-4674-be05-d9bb582cd3b9",
+      memberId: id,
+      profile: {
+        name: nickName,
+        email: id,
+      },
+    });
     //console.log(mid);
     if (id !== null) {
       const newState = {
@@ -61,12 +69,6 @@ function App() {
     sessionStorage.removeItem("nickName");
     nav("/"); //첫페이지로 돌아감.
   };
-
-  useEffect(() => {
-    ChannelService.boot({
-      pluginKey: "261174a2-5819-4674-be05-d9bb582cd3b9",
-    });
-  }, []);
 
   return (
     <>

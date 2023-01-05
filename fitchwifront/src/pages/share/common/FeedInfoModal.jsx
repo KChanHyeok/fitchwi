@@ -214,7 +214,7 @@ const FeedInfoModal = ({
                 <Stack direction="row" gap={1} mb={1} alignItems="center">
                   {tagList &&
                     tagList.map((tag, index) => (
-                      <Typography variant="body6" color="grey" onClick={() => console.log("검색으로 이동")} key={index}>
+                      <Typography variant="body6" color="grey" onClick={() => nav(`/search/${tag}`)} sx={{ cursor: "pointer" }} key={index}>
                         #{tag}
                       </Typography>
                     ))}
