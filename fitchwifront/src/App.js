@@ -13,6 +13,7 @@ import Manager from "./pages/manager";
 import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
+import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
 function App() {
   const nav = useNavigate();
 
@@ -81,8 +82,12 @@ function App() {
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
+        <Route
+          path="/memberpage/*"
+          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
+        ></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
+        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect />}></Route>
       </Routes>
     </>
   );
