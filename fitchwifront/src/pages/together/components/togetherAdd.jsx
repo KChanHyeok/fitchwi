@@ -48,6 +48,8 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   const nav = useNavigate();
   const formDate = new FormData();
   const [fileForm, setFileForm] = useState("");
+  const [firstDateOpen, setFirstDateOpen] = useState(true);
+  const [secondDateOpen, setSecondDateOpen] = useState(true);
   
   const imgEl = document.querySelector(".img_box");
   
@@ -63,8 +65,8 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherDate: "",
     togetherMax: 0,
     togetherContent: "",
-    togetherRecruitStartDate: nowdate, // 모집 시작일
-    togetherRecruitEndDate: nowdate, // 모집 마감일
+    togetherRecruitStartDate: "", // 모집 시작일
+    togetherRecruitEndDate: "", // 모집 마감일
     togetherType: "", //가입 유형
     togetherInquiry: "", // 함께해요 가입 질문
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
@@ -128,6 +130,19 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+
+  // const disableDates = () => {
+  //   const day = date.date();
+  //       console.log(moment(bookedDays[0]).format("DD"));
+  //       // for (let i = 0; i < bookedDays.length; i++) {
+  //       // moment(bookedDays[i]).format("DD");
+  //       // }
+  //       for (let i = 0; i < bookedDays.length; i++) {
+  //           if (day === moment(bookedDays[i]).format("DD") * 1) {
+  //           return true;
+  //           }
+  //       }
+  // }
 
   console.log(insertForm)
 
@@ -268,8 +283,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                   onChange={(e)=>{
                     setInsertForm({
                       ...insertForm,
-                      togetherDate:moment(e.$d).format("YYYY-MM-DD")
+                      togetherDate: moment(e.$d).format("YYYY-MM-DD"),
+                      togetherRecruitStartDate: "",
+                      togetherRecruitEndDate:""
                     });
+                    setFirstDateOpen(false)
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />
@@ -290,17 +308,21 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StaticDatePicker
-                  displayStaticWrapperAs="desktop"
-                  label="모집신청 시작일"
-                  disablePast
-                  value={insertForm.togetherRecruitStartDate}
-                  onChange={(e)=>{
-                    setInsertForm({
-                      ...insertForm,
-                      togetherRecruitStartDate:moment(e.$d).format("YYYY-MM-DD")
-                    });
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
+                displayStaticWrapperAs="desktop"
+                label="모집신청 시작일"
+                disablePast
+                value={insertForm.togetherRecruitStartDate}
+                maxDate={moment(insertForm.togetherDate).subtract(1,"days").format()}
+                onChange={(e)=>{
+                  setInsertForm({
+                    ...insertForm,
+                    togetherRecruitStartDate: moment(e.$d).format("YYYY-MM-DD"),
+                    togetherRecruitEndDate:""
+                  });
+                  setSecondDateOpen(false)
+                }}
+                disabled={firstDateOpen}
+                renderInput={(params) => <TextField {...params} />}
                 />
               </LocalizationProvider>
             </Grid>
@@ -318,17 +340,21 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StaticDatePicker
-                  displayStaticWrapperAs="desktop"
-                  label="모집신청 마감일"
-                  disablePast
-                  value={insertForm.togetherRecruitEndDate}
-                  onChange={(e)=>{
-                    setInsertForm({
-                      ...insertForm,
-                      togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
-                    });
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
+                displayStaticWrapperAs="desktop"
+                label="모집신청 마감일"
+                disablePast
+                value={insertForm.togetherRecruitEndDate}
+                minDate={insertForm.togetherRecruitStartDate}
+                maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
+                // shouldDisableDate={ }
+                onChange={(e)=>{
+                  setInsertForm({
+                    ...insertForm,
+                    togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
+                  });
+                }}
+                disabled={secondDateOpen}
+                renderInput={(params) => <TextField {...params} />}
                 />
               </LocalizationProvider>
             </Grid>
