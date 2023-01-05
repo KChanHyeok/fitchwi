@@ -110,8 +110,13 @@ public class MemberController {
 
 
   @GetMapping("/login/kakao/callback")
-  public Map<String, Object> kakaoLogin(@RequestParam String code) {
-    Map<String, Object> stringObjectMap = memberService.registerOrLogin(code);
-    return stringObjectMap;
+  public Map<String, Object> kakaoLogin(@RequestParam String code, HttpSession session) {
+
+    return  memberService.registerOrLogin(code, session);
+  }
+
+  @PostMapping("/logout")
+  public String logoutMember( HttpSession session ){
+    return memberService.logoutMember( session);
   }
 }

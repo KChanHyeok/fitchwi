@@ -14,6 +14,7 @@ import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
+import axios from "axios";
 function App() {
   const nav = useNavigate();
 
@@ -59,6 +60,9 @@ function App() {
 
   //로그아웃함수
   const onLogout = () => {
+    axios
+      .post("/logout", { data: { id: lstate.logid } })
+      .then((result) => console.log(result.data));
     alert("로그아웃");
     const newState = {
       logid: "",

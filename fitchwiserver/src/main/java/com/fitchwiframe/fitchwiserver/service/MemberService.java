@@ -10,10 +10,7 @@ import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -142,14 +139,14 @@ public class MemberService {
       if (dbMember.getMemberEmail() != null) {
         if (encoder.matches(inputMember.getMemberPwd(), dbMember.getMemberPwd())) {
           result.put("state", "ok");
-          result.put("memberEmail",  dbMember.getMemberEmail());
+          result.put("memberEmail", dbMember.getMemberEmail());
           result.put("memberNickname", dbMember.getMemberNickname());
 
         } else {
           result.put("state", "wrong pwd");
         }
       } else {
-        result.put("state","no data");
+        result.put("state", "no data");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -392,7 +389,7 @@ public class MemberService {
 
     HttpEntity<MultiValueMap<String, String>> tokenRequest = new HttpEntity<>(body, httpHeaders);
     RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<String> response = restTemplate.exchange("https://kauth.kakao.com//oauth/token", HttpMethod.POST, tokenRequest, String.class);
+    ResponseEntity<String> response = restTemplate.exchange("https://kauth.kakao.com/oauth/token", HttpMethod.POST, tokenRequest, String.class);
     System.out.println("response = " + response);
     String accessToken = null;
     try {
@@ -422,7 +419,7 @@ public class MemberService {
 
     HttpEntity<MultiValueMap<String, String>> infoRequest = new HttpEntity<>(httpHeaders);
     RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com//v2/user/me", HttpMethod.POST, infoRequest, String.class);
+    ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, infoRequest, String.class);
     JsonNode jsonNode = null;
     try {
       String responseBody = response.getBody();
@@ -436,12 +433,13 @@ public class MemberService {
     return jsonNode;
   }
 
-  public Map<String, Object> registerOrLogin(String code) {
+  public Map<String, Object> registerOrLogin(String code, HttpSession session) {
     Map<String, Object> resultMap = new HashMap<>();
     JsonNode jsonNode = null;
     KakaoProfile kakaoProfile = null;
+    String accessToken = getToken(code);
     try {
-      jsonNode = getMemberInfoFromKaKao(getToken(code));
+      jsonNode = getMemberInfoFromKaKao(accessToken);
 
       ObjectMapper objectMapper = new ObjectMapper();
       kakaoProfile = objectMapper.treeToValue(jsonNode, KakaoProfile.class);
@@ -464,7 +462,9 @@ public class MemberService {
     Optional<Member> dbMember = memberRepository.findById(memberEmail);
     if (dbMember.isPresent()) {
       resultMap.put("isPresent", "ok");
-      resultMap.put("member", dbMember);
+      resultMap.put("member", dbMember.get());
+      session.setAttribute("at", accessToken);
+      System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
       return resultMap;
     }
 
@@ -477,5 +477,34 @@ public class MemberService {
     return resultMap;
 
   }
+
+  public String logoutMember(HttpSession session) {
+    String result = "fail";
+    String accessToken = (String) session.getAttribute("at");
+    if (accessToken == null) {
+      result = "ok";
+      return result;
+    }
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+    httpHeaders.add("Authorization", "Bearer " + accessToken);
+
+
+    HttpEntity<MultiValueMap<String, String>> infoRequest = new HttpEntity<>(httpHeaders);
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v1/user/logout", HttpMethod.POST, infoRequest, String.class);
+
+
+    if (response.getStatusCode().equals(HttpStatus.OK)) {
+      session.removeAttribute("at");
+      System.out.println("session.getAttribute(\"at\").toString() = " + session.getAttribute("at").toString());
+      result = "ok";
+    }
+
+
+    return result;
+  }
+
 
 }

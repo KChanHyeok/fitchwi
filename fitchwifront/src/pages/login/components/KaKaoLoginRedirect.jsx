@@ -12,12 +12,14 @@ const KaKaoLoginRedirect = (props) => {
         const { isPresent, member } = res.data;
         switch (isPresent) {
           case "ok":
+            console.log(res.data);
             sessionStorage.setItem("id", member.memberEmail);
             sessionStorage.setItem("nickName", member.memberNickname);
             alert(member.memberNickname + "님 환영합니다.");
-            window.location.href = "/";
+            //  window.location.href = "/";
             break;
           case "no":
+            console.log(res.data);
             alert("추가 정보 입력 페이지로 이동합니다.");
             break;
           case "fail":
