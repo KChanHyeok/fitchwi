@@ -6,12 +6,12 @@ const Home = () => {
   return (
     <>
       <Container>
-        <Box flex={4} p={2}>
-          <Box p={2} ml={10} mr={10} mt={5}>
+        <Box flex={4}>
+          <Box ml={4} mr={4}>
             <Box border={1} mb={4}>
               <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
-                <Box component="img" src="/images/MainPageBanner1.png" height={400} width={1000} />
-                <div style={{ backgroundColor: "pink", width: 1000, height: 400 }}></div>
+                <Box component="img" src="/images/MainPageBanner1.png" height={400} />
+                <div style={{ backgroundColor: "pink", width: 1200, height: 400 }}></div>
               </Carousel>
             </Box>
             <Stack direction="row" spacing={3} justifyContent="space-between">
