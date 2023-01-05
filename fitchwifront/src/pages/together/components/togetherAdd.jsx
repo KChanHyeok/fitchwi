@@ -10,16 +10,20 @@ import {
   TextField,
   Typography,
   Stack,
+  Grid
 } from "@mui/material";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
 import React, { useCallback, useEffect, useState } from "react";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import moment from "moment/moment";
 
-const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
+const nowdate = moment().format("YYYY-MM-DD");
 
 
 const UserBox = styled(Box)({
@@ -40,7 +44,6 @@ const facilities = {
 }
 
 const TogetherAdd = ({ data, refreshTogetherList }) => {
-  // const [togetherDatemonet, setTogetherDatemonet] = React.useState(dayjs(nowdate));
 
   const nav = useNavigate();
   const formDate = new FormData();
@@ -57,11 +60,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherTitle: "",
     togetherCategory: "",
     togetherPosition: "",
-    togetherDate: nowdate,
+    togetherDate: "",
     togetherMax: 0,
     togetherContent: "",
-    togetherRecruitStartDate: "", // 모집 시작일
-    togetherRecruitEndDate: "", // 모집 마감일
+    togetherRecruitStartDate: nowdate, // 모집 시작일
+    togetherRecruitEndDate: nowdate, // 모집 마감일
     togetherType: "", //가입 유형
     togetherInquiry: "", // 함께해요 가입 질문
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
@@ -130,7 +133,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
   return (
     <Stack height={800} flex={7} p={3}>
-      <Box bgcolor="white" p={3} sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
+      <Box bgcolor="white" sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
@@ -151,38 +154,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherTitle"
           required
         />
-        {/* <TextField
-          fullWidth
-          label="모이는 일자"
-          sx={{ mt: 3 }}
-          type="date"
-          id="fullWidth"
-          value={insertForm.togetherDate}
-          onChange={handleChange}
-          name="togetherDate"
-          focused
-          color="grey"
-          required
-        /> */}
-         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <StaticDatePicker
-            displayStaticWrapperAs="desktop"
-            label="Week picker"
-            value={insertForm.togetherDate}
-            onChange={(e)=>{
-              setInsertForm({
-                ...insertForm,
-                togetherDate:moment(e.$d).format("YYYY-MM-DD")
-              });
-            }}
-            disablePast
-            // renderDay={renderWeekPickerDay}
-            renderInput={(params) => <TextField {...params} />}
-            inputFormat="'Week of' MMM d"
-          />
-        </LocalizationProvider>
-
-
         <TextField
           fullWidth
           label="최대참여인원"
@@ -215,60 +186,57 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <MenuItem value="기타">기타</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          fullWidth
-          label="모집신청 시작일을 입력헤주세요"
-          sx={{ mt: 3 }}
-          type="date"
-          id="fullWidth"
-          value={insertForm.togetherRecruitStartDate}
-          onChange={handleChange}
-          name="togetherRecruitStartDate"
-          focused
-          required
-          color="grey"
-        />
-        <TextField
-          fullWidth
-          label="모집신청 마감일을 입력헤주세요"
-          color="grey"
-          sx={{ mt: 3 }}
-          focused
-          type="date"
-          onChange={handleChange}
-          value={insertForm.togetherRecruitEndDate}
-          name="togetherRecruitEndDate"
-          id="fullWidth"
-          required
-        />
-        <FormControl sx={{ mt: 2 }} fullWidth>
-          <InputLabel>시설이용료</InputLabel>
-          <Select
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
-            value={insertForm.facilitiesCode || facilities}
-            name="facilitiesCode"
-            onChange={handleChange}
-            label="시설이용료"
-            required
-          >
-            <MenuItem value={facilities}>
-              <em>-</em>
-            </MenuItem>
-            {data.filter(data=>data.facilitiesCode!==0).map((data) => (
-              <MenuItem value={data} key={data.facilitiesCode}>
-                {data.facilitiesName}
-                <br />
-                가격 : {data.facilitiesPrice}원<br />
-                담당자 : {data.facilitiesManager}
-                <br />
-                연락처 : {data.facilitiesPhone}
-                <br />
-                위치 : {data.facilitiesPosition}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Typography variant="h5" sx={{mt:3}}>
+              시설을 골라주세요
+            </Typography>
+            <List
+              sx={{ width: '100%', maxWidth: 360, maxHeight:200, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
+              aria-label="contacts"
+            >
+              <ListItem disablePadding>
+                <ListItemButton onClick={()=>{
+                  setInsertForm({
+                    ...insertForm,
+                    facilitiesCode:facilities,
+                    togetherPosition:facilities.facilitiesPosition
+                  })
+                }}>
+                  <ListItemText inset primary="이용안함" />
+                </ListItemButton>
+              </ListItem>
+              {data.filter(data=>data.facilitiesCode!==0).map(data=>(
+                <ListItem disablePadding key={data.facilitiesCode}>
+                <ListItemButton onClick={()=> {
+                  setInsertForm({
+                    ...insertForm,
+                    facilitiesCode:data,
+                    togetherPosition:data.facilitiesPosition
+                  })
+                }}>
+                  <ListItemText inset primary={`${data.facilitiesName}  -  ${data.facilitiesPosition}`} />
+                </ListItemButton>
+              </ListItem>
+              ))}
+              
+            </List>
+          </Grid>
+          <Grid item xs>
+            <Box component="div" sx={{ mt:10 ,height:200}}>
+                {insertForm.facilitiesCode.facilitiesCode===0 ? <Typography variant="h6" component="div">시설 이용안함</Typography> :
+                <Typography variant="h6" component="div">
+                  시설명 : {insertForm.facilitiesCode.facilitiesName}<br/>
+                  시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}<br/>
+                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원<br/>
+                  시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}<br/>
+                  시설담당자 : {insertForm.facilitiesCode.facilitiesManager}<br/>
+                  시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
+                </Typography> 
+                }
+            </Box>
+          </Grid>
+        </Grid>
         <TextField
           fullWidth
           label="모이는 장소의 주소"
@@ -279,9 +247,95 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherPosition"
           required
         />
+        <Grid container direction="row"  spacing={6}>
+            <Grid xs={2} sm={2} md={4} item>
+              <TextField
+                label="모이는 일자"
+                sx={{ mt: 3 }}
+                type="text"
+                value={insertForm.togetherDate}
+                focused
+                fullWidth
+                color="grey"
+                required
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모이는 일자"
+                  disablePast
+                  value={insertForm.togetherDate}
+                  onChange={(e)=>{
+                    setInsertForm({
+                      ...insertForm,
+                      togetherDate:moment(e.$d).format("YYYY-MM-DD")
+                    });
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid xs={2} sm={4} md={4} item>
+              <TextField
+                fullWidth
+                label="모집신청 시작일을 입력헤주세요"
+                sx={{ mt: 3 }}
+                type="text"
+                value={insertForm.togetherRecruitStartDate}
+                onChange={handleChange}
+                name="togetherRecruitStartDate"
+                focused
+                required
+                color="grey"
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모집신청 시작일"
+                  disablePast
+                  value={insertForm.togetherRecruitStartDate}
+                  onChange={(e)=>{
+                    setInsertForm({
+                      ...insertForm,
+                      togetherRecruitStartDate:moment(e.$d).format("YYYY-MM-DD")
+                    });
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid xs={2} sm={4} md={4} item>
+              <TextField
+                fullWidth
+                label="모집신청 마감일을 입력헤주세요"
+                color="grey"
+                sx={{ mt: 3 }}
+                focused
+                type="text"
+                name="togetherRecruitEndDate"
+                value={insertForm.togetherRecruitEndDate}
+                required
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모집신청 마감일"
+                  disablePast
+                  value={insertForm.togetherRecruitEndDate}
+                  onChange={(e)=>{
+                    setInsertForm({
+                      ...insertForm,
+                      togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
+                    });
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
         <TextField
           fullWidth
-          label="1인당 참가비"
+          label="1인당 참가비(0원입력시 무료로 진행)"
           type="number"
           sx={{ mt: 3 }}
           id="fullWidth"
@@ -305,20 +359,30 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <MenuItem value="승인제">승인제</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          fullWidth
-          label="모임대표사진"
-          type="file"
-          focused
-          sx={{ mt: 3 }}
-          id="fullWidth"
-          color="grey"
-          onChange={onLoadFile}
-          required
-        />
-        <div style={imgBoxStyle} className="img_box">
-          <img src="" alt="" />
-        </div>
+        <Grid container spacing={4}>
+          <Grid item xs={3}>
+            <Box sx={{marginTop: "20px", width: "300px", height: "200px", textAlign:"center",lineHeight:5, border:"1px dashed grey"}}>
+              <Typography variant="h5" sx={{mt:3}}>대표사진을 넣어주세요</Typography>
+              <Button variant="contained" component="label" size="large">
+                Upload
+                <TextField
+                  label="모임대표사진"
+                  type="file"
+                  accept="image/*"
+                  focused
+                  sx={{ mt: 3, display:"none"}}
+                  color="grey"
+                  onChange={onLoadFile}
+                  required
+                />
+              </Button>
+            </Box>
+          </Grid>
+          <Grid item xs>
+            <Box style={imgBoxStyle} className="img_box">
+            </Box>
+          </Grid>
+        </Grid>
         <TextField
           fullWidth
           label="유저 신청시 질문내용 작성(승인제)"
@@ -331,10 +395,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <TextField
           fullWidth
           label="모임 소개 말"
-          sx={{ mt: 3 }}
-          id="fullWidth"
+          sx={{ mt: 3}}
           value={insertForm.togetherContent}
           name="togetherContent"
+          multiline
+          rows={4}
           onChange={handleChange}
           required
         />
@@ -342,7 +407,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           fullWidth
           label="태그"
           sx={{ mt: 3 }}
-          id="fullWidth"
           name="togetherTagContent"
           onChange={handleChange}
           required
