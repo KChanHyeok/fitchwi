@@ -9,11 +9,13 @@ import Header from "./layout/Header";
 import Together from "./pages/together";
 import MemberPage from "./pages/memberpage";
 import Search from "./pages/search";
+import About from "./pages/about";
 import Manager from "./pages/manager";
 import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
+
 function App() {
   const nav = useNavigate();
 
@@ -85,21 +87,16 @@ function App() {
       <Header lstate={lstate} onLogout={onLogout} />
       <Routes>
         <Route path="/*" element={<Home />}></Route>
+        <Route path="/about" element={<About />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
         <Route path="/share/*" element={<Share />}></Route>
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route
-          path="/memberpage/*"
-          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
-        ></Route>
+        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
-        <Route
-          path="/login/kakao/callback"
-          element={<KaKaoLoginRedirect sucLogin={sucLogin} />}
-        ></Route>
+        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect sucLogin={sucLogin} />}></Route>
       </Routes>
     </>
   );

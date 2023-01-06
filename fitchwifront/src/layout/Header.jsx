@@ -26,7 +26,7 @@ const Header = ({ lstate, onLogout }) => {
               FITCHWI
             </Typography> */}
             </Link>
-            <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/together"}>
+            <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/about"}>
               소개페이지
             </Link>
             <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/together"}>

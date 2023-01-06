@@ -3,10 +3,11 @@ import { Close } from "@mui/icons-material";
 import { Box, Divider, Modal, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React from "react";
+import TalkCategoryImage from "../../talk/components/TalkCategoryImage";
 import TogetherTap from "./common/togetherTap";
 import TogetherCategoryImage from "./togetherCategoryImage";
 
-const TogetherCategory = ({ open, setOpen }) => {
+const TogetherCategory = ({ open, setOpen, type }) => {
   const StyleModal = styled(Modal)({
     display: "flex",
     alignItems: "center",
@@ -23,7 +24,7 @@ const TogetherCategory = ({ open, setOpen }) => {
             <Close />
           </Typography>
         </Stack>
-        <TogetherCategoryImage />
+        {type === "talk" ? <TalkCategoryImage /> : <TogetherCategoryImage />}
         <Divider sx={{ mt: 2 }} />
         <Box height={200} mt={1}>
           <TogetherTap />

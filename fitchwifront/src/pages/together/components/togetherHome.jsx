@@ -27,7 +27,7 @@ const TogetherHome = () => {
             카테고리
           </Button>
         </Stack>
-        <TogetherCategory open={open} setOpen={setOpen} />
+        <TogetherCategory open={open} setOpen={setOpen} type={"together"} />
         {/* 1번 카테고리 */}
         <Box height={300} mt={6}>
           <Typography variant="h6">오늘모임 HOT 키워드</Typography>

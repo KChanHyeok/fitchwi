@@ -336,4 +336,15 @@ public class TalkService {
 
         return talkMap;
     }
+
+    public Talk getTalk(long talkCode) {
+        log.info("talkService.getTalk()");
+        Talk talkInfo = new Talk();
+        try {
+            talkInfo = talkRepository.findById(talkCode).get();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkInfo;
+    }
 }
