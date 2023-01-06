@@ -39,13 +39,13 @@ export default function ReportManagement() {
 
   useEffect(() => {
     pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
-    console.log("axios");
+    // console.log("axios");
   }, [pageNumInSessionStg]);
 
   const getReports = (pageNumInSessionStg) => {
     axios.get("/getReports", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
       const { reportList, totalPage, pageNum } = result.data;
-      console.log(result.data);
+      //  console.log(result.data);
       setReportList(reportList);
       setPageNum(pageNum);
       setTotalPage(totalPage);
@@ -56,11 +56,11 @@ export default function ReportManagement() {
     getReports(value);
   }, []);
   const onRistrict = (period, memberEmail, reportCode) => {
-    console.log(period);
+    // console.log(period);
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
 
     axios.put(`/restrictMember/${restrictDate}/${memberEmail}`).then((result) => {
-      console.log(result);
+      //   console.log(result);
       updateReportState(reportCode);
     });
   };
@@ -68,28 +68,29 @@ export default function ReportManagement() {
   const [restrictDateMap, setRestrictDateMap] = useState(new Map());
 
   const onSelectDate = useCallback((e) => {
-    console.log(e.target.value);
+    //  console.log(e.target.value);
     setRestrictDateMap((prev) => new Map(prev).set(e.target.name, e.target.value));
   }, []);
 
   const deleteReport = useCallback((reportCode) => {
-    console.log(reportCode);
+    // console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
       alert(result.data);
       getReports(pageNum);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const deleteReportTarget = useCallback(
     (reportTarget, reportCategory, memberEmail, reportCode) => {
-      console.log("delete");
+      //  console.log("delete");
       switch (reportCategory) {
         case "share":
-          console.log("feed");
+          //    console.log("feed");
           axios
             .get("/getFeedInfo", { params: { feedCode: reportTarget } })
             .then((feed) => {
-              console.log(feed.data);
+              //     console.log(feed.data);
               axios
                 .delete("/deleteFeed", { data: feed.data })
                 .then((result) => updateReportState(reportCode))
@@ -99,12 +100,12 @@ export default function ReportManagement() {
 
           break;
         case "talk":
-          console.log("talk");
+          //   console.log("talk");
           axios
             .get("/getTalk", { params: { talkCode: reportTarget } })
             .then((talk) => {
-              console.log(talk.data);
-              console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
+              //   console.log(talk.data);
+              //   console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
               if (talk.data.talkOpenCode.memberEmail.memberEmail === memberEmail) {
                 console.log("개설자");
                 axios
@@ -114,18 +115,18 @@ export default function ReportManagement() {
                     alert("해당 '얘기해요'를 삭제했습니다.");
                   })
                   .catch((error) => {
-                    console.log(error);
+                    // console.log(error);
                     alert("해당 얘기해요를 삭제할 수 없습니다.");
                   });
               } else {
-                console.log("가입자");
+                // console.log("가입자");
                 axios
                   .get("/getTalkJoinListByMember", { params: { memberEmail: memberEmail } })
                   .then((result) => {
                     let targetTalkJoin = result.data.filter(
                       (talkJoin) => talkJoin.memberEmail.memberEmail === memberEmail
                     );
-                    console.log(targetTalkJoin);
+                    //  console.log(targetTalkJoin);
                     axios
                       .delete("/deleteTalkJoinInfo", {
                         params: {
@@ -148,17 +149,12 @@ export default function ReportManagement() {
         default:
           break;
       }
-
-      // axios
-      //   .delete("/deleteReportTarget", {
-      //     params: { reportTarget: reportTarget, reportCategory: reportCategory },
-      //   })
-      //   .then((result) => alert(result.data));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const updateReportState = (reportCode) => {
-    console.log(reportCode);
+    // console.log(reportCode);
     axios.put(`/updateReportState/${reportCode}`).then((result) => {
       alert(result.data + "처리 완료");
       getReports(pageNum);

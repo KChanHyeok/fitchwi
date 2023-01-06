@@ -72,21 +72,21 @@ export default function UpdateMember({ member }) {
         }
       })
       .catch((error) => console.log(error));
-    console.log(memberToUpdate);
+    // console.log(memberToUpdate);
   };
 
   const inputChange = useCallback(
     (e) => {
-      console.log("inputChange");
-      console.log(memberToUpdate);
+      //   console.log("inputChange");
+      //  console.log(memberToUpdate);
       setMemberToUpdate({ ...memberToUpdate, [e.target.name]: e.target.value });
-      console.log(memberToUpdate);
-      console.log("inputChange");
+      //   console.log(memberToUpdate);
+      //  console.log("inputChange");
     },
     [memberToUpdate]
   );
   useEffect(() => {
-    console.log(memberToUpdate);
+    //   console.log(memberToUpdate);
   }, [memberToUpdate]);
   //비밀번호 확인
   const [correctPwd, setCorrectPwd] = useState(null);
@@ -95,7 +95,7 @@ export default function UpdateMember({ member }) {
   const onCheckPwd = useCallback(
     (e) => {
       let checkPwd = e.target.value;
-      console.log(checkPwd);
+      //  console.log(checkPwd);
 
       if (checkPwd === "") {
         setMsg("미입력");
@@ -173,7 +173,7 @@ export default function UpdateMember({ member }) {
   }, [memberInterest]);
 
   useEffect(() => {
-    console.log("check type");
+    // console.log("check type");
     if (typeof memberInterest == "string") {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       interestArray = memberInterest.split(" ");
@@ -225,7 +225,7 @@ export default function UpdateMember({ member }) {
   }, [isMemberInterest]);
 
   const onClickInterest = (e) => {
-    console.log("setChecked");
+    //  console.log("setChecked");
     setChecked({ ...checked, [e.target.name]: e.target.checked });
   };
 
@@ -233,8 +233,8 @@ export default function UpdateMember({ member }) {
 
   useEffect(() => {
     // if (checked) {
-    console.log(" setSelectedInterest(selectedValue);");
-    console.log(checked);
+    //  console.log(" setSelectedInterest(selectedValue);");
+    // console.log(checked);
     let arrKeys = Object.keys(checked);
     let arrValues = Object.values(checked);
     let selectedIndex = [];
@@ -247,15 +247,15 @@ export default function UpdateMember({ member }) {
     selectedIndex.forEach((v) => {
       selectedValue.push(arrKeys[v]);
     });
-    console.log(selectedValue);
+    //  console.log(selectedValue);
     setSelectedInterest(selectedValue);
     // }
   }, [checked]);
 
-  console.log("render");
+  // console.log("render");
 
   useEffect(() => {
-    console.log("selectedInterest.forEach((e");
+    //  console.log("selectedInterest.forEach((e");
     let stringInterest = "";
     selectedInterest.forEach((e) => {
       switch (e) {
@@ -309,11 +309,11 @@ export default function UpdateMember({ member }) {
     }
   };
   const clearImg = () => {
-    console.log(file);
+    //  console.log(file);
 
     setMemberToUpdate({ ...memberToUpdate, memberImg: "" });
     setFile("/images/DefaultProfileImageSystemName.jpg");
-    console.log(file);
+    //  console.log(file);
   };
   return (
     <Container component="main" maxWidth="xs">

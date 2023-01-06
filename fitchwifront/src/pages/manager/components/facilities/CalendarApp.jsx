@@ -126,7 +126,7 @@ export default function CalendarApp({ facilitiesCode }) {
       setEndDate("");
     }
     if (startDate === "") {
-      console.log(v);
+      //   console.log(v);
       setStartDate(v);
     }
   };

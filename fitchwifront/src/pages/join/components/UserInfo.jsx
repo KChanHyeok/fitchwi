@@ -10,7 +10,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, setSuccess }
   const onCheckPwd = useCallback(
     (e) => {
       let checkPwd = e.target.value;
-      console.log(checkPwd);
+      //  console.log(checkPwd);
 
       if (checkPwd === "") {
         setMsg("미입력");
@@ -39,14 +39,16 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, setSuccess }
       alert("사용하실 Email을 입력해주세요.");
       return;
     }
-    axios.get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } }).then((res) => {
-      if (res.data === "ok") {
-        alert("사용 가능한 Email 입니다.");
-      } else {
-        setDisabled(true);
-        alert("사용할 수 없는 Email 입니다.");
-      }
-    });
+    axios
+      .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
+      .then((res) => {
+        if (res.data === "ok") {
+          alert("사용 가능한 Email 입니다.");
+        } else {
+          setDisabled(true);
+          alert("사용할 수 없는 Email 입니다.");
+        }
+      });
     //console.log(typeof joinForm.memberEmail);
   };
 
@@ -89,8 +91,8 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, setSuccess }
         setSuccess(true);
         setDisabled(false);
         alert("본인인증 성공");
-        console.log(response);
-        console.log(merchant_uid);
+        //   console.log(response);
+        //  console.log(merchant_uid);
       } else {
         alert(`본인인증 실패: ${error_msg}`);
       }
@@ -116,7 +118,13 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, setSuccess }
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="outlined" fullWidth style={{ width: "40%" }} sx={{ mb: 1 }} onClick={onCheckId}>
+          <Button
+            variant="outlined"
+            fullWidth
+            style={{ width: "40%" }}
+            sx={{ mb: 1 }}
+            onClick={onCheckId}
+          >
             중복확인
           </Button>
         </Grid>

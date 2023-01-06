@@ -41,14 +41,14 @@ const JoinIndex = () => {
     [joinForm]
   );
 
-  console.log(joinForm);
+  // console.log(joinForm);
 
   const sendJoin = (e) => {
     if (!success) {
       return alert("본인인증이 필요합니다.");
     }
     e.preventDefault();
-    console.log(joinForm.memberInterest);
+    //  console.log(joinForm.memberInterest);
     formData.append("data", new Blob([JSON.stringify(joinForm)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
 
@@ -83,13 +83,29 @@ const JoinIndex = () => {
         <Route path="/" element={<Name onChange={onChange} />}></Route>
         <Route path="/nickname" element={<Nickname onChange={onChange} />}></Route>
         <Route path="/userimg" element={<UserImg setFileForm={setFileForm} />}></Route>
-        <Route path="/gender" element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
+        <Route
+          path="/gender"
+          element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}
+        ></Route>
         <Route path="/birth" element={<Birth onChange={onChange} />}></Route>
-        <Route path="/interest" element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
-        <Route path="/mbti" element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
+        <Route
+          path="/interest"
+          element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}
+        ></Route>
+        <Route
+          path="/mbti"
+          element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}
+        ></Route>
         <Route
           path="/userinfo"
-          element={<UserInfo joinForm={joinForm} onChange={onChange} setJoinForm={setJoinForm} setSuccess={setSuccess} />}
+          element={
+            <UserInfo
+              joinForm={joinForm}
+              onChange={onChange}
+              setJoinForm={setJoinForm}
+              setSuccess={setSuccess}
+            />
+          }
         ></Route>
       </Routes>
     </Box>

@@ -44,7 +44,7 @@ function a11yProps(index) {
 export default function Membertogether({ myMenu, togetherJoinList, togetherOpenedList }) {
   const [value, setValue] = useState(0);
 
-  console.log(togetherOpenedList);
+  //  console.log(togetherOpenedList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -70,8 +70,8 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   }, [togetherJoinList]);
 
   const printJoin = (togetherList) => {
-    console.log("가입");
-    console.log(togetherList);
+    //  console.log("가입");
+    // console.log(togetherList);
     return togetherList.map((together) => {
       return (
         <Link
@@ -157,8 +157,8 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   };
 
   const printOpen = (togetherList) => {
-    console.log("운영");
-    console.log(togetherList);
+    //  console.log("운영");
+    // console.log(togetherList);
     return togetherList.map((together) => {
       return (
         <Link

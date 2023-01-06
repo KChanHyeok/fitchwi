@@ -42,7 +42,7 @@ export default function ViewFacilities() {
   } = facilities;
   const loadFacilities = useCallback(() => {
     axios.get(`/getFacilitiesInfo/${facilitiesCode}`).then((result) => {
-      console.log(result.data);
+      //  console.log(result.data);
       setFacilities(result.data);
     });
   }, [facilitiesCode]);

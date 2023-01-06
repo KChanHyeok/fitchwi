@@ -47,7 +47,9 @@ export default function MemberPage({ member, onLogout, lstate }) {
 
   console.log(myMenu);
   const getMemberFeed = useCallback(() => {
-    axios.get("/getMemberFeed", { params: { memberEmail: member.memberEmail } }).then((res) => setFeedList(res.data));
+    axios
+      .get("/getMemberFeed", { params: { memberEmail: member.memberEmail } })
+      .then((res) => setFeedList(res.data));
   }, [member]);
 
   const getMemberTalk = useCallback(() => {
@@ -141,7 +143,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
       if (isFollow === false) {
         // console.log(pageOwner.memberEmail);
         axios.get("/follow", { params: { loginId: logid, pageOwner: memberEmail } }).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           alert(`${memberNickname}님을 팔로우했습니다.`);
           setIsFollow(true);
         });
@@ -151,7 +153,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
             params: { loginId: logid, pageOwner: memberEmail, isFollow: isFollow },
           })
           .then((res) => {
-            console.log(res.data);
+            //  console.log(res.data);
             alert(`${memberNickname}님 팔로우를 취소했습니다.`);
             setIsFollow(false);
           });
@@ -281,15 +283,23 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 style={{
                   background: "linear-gradient(190deg,lightgray, white)",
                 }}
-                avatar={<Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />}
+                avatar={
+                  <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                }
                 title={
                   <Typography sx={{ fontSize: 25 }}>
                     {" "}
-                    {logid === memberEmail ? `${memberNickname}(${memberName})` : `${memberNickname}`}
+                    {logid === memberEmail
+                      ? `${memberNickname}(${memberName})`
+                      : `${memberNickname}`}
                   </Typography>
                 }
                 subheader={
-                  logid === memberEmail ? memberEmail : <Report targetMember={member.memberEmail} category="memberpage" target="0" />
+                  logid === memberEmail ? (
+                    memberEmail
+                  ) : (
+                    <Report targetMember={member.memberEmail} category="memberpage" target="0" />
+                  )
                 }
               />
             )}
@@ -339,7 +349,11 @@ export default function MemberPage({ member, onLogout, lstate }) {
             </CardContent>
           </Card>
           {myMenu === "share" ? (
-            <ImageList sx={{ width: "90%", overflowY: "scroll", height: "480px", mb: 6, mt: 0.5 }} cols={3} rowHeight={164}>
+            <ImageList
+              sx={{ width: "90%", overflowY: "scroll", height: "480px", mb: 6, mt: 0.5 }}
+              cols={3}
+              rowHeight={164}
+            >
               {feedList !== undefined ? (
                 feedList.map((feed, index) => (
                   <Link to={`/share/${feed.feedCode}`} key={index}>
@@ -369,7 +383,11 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 얘기해요 활동 현황
               </Typography>
               {talkJoinList !== undefined ? (
-                <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} talkOpenedList={talkOpenedList} />
+                <MemberTalk
+                  myMenu={myMenu}
+                  talkJoinList={talkJoinList}
+                  talkOpenedList={talkOpenedList}
+                />
               ) : null}
             </Box>
           ) : (
@@ -379,7 +397,11 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 함께해요 활동 현황
               </Typography>
               {togetherJoinList !== undefined ? (
-                <MemberTogether myMenu={myMenu} togetherJoinList={togetherJoinList} togetherOpenedList={togetherOpenedList} />
+                <MemberTogether
+                  myMenu={myMenu}
+                  togetherJoinList={togetherJoinList}
+                  togetherOpenedList={togetherOpenedList}
+                />
               ) : null}
             </Box>
           )}
