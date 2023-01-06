@@ -42,7 +42,7 @@ export default function Login({ sucLogin }) {
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
             alert(res.data.memberNickname + "님 환영합니다.");
-            //   nav("/");
+            nav("/");
             break;
 
           case "wrong pwd":
