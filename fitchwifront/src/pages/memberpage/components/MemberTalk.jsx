@@ -44,7 +44,7 @@ function a11yProps(index) {
 export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
   const [value, setValue] = useState(0);
 
-  console.log(talkOpenedList);
+  //console.log(talkOpenedList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,8 +66,8 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
   }, [talkJoinList]);
 
   const printJoin = (talkList) => {
-    console.log("가입");
-    console.log(talkList);
+    // console.log("가입");
+    // console.log(talkList);
     return talkList.map((talk) => {
       return (
         <Link
@@ -134,8 +134,8 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
   };
 
   const printOpen = (talkList) => {
-    console.log("운영");
-    console.log(talkList);
+    // console.log("운영");
+    //  console.log(talkList);
     return talkList.map((talk) => {
       return (
         <Link to={`/talk/${talk.talkCode}`} key={talk.talkCode} style={{ textDecoration: "none" }}>

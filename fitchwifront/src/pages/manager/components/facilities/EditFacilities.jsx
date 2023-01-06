@@ -8,7 +8,7 @@ export default function EditFacilities() {
   const { facilitiesCode } = useParams();
   const loadFacilities = useCallback(() => {
     axios.get(`/getFacilitiesInfo/${facilitiesCode}`).then((result) => {
-      console.log(result.data);
+      //  console.log(result.data);
       setNewFacilities(result.data);
     });
   }, [facilitiesCode]);
@@ -37,7 +37,7 @@ export default function EditFacilities() {
   const onInputChange = (e) => {
     setNewFacilities({ ...newFacilities, [e.target.name]: e.target.value });
   };
-  console.log(newFacilities);
+  // console.log(newFacilities);
 
   const onSubmit = (e) => {
     e.preventDefault();

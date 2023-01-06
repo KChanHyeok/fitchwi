@@ -3,7 +3,9 @@ import React from "react";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const Postcode = ({ insertAddr }) => {
-  const open = useDaumPostcodePopup("http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
+  const open = useDaumPostcodePopup(
+    "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+  );
 
   const handleComplete = (data) => {
     let fullAddress = data.address;
@@ -19,7 +21,7 @@ const Postcode = ({ insertAddr }) => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    // console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
     insertAddr(fullAddress);
   };
 

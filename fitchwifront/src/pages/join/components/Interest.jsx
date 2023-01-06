@@ -43,7 +43,7 @@ export default function Interest({ joinForm, setJoinForm }) {
         memberInterest: interestArr,
       };
       setJoinForm(joinObj);
-      console.log(joinForm.memberInterest);
+      //  console.log(joinForm.memberInterest);
     },
     [joinForm, setJoinForm, interestArr]
   );

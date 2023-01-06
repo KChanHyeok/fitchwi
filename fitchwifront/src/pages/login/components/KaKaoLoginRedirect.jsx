@@ -11,16 +11,15 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
 
     const kakaoLogin = async () => {
       await axios.get("/login/kakao/callback?", { params: { code: code } }).then((res) => {
-        console.log(res.data);
+        //  console.log(res.data);
+        // eslint-disable-next-line no-unused-vars
         const { isPresent, member } = res.data;
 
         switch (isPresent) {
           case "ok":
-
-
             switch (res.data.state) {
               case "ok":
-                console.log(res.data);
+                //       console.log(res.data);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 alert(res.data.memberNickname + "님 환영합니다.");
@@ -43,11 +42,9 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
               default:
                 break;
             }
-
-
             break;
           case "no":
-            console.log(member);
+            // console.log(member);
             alert("추가 정보 입력 페이지로 이동합니다.");
             break;
           case "fail":
