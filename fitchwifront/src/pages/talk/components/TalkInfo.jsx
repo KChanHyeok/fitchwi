@@ -78,7 +78,7 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
             alignItems="stretch"
             spacing={2}
         >
-            {talkList.length === 0 || !talkInfo || !talkJoinMember ? <h1>로딩중</h1> :
+            {talkList.length === 0 || !talkInfo || !talkTagInfo || !talkJoinMember ? <h1>로딩중</h1> :
                 <Box className="talkSection">
                     <Box className="talkDetailBox">
                         <Box className="talkTxtLine">
@@ -120,7 +120,7 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                                 </Typography>
                             </UserBox>
                             <Typography className="talkTxtLine">
-                                <h4>참여중인 회원</h4>
+                                <span><b>참여중인 회원</b></span><br />
                                 {talkJoinMember.length === 0
                                     ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
                                     : talkJoinMember.map((data) =>
@@ -140,6 +140,7 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                             <Box>
                             </Box>
                             <h4 className="talkTxtLine">얘기해요 피드</h4>
+                            {talkTagInfo.talkTagContent}
                             <h4 className="talkTxtLine">얘기해요 소개</h4>
                             {talkInfo.talkContent}
                         </Box>

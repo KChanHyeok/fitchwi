@@ -155,6 +155,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             value={insertTalkOp.talkMax}
                             sx={{ mt: 3 }}
                             onChange={onChange}
+                            required
                         />
                         <FormControl sx={{ mt: 2 }} fullWidth>
                             <InputLabel>모임 카테고리 선정</InputLabel>
@@ -189,7 +190,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             {showInquiry && <TextField label="가입질문"
                                 name="talkInquiry"
                                 value={insertTalkOp.talkInquiry}
-                                sx={{ mt: 3 }}
+                                sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
                                 onChange={onChange} />}
                         </div>
                         <TextField fullWidth
@@ -199,6 +200,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             sx={{ mt: 3 }}
                             onChange={onLoadFile}
                             color="grey"
+                            required
                             focused
                         />
                         <div style={imgBoxStyle} className="talk_img_box">
