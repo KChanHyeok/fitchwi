@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 
 const Together = ({togetherList}) => {
+
+    const [facilities, setFacilities] = useState()
+
+    useEffect(()=> {
+        try{
+            setFacilities(togetherList.togetherOpenedCode.facilitiesCode);
+        }catch(e) {
+
+        }
+    },[togetherList.togetherOpenedCode.facilitiesCode])
+
         const {
         togetherCode,
         // togetherCategory,
@@ -19,6 +30,7 @@ const Together = ({togetherList}) => {
         togetherTitle,
         // togetherType,
         } = togetherList;
+
     return (
         <Link to={`/together/${togetherCode}`} >
             <Card sx={{ mb:3, maxWidth:1000}}>
@@ -35,7 +47,7 @@ const Together = ({togetherList}) => {
                         </Typography>
                         <Typography variant="body" color="text.secondary">
                             {togetherContent}<br/>
-                            {togetherPrice}원
+                            {facilities&& togetherPrice+facilities.facilitiesPrice }원
                         </Typography>
                     </CardContent>
                 </CardActionArea>

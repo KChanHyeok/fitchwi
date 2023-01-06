@@ -12,7 +12,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       if(sessionStorage.getItem("id")) {
         getMemberInfo()
       }
-    })
+    },[])
     const getMemberInfo = () => {
         axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
@@ -74,7 +74,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
-        if(togetherInfo.togetherPrice===0) {
+        if(togetherInfo.togetherPrice===0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0) {
             insertTogetherFreeJoinInfo();
         }else {
             requestPay()
@@ -179,8 +179,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                         환불 및 신청을 취소하시겠습니까?
                     </Typography>
-                    {togetherInfo.togetherPrice === 0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >신청취소</Button>:
-                    <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불신청취소</Button>}
+                    {togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >신청취소</Button>:
+                    <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >신청취소(환불)</Button>}
                     <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 togetherJoinState==="가입중" ? <Box sx={style}>
@@ -194,7 +194,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     환불 및 취소 하시겠습니까?
                 </Typography>
-                {togetherInfo.togetherPrice === 0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >취소하기</Button>:
+                {togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >취소하기</Button>:
                 <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불하기</Button>}
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
@@ -210,7 +210,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     함께해요 이름 : {togetherInfo.togetherTitle}<br/>
                     참여중인 멤버수 : {togetherJoinMember.length+1}명 / {togetherInfo.togetherMax}명<br/>
                     장소 : {togetherInfo.togetherPosition}<br/>
-                    총 결제금액 : {togetherInfo.togetherTotalPrice}원 <br/>
+                    총 결제금액 : {togetherInfo.togetherTotalPrice}원(본인 부담금 포함) <br/>
                 </Typography>
 
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
@@ -242,6 +242,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     variant="standard"
                     required
                     />
+                    <Typography>
+                        1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}
+                    </Typography>
                     <Button type="submit" variant="contained" onClick={togetherJoinSend} disabled={disabled}>참여하기</Button>
                 </Box>
                 }
