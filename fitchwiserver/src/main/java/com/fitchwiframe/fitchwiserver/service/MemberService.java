@@ -445,6 +445,59 @@ public class MemberService {
       kakaoProfile = objectMapper.treeToValue(jsonNode, KakaoProfile.class);
 
 
+      Member member = new Member();
+      String memberEmail = kakaoProfile.getKakao_account().getEmail();
+
+
+      Optional<Member> optionalMember = memberRepository.findById(memberEmail);
+      if (optionalMember.isPresent()) {
+        Member dbMember = optionalMember.get();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        Date restriction = null;
+        if (dbMember.getMemberRestriction() != null) {
+          restriction = dateFormat.parse(dbMember.getMemberRestriction());
+
+
+          if (restriction.compareTo(today) > 0) {
+            resultMap.put("isPresent", "ok");
+            resultMap.put("state", "reported");
+            resultMap.put("memberRestriction", dbMember.getMemberRestriction());
+            resultMap.put("memberEmail", dbMember.getMemberEmail());
+            resultMap.put("memberNickname", dbMember.getMemberNickname());
+          } else {
+            resultMap.put("isPresent", "ok");
+            resultMap.put("state", "released");
+            resultMap.put("memberRestriction", dbMember.getMemberRestriction());
+            resultMap.put("memberEmail", dbMember.getMemberEmail());
+            resultMap.put("memberNickname", dbMember.getMemberNickname());
+            session.setAttribute("at", accessToken);
+            System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
+
+            dbMember.setMemberRestriction(null);
+            memberRepository.save(dbMember);
+          }
+          return resultMap;
+        }
+
+        resultMap.put("isPresent", "ok");
+        resultMap.put("member", dbMember);
+        resultMap.put("state", "ok");
+        resultMap.put("memberEmail", dbMember.getMemberEmail());
+        resultMap.put("memberNickname", dbMember.getMemberNickname());
+        session.setAttribute("at", accessToken);
+        System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
+        return resultMap;
+      }
+
+      member.setMemberEmail(kakaoProfile.getKakao_account().getEmail());
+      member.setMemberNickname(kakaoProfile.getProperties().getNickname());
+      member.setMemberImg(kakaoProfile.getProperties().getProfile_image());
+      member.setMemberSaveimg(kakaoProfile.getProperties().getProfile_image());
+      resultMap.put("isPresent", "no");
+      resultMap.put("member", member);
+      return resultMap;
     } catch (Exception e) {
       e.printStackTrace();
 
@@ -453,29 +506,6 @@ public class MemberService {
       return resultMap;
 
     }
-
-
-    Member member = new Member();
-    String memberEmail = kakaoProfile.getKakao_account().getEmail();
-
-
-    Optional<Member> dbMember = memberRepository.findById(memberEmail);
-    if (dbMember.isPresent()) {
-      resultMap.put("isPresent", "ok");
-      resultMap.put("member", dbMember.get());
-      session.setAttribute("at", accessToken);
-      System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
-      return resultMap;
-    }
-
-    member.setMemberEmail(kakaoProfile.getKakao_account().getEmail());
-    member.setMemberNickname(kakaoProfile.getProperties().getNickname());
-    member.setMemberImg(kakaoProfile.getProperties().getProfile_image());
-    member.setMemberSaveimg(kakaoProfile.getProperties().getProfile_image());
-    resultMap.put("isPresent", "no");
-    resultMap.put("member", member);
-    return resultMap;
-
   }
 
   public String logoutMember(HttpSession session) {

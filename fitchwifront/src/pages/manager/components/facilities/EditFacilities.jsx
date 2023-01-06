@@ -1,11 +1,10 @@
 import { Avatar, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import CalendarApp from "./CalendarApp";
 export default function EditFacilities() {
-  const nav = useNavigate();
   const { facilitiesCode } = useParams();
   const loadFacilities = useCallback(() => {
     axios.get(`/getFacilitiesInfo/${facilitiesCode}`).then((result) => {
@@ -45,7 +44,6 @@ export default function EditFacilities() {
     axios.put(`/updateFacilities/${facilitiesCode}`, newFacilities).then((res) => {
       if (res === "ok") {
         alert(res.data);
-        nav("/manager/facilities");
       } else {
         alert(res.data);
       }
@@ -55,6 +53,8 @@ export default function EditFacilities() {
   return (
     <Container component="main">
       <Box
+        component="form"
+        onSubmit={(e) => onSubmit(e)}
         sx={{
           marginTop: 8,
           display: "flex",
@@ -72,7 +72,7 @@ export default function EditFacilities() {
         </Typography>
         <Grid container maxWidth="xs" justifyContent="space-between" spacing={3}>
           <Grid item xs={6}>
-            <Box component="form" onSubmit={(e) => onSubmit(e)} noValidate sx={{ mt: 1 }}>
+            <Box noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -154,7 +154,7 @@ export default function EditFacilities() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                취소하기
+                뒤로가기
               </Button>
             </Link>
           </Grid>

@@ -10,11 +10,7 @@ const KaKaoLogin = () => {
 
   return (
     <React.Fragment>
-      <img
-        src="images/kakao_login_medium_narrow.png"
-        alt="카카오 로그인"
-        onClick={kakaoLogin}
-      ></img>
+      <img src="images/kakao_login_medium_wide.png" alt="카카오 로그인" onClick={kakaoLogin}></img>
     </React.Fragment>
   );
 };

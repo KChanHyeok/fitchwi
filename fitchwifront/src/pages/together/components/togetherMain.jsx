@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Together from "./together";
-// import { useEffect } from "react";
 
 const TogetherMain = ({ togetherList }) => {
   return (

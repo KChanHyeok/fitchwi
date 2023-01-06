@@ -148,7 +148,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                         alert("삭제 불가");
                     }
                 });
-        }, [talkInfo, nav]
+        }, [talkInfo, nav, refreshTalkList]
     );
 
     //삭제 모달 창

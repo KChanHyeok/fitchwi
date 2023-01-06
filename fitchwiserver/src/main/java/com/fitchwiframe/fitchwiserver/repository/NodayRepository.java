@@ -5,8 +5,8 @@ import com.fitchwiframe.fitchwiserver.entity.Noday;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface NodayRepository extends CrudRepository<Noday,Long > {
   List<Noday> findAllByFacilitiesCode(Facilities facilities);
+
 }

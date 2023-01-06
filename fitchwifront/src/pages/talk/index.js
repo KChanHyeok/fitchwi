@@ -2,7 +2,10 @@ import { Fab, Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "../../layout/Sidebar";
+
 import TalkInfo from "./components/TalkInfo";
 import TalkMain from "./components/TalkMain";
 import TalkOpened from "./components/TalkOpened";
@@ -11,8 +14,11 @@ import { Add as AddIcon } from "@mui/icons-material";
 import TalkHome from "./components/TalkHome";
 
 function Home() {
-  const id = sessionStorage.getItem("id");
-  const nav = useNavigate();
+
+    const id = sessionStorage.getItem("id");
+    const nav = useNavigate();
+    const location = useLocation();
+
 
   const [talkList, setTalkList] = useState([]);
   const [talkTagList, setTalkTagList] = useState([]);
@@ -61,48 +67,38 @@ function Home() {
     }
   };
 
-  return (
-    <>
-      <Tooltip
-        onClick={isLogin}
-        title="Add"
+    return (
+        <>
+        {location.pathname!=="/talk/opened"
+        && <Tooltip
+        onClick={isLogin} title="Add"
         sx={{
-          position: "fixed",
-          bottom: 20,
-          marginLeft: 7,
-          left: { xs: "calc(50% - 25px)", md: 30 },
-        }}
-      >
-        <Fab color="secondary" aria-label="add">
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-      <Stack direction="row" spacing={7} justifyContent="space-between">
-        <Routes>
-          <Route path="/*" element={<TalkMain talkList={talkList} />} />
-          <Route
-            path="/:talkPageCode"
-            element={
-              <TalkInfo
-                talkList={talkList}
-                talkTagList={talkTagList}
-                talkJoinList={talkJoinList}
-                refreshTalkList={getAllTalkList}
-                refreshTalkTagList={getAllTalkTagList}
-                refreshTalkJoinList={getTalkJoinList}
-              />
-            }
-          />
-          <Route path="opened" element={<TalkOpened memberEmail={id} refreshTalkList={getAllTalkList} />} />
-          <Route
-            path="update"
-            element={<TalkUpdate memberEmail={id} refreshTalkList={getAllTalkList} refreshTalkTagList={getAllTalkTagList} />}
-          />
-          <Route path="/home" element={<TalkHome />} />
-        </Routes>
-      </Stack>
-    </>
-  );
+            position: "fixed",
+            bottom: 20,
+            marginLeft: 7,
+            left: { xs: "calc(50% - 25px)", md: 30 },}}>
+                <Fab color="secondary" aria-label="add">
+                    <AddIcon />
+                </Fab>
+        </Tooltip>}
+        <Stack>
+            <Routes>
+                <Route path="/*" element={<TalkMain talkList={talkList} />} />
+                <Route path="/:talkPageCode"
+                element={<TalkInfo
+                    talkList={talkList} talkTagList={talkTagList}
+                    talkJoinList={talkJoinList} refreshTalkList={getAllTalkList}
+                    refreshTalkTagList={getAllTalkTagList} refreshTalkJoinList={getTalkJoinList} />} />
+                    <Route path="opened"
+                    element={<TalkOpened  memberEmail={id} refreshTalkList={getAllTalkList}/>} />
+                    <Route path="update"
+                    element={<TalkUpdate  memberEmail={id} refreshTalkList={getAllTalkList}
+                    refreshTalkTagList={getAllTalkTagList} />} />
+            </Routes>           
+        </Stack>
+        </>
+    );
+
 }
 
 export default Home;

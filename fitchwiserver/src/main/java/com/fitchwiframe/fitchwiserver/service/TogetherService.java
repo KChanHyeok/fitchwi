@@ -60,6 +60,7 @@ public class TogetherService {
             }
         together.setTogetherState("결제대기중");
         together.setTogetherOpenedCode(togetherOpened);
+        together.setTogetherTotalPrice(together.getTogetherPrice() + togetherOpened.getFacilitiesCode().getFacilitiesPrice());
         togetherTag.setTogetherCode(together);
         togetherOpenedRepository.save(togetherOpened);
         togetherRepository.save(together);
@@ -107,7 +108,8 @@ public class TogetherService {
         try {
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
-                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice();
+                int facilitiesPrice = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherOpenedCode().getFacilitiesCode().getFacilitiesPrice();
+                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice()+ facilitiesPrice;
                 int totalPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherTotalPrice();
 
                 togetherJoinPayment.getTogetherJoinCode().getTogetherCode().setTogetherTotalPrice(joinPay+totalPay);
@@ -163,6 +165,7 @@ public class TogetherService {
             result = "취소성공";
         }catch (Exception e) {
             result = "취소 실패";
+            e.printStackTrace();
         }
 
 
