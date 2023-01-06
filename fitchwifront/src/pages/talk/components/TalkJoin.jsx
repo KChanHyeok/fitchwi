@@ -192,5 +192,4 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
         </>
     )
 }
-}
 export default TalkJoin;

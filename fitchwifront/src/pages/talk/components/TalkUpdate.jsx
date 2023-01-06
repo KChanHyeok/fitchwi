@@ -225,13 +225,15 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             multiline />
-                        <TextField fullWidth
-                            label="애기해요 태그"
-                            name="talkTagContent"
-                            value={updateTalkTag.talkTagContent || ""}
-                            sx={{ mt: 3 }}
-                            onChange={onChange}
-                        />
+                        {!updateTalkTag ? <p>d</p>
+                            : <TextField fullWidth
+                                label="애기해요 태그"
+                                name="talkTagContent"
+                                value={updateTalkTag.talkTagContent || ""}
+                                sx={{ mt: 3 }}
+                                onChange={onChange}
+                            />}
+
                         <Typography sx={{ float: "right" }}>
                             <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
                             <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
