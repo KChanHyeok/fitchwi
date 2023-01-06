@@ -49,7 +49,8 @@ const Together = () => {
     <Box>
       <AddButton />
       <Routes>
-        <Route path="/*" element={<TogetherMain refreshTogetherList={getAllTogetherList} togetherList={togetherList} />} />
+        <Route path="/*" element={<TogetherHome />} />
+        <Route path="main" element={<TogetherMain refreshTogetherList={getAllTogetherList} togetherList={togetherList} />} />
         <Route path="art" element={<TogetherArt />} />
         <Route
           path="/:togetherPageCode"
@@ -62,7 +63,6 @@ const Together = () => {
           }
         />
         <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
-        <Route path="home" element={<TogetherHome />} />
       </Routes>
     </Box>
   );

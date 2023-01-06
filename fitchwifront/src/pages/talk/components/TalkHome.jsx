@@ -37,7 +37,7 @@ const TalkHome = () => {
               카테고리
             </Button>
           </Stack>
-          <TogetherCategory open={open} setOpen={setOpen} />
+          <TogetherCategory open={open} setOpen={setOpen} type={"talk"} />
 
           {/* 1번 카테고리 */}
           <Box height={500} mt={4}>
