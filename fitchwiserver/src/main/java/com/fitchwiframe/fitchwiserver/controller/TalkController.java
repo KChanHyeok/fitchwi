@@ -38,21 +38,28 @@ public class TalkController {
         return talkService.getAllTalkList();
     }
 
-    //해당 얘기해요 상세보기
-    @GetMapping("/getTalk")
-    public Talk getTalk(long talkCode) {
-        log.info("talkController.getTalk()");
-        return talkService.getTalk(talkCode);
+    @GetMapping("/getAllTalkTagList")
+    public Iterable<TalkTag> getAllTalkTagList() {
+        log.info("talkController.getAllTalkTagList()");
+        return talkService.getAllTalkTagList();
     }
 
     //얘기해요 수정
     @PostMapping("/updateTalk")
-    public String updateTalk(@RequestPart(value = "data", required = true) Talk talk,
-                             @RequestPart(value = "data", required = true)TalkTag talkTag,
+    public String updateTalk(@RequestPart(value = "data", required = false) Talk talk,
+//                             @RequestPart(value = "data", required = false)TalkTag talkTag,
                              @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
                              HttpSession session) {
         log.info("talkController.updateTalk()");
-        return talkService.updateTalk(talk, talkTag, pic, session);
+        log.info("talk : " + talk);
+        return talkService.updateTalk(talk, pic, session);
+    }
+
+    @PostMapping("/updateTalkTag")
+    public String updateTalkTag(@RequestPart(value = "data", required = false)TalkTag talkTag) {
+        log.info("talkController.updateTalkTag()");
+        log.info("talkTag : " + talkTag);
+        return talkService.updateTalkTag(talkTag);
     }
 
     //얘기해요 삭제
@@ -81,6 +88,13 @@ public class TalkController {
     public String deleteTalkJoinInfo(@RequestParam String memberEmail, long talkCode) {
         log.info("talkController.deleteTalkJoinInfo()");
         return talkService.deleteTalkJoinInfo(memberEmail, talkCode);
+    }
+
+    //개설자가 가입한 회원 탈퇴 처리 / 가입중 -> 탈퇴
+    @PutMapping("/deleteJoinMember")
+    public String deleteJoinMember(@RequestBody TalkJoin talkJoin) {
+        log.info("talkController.deleteJoinMember()");
+        return talkService.deleteJoinMember(talkJoin);
     }
 
     //승인 대기 -> 가입중

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
 
@@ -20,41 +20,51 @@ const imgBoxStyle = {
     backgroundSize: "cover",
 };
 
-function TalkUpdate({ memberEmail, refreshTalkList }) {
+const imgBoxStyle2 = {
+    width: "300px",
+    height: "200px",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+};
+
+function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
-    const location = useLocation();
 
-    const [insertTalkOp, setInsertTalkOp] = useState({
-        memberEmail: {
-            memberEmail: memberEmail,
-        },
-        talkTitle: "",
-        talkMax: 0,
-        talkCategory: "",
-        talkType: "",
-        talkInquiry: "",
-        talkContent: "",
-        talkTagContent: "",
-        talkOpenDate: `${new Date().getTime()}`,
-    });
+    const [updateTalk, setUpdateTalk] = useState({});
+    const [updateTalkTag, setUpdateTalkTag] = useState({});
 
-    //파일 업로드
-    const [fileForm, setFileForm] = useState("");
+    const { state } = useLocation();
 
     useEffect(() => {
         preview();
         try {
-            if (location) {
-                setInsertTalkOp(location.state.talkInfo)
-            }
+            setUpdateTalk(state.talkInfo);
+            setUpdateTalkTag(state.talkTagInfo);
         } catch (e) {
 
         }
-
         return () => preview();
-    }, [location]);
+    }, []);
+
+    const onChange = useCallback(
+        (e) => {
+            setUpdateTalk({
+                ...updateTalk,
+                [e.target.name]: e.target.value,
+            });
+            setUpdateTalkTag({
+                ...updateTalkTag,
+                [e.target.name]: e.target.value,
+            })
+        }, [updateTalk, updateTalkTag]
+    );
+    console.log(updateTalk);
+    console.log(updateTalkTag);
+
+    //파일 업로드
+    const [fileForm, setFileForm] = useState("");
 
     const preview = () => {
         if (!fileForm) return false;
@@ -73,45 +83,21 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
             console.log(e.target.file);
         }, []);
 
-    const [showInquiry, setShowInquiry] = useState(false);
+    //talk 수정
+    const onTalkUpdate = (e) => {
+        e.preventDefault();
 
-    const approveCheck = () => {
-        setShowInquiry(true);
-    }
-
-    const otherCheck = () => {
-        setShowInquiry(false);
-    }
-
-    const [updateTalk, setUpdateTalk] = useState({});
-
-    useEffect(() => {
-        setUpdateTalk({
-            talkTitle: insertTalkOp.talkTitle,
-            talkMax: insertTalkOp.talkMax,
-            talkCategory: insertTalkOp.talkCategory,
-            talkType: insertTalkOp.talkType,
-            talkInquiry: insertTalkOp.talkInquiry,
-            talkContent: insertTalkOp.talkContent,
-            talkTagContent: insertTalkOp.talkTagContent,
-        });
-    }, [insertTalkOp]);
-
-    const onChange = useCallback(
-        (e) => {
-            setUpdateTalk({
-                ...updateTalk,
-                [e.target.name]: e.target.value
-            });
-        }, [updateTalk]
-    );
-
-    const onTalkUpdate = () => {
         formData.append("data", new Blob([JSON.stringify(updateTalk)],
             { type: "application/json" }));
+        formData.append("uploadImage", fileForm[0]);
+        const config = {
+            headers: { "Content-Type": "multipart/form-data" },
+        };
+        // console.log(updateTalk);
+        // console.log(updateTalkTag);
 
         axios
-            .post("/updateTalk", formData)
+            .post("/updateTalk", formData, config)
             .then((res) => {
                 if (res.data === "ok") {
                     alert("수정 성공");
@@ -125,9 +111,35 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
             .catch((error) => console.log(error));
     }
 
+    //talk 태그 수정
+    const onTalkTagUpdate = (e) => {
+        e.preventDefault();
+        formData.append("data", new Blob([JSON.stringify(updateTalkTag)],
+            { type: "application/json" }));
+        axios.post("/updateTalkTag", formData)
+            .then((res) => {
+                if (res.data === "ok") {
+                    alert("태그 저장 성공");
+                    refreshTalkTagList();
+                } else {
+                    alert("태그 저장 실패");
+                }
+            })
+            .catch((error) => console.log(error));
+    }
+
+    const [showInquiry, setShowInquiry] = useState(false);
+
+    const approveCheck = () => {
+        setShowInquiry(true);
+    }
+
+    const otherCheck = () => {
+        setShowInquiry(false);
+    }
+
     return (
         <>
-
             <Stack height={800} flex={7} p={3}>
                 <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
                     <Typography variant="h6" textAlign="center">
@@ -144,16 +156,15 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
                         <TextField fullWidth
                             label="얘기해요 모임명"
                             name="talkTitle"
-                            // value={insertTalkOp.talkTitle}
+                            value={updateTalk.talkTitle || ""}
                             sx={{ mt: 3 }}
                             onChange={onChange}
-                            required
-                            autoFocus />
+                        />
                         <TextField fullWidth
                             label="최대 참여인원"
                             type="number"
                             name="talkMax"
-                            value={insertTalkOp.talkMax}
+                            value={updateTalk.talkMax || ""}
                             sx={{ mt: 3 }}
                             onChange={onChange}
                         />
@@ -161,9 +172,9 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
                             <InputLabel>모임 카테고리 선정</InputLabel>
                             <Select label="모임 카테고리 선정"
                                 name="talkCategory"
-                                value={insertTalkOp.talkCategory}
+                                value={updateTalk.talkCategory || ""}
                                 onChange={onChange}
-                                required>
+                            >
                                 <MenuItem value="문화∙예술">문화∙예술</MenuItem>
                                 <MenuItem value="운동∙액티비티">운동∙액티비티</MenuItem>
                                 <MenuItem value="요리∙음식">요리∙음식</MenuItem>
@@ -178,21 +189,22 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
                             <FormControl sx={{ mt: 2, minWidth: 130, minHeight: 100 }}>
                                 <InputLabel className="talkTypeSt">가입유형</InputLabel>
                                 <Select label="가입유형" name="talkType"
-                                    value={insertTalkOp.talkType}
+                                    value={updateTalk.talkType || ""}
                                     onChange={onChange}
-                                    required>
+                                >
                                     <MenuItem value="승인제"
                                         onClick={approveCheck}>승인제</MenuItem>
                                     <MenuItem value="선착순"
                                         onClick={otherCheck}>선착순</MenuItem>
                                 </Select>
                             </FormControl>
-                            {showInquiry && <TextField label="가입질문"
-                                name="talkInquiry"
-                                value={insertTalkOp.talkInquiry}
-                                sx={{ mt: 3 }}
-                                onChange={onChange}
-                            />}
+                            {updateTalk.talkType === "승인제" ?
+                                showInquiry && <TextField label="가입질문"
+                                    name="talkInquiry"
+                                    value={updateTalk.talkInquiry || ""}
+                                    sx={{ mt: 3 }}
+                                    onChange={onChange} />
+                                : <div></div>}
                         </div>
                         <TextField fullWidth
                             label="얘기해요 대표 사진"
@@ -204,25 +216,27 @@ function TalkUpdate({ memberEmail, refreshTalkList }) {
                             focused
                         />
                         <div style={imgBoxStyle} className="talk_img_box">
-                            <img src="" alt="" />
+                            <img style={imgBoxStyle2} src={"/images/" + updateTalk.talkSaveimg} alt={updateTalk.talkImg} />
                         </div>
                         <TextField fullWidth
                             label="모임을 소개해주세요"
                             name="talkContent"
-                            value={insertTalkOp.talkContent}
+                            value={updateTalk.talkContent || ""}
                             sx={{ mt: 3 }}
                             onChange={onChange}
-                            multiline
-                            required />
+                            multiline />
                         <TextField fullWidth
                             label="애기해요 태그"
                             name="talkTagContent"
-                            value={insertTalkOp.talkTagContent}
+                            value={updateTalkTag.talkTagContent || ""}
                             sx={{ mt: 3 }}
                             onChange={onChange}
-                            required />
+                        />
+                        <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
                         <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
-                        <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                        <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>
+                            <Button variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                        </Link>
                     </form>
                 </Box>
             </Stack >

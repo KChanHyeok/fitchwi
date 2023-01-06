@@ -25,6 +25,9 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
     const location = useLocation();
+    const nowdate = new Date().getFullYear() + "-"
+        + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
+        + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
 
     const [insertTalkOp, setInsertTalkOp] = useState({
         memberEmail: {
@@ -37,7 +40,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         talkInquiry: "",
         talkContent: "",
         talkTagContent: "",
-        talkOpenDate: `${new Date().getTime()}`,
+        talkOpenDate: nowdate,
     });
 
     const onChange = useCallback(
@@ -183,7 +186,9 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                                 </Select>
                             </FormControl>
                             {showInquiry && <TextField label="가입질문"
-                                name="talkInquiry" sx={{ mt: 3 }}
+                                name="talkInquiry"
+                                value={insertTalkOp.talkInquiry}
+                                sx={{ mt: 3 }}
                                 onChange={onChange} />}
                         </div>
                         <TextField fullWidth

@@ -4,7 +4,6 @@ import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,44 +87,51 @@ public class TalkService {
 
     public Iterable<Talk> getAllTalkList() {
         log.info("talkService.getAllTalkList()");
-        Iterable<Talk> talkList = talkRepository.findAll();
+        Iterable<Talk> talkList = talkRepository.findAllByOrderByTalkOpenCodeDesc();
         return talkList;
     }
 
-    public Talk getTalk(long talkCode) {
-        log.info("talkService.getTalk()");
-        Talk talkInfo = new Talk();
-        try {
-            talkInfo = talkRepository.findById(talkCode).get();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return talkInfo;
+    public Iterable<TalkTag> getAllTalkTagList() {
+        log.info("talkService.getAllTalkTagList()");
+        Iterable<TalkTag> talkTagList = talkTagRepository.findAll();
+        return talkTagList;
     }
 
-    public String updateTalk(Talk talk, TalkTag talkTag, MultipartFile pic, HttpSession session) {
+    public String updateTalk(Talk talk, MultipartFile pic, HttpSession session) {
         log.info("talkService.updateTalk()");
         log.info("talk :" + talk);
         String result = null;
-
         try {
-            talkTagRepository.save(talkTag);
+            if(pic != null) {
+                deleteTalkFile(talk, session);
+                talk = talkFileUpload(talk, pic, session);
+            } else {
+                talk.setTalkImg(talk.getTalkImg());
+                talk.setTalkSaveimg(talk.getTalkSaveimg());
+            }
             talkRepository.save(talk);
             log.info("updateTalk : " + talk);
             log.info("수정 성공");
-//            Talk test = (Talk)session.getAttribute("talkCode");
-//            Talk upTalk = talkRepository.findById(test.getTalkCode()).get();
-//
-//            upTalk.setTalkTitle(talk.getTalkTitle());
-//            upTalk.setTalkMax(talk.getTalkMax());
-//            upTalk.setTalkCategory(talk.getTalkCategory());
-//            upTalk.setTalkContent(talk.getTalkContent());
-//            talkRepository.save(upTalk);
-//            session.setAttribute("talkCode", upTalk);
             result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
             log.info("수정 실패");
+            result = "fail";
+        }
+        return result;
+    }
+
+    public String updateTalkTag(TalkTag talkTag) {
+        log.info("talkService.updateTalkTag()");
+        String result = null;
+        try {
+            talkTagRepository.save(talkTag);
+            log.info("updateTalkTag : " + talkTag);
+            log.info("태그 수정 성공");
+            result = "ok";
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("태그 수정 실패");
             result = "fail";
         }
         return result;
@@ -226,6 +232,19 @@ public class TalkService {
         return talkList;
     }
 
+    public String deleteJoinMember(TalkJoin talkJoin) {
+        log.info("talkService.deleteJoinMember()");
+        String result = null;
+        try {
+            talkJoin.setTalkJoinState("강제탈퇴");
+            talkJoinRepository.save(talkJoin);
+            result = "탈퇴 처리 완료";
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "탈퇴 처리 실패";
+        }
+        return result;
+    }
 
     public String approvalTalkMember(TalkJoin talkJoin) {
         log.info("talkService.approvalTalkMember()");
@@ -280,8 +299,8 @@ public class TalkService {
         return talkOpenedList;
 
     }
-
-    public Map<String, Object> getMemberTalk(String memberEmail) {
+    
+        public Map<String, Object> getMemberTalk(String memberEmail) {
             Map<String, Object> talkMap = new HashMap<>();
         try{
 

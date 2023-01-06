@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface TalkRepository extends CrudRepository<Talk, Long> {
+    List<Talk> findAllByOrderByTalkOpenCodeDesc();
     @Transactional
     void deleteAllByTalkOpenCode(TalkOpened talkOpenCode);
 
