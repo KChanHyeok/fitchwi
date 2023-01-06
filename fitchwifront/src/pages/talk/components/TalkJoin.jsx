@@ -20,10 +20,12 @@ const UserBox = styled(Box)({
 });
 
 const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talkJoinMember }) => {
+
     const nav = useNavigate();
     const nowdate = new Date().getFullYear() + "-"
         + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
         + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
+
 
     const [insertTalkJoin, setInsertTalkJoin] = useState({
         memberEmail: {
@@ -192,4 +194,5 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
         </>
     )
 }
+
 export default TalkJoin;

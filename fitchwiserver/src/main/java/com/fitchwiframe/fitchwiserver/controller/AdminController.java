@@ -100,11 +100,6 @@ public class AdminController {
     log.info("adminController.deleteReport()");
     return adminService.deleteReport(reportCode);
   }
-//  @DeleteMapping("/deleteReportTarget")
-//  public String deleteReportTarget(@RequestParam Long reportTarget, @RequestParam String reportCategory, HttpSession session){
-//    log.info("adminService.deleteReportTarget()");
-//    return adminService.deleteReportTarget(reportTarget, reportCategory, session);
-//  }
 
   @PutMapping("/updateReportState/{reportCode}")
   public String updateReportState(@PathVariable Long reportCode) {

@@ -246,7 +246,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   // useMemo(() => printCardList, []);
   return (
     <Box sx={{ width: "90%" }}>
-      {togetherJoinList.length !== 0 ? (
+      {togetherJoinList.length || togetherOpenedList.lengh !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -274,7 +274,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="가입중" {...a11yProps(0)} />
-              <Tab label="참여중" {...a11yProps(1)} />
+              <Tab label="운영중" {...a11yProps(1)} />
               <Tab label="승인 대기중" {...a11yProps(2)} />
             </Tabs>
           </Box>
