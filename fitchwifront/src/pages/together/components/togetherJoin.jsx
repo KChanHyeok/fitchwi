@@ -9,8 +9,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     IMP.init("imp54355175");
 
     useEffect(()=> {
-      getMemberInfo()
-    },[])
+      if(sessionStorage.getItem("id")) {
+        getMemberInfo()
+      }
+    })
     const getMemberInfo = () => {
         axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
