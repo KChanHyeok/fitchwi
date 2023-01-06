@@ -162,7 +162,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           label="모임명"
           sx={{ mt: 3 }}
           id="fullWidth"
-          value={insertForm.togetherTitle}
           onChange={handleChange}
           name="togetherTitle"
           required

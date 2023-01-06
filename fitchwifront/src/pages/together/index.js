@@ -47,6 +47,7 @@ const Together = () => {
 
   return (
     <Box>
+      <AddButton />
       <Routes>
         <Route path="/*" element={<TogetherMain refreshTogetherList={getAllTogetherList} togetherList={togetherList} />} />
         <Route path="art" element={<TogetherArt />} />
@@ -63,7 +64,6 @@ const Together = () => {
         <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
         <Route path="home" element={<TogetherHome />} />
       </Routes>
-      <AddButton />
     </Box>
   );
 };
