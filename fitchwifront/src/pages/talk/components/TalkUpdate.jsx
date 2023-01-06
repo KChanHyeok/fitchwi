@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
+import "../styles/TalkInfo.scss";
 
 const UserBox = styled(Box)({
     display: "flex",
@@ -101,7 +102,7 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
             .then((res) => {
                 if (res.data === "ok") {
                     alert("수정 성공");
-                    nav("/talk");
+                    nav(`/talk/${updateTalk.talkCode}`);
                     refreshTalkList();
                     setUpdateTalk({});
                 } else {
@@ -138,6 +139,8 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
         setShowInquiry(false);
     }
 
+    console.log(updateTalk.talkType);
+
     return (
         <>
             <Stack sx={{ width: 800, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -154,7 +157,7 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                     <hr />
                     <form onSubmit={onTalkUpdate}>
                         <TextField fullWidth
-                            label="얘기해요 모임명"
+                            label="얘기해요 모임명(30자 이내)"
                             name="talkTitle"
                             value={updateTalk.talkTitle || ""}
                             sx={{ mt: 3 }}
@@ -185,7 +188,7 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                                 <MenuItem value="기타">기타</MenuItem>
                             </Select>
                         </FormControl>
-                        <div className="talkJoinStyle">
+                        <div>
                             <FormControl sx={{ mt: 2, minWidth: 130, minHeight: 100 }}>
                                 <InputLabel className="talkTypeSt">가입유형</InputLabel>
                                 <Select label="가입유형" name="talkType"
@@ -199,10 +202,11 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                                 </Select>
                             </FormControl>
                             {updateTalk.talkType === "승인제" ?
-                                showInquiry && <TextField label="가입질문"
+                                <TextField
+                                    label="가입질문"
                                     name="talkInquiry"
                                     value={updateTalk.talkInquiry || ""}
-                                    sx={{ mt: 3 }}
+                                    sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
                                     onChange={onChange} />
                                 : <div></div>}
                         </div>

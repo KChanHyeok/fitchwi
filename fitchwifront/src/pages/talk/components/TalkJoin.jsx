@@ -4,7 +4,6 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import "../styles/TalkInfo.scss";
 
 const StyleModal = styled(Modal)({
     display: "flex",
