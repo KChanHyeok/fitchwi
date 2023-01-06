@@ -3,14 +3,16 @@ import {
     Fab,
     Tooltip,
   } from "@mui/material";
-  import { Add as AddIcon } from "@mui/icons-material";
+import {useNavigate} from "react-router-dom";
+import { Add as AddIcon } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 
   
 const AddButton = () => {
-
+  const nav = useNavigate()
   const location = useLocation()
-
+  
+  
   return (
     <>
       {location.pathname!=="/together/add" && <Tooltip
@@ -21,9 +23,11 @@ const AddButton = () => {
         left: { xs: "calc(50% - 25px)", md: 30 },
       }}
       >
-        <Fab color="secondary" aria-label="add" component={Link} to="/together/add">
+        {!sessionStorage.getItem("id") ? <Fab color="secondary" aria-label="add" component={Link} to="/login" onClick={()=>alert("로그인이 필요한 서비스입니다.")}>
           <AddIcon />
-        </Fab>
+        </Fab> : <Fab color="secondary" aria-label="add" component={Link} to="/together/add">
+          <AddIcon />
+        </Fab>}
       </Tooltip>}
     </>
     )

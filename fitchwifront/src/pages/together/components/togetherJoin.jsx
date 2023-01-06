@@ -2,6 +2,7 @@ import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/mater
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember}) => {
     const IMP = window.IMP; // 생략 가능
@@ -14,7 +15,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
     }
-    
+
+    const nav = useNavigate();
     const nowdate = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate();
     const [insertForm,setInsertFrom] = useState({
         togetherJoinDate: nowdate,
@@ -26,7 +28,14 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     })
     const [open, setOpen] = React.useState(false);
     const [disabled,setdisabled] = useState(true)
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        if(!sessionStorage.getItem("id")) {
+            alert("로그인이 필요한 서비스입니다.")
+            nav("/login");
+            return
+        }
+        setOpen(true);
+    }
     const handleClose = () => setOpen(false);
 
     const style = {
@@ -107,6 +116,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     }
 
     const insertTogetherFreeJoinInfo = () => {
+        if(!sessionStorage.getItem("id")) {
+            alert("로그인이 필요한 서비스입니다.")
+            nav("/login");
+        }
         axios.post("/insertTogetherFreeJoinInfo", insertForm)
               .then((res) => {
                   setOpen(false);
