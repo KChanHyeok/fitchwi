@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Avatar, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
 import "../styles/TalkInfo.scss";
 
@@ -229,7 +229,10 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             multiline />
-                        {!updateTalkTag ? <p>d</p>
+                        {!updateTalkTag
+                            ? <Box sx={{ display: "flex" }}>
+                                <CircularProgress sx={{ margin: "auto" }} />
+                            </Box>
                             : <TextField fullWidth
                                 label="애기해요 태그"
                                 name="talkTagContent"

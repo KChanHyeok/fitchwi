@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import TalkJoin from "./TalkJoin";
 import Report from "../../../components/common/Report";
@@ -78,7 +78,11 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
             alignItems="stretch"
             spacing={2}
         >
-            {talkList.length === 0 || !talkInfo || !talkTagInfo || !talkJoinMember ? <h1>로딩중</h1> :
+            {talkList.length === 0 || !talkInfo || !talkTagInfo || !talkJoinMember
+                ? <Box sx={{ display: "flex" }}>
+                    <CircularProgress sx={{ margin: "auto" }} />
+                </Box>
+                :
                 <Box className="talkSection">
                     <Box className="talkDetailBox">
                         <Box className="talkTxtLine">
@@ -119,19 +123,20 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                                     {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}
                                 </Typography>
                             </UserBox>
-                            <Typography className="talkTxtLine">
-                                <span><b>참여중인 회원</b></span><br />
-                                {talkJoinMember.length === 0
-                                    ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
-                                    : talkJoinMember.map((data) =>
-                                        <UserBox key={data.talkJoinCode}>
-                                            <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                            <Typography fontWeight={500} variant="span">
-                                                {data.memberEmail.memberNickname}님
-                                            </Typography>
-                                        </UserBox>)}
-                            </Typography>
-                            {!talkTagInfo ? <h4>로딩</h4>
+                            <span><b>참여중인 회원</b></span><br />
+                            {talkJoinMember.length === 0
+                                ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
+                                : talkJoinMember.map((data) =>
+                                    <UserBox key={data.talkJoinCode}>
+                                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                        <Typography fontWeight={500} variant="span">
+                                            {data.memberEmail.memberNickname}님
+                                        </Typography>
+                                    </UserBox>)}
+                            {!talkTagInfo
+                                ? <Box sx={{ display: "flex" }}>
+                                    <CircularProgress sx={{ margin: "auto" }} />
+                                </Box>
                                 : <Box>
                                     <h4 className="talkTxtLine">태그</h4>
                                     {talkTagInfo.talkTagContent}
@@ -141,12 +146,12 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                             </Box>
                             <h4 className="talkTxtLine">얘기해요 피드</h4>
                             {talkTagInfo.talkTagContent}
-                            <h4 className="talkTxtLine">얘기해요 소개</h4>
-                            {talkInfo.talkContent}
                         </Box>
                         <Box className="talkTxtLine">
                             {!talkJoinMember
-                                ? <h2>로딩중</h2>
+                                ? <Box sx={{ display: "flex" }}>
+                                    <CircularProgress sx={{ margin: "auto" }} />
+                                </Box>
                                 : talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
                                     ? (<Button className="talkSticky" onClick={isDelete}>삭제하기</Button>)
                                     : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
