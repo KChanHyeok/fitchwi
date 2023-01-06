@@ -9,7 +9,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import { Avatar, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -221,7 +221,10 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     </DialogTitle>
                     <hr />
                     <DialogContent>
-                        {!talkJoinMember ? <h2>로딩중</h2>
+                        {!talkJoinMember
+                            ? <Box sx={{ display: "flex" }}>
+                                <CircularProgress sx={{ margin: "auto" }} />
+                            </Box>
                             : talkJoinMember.length === 0
                                 ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
                                 : talkJoinMember.map((data) =>
@@ -248,7 +251,10 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     <hr />
                     <DialogContent>
                         <Typography>회원 / 답변</Typography>
-                        {!waitingMemberList ? <h2>로딩중</h2>
+                        {!waitingMemberList
+                            ? <Box sx={{ display: "flex" }}>
+                                <CircularProgress sx={{ margin: "auto" }} />
+                            </Box>
                             : waitingMemberList.length === 0
                                 ? <Typography>현재 승인 대기 중인 인원이 없습니다.</Typography>
                                 : waitingMemberList.map((data) =>
