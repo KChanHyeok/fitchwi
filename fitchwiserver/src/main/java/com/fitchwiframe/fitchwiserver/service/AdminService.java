@@ -102,6 +102,9 @@ public class AdminService {
     log.info("adminService.deleteFacilities()");
     String result = "fail";
     try {
+      Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
+
+      nodayRepository.deleteAll( nodayRepository.findAllByFacilitiesCode(facilities));
       facilitiesRepository.deleteById(facilitiesCode);
       result = "ok";
     } catch (Exception e) {
@@ -304,9 +307,9 @@ public class AdminService {
 
 
 
-    List<Report> reportWithDetailList = new ArrayList<>();
+
     try {
-     // List<Report> reportList = reportRepository.findAll();
+
 
       for (Report report : reportList) {
         report.getMemberEmail().setMemberPwd("");
@@ -315,7 +318,7 @@ public class AdminService {
           reportDetail.getMemberEmail().setMemberPwd("");
         }
         report.setReportDetailList(reportDetailList);
-        reportWithDetailList.add(report);
+
       }
 
     } catch (Exception e) {
@@ -373,36 +376,4 @@ public class AdminService {
     return result;
   }
 
-//  public String deleteReportTarget(Long reportTarget, String reportCategory, HttpSession session) {
-//  log.info("adminService.deleteReportTarget()");
-//  String result = "fail";
-//  switch(reportCategory){
-//    case "share":
-//      try{
-//
-//        Feed feedInfo = feedService.getFeedInfo(reportTarget);
-//        if(feedInfo==null){
-//          result ="no data";
-//        }
-//        feedService.deleteFeed(feedInfo, session );
-//        result="ok";
-//      }catch (Exception e){
-//        e.printStackTrace();
-//      }
-//      break;
-//    case "talk":
-//
-//      deleteTalk
-//
-//      break;
-//
-//  }
-//  return result;
-//  }
-
-
-//  public Report getReport(Long reportCode) {
-//    log.info("adminService.getReport()");
-//    return reportRepository.findById(reportCode).get();
-//  }
 }
