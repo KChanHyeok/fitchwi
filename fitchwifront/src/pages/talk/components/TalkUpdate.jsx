@@ -140,7 +140,7 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
 
     return (
         <>
-            <Stack height={800} flex={7} p={3}>
+            <Stack sx={{ width: 800, height: 800, margin: "auto" }} flex={7} p={3}>
                 <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
                     <Typography variant="h6" textAlign="center">
                         얘기해요 수정
@@ -232,11 +232,13 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                             sx={{ mt: 3 }}
                             onChange={onChange}
                         />
-                        <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
-                        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
-                        <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>
-                            <Button variant={"contained"} sx={{ mt: 2 }}>취소</Button>
-                        </Link>
+                        <Typography sx={{ float: "right" }}>
+                            <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
+                            <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
+                            <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>
+                                <Button variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                            </Link>
+                        </Typography>
                     </form>
                 </Box>
             </Stack >
