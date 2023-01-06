@@ -2,7 +2,7 @@ import { Fab, Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../layout/Sidebar";
 import TalkInfo from "./components/TalkInfo";
 import TalkMain from "./components/TalkMain";
@@ -13,6 +13,7 @@ import { Add as AddIcon } from "@mui/icons-material";
 function Home() {
     const id = sessionStorage.getItem("id");
     const nav = useNavigate();
+    const location = useLocation();
 
     const [talkList, setTalkList] = useState([]);
     const [talkTagList, setTalkTagList] = useState([]);
@@ -60,7 +61,8 @@ function Home() {
 
     return (
         <>
-        <Tooltip
+        {location.pathname!=="/talk/opened"
+        && <Tooltip
         onClick={isLogin} title="Add"
         sx={{
             position: "fixed",
@@ -70,9 +72,8 @@ function Home() {
                 <Fab color="secondary" aria-label="add">
                     <AddIcon />
                 </Fab>
-        </Tooltip>
-        <Stack direction="row" spacing={7} justifyContent="space-between">
-            <Sidebar pageurl={"talk"} />
+        </Tooltip>}
+        <Stack>
             <Routes>
                 <Route path="/*" element={<TalkMain talkList={talkList} />} />
                 <Route path="/:talkPageCode"
