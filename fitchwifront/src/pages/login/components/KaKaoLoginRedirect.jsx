@@ -16,7 +16,7 @@ const KaKaoLoginRedirect = (props) => {
             sessionStorage.setItem("id", member.memberEmail);
             sessionStorage.setItem("nickName", member.memberNickname);
             alert(member.memberNickname + "님 환영합니다.");
-            //  window.location.href = "/";
+            window.location.href = "/";
             break;
           case "no":
             console.log(res.data);

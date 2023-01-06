@@ -12,25 +12,22 @@ const TogetherHome = () => {
 
   return (
     <Container fixed>
+      <Box height={300} ml={4} mr={4}>
+        <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }}>
+          <Box height={300} width={1088} component="img" src="/images/TogetherBanner1.png" sx={{ cursor: "pointer" }}></Box>
+          <Box height={300} width={1088} component="img" src="/images/TogetherBanner2.png" sx={{ cursor: "pointer" }}></Box>
+          <Box height={300} width={1088} component="img" src="/images/TogetherBanner3.png" sx={{ cursor: "pointer" }}></Box>
+        </Carousel>
+      </Box>
       <Box flex={4} p={4}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        {/* 광고 또는 함께해요 홍보 영역 */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mt={4}>
           <Typography variant="h6">함께해요 메인페이지</Typography>
           <Button variant="contained" endIcon={<Category />} onClick={() => setOpen(true)}>
             카테고리
           </Button>
         </Stack>
         <TogetherCategory open={open} setOpen={setOpen} />
-
-        {/* 광고 또는 함께해요 홍보 영역 */}
-        <Box height={300} mt={4}>
-          <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }}>
-            <div style={{ backgroundColor: "pink", height: 400 }}></div>
-            <div style={{ backgroundColor: "blue", height: 400 }}></div>
-            <div style={{ backgroundColor: "yellow", height: 400 }}></div>
-            <div style={{ backgroundColor: "red", height: 400 }}></div>
-          </Carousel>
-        </Box>
-
         {/* 1번 카테고리 */}
         <Box height={300} mt={6}>
           <Typography variant="h6">오늘모임 HOT 키워드</Typography>
@@ -120,7 +117,7 @@ const TogetherHome = () => {
         </Box>
 
         <Link>
-          <Box height={300} mt={6} component="img" src="/images/TogetherPost1.png"></Box>
+          <Box height={300} mt={6} width={1088} component="img" src="/images/TogetherPost1.png"></Box>
         </Link>
 
         {/* 3번 카테고리 */}

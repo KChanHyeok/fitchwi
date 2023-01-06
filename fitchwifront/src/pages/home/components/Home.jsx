@@ -8,10 +8,11 @@ const Home = () => {
       <Container>
         <Box flex={4}>
           <Box ml={4} mr={4}>
-            <Box border={1} mb={4}>
+            <Box mb={4} height={400}>
               <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
-                <Box component="img" src="/images/MainPageBanner1.png" height={400} />
-                <div style={{ backgroundColor: "pink", width: 1200, height: 400 }}></div>
+                <Box height={400} width={1088} component="img" src="/images/MainPageBanner1.jpeg" sx={{ cursor: "pointer" }}></Box>
+                <Box height={400} width={1088} component="img" src="/images/MainPageBanner2.jpeg" sx={{ cursor: "pointer" }}></Box>
+                <Box height={400} width={1088} component="img" src="/images/MainPageBanner3.png" sx={{ cursor: "pointer" }}></Box>
               </Carousel>
             </Box>
             <Stack direction="row" spacing={3} justifyContent="space-between">
