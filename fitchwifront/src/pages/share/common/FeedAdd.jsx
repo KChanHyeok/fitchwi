@@ -198,7 +198,6 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
           },
         })
         .then((response) => {
-          console.log(response.data);
           setJoinList(response.data);
         })
         .catch((error) => console.log(error));

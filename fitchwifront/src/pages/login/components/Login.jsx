@@ -119,12 +119,7 @@ export default function Login({ sucLogin }) {
             로그인
           </Button>
 
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={() => createMemeber()}
-          >
+          <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
             구글로그인
           </Button>
 

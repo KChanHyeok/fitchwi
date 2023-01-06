@@ -17,6 +17,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
         switch (isPresent) {
           case "ok":
 
+
             switch (res.data.state) {
               case "ok":
                 console.log(res.data);
@@ -42,6 +43,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
               default:
                 break;
             }
+
 
             break;
           case "no":

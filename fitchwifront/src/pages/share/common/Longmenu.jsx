@@ -31,23 +31,8 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-export default function LongMenu({ flist, refreshFeed, information, Modal }) {
+export default function LongMenu({ flist, refreshFeed, information }) {
   const [feedToUpdate, setFeedUpdate] = useState({});
-
-  useEffect(() => {
-    setFeedUpdate({
-      feedCode: information.feedCode,
-      memberEmail: {
-        memberEmail: information.memberEmail.memberEmail,
-      },
-      feedCategory: information.feedCategory,
-      feedContent: information.feedContent,
-      feedClassificationcode: information.feedClassificationcode,
-      feedDate: information.feedDate,
-      feedTag: [],
-    });
-  }, [information]);
-
   const { feedCategory, feedContent, feedClassificationcode } = feedToUpdate;
   let formdata = new FormData();
   const nav = useNavigate();
@@ -56,6 +41,7 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
   const [open, setOpen] = useState(false);
   const Menuopen = Boolean(anchorEl);
   const [state, setState] = useState(false);
+  const [joinList, setJoinList] = useState();
 
   const handleChange = useCallback(
     (event) => {
@@ -83,10 +69,9 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          refreshFeed();
           setTagForm([]);
           setFeedUpdate({});
-          Modal(false);
+          window.location.reload();
         } else {
           alert("실패");
         }
@@ -143,6 +128,36 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
     }
   };
 
+  const getTalkJoinList = useCallback(() => {
+    if (sessionStorage.getItem("id") !== undefined) {
+      axios
+        .get("/getTalkJoinListByMember", {
+          params: {
+            memberEmail: sessionStorage.getItem("id"),
+          },
+        })
+        .then((response) => {
+          setJoinList(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, []);
+
+  useEffect(() => {
+    setFeedUpdate({
+      feedCode: information.feedCode,
+      memberEmail: {
+        memberEmail: information.memberEmail.memberEmail,
+      },
+      feedCategory: information.feedCategory,
+      feedContent: information.feedContent,
+      feedClassificationcode: information.feedClassificationcode,
+      feedDate: information.feedDate,
+      feedTag: [],
+    });
+    getTalkJoinList();
+  }, [information, getTalkJoinList]);
+
   return (
     <div>
       <IconButton
@@ -190,35 +205,12 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
             },
           }}
         >
-          <Report
-            type="MenuItem"
-            target={information.feedCode}
-            targetMember={information.memberEmail.memberEmail}
-            category="share"
-          />
+          <Report type="MenuItem" target={information.feedCode} targetMember={information.memberEmail.memberEmail} category="share" />
         </Menu>
       )}
-      <StyleModal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          width={850}
-          height={500}
-          bgcolor="white"
-          p={3}
-          borderRadius={5}
-          sx={{ display: "flex", flexDirection: "column" }}
-        >
-          <Stack
-            direction="row"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={3}
-          >
+      <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box width={850} height={500} bgcolor="white" p={3} borderRadius={5} sx={{ display: "flex", flexDirection: "column" }}>
+          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
             <Button color="error" onClick={handleClose}>
               CANCEL
             </Button>
@@ -229,11 +221,7 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
               <Button color="success" onClick={saveFeed}>
                 SAVE
               </Button>
-              {state === false ? (
-                <Button disabled>UPDATE</Button>
-              ) : (
-                <Button onClick={sendFeed}>UPDATE</Button>
-              )}
+              {state === false ? <Button disabled>UPDATE</Button> : <Button onClick={sendFeed}>UPDATE</Button>}
             </ButtonGroup>
           </Stack>
           <Divider />
@@ -272,26 +260,41 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
             )}
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 350, height: 400 }} mt={1}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                  참여한 함께해요
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={feedClassificationcode || ""}
-                  name="feedClassificationcode"
-                  onChange={handleChange}
-                  label="함께해요 리스트"
-                >
-                  <MenuItem value="">
-                    <em>선택</em>
-                  </MenuItem>
-                  <MenuItem value="함께해요 1의 코드">함께해요 1</MenuItem>
-                  <MenuItem value="함께해요 2의 코드">함께해요 2</MenuItem>
-                  <MenuItem value="함께해요 3의 코드">함께해요 3</MenuItem>
-                </Select>
-              </FormControl>
+              {joinList === undefined || joinList.length === 0 ? (
+                <FormControl fullWidth disabled>
+                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                    참여중인 얘기해요가 없습니다.
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    label="참여중인 얘기해요"
+                    value={feedClassificationcode || ""}
+                  >
+                    <MenuItem value=""></MenuItem>
+                  </Select>
+                </FormControl>
+              ) : (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                    참여중인 얘기해요
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-autowidth-label"
+                    id="demo-simple-select-autowidth"
+                    value={feedClassificationcode}
+                    name="feedClassificationcode"
+                    onChange={handleChange}
+                    label="참여중인 얘기해요"
+                  >
+                    {joinList.map((item, index) => (
+                      <MenuItem key={index} value={item.talkCode.talkCode}>
+                        {item.talkCode.talkTitle}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
               <br />
               <FormControl sx={{ mt: 2 }} fullWidth>
                 <InputLabel>피드 카테고리</InputLabel>
@@ -316,12 +319,7 @@ export default function LongMenu({ flist, refreshFeed, information, Modal }) {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
-              <MultipleSelectChip
-                insertForm={feedToUpdate}
-                setInsertForm={setFeedUpdate}
-                tagForm={tagForm}
-                setTagForm={setTagForm}
-              />
+              <MultipleSelectChip insertForm={feedToUpdate} setInsertForm={setFeedUpdate} tagForm={tagForm} setTagForm={setTagForm} />
               <TextField
                 sx={{ mt: 2 }}
                 fullWidth
