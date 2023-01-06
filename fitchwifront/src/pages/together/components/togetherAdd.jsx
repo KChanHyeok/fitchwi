@@ -83,7 +83,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-    console.log(render);
   };
 
   const onLoadFile = useCallback((event) => {
@@ -143,7 +142,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   //       }
   // }
 
-  console.log(insertForm);
 
   return (
     <Stack height={800} flex={7} p={3}>
@@ -163,7 +161,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           label="모임명"
           sx={{ mt: 3 }}
           id="fullWidth"
-          value={insertForm.togetherTitle}
           onChange={handleChange}
           name="togetherTitle"
           required
@@ -303,16 +300,41 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 label="모이는 일자"
                 disablePast
                 value={insertForm.togetherDate}
-                onChange={(e) => {
-                  setInsertForm({
-                    ...insertForm,
-                    togetherDate: moment(e.$d).format("YYYY-MM-DD"),
-                    togetherRecruitStartDate: "",
-                    togetherRecruitEndDate: "",
-                  });
-                  setFirstDateOpen(false);
-                }}
-                renderInput={(params) => <TextField {...params} />}
+                focused
+                fullWidth
+                color="grey"
+                required
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모이는 일자"
+                  disablePast
+                  value={insertForm.togetherDate}
+                  onChange={(e)=>{
+                    setInsertForm({
+                      ...insertForm,
+                      togetherDate: moment(e.$d).format("YYYY-MM-DD"),
+                      togetherRecruitStartDate: "",
+                      togetherRecruitEndDate:""
+                    });
+                    setFirstDateOpen(false)
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid xs={2} sm={4} md={4} item>
+              <TextField
+                fullWidth
+                label="모집신청 시작일을 입력헤주세요"
+                sx={{ mt: 3 }}
+                type="text"
+                value={insertForm.togetherRecruitStartDate}
+                name="togetherRecruitStartDate"
+                focused
+                required
+                color="grey"
               />
             </LocalizationProvider>
           </Grid>
