@@ -28,8 +28,8 @@ export default function FollowMemberListModal({ children, followList, lstate }) 
 
   let interestArr = [];
   const { logid } = lstate;
-  followList.map((member) => (interestArr = member.memberInterest.split(" ")));
-
+  followList.map((member) => (interestArr = [...interestArr, member.memberInterest.split(" ")]));
+  console.log(interestArr);
   return (
     <div>
       <Button onClick={handleOpen} style={{ color: "black" }}>
@@ -80,7 +80,7 @@ export default function FollowMemberListModal({ children, followList, lstate }) 
                               : `${member.memberNickname}`}
                           </Typography>
                         }
-                        secondary={interestArr.map((interest, index) => (
+                        secondary={interestArr[index].map((interest, index) => (
                           <span key={index}> #{interest}</span>
                         ))}
                       />
