@@ -2,95 +2,102 @@ import styled from "@emotion/styled";
 import { Avatar, Button, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import moment from "moment/moment";
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import "../styles/TalkInfo.scss";
 
 const StyleModal = styled(Modal)({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 });
 
 const UserBox = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginBottom: "20px",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
 });
 
 const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talkJoinMember }) => {
+
+    const nav = useNavigate();
     const nowdate = new Date().getFullYear() + "-"
         + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
         + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
 
-  const [insertTalkJoin, setInsertTalkJoin] = useState({
-    memberEmail: {
-      memberEmail: sessionStorage.getItem("id"),
-    },
-    talkJoinDate: nowdate,
-    talkJoinAnswer: "",
-    talkCode: talkInfo,
-  });
 
-  const onChange = useCallback((e) => {
-    const inputTo = {
-      ...insertTalkJoin,
-      talkCode: talkInfo,
-      [e.target.name]: e.target.value,
-    };
-    setInsertTalkJoin(inputTo);
-  }, []);
-
-  //작성 내용 전송 함수
-  const onTalkJoin = (e) => {
-    console.log(insertTalkJoin);
-    e.preventDefault();
-    axios
-      .post("/insertTalkJoinInfo", insertTalkJoin)
-      .then((res) => {
-        setOpenModal(false);
-        alert(res.data);
-        refreshTalkJoinList();
-      })
-      .catch((error) => console.log(error));
-  };
-
-  //참여(가입) 탈퇴하기
-  const deleteTalkJoinInfo = (e) => {
-    e.preventDefault();
-    axios
-      .delete("/deleteTalkJoinInfo", {
-        params: {
-          memberEmail: sessionStorage.getItem("id"),
-          talkCode: talkInfo.talkCode,
+    const [insertTalkJoin, setInsertTalkJoin] = useState({
+        memberEmail: {
+            memberEmail: sessionStorage.getItem("id"),
         },
-      })
-      .then((res) => {
-        if (talkJoinState === "대기") {
-          alert("신청 취소 완료");
+        talkJoinDate: nowdate,
+        talkJoinAnswer: "",
+        talkCode: talkInfo,
+    });
+
+    const onChange = useCallback((e) => {
+        const inputTo = {
+            ...insertTalkJoin,
+            talkCode: talkInfo,
+            [e.target.name]: e.target.value,
+        };
+        setInsertTalkJoin(inputTo);
+    }, [insertTalkJoin, talkInfo]);
+
+    //작성 내용 전송 함수
+    const onTalkJoin = (e) => {
+        console.log(insertTalkJoin);
+        e.preventDefault();
+        axios
+            .post("/insertTalkJoinInfo", insertTalkJoin)
+            .then((res) => {
+                setOpenModal(false);
+                alert(res.data);
+                refreshTalkJoinList();
+            })
+            .catch((error) => console.log(error));
+    };
+
+    //참여(가입) 탈퇴하기
+    const deleteTalkJoinInfo = (e) => {
+        e.preventDefault();
+        axios
+            .delete("/deleteTalkJoinInfo", {
+                params: {
+                    memberEmail: sessionStorage.getItem("id"),
+                    talkCode: talkInfo.talkCode,
+                },
+            })
+            .then((res) => {
+                if (talkJoinState === "대기") {
+                    alert("신청 취소 완료");
+                } else {
+                    alert(res.data);
+                }
+                setOpenModal(false);
+                refreshTalkJoinList();
+            })
+            .catch((error) => console.log(error));
+    };
+
+    //참여 모달창
+    const [openModal, setOpenModal] = useState(false);
+
+    useEffect(() => {
+        console.log(talkJoinState);
+    }, [talkJoinState]);
+
+    //로그인 조건 / 최대 인원 설정
+    const isLogin = () => {
+        if (sessionStorage.getItem("id") === null) {
+            alert("로그인이 필요한 서비스입니다.");
+            nav("/login");
+        } else if (1 + talkJoinMember.length === talkInfo.talkMax) {
+            alert("최대인원 초과로 현재 참여가 불가능합니다.");
         } else {
-          alert(res.data);
+            setOpenModal(true);
         }
-        setOpenModal(false);
-        refreshTalkJoinList();
-      })
-      .catch((error) => console.log(error));
-  };
-
-  //참여 모달창
-  const [openModal, setOpenModal] = useState(false);
-
-  useEffect(() => {
-    console.log(talkJoinState);
-  }, [talkJoinState]);
-
-  //최대인원 설정
-  const isTalkMax = () => {
-    if (1 + talkJoinMember.length === talkInfo.talkMax) {
-      alert("최대인원 초과로 현재 참여가 불가능합니다.");
-    } else {
-      setOpenModal(true);
     }
 
     return (
@@ -109,7 +116,7 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
                             ? <Button onClick={() => setOpenModal(true)}
                                 color="primary" variant="contained"
                                 className="talkSticky">탈퇴하기</Button>
-                            : <Button onClick={isTalkMax}
+                            : <Button onClick={isLogin}
                                 color="primary" variant="contained"
                                 className="talkSticky">{children}</Button>
             }
@@ -187,5 +194,5 @@ const TalkJoin = ({ children, talkInfo, talkJoinState, refreshTalkJoinList, talk
         </>
     )
 }
-}
+
 export default TalkJoin;

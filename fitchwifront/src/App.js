@@ -14,7 +14,6 @@ import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
-import axios from "axios";
 function App() {
   const nav = useNavigate();
 
@@ -75,6 +74,7 @@ function App() {
     };
     setLstate(newState);
     //로그아웃 시 로그인 상태 및 페이지번호 삭제
+    sessionStorage.removeItem("pageNum");
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("nickName");
     nav("/"); //첫페이지로 돌아감.
@@ -96,7 +96,10 @@ function App() {
           element={<MemberPage onLogout={onLogout} lstate={lstate} />}
         ></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
-        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect />}></Route>
+        <Route
+          path="/login/kakao/callback"
+          element={<KaKaoLoginRedirect sucLogin={sucLogin} />}
+        ></Route>
       </Routes>
     </>
   );

@@ -126,7 +126,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     return (
         <>
 
-            <Stack height={800} flex={7} p={3}>
+            <Stack sx={{ width: 800, height: 800, margin: "auto" }} flex={7} p={3}>
                 <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
                     <Typography variant="h6" textAlign="center">
                         얘기해요 개설
@@ -145,6 +145,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             value={insertTalkOp.talkTitle}
                             sx={{ mt: 3 }}
                             onChange={onChange}
+                            placeholder="30자 이내로 작성"
                             required
                             autoFocus />
                         <TextField fullWidth
@@ -208,6 +209,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             name="talkContent"
                             sx={{ mt: 3 }}
                             onChange={onChange}
+                            placeholder="5000자 이내로 작성"
                             multiline
                             required />
                         <TextField fullWidth
@@ -216,8 +218,10 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             sx={{ mt: 3 }}
                             onChange={onChange}
                             required />
-                        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
-                        <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                        <Typography sx={{ float: "right" }}>
+                            <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
+                            <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                        </Typography>
                     </form>
                 </Box>
             </Stack>

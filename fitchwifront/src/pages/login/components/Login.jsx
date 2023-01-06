@@ -52,11 +52,16 @@ export default function Login({ sucLogin }) {
             alert("아이디와 일치하는 회원정보가 없습니다.");
             break;
           case "reported":
-            alert(res.data.memberRestriction + "부터 이용 가능");
+            alert("신고누적으로, " + res.data.memberRestriction + "부터 이용 가능합니다.");
             nav("/");
             break;
           case "released":
-            alert(res.data.memberRestriction + "부로 이용 제한 해제");
+            alert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.");
+            sucLogin(res.data.memberEmail, res.data.memberNickname);
+            sessionStorage.setItem("id", res.data.memberEmail);
+            sessionStorage.setItem("nickName", res.data.memberNickname);
+            alert(res.data.memberNickname + "님 환영합니다.");
+            nav("/");
             break;
           default:
             break;
@@ -86,7 +91,7 @@ export default function Login({ sucLogin }) {
         <Typography component="h1" variant="h5">
           로그인
         </Typography>
-        <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }} style={{ width: "300px" }}>
           <TextField
             margin="normal"
             required
@@ -123,7 +128,7 @@ export default function Login({ sucLogin }) {
             구글로그인
           </Button>
 
-          <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
+          <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
             <KaKaoLogin />
           </Button>
           <Grid container>
