@@ -85,7 +85,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-    console.log(render)
   };
 
   const onLoadFile = useCallback((event) => {
@@ -144,7 +143,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   //       }
   // }
 
-  console.log(insertForm)
 
   return (
     <Stack height={800} flex={7} p={3}>
