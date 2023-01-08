@@ -26,7 +26,7 @@ import React, { useCallback, useEffect, /* useEffect,*/ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Report from "../../../components/common/Report";
 
-import CheckPwdModal from "./CheckPwdModal";
+// import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
 import MemberTalk from "./MemberTalk";
@@ -171,16 +171,22 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const deleteMemberInfo = useCallback(
     (member) => {
-      axios.delete("/deleteMember", { data: member }).then((res) => {
-        if (res.data === "ok") {
-          sessionStorage.removeItem("id");
-          alert("탈퇴 처리가 완료됐습니다.");
-          onLogout();
-          nav("/");
-        } else {
-          alert("회원 탈퇴 과정에 문제가 발생했습니다.");
-        }
-      });
+      axios
+        .delete("/deleteMember", { data: member })
+        .then((res) => {
+          if (res.data === "ok") {
+            sessionStorage.removeItem("id");
+            sessionStorage.removeItem("nickName");
+            alert("탈퇴 처리가 완료됐습니다.");
+            onLogout();
+            nav("/");
+          } else if (res.data === "togetherExist") {
+            alert("함께해요를 먼저 탈퇴해주세요");
+          } else {
+            alert("탈퇴처리에 문제발생");
+          }
+        })
+        .catch((error) => console.log(error));
     },
     [nav, onLogout]
   );
@@ -191,7 +197,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
   });
 
   //회원 정보 수정
-  const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
+  // const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
   return (
     <Container component="main" maxWidth="xl">
@@ -223,7 +229,8 @@ export default function MemberPage({ member, onLogout, lstate }) {
               <List>
                 <ListItem disablePadding>
                   <ListItemButton sx={{ justifyContent: "center" }}>
-                    <CheckPwdModal
+                    <Link to="/memberpage/updateMember">정보수정</Link>
+                    {/* <CheckPwdModal
                       sx={{ width: "100%" }}
                       onClick={() => setOpenCheckPwd(() => true)}
                       openCheckPwd={openCheckPwd}
@@ -231,8 +238,8 @@ export default function MemberPage({ member, onLogout, lstate }) {
                       member={member}
                       lstate={lstate}
                     >
-                      정보수정
-                    </CheckPwdModal>
+             
+                    </CheckPwdModal> */}
                   </ListItemButton>
                 </ListItem>
                 <Divider variant="middle" component="li" />
@@ -257,9 +264,9 @@ export default function MemberPage({ member, onLogout, lstate }) {
                   setOpen={setConfirmOpen}
                   onConfirm={() => deleteMemberInfo(member)}
                 >
-                  {`${member.memberName}(${member.memberEmail})님께서 Fitchwi에서 활동한 내역 중,
-            피드와 채팅 기록을 제외한 모든 내역이 삭제됩니다. 
-            이에 동의하신다면 아래의 '탈퇴'버튼을 눌러주세요. `}
+                  {`${member.memberName}(${member.memberEmail})님께서 Fitchwi에서 활동한 모든 기록이 삭제됩니다.
+                  단, 진행 예정이 함께해요에 참여중일 경우에는 탈퇴가 불가능하며, 함께해요 취소를 먼저 진행해주세요. 
+                  이에 동의하신다면 아래의 '탈퇴'버튼을 눌러주세요. `}
                 </ConfirmDialog>
               </List>
             </Box>
@@ -284,7 +291,8 @@ export default function MemberPage({ member, onLogout, lstate }) {
                   background: "linear-gradient(190deg,lightgray, white)",
                 }}
                 avatar={
-                  <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                  // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                  <Avatar src={memberSaveimg} sx={{ width: 100, height: 100 }} />
                 }
                 title={
                   <Typography sx={{ fontSize: 25 }}>

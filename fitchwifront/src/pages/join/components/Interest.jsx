@@ -1,8 +1,9 @@
-import React, { useCallback, /*useEffect,*/ useMemo, useState } from "react";
+import React, { useCallback, useEffect, /*useEffect,*/ useMemo, useState } from "react";
 
 import { Button, Checkbox, FormControlLabel, styled, Typography } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { Box } from "@mui/system";
 
 export default function Interest({ joinForm, setJoinForm }) {
   const InterestCheckBox = styled(Checkbox)({
@@ -14,6 +15,7 @@ export default function Interest({ joinForm, setJoinForm }) {
     marginRight: "100px",
     onClick: "onCheck",
   });
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const [checked, setChecked] = useState({
     culture: false,
@@ -29,8 +31,17 @@ export default function Interest({ joinForm, setJoinForm }) {
   const handleClick = (e) => {
     setChecked({ ...checked, [e.target.name]: e.target.checked });
   };
-  const interestArr = useMemo(() => [], []);
 
+  const interestArr = useMemo(() => [], []);
+  console.log(joinForm.memberInterest);
+  useEffect(() => {
+    console.log(joinForm.memberInterest.length);
+    if (joinForm.memberInterest.length !== 0) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [joinForm.memberInterest, checked]);
   const onCheck = useCallback(
     (e) => {
       if (e.target.checked === true) {
@@ -193,11 +204,13 @@ export default function Interest({ joinForm, setJoinForm }) {
       />
 
       <br />
-      <Link to="/join/mbti" style={{ textDecoration: "none" }}>
-        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onCheckComple}>
-          다음
-        </Button>
-      </Link>
+      <Box onClick={onCheckComple}>
+        <Link to="/join/mbti" style={{ textDecoration: "none" }}>
+          <Button sx={{ mt: 5, width: 100 }} variant="contained" disabled={isDisabled}>
+            다음
+          </Button>
+        </Link>
+      </Box>
     </div>
   );
 }

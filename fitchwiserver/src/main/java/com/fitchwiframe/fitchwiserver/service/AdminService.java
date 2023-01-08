@@ -38,19 +38,30 @@ public class AdminService {
   }
 
 
-  public Map<String, Object> getFacilitiesList(Integer pageNum) {
+  public Map<String, Object> getFacilitiesList(Integer pageNum, String facilitiesName) {
    log.info("getFacilitiesList()");
     if(pageNum ==null){
     pageNum=1;
   }
   int listCount = 7;
   Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"facilitiesCode");
-  Page<Facilities> result = facilitiesRepository.findAll(pageable);
+
+
+
+  Page<Facilities> result = null;
+
+  if(facilitiesName.equals("")){
+    result =    facilitiesRepository.findAll(pageable);
+  }else{
+    String keywordToSearch = "%" + facilitiesName + "%";
+    result = facilitiesRepository.findByFacilitiesNameLike(keywordToSearch, pageable);
+  }
+
   List<Facilities> facilitiesList = result.getContent();
-  int totlaPage = result.getTotalPages();
+  int totalPage = result.getTotalPages();
 
   Map<String, Object> mapToReturn  = new HashMap<>();
-    mapToReturn.put("totalPage", totlaPage);
+    mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
     mapToReturn.put("facilitiesList", facilitiesList);
 
@@ -298,11 +309,11 @@ public class AdminService {
     Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"reportCode");
     Page<Report> result = reportRepository.findAll(pageable);
     List<Report> reportList = result.getContent();
-    int totlaPage = result.getTotalPages();
+    int totalPage = result.getTotalPages();
 
 
     Map<String, Object> mapToReturn  = new HashMap<>();
-    mapToReturn.put("totalPage", totlaPage);
+    mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
 
 

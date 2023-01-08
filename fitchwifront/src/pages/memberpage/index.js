@@ -40,7 +40,10 @@ export default function MemberPageIndex({ onLogout, lstate }) {
           element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}
         ></Route>
 
-        <Route path="/updateMember" element={<UpdateMember member={member} />}></Route>
+        <Route
+          path="/updateMember"
+          element={<UpdateMember member={member} lstate={lstate} />}
+        ></Route>
       </Routes>
     </div>
   );

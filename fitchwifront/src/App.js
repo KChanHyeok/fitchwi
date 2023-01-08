@@ -79,6 +79,7 @@ function App() {
     sessionStorage.removeItem("pageNum");
     sessionStorage.removeItem("id");
     sessionStorage.removeItem("nickName");
+    sessionStorage.removeItem("classification");
     nav("/"); //첫페이지로 돌아감.
   };
 
@@ -94,9 +95,15 @@ function App() {
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
+        <Route
+          path="/memberpage/*"
+          element={<MemberPage onLogout={onLogout} lstate={lstate} />}
+        ></Route>
         <Route path="/manager/*" element={<Manager />}></Route>
-        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect sucLogin={sucLogin} />}></Route>
+        <Route
+          path="/login/kakao/callback"
+          element={<KaKaoLoginRedirect sucLogin={sucLogin} />}
+        ></Route>
       </Routes>
     </>
   );

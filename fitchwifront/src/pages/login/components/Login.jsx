@@ -41,6 +41,7 @@ export default function Login({ sucLogin }) {
             sucLogin(res.data.memberEmail, res.data.memberNickname);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
+
             alert(res.data.memberNickname + "님 환영합니다.");
             nav("/");
             break;
@@ -119,7 +120,12 @@ export default function Login({ sucLogin }) {
             로그인
           </Button>
 
-          <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => createMemeber()}
+          >
             구글로그인
           </Button>
 

@@ -15,34 +15,45 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import FacilitiesSearch from "./FacilitiesSearch";
 export default function Facilities() {
   const [facilities, setFacilities] = useState([]);
-
+  const [facilitiesName, setFacilitiesName] = useState("");
   const [pageNum, setPageNum] = useState(1);
-
   const [totalPage, setTotalPage] = useState(0);
   let pageNumInSessionStg = sessionStorage.getItem("pageNum");
 
-  const loadFacilities = (pageNumInSessionStg) => {
-    axios.get("/getFacilitiesList", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
-      const { facilitiesList, totalPage, pageNum } = result.data;
-      setTotalPage(totalPage);
-      setPageNum(pageNum);
-      setFacilities(facilitiesList);
+  const loadFacilities = (pageNumInSessionStg, facilitiesName) => {
+    console.log("로드");
+    axios
+      .get("/getFacilitiesList", {
+        params: { pageNum: pageNumInSessionStg, facilitiesName: facilitiesName },
+      })
+      .then((result) => {
+        const { facilitiesList, totalPage, pageNum } = result.data;
+        setTotalPage(totalPage);
+        setPageNum(pageNum);
+        setFacilities(facilitiesList);
 
-      sessionStorage.setItem("pageNum", pageNum);
-    });
+        sessionStorage.setItem("pageNum", pageNum);
+      });
   };
-  useEffect(() => {
-    pageNumInSessionStg !== null ? loadFacilities(pageNumInSessionStg) : loadFacilities(1);
-    console.log("axios");
-  }, [pageNumInSessionStg]);
 
-  const handlepageNum = useCallback((value) => {
-    loadFacilities(value);
+  useEffect(() => {
+    pageNumInSessionStg !== null
+      ? loadFacilities(pageNumInSessionStg, facilitiesName)
+      : loadFacilities(1, facilitiesName);
+    console.log("axios");
   }, []);
+
+  const handlepageNum = (value) => {
+    console.log("pagenum handle");
+    console.log("value =  " + value);
+    console.log("facilitiesname = " + facilitiesName);
+    loadFacilities(value, facilitiesName);
+  };
 
   const BasicTableRow = styled(TableRow)({
     ":hover": { backgroundColor: `#ffd2e2`, transition: `0.3s` },
@@ -54,9 +65,8 @@ export default function Facilities() {
       loadFacilities(pageNum);
     });
   };
-  // console.log(totalPage);
-  // console.log(pageNum);
-
+  console.log("out");
+  console.log(facilitiesName);
   return (
     <Container
       component="main"
@@ -64,6 +74,12 @@ export default function Facilities() {
       align="center"
       sx={{ margin: "auto", ml: 40 }}
     >
+      <FacilitiesSearch
+        facilitiesName={facilitiesName}
+        setFacilitiesName={setFacilitiesName}
+        pageNum={pageNum}
+        loadFacilities={loadFacilities}
+      />
       <Box>
         <Typography variant="h4">시설 관리</Typography>
 

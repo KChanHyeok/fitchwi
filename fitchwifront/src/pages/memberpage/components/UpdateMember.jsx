@@ -24,8 +24,10 @@ import axios from "axios";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Postcode from "../../join/components/Postcode";
-export default function UpdateMember({ member }) {
+import ChangePwdModal from "./ChangePwdModal";
+export default function UpdateMember({ member, lstate }) {
   const [memberToUpdate, setMemberToUpdate] = useState({});
+  const [openChangePwd, setOpenChangePwd] = React.useState(false);
   useEffect(() => {
     setMemberToUpdate({ ...member });
   }, [member]);
@@ -331,7 +333,7 @@ export default function UpdateMember({ member }) {
         {memberSaveimg && (
           <Box>
             <Avatar
-              src={file !== "" ? file : `/images/${memberSaveimg}`}
+              src={file !== "" ? file : memberSaveimg}
               sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
             />
             <ButtonGroup>
@@ -369,8 +371,9 @@ export default function UpdateMember({ member }) {
                 variant="standard"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
+            {sessionStorage.getItem("classification") !== "k" ? (
+              <Grid item xs={12} sm={6}>
+                {/* <TextField
                 margin="normal"
                 fullWidth
                 name="memberPwd"
@@ -390,8 +393,21 @@ export default function UpdateMember({ member }) {
                 variant="standard"
                 focused={true}
                 onChange={onCheckPwd}
-              />
-            </Grid>
+              /> */}
+
+                <ChangePwdModal
+                  sx={{ width: "100%" }}
+                  onClick={() => setOpenChangePwd(() => true)}
+                  openChangePwd={openChangePwd}
+                  setOpenChangePwd={setOpenChangePwd}
+                  // member={member}
+                  lstate={lstate}
+                >
+                  {" "}
+                  비밀번호 수정
+                </ChangePwdModal>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
               {correctPwd == null ? null : correctPwd ? (
                 <Alert

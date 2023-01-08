@@ -30,7 +30,7 @@ const Postcode = ({ insertAddr }) => {
   };
 
   return (
-    <Button variant="outlined" onClick={handleClick} style={{ width: "40%" }} sx={{ mb: 1 }}>
+    <Button variant="outlined" onClick={handleClick} style={{ width: "100%" }} sx={{ mb: 1 }}>
       주소 검색
     </Button>
   );

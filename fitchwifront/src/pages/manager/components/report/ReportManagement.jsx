@@ -106,42 +106,18 @@ export default function ReportManagement() {
             .then((talk) => {
               //   console.log(talk.data);
               //   console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
-              if (talk.data.talkOpenCode.memberEmail.memberEmail === memberEmail) {
-                console.log("개설자");
-                axios
-                  .delete("/deleteTalk", { data: talk.data })
-                  .then((result) => {
-                    updateReportState(reportCode);
-                    alert("해당 '얘기해요'를 삭제했습니다.");
-                  })
-                  .catch((error) => {
-                    // console.log(error);
-                    alert("해당 얘기해요를 삭제할 수 없습니다.");
-                  });
-              } else {
-                // console.log("가입자");
-                axios
-                  .get("/getTalkJoinListByMember", { params: { memberEmail: memberEmail } })
-                  .then((result) => {
-                    let targetTalkJoin = result.data.filter(
-                      (talkJoin) => talkJoin.memberEmail.memberEmail === memberEmail
-                    );
-                    //  console.log(targetTalkJoin);
-                    axios
-                      .delete("/deleteTalkJoinInfo", {
-                        params: {
-                          memberEmail: memberEmail,
-                          talkCode: targetTalkJoin[0].talkCode.talkCode,
-                        },
-                      })
-                      .then((result) => {
-                        updateReportState(reportCode);
-                        alert("해당 '얘기해요'에서 대상을 탈퇴시켰습니다.");
-                      })
-                      .catch((error) => console.log(error));
-                  })
-                  .catch((error) => console.log(error));
-              }
+
+              console.log("개설자");
+              axios
+                .delete("/deleteTalk", { data: talk.data })
+                .then((result) => {
+                  updateReportState(reportCode);
+                  alert("해당 '얘기해요'를 삭제했습니다.");
+                })
+                .catch((error) => {
+                  // console.log(error);
+                  alert("해당 얘기해요를 삭제할 수 없습니다.");
+                });
             })
             .catch((error) => console.log(error));
 

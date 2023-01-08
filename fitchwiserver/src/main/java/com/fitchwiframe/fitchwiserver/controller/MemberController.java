@@ -95,9 +95,18 @@ public class MemberController {
   @PostMapping("/checkPwd")
   private String checkPwd(@RequestBody Member memberToCheck){
     log.info("memberController.checkPwd()");
+    System.out.println("memberToCheck = " + memberToCheck);
 
     return memberService.checkPwd(memberToCheck);
 
+  }
+
+  @PutMapping("/updatePwd")
+  private String updatePwd(@RequestBody Member memberToChangePwd){
+    log.info("memberController.updatePwd()");
+    System.out.println("memberToChangePwd = " + memberToChangePwd);
+
+    return memberService.updatePwd(memberToChangePwd);
   }
 
   @PostMapping("/updateMemberInfo")
