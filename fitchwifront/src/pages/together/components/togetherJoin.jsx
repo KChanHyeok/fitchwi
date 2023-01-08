@@ -78,11 +78,11 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         if(togetherInfo.togetherPrice===0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0) {
             insertTogetherFreeJoinInfo();
         }else {
-            requestPay()
+            requestJoinPay()
         }
       }
 
-      const requestPay = () => {
+      const requestJoinPay = () => {
         IMP.request_pay({ // param
           pg: "html5_inicis",
           pay_method: "card",
@@ -118,6 +118,53 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         });
     }
 
+    const finalPayment = () => {
+        // if (togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice === 0) {
+            // insertTogetherFreeInfo();
+        // } else {
+            requestLastPay()
+        // }
+    }
+
+     const requestLastPay = () => {
+        IMP.request_pay({ // param
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: 'merchant_' + new Date().getTime(),
+          name: togetherInfo.togetherTitle,
+          amount: 100,
+          buyer_email: sessionStorage.getItem("id"),
+          buyer_name: (insertForm.memberEmail.memberName),
+          buyer_tel: (insertForm.memberEmail.memberPhone),
+          buyer_addr: (insertForm.memberEmail.memberAddr),
+          buyer_postcode: "01181"
+        }, rsp => { // callback
+          if (rsp.success) {
+            const insertPayForm = {
+                togetherPayCode: rsp.merchant_uid,
+                togetherCode: insertForm,
+                togetherImp: rsp.imp_uid,
+                togetherPayPrice: rsp.paid_amount,
+                togetherPayMethod: rsp.pay_method,
+                togetherPayStatus: "",
+            }
+            
+            axios.post("/insertTogetherPay", insertPayForm)
+              .then((res) => {
+                  setOpen(false);
+                  alert(res.data);
+                  refreshTogetherJoinList();
+              })
+              .catch((Error) => console.log(Error))
+          } else {
+            alert("결제실패")
+          }
+        });
+    }
+    // const insertTogetherFreeInfo = () => {
+        
+    // }
+
     const insertTogetherFreeJoinInfo = () => {
         if(!sessionStorage.getItem("id")) {
             alert("로그인이 필요한 서비스입니다.")
@@ -132,7 +179,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
               .catch((Error) => console.log(Error))
     }
 
-
+    
       const deleteTogetherPayJoinInfo = (e) => {
         e.preventDefault();
 
@@ -217,7 +264,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     {togetherJoinMember.length+1===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
-                <Button variant="contained" sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
+                <Button variant="contained" onClick={finalPayment} sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 <Box sx={style} component="form">
