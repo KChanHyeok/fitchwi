@@ -81,7 +81,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     getMemberInfo(sessionStorage.getItem("id"))
     preview();
     return () => preview();
-  },[]);
+  });
   
   const preview = () => {
     if (!fileForm) return false
