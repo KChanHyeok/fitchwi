@@ -387,4 +387,15 @@ public class AdminService {
     return result;
   }
 
+  public void deleteAllByMember(Member member) {
+    List<ReportDetail> reportDetailList = reportDetailRepository.findByMemberEmail(member);
+    if(!(reportDetailList.isEmpty())){
+      reportDetailRepository.deleteAll(reportDetailList);
+    }
+    List<Report> reportList = reportRepository.findByMemberEmail(member);
+    if(!(reportList.isEmpty())){
+      reportRepository.deleteAll(reportList);
+    }
+  }
+
 }

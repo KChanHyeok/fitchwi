@@ -3,11 +3,12 @@ package com.fitchwiframe.fitchwiserver.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitchwiframe.fitchwiserver.dto.KakaoProfile;
-import com.fitchwiframe.fitchwiserver.entity.Follow;
-import com.fitchwiframe.fitchwiserver.entity.Member;
+import com.fitchwiframe.fitchwiserver.entity.*;
 
+import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
+import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -32,6 +33,12 @@ public class MemberService {
   private MemberRepository memberRepository;
   @Autowired
   private FollowRepository followRepository;
+
+  @Autowired private FeedService feedService;
+
+  @Autowired private TalkService talkService;
+@Autowired private AdminService adminService;
+
 
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -191,7 +198,23 @@ public class MemberService {
   public String deleteMemberInfo(Member member, HttpSession session) {
     String result = "fail";
     try {
-      //얘기해요 함께해요 관련 처리 추가 필요함
+      feedService.deleteAllByMember(member,session);
+      talkService.deleteAllByMember(member,session);
+      adminService.deleteAllByMember(member);
+//함께해요 관련 처리 필요
+
+
+      List<Follow> allByFollowId = followRepository.findAllByFollowId(member.getMemberEmail());
+      if(!(allByFollowId.isEmpty())){
+        followRepository.deleteAll(allByFollowId);
+      }
+      List<Follow> allByMemberEmail = followRepository.findAllByMemberEmail(member);
+      if(!(allByMemberEmail.isEmpty())){
+        followRepository.deleteAll(allByMemberEmail);
+      }
+
+
+
       deleteFile(member.getMemberSaveimg(), session);
       memberRepository.deleteById(member.getMemberEmail());
       result = "ok";

@@ -21,4 +21,6 @@ public interface ReportRepository extends CrudRepository <Report, Long> {
   Report findByReportCategoryAndReportTargetAndMemberEmail(String reportCategory, Long reportTarget, Member targetMember);
 
   Page<Report> findAll(Pageable pageable);
+
+  List<Report> findByMemberEmail(Member member);
 }

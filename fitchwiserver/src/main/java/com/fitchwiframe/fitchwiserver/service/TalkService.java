@@ -299,7 +299,7 @@ public class TalkService {
         return talkOpenedList;
 
     }
-    
+
         public Map<String, Object> getMemberTalk(String memberEmail) {
             Map<String, Object> talkMap = new HashMap<>();
         try{
@@ -346,5 +346,28 @@ public class TalkService {
             e.printStackTrace();
         }
         return talkInfo;
+    }
+
+
+    public void deleteAllByMember(Member member, HttpSession session){
+        //가입중
+      List<TalkJoin> talkJoinListByMember = getTalkJoinListByMember(member.getMemberEmail());
+      if(!(talkJoinListByMember.isEmpty())){
+        talkJoinRepository.deleteAll(talkJoinListByMember);
+      }
+      //운영중
+      List<Talk> talkList =new ArrayList<>();
+
+      List<TalkOpened> talkOpenedListByMember = getTalkOpenedListByMember(member.getMemberEmail());
+      if(!(talkOpenedListByMember.isEmpty())){
+        for(TalkOpened talkOpen : talkOpenedListByMember){
+          talkList.add(talkRepository.findByTalkOpenCode(talkOpen));
+        }
+
+        for(Talk talk : talkList){
+          deleteTalk(talk, session);
+        }
+
+      }
     }
 }
