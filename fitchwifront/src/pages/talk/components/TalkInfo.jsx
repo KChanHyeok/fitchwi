@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
@@ -22,7 +22,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkInfo = ({ talkList, talkTagList, talkJoinList,
+const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
     refreshTalkTagList, refreshTalkList, refreshTalkJoinList }) => {
 
     let { talkPageCode } = useParams();
@@ -115,23 +115,55 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                             {talkInfo.talkContent}
                             <h4 className="talkTxtLine">방장<br /></h4>
                             <UserBox>
-                                <Avatar
-                                    src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
-                                    sx={{ width: 40, height: 40, mr: 2 }}
-                                />
-                                <Typography fontWeight={500} variant="span">
-                                    {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}
-                                </Typography>
+                                {!talkInfo
+                                    ? <Box sx={{ display: "flex" }}>
+                                        <CircularProgress sx={{ margin: "auto" }} />
+                                    </Box>
+                                    : <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}>
+                                        <Avatar
+                                            src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
+                                            sx={{ width: 40, height: 40 }}
+                                        />
+                                    </Link>
+                                }
+                                {!talkInfo
+                                    ? <Box sx={{ display: "flex" }}>
+                                        <CircularProgress sx={{ margin: "auto" }} />
+                                    </Box>
+                                    :
+                                    <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
+                                        style={{ textDecoration: "none", color: "black" }}><Typography fontWeight={500} variant="span">
+                                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname} 님
+                                        </Typography>
+                                    </Link>
+                                }
                             </UserBox>
                             <span><b>참여중인 회원</b></span><br />
                             {talkJoinMember.length === 0
                                 ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
                                 : talkJoinMember.map((data) =>
                                     <UserBox key={data.talkJoinCode}>
-                                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                        <Typography fontWeight={500} variant="span">
-                                            {data.memberEmail.memberNickname}님
-                                        </Typography>
+                                        {!talkJoinMember
+                                            ? <Box sx={{ display: "flex" }}>
+                                                <CircularProgress sx={{ margin: "auto" }} />
+                                            </Box>
+                                            : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
+                                                <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                            </Link>
+                                        }
+                                        {!talkJoinMember
+                                            ? <Box sx={{ display: "flex" }}>
+                                                <CircularProgress sx={{ margin: "auto" }} />
+                                            </Box>
+                                            :
+                                            <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}
+                                                style={{ textDecoration: "none", color: "black" }}>
+                                                <Typography fontWeight={500} variant="span">
+                                                    {data.memberEmail.memberNickname} 님
+                                                </Typography>
+                                            </Link>
+                                        }
+
                                     </UserBox>)}
                             {!talkTagInfo
                                 ? <Box sx={{ display: "flex" }}>
@@ -145,7 +177,6 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                             <Box>
                             </Box>
                             <h4 className="talkTxtLine">얘기해요 피드</h4>
-                            {talkTagInfo.talkTagContent}
                         </Box>
                         <Box className="talkTxtLine">
                             {!talkJoinMember
@@ -156,9 +187,9 @@ const TalkInfo = ({ talkList, talkTagList, talkJoinList,
                                     ? (<Button className="talkSticky" onClick={isDelete}>삭제하기</Button>)
                                     : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                         && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                                        ? <TalkJoin talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
+                                        ? <TalkJoin memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
                                             talkJoinMember={talkJoinMember}>참여하기</TalkJoin>
-                                        : (<TalkJoin talkInfo={talkInfo}
+                                        : (<TalkJoin memberInfo={memberInfo} talkInfo={talkInfo}
                                             talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                                 && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
                                             refreshTalkJoinList={refreshTalkJoinList} />)}

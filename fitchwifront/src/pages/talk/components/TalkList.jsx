@@ -29,11 +29,15 @@ const TalkList = ({ talkList }) => {
                         alt="talkimg" />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            {talkTitle}
+                            {talkTitle.length > 10
+                                ? <Typography gutterBottom variant="h5" component="div"> {talkTitle.substr(0, 10)}... </Typography>
+                                :
+                                <Typography gutterBottom variant="h5" component="div">{talkTitle}</Typography>}
+
                         </Typography>
                         <Typography variant="body" color="text.secondary">
                             {talkCategory}<br />
-                            {talkContent}
+                            {talkType}
                             <Typography variant="span" className="talkOpDate">
                                 {talkOpenCode.talkOpenDate}
                             </Typography>
