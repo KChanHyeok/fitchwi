@@ -305,7 +305,7 @@ public class AdminService {
     if(pageNum ==null){
       pageNum=1;
     }
-    int listCount = 7;
+    int listCount = 9;
     Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"reportCode");
     Page<Report> result = reportRepository.findAll(pageable);
     List<Report> reportList = result.getContent();

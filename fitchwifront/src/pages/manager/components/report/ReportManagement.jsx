@@ -4,6 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
@@ -40,16 +41,20 @@ export default function ReportManagement() {
   useEffect(() => {
     pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
     // console.log("axios");
-  }, [pageNumInSessionStg]);
+  }, []);
 
   const getReports = (pageNumInSessionStg) => {
+    console.log("report");
+    setLoad(false);
     axios.get("/getReports", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
       const { reportList, totalPage, pageNum } = result.data;
+
       //  console.log(result.data);
       setReportList(reportList);
       setPageNum(pageNum);
       setTotalPage(totalPage);
       sessionStorage.setItem("pageNum", pageNum);
+      setLoad(true);
     });
   };
   const handlepageNum = useCallback((value) => {
@@ -141,7 +146,7 @@ export default function ReportManagement() {
     textAlign: "center",
     width: "33%",
   });
-
+  const [load, setLoad] = useState(false);
   return (
     <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 40 }}>
       <Box sx={{ mb: 5 }}>
@@ -177,155 +182,169 @@ export default function ReportManagement() {
           </Typography>
         </AccordionSummary>
       </Accordion>
-
-      {reportList &&
-        reportList.map((report, index) => (
-          <div key={report.reportCode}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Grid container justifyContent="space-evenly">
-                  <Grid item xs={2}>
-                    {report.reportCode}
-                  </Grid>
-                  <Grid item xs={2}>
-                    {report.reportTarget === 0 ? (
+      <Box sx={{ height: 570 }}>
+        {load === false ? (
+          <Box
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          reportList.map((report, index) => (
+            <div key={report.reportCode}>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Grid container justifyContent="space-evenly">
+                    <Grid item xs={2}>
+                      {report.reportCode}
+                    </Grid>
+                    <Grid item xs={2}>
+                      {report.reportTarget === 0 ? (
+                        <Link
+                          to={`/${report.reportCategory}`}
+                          state={{ memberId: report.memberEmail.memberEmail }}
+                        >
+                          <Typography>{report.reportCategory}</Typography>
+                        </Link>
+                      ) : report.reportState === "대기" ? (
+                        <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
+                          <Typography>{report.reportCategory}</Typography>
+                        </Link>
+                      ) : (
+                        <Typography onClick={() => alert("삭제된 게시글입니다.")}>
+                          {report.reportCategory}
+                        </Typography>
+                      )}
+                    </Grid>
+                    <Grid item xs={2}>
                       <Link
                         to={`/${report.reportCategory}`}
                         state={{ memberId: report.memberEmail.memberEmail }}
                       >
-                        <Typography>{report.reportCategory}</Typography>
+                        <Typography>{report.memberEmail.memberEmail}</Typography>
                       </Link>
-                    ) : report.reportState === "대기" ? (
-                      <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
-                        <Typography>{report.reportCategory}</Typography>
-                      </Link>
-                    ) : (
-                      <Typography onClick={() => alert("삭제된 게시글입니다.")}>
-                        {report.reportCategory}
-                      </Typography>
-                    )}
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography>{report.reportDetailList.length}</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography>{report.reportState}</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2}>
-                    <Link
-                      to={`/${report.reportCategory}`}
-                      state={{ memberId: report.memberEmail.memberEmail }}
-                    >
-                      <Typography>{report.memberEmail.memberEmail}</Typography>
-                    </Link>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Typography>{report.reportDetailList.length}</Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Typography>{report.reportState}</Typography>
-                  </Grid>
-                </Grid>
-              </AccordionSummary>
+                </AccordionSummary>
 
-              <AccordionDetails>
-                <TableContainer component="main">
-                  <Table aria-label="simple table">
-                    <TableHead
-                      style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
-                    >
-                      <TableRow>
-                        <CenterTableCell>신고일시</CenterTableCell>
-                        <CenterTableCell>신고한 유저</CenterTableCell>
-                        <CenterTableCell>신고 내용</CenterTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {report.reportDetailList.map((reportDetail) => (
-                        <TableRow
-                          key={reportDetail.reportDetailCode}
-                          sx={{ backgroundColor: "#f2f2f2" }}
-                        >
-                          <CenterTableCell>{reportDetail.reportDetailDate}</CenterTableCell>
-                          <CenterTableCell>{reportDetail.memberEmail.memberEmail}</CenterTableCell>
-                          <CenterTableCell>{reportDetail.reportDetailContent}</CenterTableCell>
+                <AccordionDetails>
+                  <TableContainer component="main">
+                    <Table aria-label="simple table">
+                      <TableHead
+                        style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
+                      >
+                        <TableRow>
+                          <CenterTableCell>신고일시</CenterTableCell>
+                          <CenterTableCell>신고한 유저</CenterTableCell>
+                          <CenterTableCell>신고 내용</CenterTableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <Grid container sx={{ mt: 1 }}>
-                  <Grid item xs={6}>
-                    <Button
-                      variant="contained"
-                      sx={{ mt: 1, height: 40 }}
-                      onClick={() => deleteReport(report.reportCode)}
-                    >
-                      신고내역 삭제
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    {report.reportState === "대기" ? (
-                      report.reportCategory === "share" || report.reportCategory === "talk" ? (
-                        <Button
-                          variant="contained"
-                          sx={{ mt: 1, height: 40 }}
-                          onClick={() =>
-                            deleteReportTarget(
-                              report.reportTarget,
-                              report.reportCategory,
-                              report.memberEmail.memberEmail,
-                              report.reportCode
-                            )
-                          }
-                        >
-                          신고 대상 삭제
-                        </Button>
-                      ) : (
-                        <div>
-                          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                            <InputLabel id="demo-select-small">이용 제한 일</InputLabel>
-                            <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              name={report.reportCode + ""}
-                              // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
-                              label="restrictDate"
-                              defaultValue={2}
-                              onChange={(e) => onSelectDate(e)}
-                              size="small"
-                            >
-                              <MenuItem value={2}>1일</MenuItem>
-                              <MenuItem value={8}>7일</MenuItem>
-                              <MenuItem value={31}>30일</MenuItem>
-                              <MenuItem value={91}>90일</MenuItem>
-                              <MenuItem value={181}>180일</MenuItem>
-                              <MenuItem value={361}>360일</MenuItem>
-                            </Select>
-                          </FormControl>
+                      </TableHead>
+                      <TableBody>
+                        {report.reportDetailList.map((reportDetail) => (
+                          <TableRow
+                            key={reportDetail.reportDetailCode}
+                            sx={{ backgroundColor: "#f2f2f2" }}
+                          >
+                            <CenterTableCell>{reportDetail.reportDetailDate}</CenterTableCell>
+                            <CenterTableCell>
+                              {reportDetail.memberEmail.memberEmail}
+                            </CenterTableCell>
+                            <CenterTableCell>{reportDetail.reportDetailContent}</CenterTableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <Grid container sx={{ mt: 1 }}>
+                    <Grid item xs={6}>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 1, height: 40 }}
+                        onClick={() => deleteReport(report.reportCode)}
+                      >
+                        신고내역 삭제
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      {report.reportState === "대기" ? (
+                        report.reportCategory === "share" || report.reportCategory === "talk" ? (
                           <Button
                             variant="contained"
                             sx={{ mt: 1, height: 40 }}
                             onClick={() =>
-                              onRistrict(
-                                restrictDateMap.get(report.reportCode + ""),
+                              deleteReportTarget(
+                                report.reportTarget,
+                                report.reportCategory,
                                 report.memberEmail.memberEmail,
                                 report.reportCode
                               )
                             }
                           >
-                            제한하기
+                            신고 대상 삭제
                           </Button>
-                        </div>
-                      )
-                    ) : (
-                      <Typography>이미 처리된 신고 내역입니다.</Typography>
-                    )}
+                        ) : (
+                          <div>
+                            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                              <InputLabel id="demo-select-small">이용 제한 일</InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                name={report.reportCode + ""}
+                                // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
+                                label="restrictDate"
+                                defaultValue={2}
+                                onChange={(e) => onSelectDate(e)}
+                                size="small"
+                              >
+                                <MenuItem value={2}>1일</MenuItem>
+                                <MenuItem value={8}>7일</MenuItem>
+                                <MenuItem value={31}>30일</MenuItem>
+                                <MenuItem value={91}>90일</MenuItem>
+                                <MenuItem value={181}>180일</MenuItem>
+                                <MenuItem value={361}>360일</MenuItem>
+                              </Select>
+                            </FormControl>
+                            <Button
+                              variant="contained"
+                              sx={{ mt: 1, height: 40 }}
+                              onClick={() =>
+                                onRistrict(
+                                  restrictDateMap.get(report.reportCode + ""),
+                                  report.memberEmail.memberEmail,
+                                  report.reportCode
+                                )
+                              }
+                            >
+                              제한하기
+                            </Button>
+                          </div>
+                        )
+                      ) : (
+                        <Typography>이미 처리된 신고 내역입니다.</Typography>
+                      )}
+                    </Grid>
                   </Grid>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-            <Divider variant="middle" component={"li"} style={{ listStyle: "none" }} />
-          </div>
-        ))}
+                </AccordionDetails>
+              </Accordion>
+              <Divider variant="middle" component={"li"} style={{ listStyle: "none" }} />
+            </div>
+          ))
+        )}
+      </Box>
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
           sx={{ mb: 10 }}

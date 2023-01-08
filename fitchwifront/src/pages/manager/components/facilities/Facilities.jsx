@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  CircularProgress,
   Container,
   Pagination,
   Stack,
@@ -24,8 +25,9 @@ export default function Facilities() {
   const [pageNum, setPageNum] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   let pageNumInSessionStg = sessionStorage.getItem("pageNum");
-
+  const [load, setLoad] = useState(false);
   const loadFacilities = (pageNumInSessionStg, facilitiesName) => {
+    setLoad(false);
     console.log("로드");
     axios
       .get("/getFacilitiesList", {
@@ -36,7 +38,7 @@ export default function Facilities() {
         setTotalPage(totalPage);
         setPageNum(pageNum);
         setFacilities(facilitiesList);
-
+        setLoad(true);
         sessionStorage.setItem("pageNum", pageNum);
       });
   };
@@ -57,6 +59,7 @@ export default function Facilities() {
   };
 
   const BasicTableRow = styled(TableRow)({
+    maxHeight: 68,
     ":hover": { backgroundColor: `#ffd2e2`, transition: `0.3s` },
   });
 
@@ -90,19 +93,39 @@ export default function Facilities() {
           </Button>
         </Link>
       </Box>
-      <TableContainer component="main" sx={{ width: "100%" }}>
-        <Table sx={{ width: "100%", mt: 2 }} aria-label="simple table">
+      <TableContainer component="main" sx={{ width: "100%", height: 570 }}>
+        <Table sx={{ mt: 2 }} aria-label="simple table">
           <TableHead style={{ borderBottom: "2px solid black" }}>
             <TableRow>
-              <TableCell align="center">시설번호</TableCell>
-              <TableCell align="center">시설 명</TableCell>
-              <TableCell align="center">담당자명</TableCell>
-              <TableCell align="center">상태</TableCell>
-              <TableCell align="center">수정/삭제</TableCell>
+              <TableCell align="center" width="20%">
+                시설번호
+              </TableCell>
+              <TableCell align="center" width="20%">
+                시설 명
+              </TableCell>
+              <TableCell align="center" width="20%">
+                담당자명
+              </TableCell>
+              <TableCell align="center" width="20%">
+                상태
+              </TableCell>
+              <TableCell align="center" width="20%">
+                수정/삭제
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {facilities &&
+            {load === false ? (
+              <Box
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
               facilities.map((facilities, index) => (
                 <BasicTableRow key={index}>
                   <TableCell align="center">{facilities.facilitiesCode}</TableCell>
@@ -132,10 +155,12 @@ export default function Facilities() {
                     </ButtonGroup>
                   </TableCell>
                 </BasicTableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
           sx={{ mb: 10 }}
