@@ -398,21 +398,23 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <Stack>
           <Box style={imgBoxStyle} className="img_box">
           </Box>
-          <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
-            <Button sx={{ml:4}} variant="contained" component="label" size="large">
-              Upload
-              <TextField
-                label="모임대표사진"
-                type="file"
-                accept="image/*"
-                focused
-                sx={{ mt: 3, display:"none"}}
-                color="grey"
-                onChange={onLoadFile}
-                required
-              />
-            </Button>
+          <Box>
+            <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
+              <Button sx={{ml:4}} variant="contained" component="label" size="large">
+                Upload
+                <TextField
+                  label="모임대표사진"
+                  type="file"
+                  accept="image/*"
+                  focused
+                  sx={{ mt: 3, display:"none"}}
+                  color="grey"
+                  onChange={onLoadFile}
+                  required
+                />
+              </Button>
             </Typography>
+          </Box>
         </Stack>
         <TextField
           fullWidth
