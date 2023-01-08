@@ -347,4 +347,18 @@ public class TalkService {
         }
         return talkInfo;
     }
+
+    public List<Talk> getTalkListByCategory(String talkCategory) {
+        log.info("talkService.getTalkListByCategory()");
+        List<Talk> talkList = new ArrayList<>();
+
+        try {
+            System.out.println("category = " + talkCategory);
+            talkList = talkRepository.findAllByTalkCategory(talkCategory);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkList;
+    }
+
 }

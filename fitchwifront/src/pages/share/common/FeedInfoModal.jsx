@@ -158,7 +158,7 @@ const FeedInfoModal = ({
       <StyleModal open={!open} onClose={(e) => nav(-1)} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box width={1200} height={700} bgcolor="white" p={3} borderRadius={2}>
           <Stack direction="row" spacing={3} justifyContent="space-between">
-            <Box flex={2} ml={4}>
+            <Box flex={2}>
               {file.length > 1 ? (
                 <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
                   {file.map((item, i) => (

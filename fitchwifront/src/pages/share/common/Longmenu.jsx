@@ -18,7 +18,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import MultipleSelectChip from "./MultipleSelectChip";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import axios from "axios";
@@ -33,7 +32,7 @@ const StyleModal = styled(Modal)({
 
 export default function LongMenu({ flist, refreshFeed, information }) {
   const [feedToUpdate, setFeedUpdate] = useState({});
-  const { feedCategory, feedContent, feedClassificationcode } = feedToUpdate;
+  const { feedCategory, feedContent, feedClassificationcode, feedTag } = feedToUpdate;
   let formdata = new FormData();
   const nav = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -114,7 +113,6 @@ export default function LongMenu({ flist, refreshFeed, information }) {
 
   const deleteFeed = () => {
     if (window.confirm("해당 피드를 삭제하시겠습니까?")) {
-      console.log(information);
       axios.delete("/deleteFeed", { data: information }).then((response) => {
         if (response.data === "ok") {
           alert("삭제 완료");
@@ -153,7 +151,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
       feedContent: information.feedContent,
       feedClassificationcode: information.feedClassificationcode,
       feedDate: information.feedDate,
-      feedTag: [],
+      feedTag: information.feedTag.split(" "),
     });
     getTalkJoinList();
   }, [information, getTalkJoinList]);
@@ -319,7 +317,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
-              <MultipleSelectChip insertForm={feedToUpdate} setInsertForm={setFeedUpdate} tagForm={tagForm} setTagForm={setTagForm} />
+              <TextField sx={{ mt: 2 }} fullWidth value={feedTag} id="outlined-multiline-static" label="피드 태그" name="feedTag" />
               <TextField
                 sx={{ mt: 2 }}
                 fullWidth
@@ -328,7 +326,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                 onChange={handleChange}
                 label="피드 내용"
                 multiline
-                rows={4}
+                rows={7}
                 name="feedContent"
               />
             </Box>

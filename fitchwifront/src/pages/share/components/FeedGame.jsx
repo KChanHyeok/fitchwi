@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import FeedAdd from "../common/FeedAdd";
@@ -34,10 +34,10 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
       })
       .then((response) => {
         setFeed((prevState) => prevState.concat(response.data));
-        preventRef.current = true;
-        if (response.data.end) {
+        if (response.data.length < 5) {
           endRef.current = true;
         }
+        preventRef.current = true;
       });
     setLoading(false);
   }, [page]);
@@ -56,6 +56,19 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
       getFeedList();
     }
   }, [getFeedList, page]);
+
+  const loadFeed = () => {
+    axios
+      .get("/getFeedListTillPage", {
+        params: {
+          category: "all",
+          page: page,
+        },
+      })
+      .then((response) => {
+        setFeed(response.data);
+      });
+  };
 
   return (
     <>
@@ -77,7 +90,7 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
                   file={data.ffList}
                   comment={data.fcList}
                   memberInfo={memberInfo}
-                  refreshFeed={getFeedList}
+                  refreshFeed={loadFeed}
                   like={data.flList}
                   feedClassificationcode={data.feedClassificationcode}
                 />
@@ -86,9 +99,9 @@ const FeedGame = ({ memberInfo, refreshFeed }) => {
           </>
         )}
         {loading ? (
-          <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+          <Box textAlign="center" lineHeight={40}>
             <CircularProgress color="inherit" />
-          </Backdrop>
+          </Box>
         ) : (
           <></>
         )}

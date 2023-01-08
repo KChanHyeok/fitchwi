@@ -76,68 +76,73 @@ export default function Login({ sucLogin }) {
     });
   };
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LoginOutlined />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          로그인
-        </Typography>
-        <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }} style={{ width: "300px" }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="이메일"
-            name="memberEmail"
-            autoFocus
-            onChange={onLoginChange}
-            value={memberEmail}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="memberPwd"
-            label="Password"
-            type="password"
-            id="password"
-            onChange={onLoginChange}
-            value={memberPwd}
-          />
-
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+    <>
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "white",
+            p: 5,
+            borderRadius: 10,
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LoginOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             로그인
-          </Button>
+          </Typography>
+          <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }} style={{ width: "300px" }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="이메일"
+              name="memberEmail"
+              autoFocus
+              onChange={onLoginChange}
+              value={memberEmail}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="memberPwd"
+              label="Password"
+              type="password"
+              id="password"
+              onChange={onLoginChange}
+              value={memberPwd}
+            />
 
-          <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
-            구글로그인
-          </Button>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
+              로그인
+            </Button>
 
-          <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
-            <KaKaoLogin />
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="" variant="body2">
-                아이디/비밀번호 찾기
-              </Link>
+            <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => createMemeber()}>
+              구글로그인
+            </Button>
+
+            <Button fullWidth variant="text" sx={{ mt: 1, mb: 2, height: "45px" }}>
+              <KaKaoLogin />
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link to="" variant="body2">
+                  아이디/비밀번호 찾기
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/join">회원 가입</Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="/join">회원 가입</Link>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </>
   );
 }

@@ -16,7 +16,8 @@ function getStyles(name, tagForm, theme) {
   };
 }
 
-export default function MultipleSelectChip({ tagForm, setTagForm }) {
+export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) {
+  console.log(insertForm);
   useEffect(() => {
     getTagList();
   }, []);

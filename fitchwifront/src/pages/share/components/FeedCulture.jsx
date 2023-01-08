@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import FeedAdd from "../common/FeedAdd";
@@ -34,10 +34,10 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
       })
       .then((response) => {
         setFeedCulture((prevState) => prevState.concat(response.data));
-        preventRef.current = true;
-        if (response.data.end) {
+        if (response.data.length < 5) {
           endRef.current = true;
         }
+        preventRef.current = true;
       });
     setLoading(false);
   }, [page]);
@@ -57,13 +57,26 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
     }
   }, [getFeedList, page]);
 
+  const loadFeed = () => {
+    axios
+      .get("/getFeedListTillPage", {
+        params: {
+          category: "all",
+          page: page,
+        },
+      })
+      .then((response) => {
+        setFeedCulture(response.data);
+      });
+  };
+
   return (
     <>
       <Box flex={4} p={2}>
         {feedCulture && (
           <>
             {feedCulture.length === 0 ? (
-              <Box textAlign="center">작성된 공유해요가 없습니다</Box>
+              <></>
             ) : (
               feedCulture.map((data) => (
                 <Post
@@ -78,7 +91,7 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
                   file={data.ffList}
                   comment={data.fcList}
                   memberInfo={memberInfo}
-                  refreshFeed={getFeedList}
+                  refreshFeed={loadFeed}
                   like={data.flList}
                 />
               ))
@@ -86,9 +99,9 @@ const FeedCulture = ({ memberInfo, refreshFeed }) => {
           </>
         )}
         {loading ? (
-          <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+          <Box textAlign="center" alignItems="center" lineHeight={40}>
             <CircularProgress color="inherit" />
-          </Backdrop>
+          </Box>
         ) : (
           <></>
         )}

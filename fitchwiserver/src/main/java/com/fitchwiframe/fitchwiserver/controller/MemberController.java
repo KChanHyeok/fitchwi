@@ -119,4 +119,9 @@ public class MemberController {
   public String logoutMember( HttpSession session ){
     return memberService.logoutMember( session);
   }
+
+  @GetMapping("/getMemberList")
+  private List<Member> getMemberList(){
+    return memberService.getMemberList();
+  }
 }

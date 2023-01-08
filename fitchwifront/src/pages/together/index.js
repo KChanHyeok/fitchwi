@@ -8,6 +8,7 @@ import TogetherArt from "./components/togetherArt";
 import TogetherInfo from "./components/togetherInfo";
 import AddButton from "./components/common/addButton";
 import TogetherHome from "./components/togetherHome";
+import Footer from "../../layout/Footer";
 
 const Together = () => {
   const [facilitiesList, setFacilitiesList] = useState([]);
@@ -64,6 +65,7 @@ const Together = () => {
         />
         <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
       </Routes>
+      <Footer />
     </Box>
   );
 };

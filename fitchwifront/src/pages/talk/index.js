@@ -12,6 +12,7 @@ import TalkOpened from "./components/TalkOpened";
 import TalkUpdate from "./components/TalkUpdate";
 import { Add as AddIcon } from "@mui/icons-material";
 import TalkHome from "./components/TalkHome";
+import Footer from "../../layout/Footer";
 
 function Home() {
   const id = sessionStorage.getItem("id");
@@ -107,6 +108,7 @@ function Home() {
           />
         </Routes>
       </Stack>
+      <Footer />
     </>
   );
 }
