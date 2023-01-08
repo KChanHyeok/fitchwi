@@ -46,6 +46,7 @@ export default function Facilities() {
       ? loadFacilities(pageNumInSessionStg, facilitiesName)
       : loadFacilities(1, facilitiesName);
     console.log("axios");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlepageNum = (value) => {

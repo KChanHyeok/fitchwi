@@ -132,6 +132,8 @@ public class MemberService {
   }
 
 
+
+
   //로그인
   public Map<String, Object> loginMember(Member inputMember) {
     log.info("memberService.loginMember()");
@@ -595,5 +597,17 @@ public class MemberService {
   }
 
 
+  public String checkPhone(String memberPhone) {
+    log.info("memberService.checkPhone");
+    log.info(memberPhone);
+   // System.out.println( memberPhone);
+    String result = "fail";
+    Member byMemberPhone = memberRepository.findByMemberPhone(memberPhone);
+    if(byMemberPhone==null){
+      result = "ok";
+    }
 
+
+    return result;
+  }
 }

@@ -51,6 +51,7 @@ const JoinIndex = () => {
       };
       setJoinForm(joinFormObj);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
   //////////

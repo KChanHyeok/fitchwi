@@ -53,6 +53,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
       };
       setJoinForm(joinObj);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pwd, checkPwd]);
 
   const onCheckId = (e) => {
@@ -85,41 +86,52 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
     },
     [joinForm, setJoinForm]
   );
-
+  console.log(joinForm.memberPhone);
   const Certification = () => {
+    console.log(joinForm.memberPhone);
     if (joinForm.memberPhone === "") {
       return alert("연락처를 입력해주세요!");
     }
-    const { IMP } = window;
-    // IMP.init("imp51345423");
-    // 본인인증은 다날과 계약을 진행해야 서비스 제공이 가능해서 본인 가맹점 식별코드로는 테스트가 불가능함!
+    axios
+      .post("/checkPhone", joinForm.memberPhone, { headers: { "Content-Type": "test/plain" } })
+      .then((result) => {
+        console.log(result.data);
+        if (result.data === "fail") {
+          alert("이미 등록된 전화번호입니다.");
+        } else {
+          const { IMP } = window;
+          // IMP.init("imp51345423");
+          // 본인인증은 다날과 계약을 진행해야 서비스 제공이 가능해서 본인 가맹점 식별코드로는 테스트가 불가능함!
 
-    // 그래서 아임포트에서 본인인증 테스트가 가능한 계정을 제공해줌!
-    IMP.init("imp10391932");
+          // 그래서 아임포트에서 본인인증 테스트가 가능한 계정을 제공해줌!
+          IMP.init("imp10391932");
 
-    // 회원가입 할 때 입력한 정보로 채워줄지 아니면 공백으로 처리할 지는 고민해봐야 할듯
-    const data = {
-      merchant_uid: `mid_${new Date().getTime()}`,
-      company: "아임포트",
-      carrier: "",
-      //name: joinForm.memberName,
-      phone: joinForm.memberPhone,
-    };
-    IMP.certification(data, callback);
+          // 회원가입 할 때 입력한 정보로 채워줄지 아니면 공백으로 처리할 지는 고민해봐야 할듯
+          const data = {
+            merchant_uid: `mid_${new Date().getTime()}`,
+            company: "아임포트",
+            carrier: "",
+            //name: joinForm.memberName,
+            phone: joinForm.memberPhone,
+          };
+          IMP.certification(data, callback);
 
-    function callback(response) {
-      const { success, merchant_uid, error_msg } = response;
-      console.log(response);
-      if (success) {
-        setCheckedPhone(joinForm.memberPhone);
-        //    setDisabled(false);
-        alert("본인인증 성공");
-        //   console.log(response);
-        //  console.log(merchant_uid);
-      } else {
-        alert(`본인인증 실패: ${error_msg}`);
-      }
-    }
+          function callback(response) {
+            // eslint-disable-next-line no-unused-vars
+            const { success, merchant_uid, error_msg } = response;
+            console.log(response);
+            if (success) {
+              setCheckedPhone(joinForm.memberPhone);
+              //    setDisabled(false);
+              alert("본인인증 성공");
+              //   console.log(response);
+              //  console.log(merchant_uid);
+            } else {
+              alert(`본인인증 실패: ${error_msg}`);
+            }
+          }
+        }
+      });
   };
 
   return (
@@ -228,6 +240,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
         <Grid item xs={12}>
           <TextField
             required
+            type="text"
             onChange={onChange}
             name="memberPhone"
             sx={{ width: "100%" }}

@@ -120,12 +120,21 @@ public class MemberController {
 
   @GetMapping("/login/kakao/callback")
   public Map<String, Object> kakaoLogin(@RequestParam String code, HttpSession session) {
-
+    log.info("memberController.kakaoLogin");
     return  memberService.registerOrLogin(code, session);
   }
 
   @PostMapping("/logout")
   public String logoutMember( HttpSession session ){
+    log.info("memberController.logoutMember");
     return memberService.logoutMember( session);
+  }
+
+
+  @PostMapping("/checkPhone")
+  public String checkPhone(@RequestBody String memberPhone){
+    log.info("memberController.checkPhone");
+    System.out.println("memberPhone = " + memberPhone);
+    return memberService.checkPhone(memberPhone);
   }
 }
