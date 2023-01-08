@@ -4,6 +4,7 @@ import com.fitchwiframe.fitchwiserver.entity.Member;
 import com.fitchwiframe.fitchwiserver.service.MemberService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,9 +96,18 @@ public class MemberController {
   @PostMapping("/checkPwd")
   private String checkPwd(@RequestBody Member memberToCheck){
     log.info("memberController.checkPwd()");
+    System.out.println("memberToCheck = " + memberToCheck);
 
     return memberService.checkPwd(memberToCheck);
 
+  }
+
+  @PutMapping("/updatePwd")
+  private String updatePwd(@RequestBody Member memberToChangePwd){
+    log.info("memberController.updatePwd()");
+    System.out.println("memberToChangePwd = " + memberToChangePwd);
+
+    return memberService.updatePwd(memberToChangePwd);
   }
 
   @PostMapping("/updateMemberInfo")
@@ -111,12 +121,27 @@ public class MemberController {
 
   @GetMapping("/login/kakao/callback")
   public Map<String, Object> kakaoLogin(@RequestParam String code, HttpSession session) {
-
+    log.info("memberController.kakaoLogin");
     return  memberService.registerOrLogin(code, session);
   }
 
   @PostMapping("/logout")
   public String logoutMember( HttpSession session ){
+    log.info("memberController.logoutMember");
     return memberService.logoutMember( session);
+  }
+
+
+  @PostMapping("/checkPhone")
+  public String checkPhone(@RequestBody String memberPhone){
+    log.info("memberController.checkPhone");
+    System.out.println("memberPhone = " + memberPhone);
+    return memberService.checkPhone(memberPhone);
+  }
+
+  @GetMapping("/getMemberByPhone")
+  public String[] getMemberByPhone(@RequestParam String memberPhone){
+    log.info("memberController.getMemberByPhone");
+    return memberService.getMemberByPhone(memberPhone);
   }
 }

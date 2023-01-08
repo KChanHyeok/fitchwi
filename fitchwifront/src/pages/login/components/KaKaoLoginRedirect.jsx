@@ -22,6 +22,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
                 //       console.log(res.data);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
+                sessionStorage.setItem("classification", "k");
                 alert(res.data.memberNickname + "님 환영합니다.");
                 window.location.href = "/";
                 break;
@@ -35,6 +36,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
                 sucLogin(res.data.memberEmail, res.data.memberNickname);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
+                sessionStorage.setItem("classification", "k");
 
                 nav("/");
                 break;
@@ -44,8 +46,8 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
             }
             break;
           case "no":
-            // console.log(member);
             alert("추가 정보 입력 페이지로 이동합니다.");
+            nav("/join/name", { replace: true, state: member });
             break;
           case "fail":
             alert("인증에 문제가 발생했습니다.");

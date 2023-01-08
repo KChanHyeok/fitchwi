@@ -3,11 +3,12 @@ package com.fitchwiframe.fitchwiserver.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitchwiframe.fitchwiserver.dto.KakaoProfile;
-import com.fitchwiframe.fitchwiserver.entity.Follow;
-import com.fitchwiframe.fitchwiserver.entity.Member;
+import com.fitchwiframe.fitchwiserver.entity.*;
 
+import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
+import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -33,23 +34,34 @@ public class MemberService {
   @Autowired
   private FollowRepository followRepository;
 
+  @Autowired private FeedService feedService;
+
+  @Autowired private TalkService talkService;
+@Autowired private AdminService adminService;
+
+
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 
-  //회원가입 - 이미지 기본 이름 추가 필요
+  //회원가입
   public String joinMember(Member newMember, MultipartFile pic, HttpSession session) {
     log.info("memberService.joinmember");
     System.out.println("pic = " + pic);
     String result = null;
-    String cryptPwd = encoder.encode(newMember.getMemberPwd());
-    newMember.setMemberPwd(cryptPwd);
+    String cryptPwd = null;
+    if(newMember.getMemberPwd()!=null){
+       cryptPwd = encoder.encode(newMember.getMemberPwd());
+      newMember.setMemberPwd(cryptPwd);
+    }
 
+
+    if(newMember.getMemberSaveimg().equals("")){
     try {
       if (pic != null) {
         fileUpload(newMember, pic, session);
       } else {
         newMember.setMemberImg("DefaultProfileImage.jpg");
-        newMember.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
+        newMember.setMemberSaveimg("/images/DefaultProfileImageSystemName.jpg");
       }
 
       memberRepository.save(newMember);
@@ -59,6 +71,18 @@ public class MemberService {
       e.printStackTrace();
       log.info("가입 실패");
       result = "fail";
+    }
+    }else{
+      try{
+        memberRepository.save(newMember);
+        log.info("가입 성공");
+        result = "ok";
+      }catch (Exception e) {
+        e.printStackTrace();
+        log.info("가입 실패");
+        result = "fail";
+      }
+
     }
     return result;
   }
@@ -84,7 +108,7 @@ public class MemberService {
 
     String sysname = System.currentTimeMillis()
         + orname.substring(orname.lastIndexOf("."));
-    member.setMemberSaveimg(sysname);
+    member.setMemberSaveimg("/images/"+sysname);
 
     File file = new File(realPath + sysname);
 
@@ -106,6 +130,8 @@ public class MemberService {
     }
     return result;
   }
+
+
 
 
   //로그인
@@ -155,7 +181,7 @@ public class MemberService {
     return result;
 
   }
-  //회원 정보 수정
+
 
 
   public Member getMemberInfo(String userId) {
@@ -174,7 +200,23 @@ public class MemberService {
   public String deleteMemberInfo(Member member, HttpSession session) {
     String result = "fail";
     try {
-      //얘기해요 함께해요 관련 처리 추가 필요함
+      feedService.deleteAllByMember(member,session);
+      talkService.deleteAllByMember(member,session);
+      adminService.deleteAllByMember(member);
+//함께해요 관련 처리 필요
+
+
+      List<Follow> allByFollowId = followRepository.findAllByFollowId(member.getMemberEmail());
+      if(!(allByFollowId.isEmpty())){
+        followRepository.deleteAll(allByFollowId);
+      }
+      List<Follow> allByMemberEmail = followRepository.findAllByMemberEmail(member);
+      if(!(allByMemberEmail.isEmpty())){
+        followRepository.deleteAll(allByMemberEmail);
+      }
+
+
+
       deleteFile(member.getMemberSaveimg(), session);
       memberRepository.deleteById(member.getMemberEmail());
       result = "ok";
@@ -306,7 +348,7 @@ public class MemberService {
         String cryptPwd = encoder.encode("0000");
         member.setMemberPwd(cryptPwd);
         member.setMemberImg("DefaultProfileImage.jpg");
-        member.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
+        member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
         member.setMemberMbti("ISFP");
         member.setMemberAddr("경기도 시흥시");
         member.setMemberPhone("000-0000-0000");
@@ -323,10 +365,9 @@ public class MemberService {
   public String checkPwd(Member memberToCheck) {
     log.info("memberService.checkPwd()");
     String result = "";
-    Member dbMember = memberRepository.findById(memberToCheck.getMemberEmail()).get();
-
 
     try {
+      Member dbMember = memberRepository.findById(memberToCheck.getMemberEmail()).get();
       if (encoder.matches(memberToCheck.getMemberPwd(), dbMember.getMemberPwd())) {
         result = "ok";
       } else {
@@ -338,27 +379,44 @@ public class MemberService {
     return result;
   }
 
+
+  public String updatePwd(Member memberToChangePwd) {
+    log.info("memberService.checkPwd()");
+    String result = "fail";
+    try {
+      Member dbMember = memberRepository.findById(memberToChangePwd.getMemberEmail()).get();
+      String cryptPwd = encoder.encode(memberToChangePwd.getMemberPwd());
+
+      dbMember.setMemberPwd(cryptPwd);
+      memberRepository.save(dbMember);
+      result = "ok";
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+        return result;
+  }
+
+
+
   public String updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
     log.info("memberService.updateMemberInfo();");
     String result = "fail";
     System.out.println("memberToUpdate = " + memberToUpdate);
     System.out.println("pic = " + pic);
 
-    //새 비밀번호 입력
-    if (!memberToUpdate.getMemberPwd().equals("")) {
-      String cryptPwd = encoder.encode(memberToUpdate.getMemberPwd());
-      memberToUpdate.setMemberPwd(cryptPwd);
-      //기존 비밀번호 사용
-    } else {
-      memberToUpdate.setMemberPwd(memberRepository.findById(memberToUpdate.getMemberEmail()).get().getMemberPwd());
-    }
+
     try {
+
+      Member dbMember = memberRepository.findById(memberToUpdate.getMemberEmail()).get();
+      if(dbMember.getMemberPwd()!=null){
+        memberToUpdate.setMemberPwd(dbMember.getMemberPwd());
+      }
       //기본 이미지 사용
       if (pic == null) {
         if (memberToUpdate.getMemberImg().equals("")) {
           deleteFile(memberToUpdate.getMemberSaveimg(), session);
           memberToUpdate.setMemberImg("DefaultProfileImage.jpg");
-          memberToUpdate.setMemberSaveimg("DefaultProfileImageSystemName.jpg");
+          memberToUpdate.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
         }
       } else {//새이미지사용
         deleteFile(memberToUpdate.getMemberSaveimg(), session);
@@ -420,11 +478,13 @@ public class MemberService {
     HttpEntity<MultiValueMap<String, String>> infoRequest = new HttpEntity<>(httpHeaders);
     RestTemplate restTemplate = new RestTemplate();
     ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, infoRequest, String.class);
+    System.out.println("response = " + response);
     JsonNode jsonNode = null;
     try {
       String responseBody = response.getBody();
       ObjectMapper objectMapper = new ObjectMapper();
       jsonNode = objectMapper.readTree(responseBody);
+   //   System.out.println("jsonNode = " + jsonNode);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -537,4 +597,36 @@ public class MemberService {
   }
 
 
+  public String checkPhone(String memberPhone) {
+    log.info("memberService.checkPhone");
+    log.info(memberPhone);
+   // System.out.println( memberPhone);
+    String result = "fail";
+    Member byMemberPhone = memberRepository.findByMemberPhone(memberPhone);
+    if(byMemberPhone==null){
+      result = "ok";
+    }
+
+
+    return result;
+  }
+
+  public String[] getMemberByPhone(String memberPhone) {
+    log.info("memberService.getMemberByPhone");
+    String[] result =new String[2];
+
+    Member byMemberPhone = memberRepository.findByMemberPhone(memberPhone);
+    if(byMemberPhone==null){
+      result[0]="no data";
+    }else{
+      if(byMemberPhone.getMemberPwd()==null){
+        result[0] ="kakao";
+        result[1]=byMemberPhone.getMemberEmail();
+      }else{
+        result[0] = "common";
+        result[1] = byMemberPhone.getMemberEmail();
+      }
+    }
+    return result;
+  }
 }

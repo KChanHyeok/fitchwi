@@ -20,4 +20,6 @@ public interface ReportDetailRepository extends CrudRepository<ReportDetail, Lon
  ReportDetail findByReportCodeAndMemberEmail(Report report, Member memberReporting);
 
  void deleteAllByReportCode(Report reportToDelete);
+
+  List<ReportDetail> findByMemberEmail(Member member);
 }

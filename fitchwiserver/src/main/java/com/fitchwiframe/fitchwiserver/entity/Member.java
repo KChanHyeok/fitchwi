@@ -19,7 +19,7 @@ public class Member {
   @Column(nullable = false, length = 10)
   private String memberName ;
 
-  @Column(nullable = false, length = 100)
+  @Column(nullable = true, length = 100)
   private String memberPwd ;
 
   @Column(length = 200)
