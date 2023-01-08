@@ -22,6 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import moment from "moment/moment";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -46,6 +47,7 @@ const facilities = {
 const TogetherAdd = ({ data, refreshTogetherList }) => {
 
   const nav = useNavigate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const formDate = new FormData();
   const [fileForm, setFileForm] = useState("");
   const [firstDateOpen, setFirstDateOpen] = useState(true);
@@ -72,33 +74,36 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
     togetherTagContent: "", //태그 내용
   });
-  const getMemberInfo = (id) => {
-        axios.get("/getMemberInfo", { params: { userId: id } }).then((res) =>setInsertForm({...insertForm,memberEmail: res.data}))
-        .catch((error)=> console.log(error))
-    }
-  
-  useEffect(() => {
-    getMemberInfo(sessionStorage.getItem("id"))
+  const getMemberInfo = useCallback((id) => {
+      axios.get("/getMemberInfo", { params: { userId: id } }).then((res) => setInsertForm({
+          ...insertForm,
+          memberEmail: res.data
+        })).catch((error)=> console.log(error))
+    },[insertForm])
+
+    useEffect(() => {
+      if (!insertForm.memberEmail.memberSaveimg) {
+        getMemberInfo(sessionStorage.getItem("id"));
+      }
     preview();
     return () => preview();
   });
   
-  const preview = () => {
+  const preview = useCallback(() => {
     if (!fileForm) return false
 
     const render = new FileReader();
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-    console.log(render)
-  };
+  },[fileForm, imgEl])
 
   const onLoadFile = useCallback((event) => {
     const file = event.target.files;
     setFileForm(file);
   }, []);
 
-  const sendTogether = (e) => {
+  const sendTogether = useCallback((e) => {
     e.preventDefault();
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
     formDate.append("uploadImage", fileForm[0]);
@@ -114,8 +119,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     }).catch((error) => {
       console.log(error)
     })
-
-  };
+  },[fileForm, formDate, insertForm, nav, refreshTogetherList])
 
   const handleChange = useCallback(
     (event) => {
@@ -148,6 +152,35 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   //           }
   //       }
   // }
+  
+  const open = useDaumPostcodePopup(
+    "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+  );
+
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress += extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    // console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    setInsertForm({
+      ...insertForm,
+      togetherPosition:fullAddress
+    });
+  };
+
+  const handleClick = () => {
+    open({ onComplete: handleComplete });
+  };
 
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -178,8 +211,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           label="최대참여인원"
           sx={{ mt: 3 }}
           type="number"
-          id="fullWidth"
-          value={insertForm.togetherMax}
           onChange={handleChange}
           name="togetherMax"
           required
@@ -213,7 +244,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               시설을 골라주세요
             </Typography>
             <List
-              sx={{ width: '100%', maxWidth: 360, maxHeight:200, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
+              sx={{ width: '100%', maxWidth: 360, maxHeight:170, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
               aria-label="contacts"
             >
               <ListItem disablePadding>
@@ -236,7 +267,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                     togetherPosition:data.facilitiesPosition
                   })
                 }}>
-                  <ListItemText inset primary={`${data.facilitiesName}  -  ${data.facilitiesPosition}`} />
+                  <ListItemText inset primary={`${data.facilitiesName}`} />
                 </ListItemButton>
               </ListItem>
               ))}
@@ -259,22 +290,30 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         </Grid>
         
         {/* 주소 입력 란 */}
-        <TextField
-          fullWidth
-          label="모이는 장소의 주소"
-          sx={{ mt: 3 }}
-          id="fullWidth"
-          value={insertForm.togetherPosition}
-          onChange={handleChange}
-          name="togetherPosition"
-          required
-        />
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={2}
+        >
+          <TextField
+            fullWidth
+            label="모이는 장소의 주소"
+            id="fullWidth"
+            value={insertForm.togetherPosition}
+            onChange={handleChange}
+            name="togetherPosition"
+            required
+          />
+          <Button variant="outlined" onClick={handleClick} style={{ width: "40%", lineHeight:3 }}>
+            주소 검색
+          </Button>
+        </Stack>
 
         <Stack
         direction="row"
         justifyContent="space-around"
         alignItems="center"
-        spacing={2}
+        spacing={3}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box>
@@ -398,23 +437,21 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <Stack>
           <Box style={imgBoxStyle} className="img_box">
           </Box>
-          <Box>
-            <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
-              <Button sx={{ml:4}} variant="contained" component="label" size="large">
-                Upload
-                <TextField
-                  label="모임대표사진"
-                  type="file"
-                  accept="image/*"
-                  focused
-                  sx={{ mt: 3, display:"none"}}
-                  color="grey"
-                  onChange={onLoadFile}
-                  required
-                />
-              </Button>
-            </Typography>
-          </Box>
+          <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
+            <Button sx={{ml:4}} variant="contained" component="label" size="large">
+              Upload
+              <TextField
+                label="모임대표사진"
+                type="file"
+                accept="image/*"
+                focused
+                sx={{ mt: 3, display:"none"}}
+                color="grey"
+                onChange={onLoadFile}
+                required
+              />
+            </Button>
+          </Typography>
         </Stack>
         <TextField
           fullWidth
@@ -444,10 +481,9 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           onChange={handleChange}
           required
           value={insertForm.togetherTagContent}
-        />
-        
-        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
-        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2 }}>
+        />     
+        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4, mb:4 }}>개설하기</Button>
+        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb:4 }}>
           취소
         </Button>
       </Box>

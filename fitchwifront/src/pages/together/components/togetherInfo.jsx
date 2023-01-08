@@ -1,6 +1,6 @@
 import { Box, Stack, styled, Avatar, Typography, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 import TogetherOpMenu from "./togetherOpMenu";
 
@@ -31,30 +31,29 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
   });
   
   return (
-    <Stack flex={4} p={2} direction="column" justifyContent="space-around" alignItems="stretch" spacing={2}>
+    <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
       {!togetherInfo || !togetherJoinMember ? (
         <h1>로딩중</h1>
       ) : (
         <Box>
-          <Stack flex={2} direction={"row"} justifyContent="space-between">
-            <h1>{togetherInfo.togetherTitle}</h1>
+          <Stack flex={2} direction={"row"} justifyContent="space-between" sx={{mb:2}}>
+            <h1>{togetherInfo.togetherTitle}</h1><br/>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
                 <TogetherOpMenu
                   togetherAppliedMember={togetherAppliedMember}
                   togetherJoinMember={togetherJoinMember}
                   refreshTogetherJoinList={refreshTogetherJoinList}
                   togetherInfo={togetherInfo}
-                  sx={{ fontSize: 20, ml: 60 }}
+                  sx={{ fontSize: 20}}
                   />
               ) : null
               }
-            <Box></Box>
           </Stack>
-          <Box sx={{ maxWidth: 900 }}>
+          <Box sx={{maxWidth:1000, mb:3}}>
             {togetherInfo.togetherSaveimg && (
               <Box
                 component="img"
-                sx={{ maxHeight: 400, textAlign: "center" }}
+                sx={{width:"100%",textAlign: "center" }}
                 src={`/images/${togetherInfo.togetherSaveimg}`}
                 alt="green iguana"
               ></Box>
@@ -68,6 +67,9 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
             <h4>방장</h4>
             <UserBox>
               <Avatar
+                component={Link}
+                to={"/memberpage"}
+                state={{ memberId: togetherInfo.togetherOpenedCode.memberEmail.memberEmail }}
                 src={`/images/${togetherInfo.togetherOpenedCode.memberEmail.memberSaveimg}`}
                 alt={"profil.memberImg"}
                 sx={{ width: 30, height: 30 }}
@@ -87,7 +89,13 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
             ) : (
               togetherJoinMember.map((data) => (
                 <UserBox key={data.togetherJoinCode}>
-                  <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                  <Avatar
+                    component={Link}
+                    to={"/memberpage"}
+                    state={{ memberId: data.memberEmail.memberEmail}}
+                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                    alt={"profil.memberImg"}
+                    sx={{ width: 30, height: 30 }} />
                   <Typography fontWeight={500} variant="span">
                     {!data.memberEmail.memberNickname ? data.memberEmail.memberEmail : data.memberEmail.memberNickname}님
                   </Typography>
@@ -106,7 +114,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
             <br />
             장소 : {togetherInfo.togetherPosition}
           </Box>
-          <Box sx={{ mt: 2 }}>
+            <Box sx={{ mt: 2 }}>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
               <TogetherJoin
                 togetherPayState={togetherInfo.togetherState}
@@ -128,7 +136,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
               >
                 참여신청하기
               </TogetherJoin>
-            ) : togetherInfo.togetherState==="결제완료" ? <Button disabled variant="contained">마감</Button>: (
+            ) : togetherInfo.togetherState==="결제완료" ? <Button disabled variant="contained" sx={{width:"100%", mb:3}}>마감</Button>: (
               <TogetherJoin
                 togetherJoinState={
                   togetherJoinList.filter(
