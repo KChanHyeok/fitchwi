@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Avatar, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
+import { hover } from "@testing-library/user-event/dist/hover";
 
 const UserBox = styled(Box)({
     display: "flex",
@@ -13,17 +14,18 @@ const UserBox = styled(Box)({
 });
 
 const imgBoxStyle = {
-    marginTop: "20px",
-    width: "300px",
+    marginTop: "25px",
+    // margin: "auto",  
+    width: "300px !important",
     height: "200px",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
 };
 
-function TalkOpened({ memberEmail, refreshTalkList }) {
+function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagList }) {
     let formData = new FormData();
     const nav = useNavigate();
-    const imgEl = document.querySelector(".talk_img_box");
+    const imgEl = document.querySelector(".img_box");
     const location = useLocation();
     const nowdate = new Date().getFullYear() + "-"
         + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
@@ -31,7 +33,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
 
     const [insertTalkOp, setInsertTalkOp] = useState({
         memberEmail: {
-            memberEmail: memberEmail,
+            memberEmail: sessionStorage.getItem("id"),
         },
         talkTitle: "",
         talkMax: 0,
@@ -43,6 +45,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         talkOpenDate: nowdate,
     });
 
+    console.log(memberInfo);
     const onChange = useCallback(
         (e) => {
             const inputTo = {
@@ -55,11 +58,25 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
 
+    // 파일 삭제
+    const deleteFileImage = () => {
+        URL.revokeObjectURL(fileForm);
+        setFileForm("");
+    };
+
+    // //파일 미리볼 url을 저장해줄 state
+    // const [fileImage, setFileImage] = useState("");
+
+    // // 파일 저장
+    // const saveFileImage = (e) => {
+    //     setFileForm(URL.createObjectURL(e.target.files[0]));
+    // };
+
     useEffect(() => {
         preview();
         try {
             if (location) {
-                setInsertTalkOp(location.state.talkInfo)
+                setInsertTalkOp(location.state.talkInfo);
             }
         } catch (e) {
 
@@ -68,21 +85,20 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
         return () => preview();
     }, [location]);
 
-    const preview = () => {
+    const preview = (e) => {
         if (!fileForm) return false;
         const render = new FileReader();
-        render.readAsDataURL(fileForm[0])
+        render.createObjectURL(e.target.files[0]);
         render.onload = () =>
             (imgEl.style.backgroundImage = `url(${render.result})`);
         ;
-        console.log(render);
+        console.log(render.result);
     };
 
     const onLoadFile = useCallback(
         (e) => {
-            const file = e.target.files;
-            setFileForm(file);
-            console.log(e.target.file);
+            setFileForm(URL.createObjectURL(e.target.files[0]));
+            console.log(e.target.files[0]);
         }, []);
 
     //작성 내용 전송 함수
@@ -106,6 +122,7 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                     alert("개설 성공");
                     nav("/talk");
                     refreshTalkList();
+                    refreshTalkTagList();
                 } else {
                     alert("개설 실패");
                 }
@@ -138,9 +155,10 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                             얘기해요 개설
                         </Typography>
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                                sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
-                                {sessionStorage.getItem("id")}
+                                {memberInfo.memberNickname}
                             </Typography>
                         </UserBox>
                         <hr />
@@ -199,19 +217,41 @@ function TalkOpened({ memberEmail, refreshTalkList }) {
                                     sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
                                     onChange={onChange} />}
                             </div>
-                            <TextField fullWidth
-                                label="얘기해요 대표 사진"
-                                type="file"
-                                name="talkImg"
-                                sx={{ mt: 3 }}
-                                onChange={onLoadFile}
-                                color="grey"
-                                required
-                                focused
-                            />
-                            <div style={imgBoxStyle} className="talk_img_box">
-                                <img src="" alt="" />
-                            </div>
+                            <Grid container spacing={6}>
+                                <Box sx={{ width: "300px", textAlign: "center", lineHeight: 3 }}>
+                                    <Typography variant="h6" sx={{ mt: 3 }}>대표사진을 넣어주세요</Typography>
+                                    <Button variant="contained" component="label" size="large">
+                                        Upload
+                                        <TextField
+                                            label="모임대표사진"
+                                            type="file"
+                                            accept="image/*"
+                                            focused
+                                            sx={{ mt: 3, display: "none" }}
+                                            color="grey"
+                                            onChange={onLoadFile}
+                                            required
+                                        />
+                                    </Button>
+                                    &nbsp;&nbsp;
+                                    <Button variant="contained" component="label" size="large"
+                                        style={{
+                                            backgroundColor: "gray",
+                                            color: "white",
+                                        }}
+                                        onClick={() => deleteFileImage()}>
+                                        Delete
+                                    </Button>
+                                </Box>
+                            </Grid>
+                            {fileForm && (<Box>
+                                <img style={imgBoxStyle}
+                                    className="img_box"
+                                    alt="모임대표사진"
+                                    src={fileForm}
+                                />
+                            </Box>
+                            )}
                             <TextField fullWidth
                                 label="모임을 소개해주세요"
                                 name="talkContent"
