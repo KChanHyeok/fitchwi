@@ -72,11 +72,16 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
     togetherTagContent: "", //태그 내용
   });
+  const getMemberInfo = (id) => {
+        axios.get("/getMemberInfo", { params: { userId: id } }).then((res) =>setInsertForm({...insertForm,memberEmail: res.data}))
+        .catch((error)=> console.log(error))
+    }
   
   useEffect(() => {
+    getMemberInfo(sessionStorage.getItem("id"))
     preview();
     return () => preview();
-  });
+  },[]);
   
   const preview = () => {
     if (!fileForm) return false
@@ -85,6 +90,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
+    console.log(render)
   };
 
   const onLoadFile = useCallback((event) => {
@@ -127,7 +133,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     width: "300px",
     height: "200px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
+    backgroundSize: "cover"
   };
 
   // const disableDates = () => {
@@ -143,17 +149,17 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   //       }
   // }
 
-
   return (
-    <Stack height={800} flex={7} p={3}>
-      <Box bgcolor="white" sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
+    <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
+      <Box bgcolor="white" sx={{ mb: 5 }} component="form"  onSubmit={sendTogether}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
         <UserBox>
-          <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+          {insertForm.memberEmail.memberSaveimg&& <Avatar src={`/images/${insertForm.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />}
+          
           <Typography fontWeight={500} variant="span">
-            {sessionStorage.getItem("id")}
+            {sessionStorage.getItem("nickName")}
           </Typography>
         </UserBox>
         <hr />
@@ -199,7 +205,9 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <MenuItem value="기타">기타</MenuItem>
           </Select>
         </FormControl>
-        <Grid container spacing={3}>
+        
+        {/* 시설 내역과 정보 제공 */}
+         <Grid container spacing={3}>
           <Grid item xs={4}>
             <Typography variant="h5" sx={{mt:3}}>
               시설을 골라주세요
@@ -232,7 +240,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 </ListItemButton>
               </ListItem>
               ))}
-              
             </List>
           </Grid>
           <Grid item xs>
@@ -250,6 +257,8 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             </Box>
           </Grid>
         </Grid>
+        
+        {/* 주소 입력 란 */}
         <TextField
           fullWidth
           label="모이는 장소의 주소"
@@ -260,8 +269,15 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherPosition"
           required
         />
-        <Grid container direction="row"  spacing={6}>
-            <Grid xs={2} sm={2} md={4} item>
+
+        <Stack
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+        spacing={2}
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box>
               <TextField
                 label="모이는 일자"
                 sx={{ mt: 3 }}
@@ -272,26 +288,24 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 color="grey"
                 required
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <StaticDatePicker
-                  displayStaticWrapperAs="desktop"
-                  label="모이는 일자"
-                  disablePast
-                  value={insertForm.togetherDate}
-                  onChange={(e)=>{
-                    setInsertForm({
-                      ...insertForm,
-                      togetherDate: moment(e.$d).format("YYYY-MM-DD"),
-                      togetherRecruitStartDate: "",
-                      togetherRecruitEndDate:""
-                    });
-                    setFirstDateOpen(false)
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+              <StaticDatePicker
+                displayStaticWrapperAs="desktop"
+                label="모이는 일자"
+                disablePast
+                value={insertForm.togetherDate}
+                onChange={(e)=>{
+                  setInsertForm({
+                    ...insertForm,
+                    togetherDate: moment(e.$d).format("YYYY-MM-DD"),
+                    togetherRecruitStartDate: "",
+                    togetherRecruitEndDate:""
+                  });
+                  setFirstDateOpen(false)
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="모집신청 시작일을 입력헤주세요"
@@ -304,8 +318,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 required
                 color="grey"
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <StaticDatePicker
+              <StaticDatePicker
                 displayStaticWrapperAs="desktop"
                 label="모집신청 시작일"
                 disablePast
@@ -321,10 +334,9 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 }}
                 disabled={firstDateOpen}
                 renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid xs={2} sm={4} md={4} item>
+              />
+            </Box>
+            <Box>
               <TextField
                 fullWidth
                 label="모집신청 마감일을 입력헤주세요"
@@ -336,27 +348,27 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 value={insertForm.togetherRecruitEndDate}
                 required
               />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <StaticDatePicker
-                displayStaticWrapperAs="desktop"
-                label="모집신청 마감일"
-                disablePast
-                value={insertForm.togetherRecruitEndDate}
-                minDate={insertForm.togetherRecruitStartDate}
-                maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
-                // shouldDisableDate={ }
-                onChange={(e)=>{
-                  setInsertForm({
-                    ...insertForm,
-                    togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
-                  });
-                }}
-                disabled={secondDateOpen}
-                renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
+              <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모집신청 마감일"
+                  disablePast
+                  value={insertForm.togetherRecruitEndDate}
+                  minDate={insertForm.togetherRecruitStartDate}
+                  maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
+                  // shouldDisableDate={ }
+                  onChange={(e)=>{
+                    setInsertForm({
+                      ...insertForm,
+                      togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
+                    });
+                  }}
+                  disabled={secondDateOpen}
+                  renderInput={(params) => <TextField {...params} />}
+              />
+            </Box>
+          </LocalizationProvider>
+        </Stack>
+
         <TextField
           fullWidth
           label="1인당 참가비(0원입력시 무료로 진행)"
@@ -383,30 +395,25 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <MenuItem value="승인제">승인제</MenuItem>
           </Select>
         </FormControl>
-        <Grid container spacing={4}>
-          <Grid item xs={3}>
-            <Box sx={{marginTop: "20px", width: "300px", height: "200px", textAlign:"center",lineHeight:5, border:"1px dashed grey"}}>
-              <Typography variant="h5" sx={{mt:3}}>대표사진을 넣어주세요</Typography>
-              <Button variant="contained" component="label" size="large">
-                Upload
-                <TextField
-                  label="모임대표사진"
-                  type="file"
-                  accept="image/*"
-                  focused
-                  sx={{ mt: 3, display:"none"}}
-                  color="grey"
-                  onChange={onLoadFile}
-                  required
-                />
-              </Button>
-            </Box>
-          </Grid>
-          <Grid item xs>
-            <Box style={imgBoxStyle} className="img_box">
-            </Box>
-          </Grid>
-        </Grid>
+        <Stack>
+          <Box style={imgBoxStyle} className="img_box">
+          </Box>
+          <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
+            <Button sx={{ml:4}} variant="contained" component="label" size="large">
+              Upload
+              <TextField
+                label="모임대표사진"
+                type="file"
+                accept="image/*"
+                focused
+                sx={{ mt: 3, display:"none"}}
+                color="grey"
+                onChange={onLoadFile}
+                required
+              />
+            </Button>
+            </Typography>
+        </Stack>
         <TextField
           fullWidth
           label="유저 신청시 질문내용 작성(승인제)"

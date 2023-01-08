@@ -10,11 +10,11 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
     useEffect(()=> {
       if(sessionStorage.getItem("id")) {
-        getMemberInfo()
+        getMemberInfo(sessionStorage.getItem("id"))
       }
     },[])
-    const getMemberInfo = () => {
-        axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
+    const getMemberInfo = (id) => {
+        axios.get("/getMemberInfo", { params: { userId: id } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
     }
 
