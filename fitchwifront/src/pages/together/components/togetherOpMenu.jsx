@@ -170,7 +170,6 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                     <DeleteIcon />
                     삭제신청하기
                 </MenuItem>
-                <MenuItem onClick={() => alert("신고하기")}>신고하기</MenuItem>
             </StyledMenu>
             <Modal
             keepMounted

@@ -10,11 +10,12 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
     useEffect(()=> {
       if(sessionStorage.getItem("id")) {
-        getMemberInfo()
+        getMemberInfo(sessionStorage.getItem("id"))
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
-    const getMemberInfo = () => {
-        axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
+    const getMemberInfo = (id) => {
+        axios.get("/getMemberInfo", { params: { userId: id } }).then((res) =>setInsertFrom({...insertForm,memberEmail: res.data}))
         .catch((error)=> console.log(error))
     }
 
@@ -77,11 +78,11 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         if(togetherInfo.togetherPrice===0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0) {
             insertTogetherFreeJoinInfo();
         }else {
-            requestPay()
+            requestJoinPay()
         }
       }
 
-      const requestPay = () => {
+      const requestJoinPay = () => {
         IMP.request_pay({ // param
           pg: "html5_inicis",
           pay_method: "card",
@@ -117,6 +118,53 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         });
     }
 
+    const finalPayment = () => {
+        // if (togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice === 0) {
+            // insertTogetherFreeInfo();
+        // } else {
+            requestLastPay()
+        // }
+    }
+
+     const requestLastPay = () => {
+        IMP.request_pay({ // param
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: 'merchant_' + new Date().getTime(),
+          name: togetherInfo.togetherTitle,
+          amount: 100,
+          buyer_email: sessionStorage.getItem("id"),
+          buyer_name: (insertForm.memberEmail.memberName),
+          buyer_tel: (insertForm.memberEmail.memberPhone),
+          buyer_addr: (insertForm.memberEmail.memberAddr),
+          buyer_postcode: "01181"
+        }, rsp => { // callback
+          if (rsp.success) {
+            const insertPayForm = {
+                togetherPayCode: rsp.merchant_uid,
+                togetherCode: insertForm,
+                togetherImp: rsp.imp_uid,
+                togetherPayPrice: rsp.paid_amount,
+                togetherPayMethod: rsp.pay_method,
+                togetherPayStatus: "",
+            }
+            
+            axios.post("/insertTogetherPay", insertPayForm)
+              .then((res) => {
+                  setOpen(false);
+                  alert(res.data);
+                  refreshTogetherJoinList();
+              })
+              .catch((Error) => console.log(Error))
+          } else {
+            alert("결제실패")
+          }
+        });
+    }
+    // const insertTogetherFreeInfo = () => {
+        
+    // }
+
     const insertTogetherFreeJoinInfo = () => {
         if(!sessionStorage.getItem("id")) {
             alert("로그인이 필요한 서비스입니다.")
@@ -131,7 +179,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
               .catch((Error) => console.log(Error))
     }
 
-
+    
       const deleteTogetherPayJoinInfo = (e) => {
         e.preventDefault();
 
@@ -155,11 +203,11 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
     return (
         <>
-            { togetherJoinState==="대기" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>신청취소</Button>:
-            togetherJoinState==="거절" ? <Button variant={"contained"} disabled>신청이 거절되었습니다</Button>:
-            togetherJoinState==="가입중" ? <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}}>참여취소하기</Button>:
-            togetherPayState==="결제완료" ? <Button variant={"contained"} disabled>결제가 완료되었습니다</Button>:
-            <Button onClick={handleOpen} variant={"contained"} sx={{maxWidth:900}} >{children}</Button>
+            { togetherJoinState==="대기" ? <Button onClick={handleOpen} sx={{width:"100%", mb:3}} variant={"contained"} >신청취소</Button>:
+            togetherJoinState==="거절" ? <Button variant={"contained"} sx={{width:"100%", mb:3}} disabled>신청이 거절되었습니다</Button>:
+            togetherJoinState==="가입중" ? <Button onClick={handleOpen} sx={{width:"100%", mb:3}} variant={"contained"} >참여취소하기</Button>:
+            togetherPayState==="결제완료" ? <Button variant={"contained"} sx={{width:"100%", mb:3}} disabled>결제가 완료되었습니다</Button>:
+            <Button onClick={handleOpen} variant={"contained"} sx={{width:"100%", mb:3}} >{children}</Button>
             }
             <Modal
             keepMounted
@@ -216,7 +264,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     {togetherJoinMember.length+1===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
-                <Button variant="contained" sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
+                <Button variant="contained" onClick={finalPayment} sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 <Box sx={style} component="form">

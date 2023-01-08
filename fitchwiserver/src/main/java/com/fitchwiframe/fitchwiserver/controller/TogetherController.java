@@ -41,6 +41,12 @@ public class TogetherController {
         log.info("전달 받은 데이터"+togetherJoinPayment);
         return togetherService.insertTogetherPayJoinInfo(togetherJoinPayment);
     }
+    @PostMapping("/insertTogetherPay")
+    public String insertTogetherPay(@RequestBody TogetherPayment togetherPayment) {
+        log.info("insertTogetherPay()");
+        log.info(togetherPayment+"내가 받은 결제 정보");
+        return togetherService.insertTogetherPay(togetherPayment);
+    }
 
     @PostMapping("/insertTogetherFreeJoinInfo")
     public String insertTogetherFreeJoinInfo(@RequestBody TogetherJoin togetherJoin) {
