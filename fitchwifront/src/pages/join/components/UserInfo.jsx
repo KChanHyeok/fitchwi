@@ -24,7 +24,9 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
     } else {
       if (
         correctPwd === true && //비번같음
-        checkedId === joinForm.memberEmail
+        checkedId === joinForm.memberEmail &&
+        checkedPhone === joinForm.memberPhone &&
+        joinForm.memberAddr !== ""
       ) {
         setDisabled(false);
       } else {

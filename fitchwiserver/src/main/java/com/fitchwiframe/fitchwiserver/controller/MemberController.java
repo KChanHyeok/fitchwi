@@ -4,6 +4,7 @@ import com.fitchwiframe.fitchwiserver.entity.Member;
 import com.fitchwiframe.fitchwiserver.service.MemberService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -136,5 +137,11 @@ public class MemberController {
     log.info("memberController.checkPhone");
     System.out.println("memberPhone = " + memberPhone);
     return memberService.checkPhone(memberPhone);
+  }
+
+  @GetMapping("/getMemberByPhone")
+  public String[] getMemberByPhone(@RequestParam String memberPhone){
+    log.info("memberController.getMemberByPhone");
+    return memberService.getMemberByPhone(memberPhone);
   }
 }

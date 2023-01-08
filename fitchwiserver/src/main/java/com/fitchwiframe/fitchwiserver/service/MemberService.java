@@ -610,4 +610,23 @@ public class MemberService {
 
     return result;
   }
+
+  public String[] getMemberByPhone(String memberPhone) {
+    log.info("memberService.getMemberByPhone");
+    String[] result =new String[2];
+
+    Member byMemberPhone = memberRepository.findByMemberPhone(memberPhone);
+    if(byMemberPhone==null){
+      result[0]="no data";
+    }else{
+      if(byMemberPhone.getMemberPwd()==null){
+        result[0] ="kakao";
+        result[1]=byMemberPhone.getMemberEmail();
+      }else{
+        result[0] = "common";
+        result[1] = byMemberPhone.getMemberEmail();
+      }
+    }
+    return result;
+  }
 }
