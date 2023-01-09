@@ -8,7 +8,7 @@ export default function TalkCategoryImage() {
   return (
     <ImageList sx={{ width: "100%", height: 250 }} cols={4}>
       {itemData.map((item) => (
-        <Link to={`/talk/${item.category}`} key={item.title}>
+        <Link to={`/talk/category/${item.category}`} key={item.title}>
           <ImageListItem style={{ height: "120px" }}>
             <img
               src={`${item.img}?w=248&fit=crop&auto=format`}
