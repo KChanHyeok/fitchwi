@@ -393,17 +393,22 @@ public class AdminService {
   public String managerLogin(Manager manager) {
     log.info("adminService.managerLogin()");
     String result = "fail";
+    System.out.println("manager = " + manager);
     try {
       Optional<Manager> byId = managerRepository.findById(manager.getManagerId());
       if (byId.isPresent()) {
+      System.out.println("byId.get() = " + byId.get());
         Manager dbManager = byId.get();
         if (dbManager.getManagerPwd().equals(manager.getManagerPwd())) {
           result = "ok";
         }else{
           result = "wrong pwd";
         }
+
+      }else{
         result = "no data";
       }
+
     } catch (Exception e) {
       e.printStackTrace();
     }
