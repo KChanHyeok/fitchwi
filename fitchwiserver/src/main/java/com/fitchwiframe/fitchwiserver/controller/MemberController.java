@@ -133,9 +133,9 @@ public class MemberController {
 
 
   @GetMapping("/getMemberList")
-  private List<Member> getMemberList(){
+  private List<Member> getMemberList() {
     return memberService.getMemberList();
-
+  }
 
   @PostMapping("/checkPhone")
   public String checkPhone(@RequestBody String memberPhone){
