@@ -13,12 +13,11 @@ const UserBox = styled(Box)({
 });
 
 const imgBoxStyle = {
-    marginTop: "25px",
-    // margin: "auto",  
-    width: "300px !important",
-    height: "200px",
+    marginTop: "20px",
+    width: "700px",
+    height: "300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
+    backgroundSize: "contain"
 };
 
 function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagList }) {
@@ -28,7 +27,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
     const location = useLocation();
     const nowdate = new Date().getFullYear() + "-"
         + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
-        + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
+        + (new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate());
 
     const [insertTalkOp, setInsertTalkOp] = useState({
         memberEmail: {
@@ -57,20 +56,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
 
-    // 파일 삭제
-    const deleteFileImage = () => {
-        URL.revokeObjectURL(fileForm);
-        setFileForm("");
-    };
-
-    // //파일 미리볼 url을 저장해줄 state
-    // const [fileImage, setFileImage] = useState("");
-
-    // // 파일 저장
-    // const saveFileImage = (e) => {
-    //     setFileForm(URL.createObjectURL(e.target.files[0]));
-    // };
-
     useEffect(() => {
         preview();
         try {
@@ -82,23 +67,26 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
         }
 
         return () => preview();
-    }, [location]);
+    });
 
-    const preview = (e) => {
-        if (!fileForm) return false;
+    const preview = () => {
+        if (fileForm.length === 0) {
+            return false;
+        }
         const render = new FileReader();
-        render.createObjectURL(e.target.files[0]);
-        render.onload = () =>
-            (imgEl.style.backgroundImage = `url(${render.result})`);
-        ;
-        console.log(render.result);
-    };
+        render.readAsDataURL(fileForm[0]);
+        render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
+    }
 
-    const onLoadFile = useCallback(
-        (e) => {
-            setFileForm(URL.createObjectURL(e.target.files[0]));
-            console.log(e.target.files[0]);
-        }, []);
+    const onLoadFile = useCallback((event) => {
+        const file = event.target.files;
+        setFileForm(file);
+    }, []);
+
+    // 파일 삭제
+    // const deleteFileImage = () => {
+
+    // };
 
     //작성 내용 전송 함수
     const onTalkOpened = (e) => {
@@ -198,7 +186,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                 </Select>
                             </FormControl>
                             <div className="talkJoinStyle">
-                                <FormControl sx={{ mt: 2, minWidth: 130, minHeight: 100 }}>
+                                <FormControl sx={{ mt: 2, minWidth: 130 }}>
                                     <InputLabel className="talkTypeSt">가입유형</InputLabel>
                                     <Select label="가입유형" name="talkType"
                                         value={insertTalkOp.talkType}
@@ -216,10 +204,9 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
                                     onChange={onChange} />}
                             </div>
-                            <Grid container spacing={6}>
-                                <Box sx={{ width: "300px", textAlign: "center", lineHeight: 3 }}>
-                                    <Typography variant="h6" sx={{ mt: 3 }}>대표사진을 넣어주세요</Typography>
-                                    <Button variant="contained" component="label" size="large">
+                            <Stack>
+                                <Typography variant="h7" sx={{ mt: 3 }}>대표사진을 넣어주세요
+                                    <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
                                         Upload
                                         <TextField
                                             label="모임대표사진"
@@ -232,7 +219,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                             required
                                         />
                                     </Button>
-                                    &nbsp;&nbsp;
+                                    {/* &nbsp;&nbsp;
                                     <Button variant="contained" component="label" size="large"
                                         style={{
                                             backgroundColor: "gray",
@@ -240,17 +227,11 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                         }}
                                         onClick={() => deleteFileImage()}>
                                         Delete
-                                    </Button>
+                                    </Button> */}
+                                </Typography>
+                                <Box style={imgBoxStyle} className="img_box">
                                 </Box>
-                            </Grid>
-                            {fileForm && (<Box>
-                                <img style={imgBoxStyle}
-                                    className="img_box"
-                                    alt="모임대표사진"
-                                    src={fileForm}
-                                />
-                            </Box>
-                            )}
+                            </Stack>
                             <TextField fullWidth
                                 label="모임을 소개해주세요"
                                 name="talkContent"

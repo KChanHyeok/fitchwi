@@ -50,7 +50,7 @@ const TalkHome = ({ talkList }) => {
           </Stack>
           <TogetherCategory open={open} setOpen={setOpen} type={"talk"} />
           {/* 1번 카테고리 */}
-          <Box height={480} mt={6}>
+          <Box height={520} mt={6}>
             <Box display="flex" alignItems="center">
               <Typography variant="h5">⚡️ 새로 열린 얘기해요</Typography>
               <Link to={"/talk/new"}
@@ -60,9 +60,11 @@ const TalkHome = ({ talkList }) => {
             </Box><br />
             <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
               {talkList.sort((a, b) => b.talkCode - a.talkCode).filter((data, index) => index < 4).map(data => (
-                <Card sx={{ mb: 3, width: 300, maxHeight: 400, textDecorationLine: "none" }} key={data.talkCode} component={Link} to={`/talk/${data.talkCode}`}>
+                <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
+                  key={data.talkCode}
+                  component={Link} to={`/talk/${data.talkCode}`}>
                   <CardActionArea>
-                    <CardMedia src={`/images/${data.talkSaveimg}`} component="img" width="200" height="150" alt="talkimg" />
+                    <CardMedia src={`/images/${data.talkSaveimg}`} component="img" width="200" height="200" alt="talkimg" />
                     <CardContent>
                       <Typography
                         variant="h6"
@@ -85,7 +87,7 @@ const TalkHome = ({ talkList }) => {
                         <UserBox>
                           <Link to="/memberpage" state={{ memberId: data.talkOpenCode.memberEmail.memberEmail }}>
                             <Avatar
-                              src={`/images/${data.talkOpenCode.memberEmail.memberSaveimg}`}
+                              src={data.talkOpenCode.memberEmail.memberSaveimg}
                               sx={{ width: 40, height: 40 }}
                             />
                           </Link>

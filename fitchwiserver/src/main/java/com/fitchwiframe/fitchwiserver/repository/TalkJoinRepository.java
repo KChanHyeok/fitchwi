@@ -16,6 +16,5 @@ public interface TalkJoinRepository extends CrudRepository<TalkJoin, Long> {
 
     List<TalkJoin> findAllByMemberEmail(Member member);
 
-
-  Long countByTalkCode(Talk talk);
+    Long countByTalkCode(Talk talk);
 }
