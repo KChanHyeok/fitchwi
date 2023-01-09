@@ -31,6 +31,9 @@ const SearchPage = () => {
     await axios
       .get("/getAllFeedList")
       .then((response) => {
+        if (response.data.length > 9) {
+          response.data.length = 9;
+        }
         setFeedList(response.data);
       })
       .catch((error) => console.log(error));

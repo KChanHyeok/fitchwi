@@ -115,21 +115,23 @@ public class FeedService {
     public List<Feed> getAllFeedList() {
         log.info("feedService.getAllFeedList()");
 
-        List<Feed> feedList = feedRepository.findAllByOrderByFeedDateDesc();
-        List<Feed> newList = new ArrayList<>();
+        List<Feed> feedList = null;
+        try {
+            feedList = feedRepository.findAllByOrderByFeedDateDesc();
+            List<Feed> newList = new ArrayList<>();
 
-        for (Feed a : feedList){
-            List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
-            List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
-            List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
-            a.setFfList(feedFiles);
-            a.setFcList(feedComments);
-            a.setFlList(feedLikes);
-            newList.add(a);
-        }
-        System.out.println("newList = " + newList);
-        if (feedList == null){
-            return null;
+            for (Feed a : feedList) {
+                List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+                List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
+                a.setFfList(feedFiles);
+                a.setFcList(feedComments);
+                a.setFlList(feedLikes);
+                newList.add(a);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return feedList;
     }
@@ -138,16 +140,19 @@ public class FeedService {
     public List<Feed>getMemberFeed(String memberEmail) {
         log.info("feedService.getMemberFeed");
         Member member = memberRepository.findById(memberEmail).get();
-        //피드 가져오기
-        List<Feed> feedList = feedRepository.findAllByMemberEmailOrderByFeedDateDesc(member);
         List<Feed> memberFeedList = new ArrayList<>();
-
-        //각 피드에 해당하는 피드파일 가져오기
-        for(Feed feed : feedList){
-            List<FeedFile> feedFileList = feedFileRepository.findByFeedCode(feed.getFeedCode());
-            feed.setFfList(feedFileList);
-            memberFeedList.add(feed);
+        try {
+            List<Feed> feedList = feedRepository.findAllByMemberEmailOrderByFeedDateDesc(member);
+            //각 피드에 해당하는 피드파일 가져오기
+            for(Feed feed : feedList){
+                List<FeedFile> feedFileList = feedFileRepository.findByFeedCode(feed.getFeedCode());
+                feed.setFfList(feedFileList);
+                memberFeedList.add(feed);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        //피드 가져오기
         return memberFeedList;
     }
 

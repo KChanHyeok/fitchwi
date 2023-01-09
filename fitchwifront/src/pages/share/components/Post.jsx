@@ -56,6 +56,7 @@ const Post = ({
   // 피드 작성시간
   const toDay = new Date();
   const toDayD = toDay.getTime();
+  console.log(feedClassificationcode);
 
   let divide = 1000 * 60 * 60 * 24;
   let date = (toDayD - feedDate) / divide;
@@ -94,7 +95,10 @@ const Post = ({
 
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
-      axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => setTalkInfo(res.data));
+      axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => {
+        console.log(res.data);
+        setTalkInfo(res.data);
+      });
     }
   }, [feedClassificationcode]);
 
@@ -225,39 +229,41 @@ const Post = ({
             {!talkInfo ? (
               <></>
             ) : (
-              <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
-                <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
-                  <CardMedia
-                    component="img"
-                    sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
-                    image={`/images/${talkInfo.talkSaveimg}`}
-                  />
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontSize: 16 }}>
-                      {talkInfo.talkTitle}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
-                      {talkInfo.talkContent}
-                    </Typography>
-                    <Box
-                      sx={{
-                        mt: 1,
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Avatar
-                        alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
-                        src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
-                        sx={{ width: 20, height: 20, mr: 1 }}
-                      />
-                      <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
-                        {talkInfo.talkOpenCode.memberEmail.memberNickname}
+              <>
+                <Link to={`/talk/${talkInfo.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                  <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
+                    <CardMedia
+                      component="img"
+                      sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                      image={`/images/${talkInfo.talkSaveimg}`}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" sx={{ fontSize: 16 }}>
+                        {talkInfo.talkTitle}
                       </Typography>
-                    </Box>
-                  </CardContent>
-                </Box>
-              </Link>
+                      <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                        {talkInfo.talkContent}
+                      </Typography>
+                      <Box
+                        sx={{
+                          mt: 1,
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Avatar
+                          alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
+                          src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                          sx={{ width: 20, height: 20, mr: 1 }}
+                        />
+                        <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
+                          {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Box>
+                </Link>
+              </>
             )}
 
             <CardContent>
@@ -304,11 +310,11 @@ const Post = ({
                   </Box>
                 )
               ) : (
-                <Typography variant="body2" color="grey" marginBottom={2}>
+                <Typography variant="body2" color="grey">
                   작성한 댓글이 없습니다.
                 </Typography>
               )}
-              <Divider style={{ background: "grey", borderBottomWidth: 0.5 }} sx={{ mt: 2 }} />
+              <Divider style={{ background: "grey", borderBottomWidth: 0.5 }} sx={{ mt: 1 }} />
               <Box
                 sx={{
                   display: "flex",

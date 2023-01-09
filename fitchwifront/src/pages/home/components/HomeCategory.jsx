@@ -5,13 +5,12 @@ import { ImageListItemBar } from "@mui/material";
 
 export default function HomeCategory({ setCategory }) {
   return (
-    <ImageList sx={{ width: "100%", height: 150 }} cols={7}>
+    <ImageList sx={{ width: "100%", height: 150 }} cols={7} gap={10}>
       {itemData.map((item, index) => (
         <ImageListItem style={{ height: "150px" }} onClick={() => setCategory(item.title)} key={index}>
           <img
             src={`${item.img}?w=248&fit=crop&auto=format`}
             alt={item.title}
-            loading="lazy"
             style={{
               width: "100%",
               height: "100%",

@@ -6,7 +6,7 @@ const About = () => {
   const nav = useNavigate();
   return (
     <Box mb={4}>
-      <Box height={500} component="img" src="/images/about.png" width="100%" />
+      <Box height={400} component="img" src="/images/About1.png" width="100%" />
       <Container fixed>
         <Box flex={4}>
           <Box>
@@ -17,8 +17,8 @@ const About = () => {
                 <br />
                 대화, 공간을 나누는 커뮤니티
               </Typography>
-              <Typography variant="h6" mt={2} color="grey">
-                🍑FITCHWI는 모임을 주최하고 이끌어갈 호스트를 중심으로
+              <Typography variant="h6" mt={2} color="grey" fontWeight={100}>
+                <b>😀FITCHWI</b>는 모임을 주최하고 이끌어갈 호스트를 중심으로
                 <br />
                 취향이 맞는 사람들을 연결해요. 연결된 사람들은 가정집, 작업실, 동네가게 등<br />
                 모임이 진행되는 공간에 모여 공통된 관심사로 대화하며 취향을 나눠요.

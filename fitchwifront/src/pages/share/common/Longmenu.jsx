@@ -67,8 +67,8 @@ export default function LongMenu({ flist, refreshFeed, information }) {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          setTagForm([]);
-          setFeedUpdate({});
+          // setTagForm([]);
+          // setFeedUpdate({});
           window.location.reload();
         } else {
           alert("실패");
@@ -131,7 +131,6 @@ export default function LongMenu({ flist, refreshFeed, information }) {
   const getMemberTalk = useCallback(() => {
     axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
       const { talkJoinList, talkOpenedList } = res.data;
-      console.log(res.data);
       setTalkJoinList(talkJoinList);
       setTalkOpenedList(talkOpenedList);
     });
@@ -254,26 +253,15 @@ export default function LongMenu({ flist, refreshFeed, information }) {
             )}
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 380, height: 400 }} mt={1}>
-              {talkJoinList === 0 || talkOpenedList === 0 ? (
+              {talkJoinList.length === 0 && talkOpenedList.length === 0 ? (
                 <>
-                  <Box textAlign="right">
-                    <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
-                      🔍 얘기해요 구경하기
-                    </Button>
-                  </Box>
-                  <FormControl fullWidth disabled>
-                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                      참여중인 얘기해요가 없습니다.
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-autowidth-label"
-                      id="demo-simple-select-autowidth"
-                      value={feedClassificationcode || ""}
-                      label="참여중인 얘기해요"
-                    >
-                      <MenuItem value=""></MenuItem>
-                    </Select>
-                  </FormControl>
+                  <TextField
+                    fullWidth
+                    value="참여중인 얘기해요가 없습니다"
+                    id="outlined-multiline-static"
+                    label="참여중인 얘기해요"
+                    disabled
+                  />
                 </>
               ) : (
                 <>

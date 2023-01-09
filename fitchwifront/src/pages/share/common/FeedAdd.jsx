@@ -141,10 +141,12 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          refreshFeed();
-          setFileForm("");
-          setTagForm([]);
-          setInsertForm({});
+          window.location.reload();
+          // setState(false);
+          // setFileForm("");
+          // setTagForm([]);
+          // setInsertForm({});
+          // refreshFeed();
         } else {
           alert("실패");
         }
@@ -192,12 +194,14 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
   const [talkOpenedList, setTalkOpenedList] = useState([]);
 
   const getMemberTalk = useCallback(() => {
-    axios.get("/getMemberTalk", { params: { memberEmail: memberEmail } }).then((res) => {
-      const { talkJoinList, talkOpenedList } = res.data;
-      console.log(res.data);
-      setTalkJoinList(talkJoinList);
-      setTalkOpenedList(talkOpenedList);
-    });
+    axios
+      .get("/getMemberTalk", { params: { memberEmail: memberEmail } })
+      .then((res) => {
+        const { talkJoinList, talkOpenedList } = res.data;
+        setTalkJoinList(talkJoinList);
+        setTalkOpenedList(talkOpenedList);
+      })
+      .catch((error) => console.log(error));
   }, [memberEmail]);
 
   useEffect(() => {
@@ -289,7 +293,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
             </Box>
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 440, height: 400 }}>
-              {talkJoinList === 0 && talkOpenedList === 0 ? (
+              {talkJoinList.length === 0 && talkOpenedList.length === 0 ? (
                 <>
                   <Box textAlign="right">
                     <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
@@ -306,7 +310,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
                       value={insertForm.feedClassificationcode}
                       name="feedClassificationcode"
                       onChange={handleChange}
-                      label="참여중인 얘기해요"
+                      label="참여중인 얘기해요가 없습니다."
                     >
                       <MenuItem value=""></MenuItem>
                     </Select>
