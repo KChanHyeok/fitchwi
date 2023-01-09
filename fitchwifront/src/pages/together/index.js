@@ -67,6 +67,7 @@ const Together = () => {
           element={
             <TogetherInfo
               refreshTogetherJoinList={getAllTogetherJoinList}
+              refreshTogetherList={getAllTogetherList}
               togetherJoinList={togetherJoinList}
               togetherList={togetherList}
             />
@@ -74,7 +75,6 @@ const Together = () => {
         />
         <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
       </Routes>
-      <Footer />
     </Box>
   );
 };

@@ -4,14 +4,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 
-const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember}) => {
+const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember, refreshTogetherList}) => {
     const IMP = window.IMP; // 생략 가능
     IMP.init("imp54355175");
 
     useEffect(()=> {
-      if(sessionStorage.getItem("id")) {
-        getMemberInfo(sessionStorage.getItem("id"))
-      }
+        if(sessionStorage.getItem("id")) {
+          getMemberInfo(sessionStorage.getItem("id"))
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     const getMemberInfo = (id) => {
@@ -119,11 +119,11 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     }
 
     const finalPayment = () => {
-        // if (togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice === 0) {
-            // insertTogetherFreeInfo();
-        // } else {
+        if (togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice === 0) {
+            insertTogetherFreeInfo();
+        } else {
             requestLastPay()
-        // }
+        }
     }
 
      const requestLastPay = () => {
@@ -142,8 +142,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
           if (rsp.success) {
             const insertPayForm = {
                 togetherPayCode: rsp.merchant_uid,
-                togetherCode: insertForm,
                 togetherImp: rsp.imp_uid,
+                togetherCode: insertForm.togetherCode,
                 togetherPayPrice: rsp.paid_amount,
                 togetherPayMethod: rsp.pay_method,
                 togetherPayStatus: "",
@@ -153,7 +153,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
               .then((res) => {
                   setOpen(false);
                   alert(res.data);
-                  refreshTogetherJoinList();
+                  refreshTogetherList();
               })
               .catch((Error) => console.log(Error))
           } else {
@@ -161,9 +161,14 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
           }
         });
     }
-    // const insertTogetherFreeInfo = () => {
-        
-    // }
+    const insertTogetherFreeInfo = () => {
+        axios.post("/insertTogetherFreeInfo", insertForm.togetherCode)
+            .then((res) => {
+                setOpen(false);
+                alert(res.data);
+                refreshTogetherList();
+        })
+    }
 
     const insertTogetherFreeJoinInfo = () => {
         if(!sessionStorage.getItem("id")) {
@@ -246,13 +251,14 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불하기</Button>}
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
-                togetherPayState==="결제대기중" ? <Box sx={style}>
-                <UserBox>
-                    <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                    <Typography fontWeight={500} variant="span">
-                    {sessionStorage.getItem("id")}
-                    </Typography>
-                </UserBox>
+                togetherPayState==="결제대기중" ? 
+                <Box sx={style}>
+                    <UserBox>
+                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Typography fontWeight={500} variant="span">
+                        {sessionStorage.getItem("id")}
+                        </Typography>
+                    </UserBox>
                 <hr/>
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*결제전 진행 사항*/}
                     함께해요 이름 : {togetherInfo.togetherTitle}<br/>
@@ -261,7 +267,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                     총 결제금액 : {togetherInfo.togetherTotalPrice}원(본인 부담금 포함) <br/>
                 </Typography>
 
-                <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
+                <Typography sx={{ mt: 2, mb:2 }} variant="h6"> {/*질문*/}
                     {togetherJoinMember.length+1===togetherInfo.togetherMax ? "최종결제 진행 하시겠습니까?":"인원이 부족합니다"}
                 </Typography>
                 <Button variant="contained" onClick={finalPayment} sx={{mr:3}} disabled={!(togetherJoinMember.length+1===togetherInfo.togetherMax)} >결제하기</Button>
