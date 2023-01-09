@@ -126,7 +126,7 @@ public class TalkController {
 
     @GetMapping("/getTalkJoinListByMember")
     public List<TalkJoin> getTalkJoinListByMember(@RequestParam String memberEmail){
-        log.info("ssgetTalkJoinListByMember()");
+        log.info("getTalkJoinListByMember()");
         return talkService.getTalkJoinListByMember(memberEmail);
     }
 

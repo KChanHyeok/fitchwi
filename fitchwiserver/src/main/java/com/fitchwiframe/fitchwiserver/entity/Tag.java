@@ -14,6 +14,6 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tagCode;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique=true)
     private String tagContent;
 }
