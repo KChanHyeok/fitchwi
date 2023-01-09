@@ -115,8 +115,7 @@ const Post = ({
               feedCode: feedCode,
               feedCommentContent: "",
             });
-            window.location.reload();
-            // refreshFeed();
+            refreshFeed();
           } else {
             alert("실패");
           }
@@ -144,8 +143,7 @@ const Post = ({
       if (isLike === false) {
         axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {
           setIsLike(!isLike);
-          window.location.reload();
-          // refreshFeed();
+          refreshFeed();
         });
       } else {
         axios
@@ -154,12 +152,11 @@ const Post = ({
           })
           .then((res) => {
             setIsLike(!isLike);
-            window.location.reload();
-            // refreshFeed();
+            refreshFeed();
           });
       }
     },
-    [feedCode, memberInfo.memberEmail, nav]
+    [feedCode, memberInfo.memberEmail, nav, refreshFeed]
   );
 
   useEffect(() => {
@@ -199,7 +196,7 @@ const Post = ({
               title={<b>{memberWriterInfo.memberNickname}</b>}
               subheader={day > 1 ? day + "일 전" : hour > 1 ? hour + "시간 전" : minute > 1 ? minute + "분 전" : second + "초 전"}
             />
-            <Divider />
+            <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
             {/* 피드 이미지 */}
             {file.length > 1 ? (
               <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
@@ -224,7 +221,7 @@ const Post = ({
                 alt={file[0].feedFileImg}
               />
             )}
-            <Divider />
+            <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
             {!talkInfo ? (
               <></>
             ) : (
@@ -311,7 +308,7 @@ const Post = ({
                   작성한 댓글이 없습니다.
                 </Typography>
               )}
-              <Divider sx={{ mt: 2 }} />
+              <Divider style={{ background: "grey", borderBottomWidth: 0.5 }} sx={{ mt: 2 }} />
               <Box
                 sx={{
                   display: "flex",
@@ -355,7 +352,7 @@ const Post = ({
           >
             <Box width={1200} height={700} bgcolor="white" p={3} borderRadius={2}>
               <Stack direction="row" spacing={3} justifyContent="space-between">
-                <Box flex={2} ml={4}>
+                <Box flex={2}>
                   {file.length > 1 ? (
                     <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
                       {file.map((item, i) => (
@@ -378,7 +375,7 @@ const Post = ({
                     />
                   )}
                 </Box>
-                <Divider orientation="vertical" flexItem />
+                <Divider style={{ background: "black", borderBottomWidth: 0.5 }} orientation="vertical" flexItem />
                 <Box flex={1} p={1}>
                   <UserBox display="flex" justifyContent="space-between" mb={1}>
                     <Box display="flex" alignItems="center">
@@ -393,7 +390,7 @@ const Post = ({
                     </Box>
                     <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={information} />
                   </UserBox>
-                  <Divider />
+                  <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
                   <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
                     <UserBox mb={2}>
                       <Avatar
@@ -482,7 +479,7 @@ const Post = ({
                       </Typography>
                     )}
                   </Box>
-                  <Divider />
+                  <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
                   <Stack direction="row" gap={1}>
                     <Checkbox
                       checked={isLike}

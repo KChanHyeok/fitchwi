@@ -6,7 +6,11 @@ import { Route, Routes } from "react-router-dom";
 import TogetherInfo from "./components/togetherInfo";
 import AddButton from "./components/common/addButton";
 import TogetherHome from "./components/togetherHome";
+
+import Footer from "../../layout/Footer";
+
 import TogetherCategoryList from "./components/togetherCategoryList";
+
 
 const Together = () => {
   const [facilitiesList, setFacilitiesList] = useState([]);
@@ -70,6 +74,7 @@ const Together = () => {
         />
         <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
       </Routes>
+      <Footer />
     </Box>
   );
 };

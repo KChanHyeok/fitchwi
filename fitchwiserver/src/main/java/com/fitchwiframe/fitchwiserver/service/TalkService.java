@@ -349,6 +349,21 @@ public class TalkService {
     }
 
 
+    public List<Talk> getTalkListByCategory(String talkCategory) {
+        log.info("talkService.getTalkListByCategory()");
+        List<Talk> talkList = new ArrayList<>();
+
+        try {
+            System.out.println("category = " + talkCategory);
+            talkList = talkRepository.findAllByTalkCategory(talkCategory);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return talkList;
+    }
+
+
+
     public void deleteAllByMember(Member member, HttpSession session){
         //가입중
       List<TalkJoin> talkJoinListByMember = getTalkJoinListByMember(member.getMemberEmail());
@@ -370,4 +385,5 @@ public class TalkService {
 
       }
     }
+
 }

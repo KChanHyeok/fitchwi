@@ -44,7 +44,7 @@ const Header = ({ lstate, onLogout }) => {
               <Search color="error" />
             </Link>
             <Link to={flink} style={{ textDecoration: "none" }}>
-              <Button color="primary" variant="contained" sx={{ ml: 3 }}>
+              <Button color="primary" variant="text" sx={{ ml: 3 }}>
                 {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
               </Button>
             </Link>

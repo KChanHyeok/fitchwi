@@ -198,6 +198,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
           },
         })
         .then((response) => {
+          console.log(response.data);
           setJoinList(response.data);
         })
         .catch((error) => console.log(error));
@@ -231,7 +232,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
               <Button color="error" onClick={handleClose}>
                 CANCEL
               </Button>
-              <Button color="secondary" onClick={reset}>
+              <Button onClick={reset} sx={{ color: "pink" }}>
                 RESET
               </Button>
             </ButtonGroup>

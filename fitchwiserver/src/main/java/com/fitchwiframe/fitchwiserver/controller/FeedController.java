@@ -43,6 +43,12 @@ public class FeedController {
         return feedService.getFeedList(page, category, session);
     }
 
+    @GetMapping("/getFeedListTillPage")
+    private List<Feed> getFeedListTillPage(@RequestParam Integer page, String category, HttpSession session){
+        log.info("getFeedListTillPage()");
+        return feedService.getFeedListTillPage(page, category, session);
+    }
+
 
     //멤버가 작성한 피드 조회
     @GetMapping("/getMemberFeed")

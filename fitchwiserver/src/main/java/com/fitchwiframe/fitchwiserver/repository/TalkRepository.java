@@ -17,4 +17,6 @@ public interface TalkRepository extends CrudRepository<Talk, Long> {
     List<Talk> findByTalkTitleLike(String searchText);
 
   Talk findByTalkOpenCode(TalkOpened to);
+
+  List<Talk> findAllByTalkCategory(String talkCategory);
 }

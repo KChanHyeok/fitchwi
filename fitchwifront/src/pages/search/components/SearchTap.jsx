@@ -69,11 +69,11 @@ export default function SearchTap({ list }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <ImageList sx={{ width: "100%", overflowY: "scroll", height: "800px", mb: 6, mt: 0.5 }} cols={3} rowHeight={164}>
+        <ImageList sx={{ width: "100%", overflowY: "scroll", height: "800px", mb: 6, mt: 0.5 }} cols={3}>
           {list !== undefined ? (
             list.map((feed, index) => (
               <Link to={`/share/${feed.feedCode}`} key={index}>
-                <ImageListItem style={{ height: "300px" }}>
+                <ImageListItem style={{ height: "400px" }}>
                   <img
                     src={`/images/${feed.ffList[0].feedFileSaveimg}`}
                     srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
@@ -97,7 +97,7 @@ export default function SearchTap({ list }) {
           {bestFeed !== undefined ? (
             bestFeed.map((feed, index) => (
               <Link to={`/share/${feed.feedCode}`} key={index}>
-                <ImageListItem style={{ height: "300px" }}>
+                <ImageListItem style={{ height: "400px" }}>
                   <img
                     src={`/images/${feed.ffList[0].feedFileSaveimg}`}
                     srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}

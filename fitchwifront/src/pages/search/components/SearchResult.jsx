@@ -152,7 +152,7 @@ const SearchResult = () => {
                 ) : (
                   togetherList.map((item, index) => (
                     <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={index}>
-                      <Card sx={{ maxWidth: 1000, borderBottom: 1 }}>
+                      <Card sx={{ width: "100%", borderBottom: 1 }}>
                         <CardActionArea>
                           <CardMedia component="img" height="200" src={`/images/${item.togetherSaveimg}`} alt="green iguana" />
                           <CardContent>

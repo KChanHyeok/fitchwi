@@ -38,6 +38,13 @@ public class TalkController {
         return talkService.getAllTalkList();
     }
 
+    // 얘기해요 카테고리별 조회
+    @GetMapping("/getTalkListByCategory")
+    public List<Talk> getTalkListByCategory(String talkCategory){
+        log.info("getTalkListByCategory()");
+        return talkService.getTalkListByCategory(talkCategory);
+    }
+
     @GetMapping("/getAllTalkTagList")
     public Iterable<TalkTag> getAllTalkTagList() {
         log.info("talkController.getAllTalkTagList()");

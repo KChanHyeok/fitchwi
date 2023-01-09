@@ -1,23 +1,10 @@
-import {
-  Avatar,
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Button,
-  Select,
-  styled,
-  TextField,
-  Typography,
-  Stack,
-  Grid
-} from "@mui/material";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
+import { Avatar, Box, FormControl, InputLabel, MenuItem, Button, Select, styled, TextField, Typography, Stack, Grid } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 import React, { useCallback, useEffect, useState } from "react";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
@@ -25,7 +12,6 @@ import moment from "moment/moment";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 
 const nowdate = moment().format("YYYY-MM-DD");
-
 
 const UserBox = styled(Box)({
   display: "flex",
@@ -36,25 +22,24 @@ const UserBox = styled(Box)({
 
 const facilities = {
   facilitiesCode: 0,
-  facilitiesGrade: "", 
-  facilitiesManager: "" ,
+  facilitiesGrade: "",
+  facilitiesManager: "",
   facilitiesName: "",
   facilitiesPhone: "",
   facilitiesPosition: "",
-  facilitiesPrice: 0
-}
+  facilitiesPrice: 0,
+};
 
 const TogetherAdd = ({ data, refreshTogetherList }) => {
-
   const nav = useNavigate();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const formDate = new FormData();
   const [fileForm, setFileForm] = useState("");
   const [firstDateOpen, setFirstDateOpen] = useState(true);
   const [secondDateOpen, setSecondDateOpen] = useState(true);
-  
+
   const imgEl = document.querySelector(".img_box");
-  
+
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
       memberEmail: sessionStorage.getItem("id"),
@@ -74,6 +59,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
     togetherTagContent: "", //태그 내용
   });
+
   const getMemberInfo = useCallback((id) => {
       axios.get("/getMemberInfo", { params: { userId: id } }).then((res) => setInsertForm({
           ...insertForm,
@@ -226,13 +212,13 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             label="모임카테고리선정"
             required
           >
-            <MenuItem value="문화·예술">문화·예술</MenuItem>
-            <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
-            <MenuItem value="요리·음식">요리·음식</MenuItem>
+            <MenuItem value="문화∙예술">문화·예술</MenuItem>
+            <MenuItem value="운동∙액티비티">운동·액티비티</MenuItem>
+            <MenuItem value="요리∙음식">요리·음식</MenuItem>
             <MenuItem value="여행">여행</MenuItem>
-            <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
-            <MenuItem value="공예·수공예">공예·수공예</MenuItem>
-            <MenuItem value="게임·오락">게임·오락</MenuItem>
+            <MenuItem value="성장∙자기계발">성장·자기계발</MenuItem>
+            <MenuItem value="공예∙수공예">공예·수공예</MenuItem>
+            <MenuItem value="게임∙오락">게임·오락</MenuItem>
             <MenuItem value="기타">기타</MenuItem>
           </Select>
         </FormControl>
@@ -240,21 +226,32 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         {/* 시설 내역과 정보 제공 */}
          <Grid container spacing={3}>
           <Grid item xs={4}>
-            <Typography variant="h5" sx={{mt:3}}>
+            <Typography variant="h5" sx={{ mt: 3 }}>
               시설을 골라주세요
             </Typography>
             <List
+              sx={{
+                width: "100%",
+                maxWidth: 360,
+                maxHeight: 200,
+                mt: 3,
+                border: "1px solid lightgray",
+                borderRadius: 1.2,
+                overflowY: "auto",
+              }}
               sx={{ width: '100%', maxWidth: 360, maxHeight:170, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
               aria-label="contacts"
             >
               <ListItem disablePadding>
-                <ListItemButton onClick={()=>{
-                  setInsertForm({
-                    ...insertForm,
-                    facilitiesCode:facilities,
-                    togetherPosition:facilities.facilitiesPosition
-                  })
-                }}>
+                <ListItemButton
+                  onClick={() => {
+                    setInsertForm({
+                      ...insertForm,
+                      facilitiesCode: facilities,
+                      togetherPosition: facilities.facilitiesPosition,
+                    });
+                  }}
+                >
                   <ListItemText inset primary="이용안함" />
                 </ListItemButton>
               </ListItem>
@@ -274,17 +271,25 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             </List>
           </Grid>
           <Grid item xs>
-            <Box component="div" sx={{ mt:10 ,height:200}}>
-                {insertForm.facilitiesCode.facilitiesCode===0 ? <Typography variant="h6" component="div">시설 이용안함</Typography> :
+            <Box component="div" sx={{ mt: 10, height: 200 }}>
+              {insertForm.facilitiesCode.facilitiesCode === 0 ? (
                 <Typography variant="h6" component="div">
-                  시설명 : {insertForm.facilitiesCode.facilitiesName}<br/>
-                  시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}<br/>
-                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원<br/>
-                  시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}<br/>
-                  시설담당자 : {insertForm.facilitiesCode.facilitiesManager}<br/>
+                  시설 이용안함
+                </Typography>
+              ) : (
+                <Typography variant="h6" component="div">
+                  시설명 : {insertForm.facilitiesCode.facilitiesName}
+                  <br />
+                  시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}
+                  <br />
+                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원<br />
+                  시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}
+                  <br />
+                  시설담당자 : {insertForm.facilitiesCode.facilitiesManager}
+                  <br />
                   시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
-                </Typography> 
-                }
+                </Typography>
+              )}
             </Box>
           </Grid>
         </Grid>
@@ -319,8 +324,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <Box>
               <TextField
                 label="모이는 일자"
-                sx={{ mt: 3 }}
-                type="text"
+                disablePast
                 value={insertForm.togetherDate}
                 focused
                 fullWidth
@@ -362,14 +366,14 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 label="모집신청 시작일"
                 disablePast
                 value={insertForm.togetherRecruitStartDate}
-                maxDate={moment(insertForm.togetherDate).subtract(1,"days").format()}
-                onChange={(e)=>{
+                maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
+                onChange={(e) => {
                   setInsertForm({
                     ...insertForm,
                     togetherRecruitStartDate: moment(e.$d).format("YYYY-MM-DD"),
-                    togetherRecruitEndDate:""
+                    togetherRecruitEndDate: "",
                   });
-                  setSecondDateOpen(false)
+                  setSecondDateOpen(false);
                 }}
                 disabled={firstDateOpen}
                 renderInput={(params) => <TextField {...params} />}
@@ -465,7 +469,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <TextField
           fullWidth
           label="모임 소개 말"
-          sx={{ mt: 3}}
+          sx={{ mt: 3 }}
           value={insertForm.togetherContent}
           name="togetherContent"
           multiline

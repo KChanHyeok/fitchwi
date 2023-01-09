@@ -597,6 +597,18 @@ public class MemberService {
   }
 
 
+
+  public List<Member> getMemberList() {
+    log.info("memberService.getMemberList()");
+
+    List<Member> memberList = new ArrayList<>() ;
+    try {
+      memberList = (List<Member>) memberRepository.findAll();
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+    return memberList;
+}
   public String checkPhone(String memberPhone) {
     log.info("memberService.checkPhone");
     log.info(memberPhone);

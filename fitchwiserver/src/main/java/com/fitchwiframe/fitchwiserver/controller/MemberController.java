@@ -132,6 +132,11 @@ public class MemberController {
   }
 
 
+  @GetMapping("/getMemberList")
+  private List<Member> getMemberList(){
+    return memberService.getMemberList();
+
+
   @PostMapping("/checkPhone")
   public String checkPhone(@RequestBody String memberPhone){
     log.info("memberController.checkPhone");
@@ -143,5 +148,6 @@ public class MemberController {
   public String[] getMemberByPhone(@RequestParam String memberPhone){
     log.info("memberController.getMemberByPhone");
     return memberService.getMemberByPhone(memberPhone);
+
   }
 }

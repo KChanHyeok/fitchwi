@@ -372,6 +372,50 @@ public class FeedService {
         return feed;
 
     }
+
+
+    public List<Feed> getFeedListTillPage(Integer page, String category, HttpSession session) {
+        log.info("feedService.getFeedListTillPage()");
+
+        int listCnt = 5;
+
+        if (page == null){
+            page = 1;
+        }
+
+        List<Feed> newList = new ArrayList<>();
+        for (int i = 1; i <= page; i++ ){
+            Pageable feedPageable = PageRequest.of(i -1, listCnt, Sort.Direction.DESC, "feedDate");
+            List<Feed> feedList;
+
+            switch (category){
+                case "all" :
+                    feedList = feedRepository.findAll(feedPageable);
+                    for (Feed a : feedList){
+                        List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                        List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+                        List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
+                        a.setFfList(feedFiles);
+                        a.setFcList(feedComments);
+                        a.setFlList(feedLikes);
+                        newList.add(a);
+                    }
+                    break;
+                default:
+                    feedList = feedRepository.findAllByFeedCategoryContains(category, feedPageable);
+                    for (Feed a : feedList){
+                        List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+                        List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
+                        List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
+                        a.setFfList(feedFiles);
+                        a.setFcList(feedComments);
+                        a.setFlList(feedLikes);
+                        newList.add(a);
+                    }
+            }
+        }
+        return newList;
+
 @Transactional
     public void deleteAllByMember(Member member, HttpSession session){
 
@@ -391,6 +435,7 @@ public class FeedService {
                 deleteFeed(feed, session);
             }
         }
+
 
     }
 }

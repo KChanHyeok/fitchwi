@@ -78,48 +78,54 @@ export default function Login({ sucLogin }) {
   //   });
   // };
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LoginOutlined />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          로그인
-        </Typography>
-        <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }} style={{ width: "300px" }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="이메일"
-            name="memberEmail"
-            autoFocus
-            onChange={onLoginChange}
-            value={memberEmail}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="memberPwd"
-            label="Password"
-            type="password"
-            id="password"
-            onChange={onLoginChange}
-            value={memberPwd}
-          />
-
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+    <>
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "white",
+            p: 5,
+            borderRadius: 10,
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LoginOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             로그인
-          </Button>
+          </Typography>
+          <Box component="form" onSubmit={onLoginSend} sx={{ mt: 1 }} style={{ width: "300px" }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="이메일"
+              name="memberEmail"
+              autoFocus
+              onChange={onLoginChange}
+              value={memberEmail}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="memberPwd"
+              label="Password"
+              type="password"
+              id="password"
+              onChange={onLoginChange}
+              value={memberPwd}
+            />
+
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
+              로그인
+            </Button>
+
 
           {/* <Button
             fullWidth
