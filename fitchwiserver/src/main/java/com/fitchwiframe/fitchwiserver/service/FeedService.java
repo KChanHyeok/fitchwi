@@ -379,19 +379,19 @@ public class FeedService {
 
         int listCnt = 5;
 
-        if (page == null){
+        if (page == null) {
             page = 1;
         }
 
         List<Feed> newList = new ArrayList<>();
-        for (int i = 1; i <= page; i++ ){
-            Pageable feedPageable = PageRequest.of(i -1, listCnt, Sort.Direction.DESC, "feedDate");
+        for (int i = 1; i <= page; i++) {
+            Pageable feedPageable = PageRequest.of(i - 1, listCnt, Sort.Direction.DESC, "feedDate");
             List<Feed> feedList;
 
-            switch (category){
-                case "all" :
+            switch (category) {
+                case "all":
                     feedList = feedRepository.findAll(feedPageable);
-                    for (Feed a : feedList){
+                    for (Feed a : feedList) {
                         List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
                         List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
                         List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
@@ -403,7 +403,7 @@ public class FeedService {
                     break;
                 default:
                     feedList = feedRepository.findAllByFeedCategoryContains(category, feedPageable);
-                    for (Feed a : feedList){
+                    for (Feed a : feedList) {
                         List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
                         List<FeedComment> feedComments = feedCommentRepository.findByFeedCode(a.getFeedCode());
                         List<FeedLike> feedLikes = feedLikeRepository.findByFeedCode(a.getFeedCode());
@@ -415,7 +415,7 @@ public class FeedService {
             }
         }
         return newList;
-
+    }
 @Transactional
     public void deleteAllByMember(Member member, HttpSession session){
 

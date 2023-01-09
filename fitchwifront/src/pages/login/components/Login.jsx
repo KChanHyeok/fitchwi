@@ -121,13 +121,11 @@ export default function Login({ sucLogin }) {
               value={memberPwd}
             />
 
-
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
               로그인
             </Button>
 
-
-          {/* <Button
+            {/* <Button
             fullWidth
             variant="outlined"
             sx={{ mt: 3, mb: 2 }}
@@ -136,19 +134,20 @@ export default function Login({ sucLogin }) {
             구글로그인
           </Button> */}
 
-          <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
-            <KaKaoLogin />
-          </Button>
+            <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
+              <KaKaoLogin />
+            </Button>
+          </Box>
         </Box>
-      </Box>
-      <Grid container>
-        <Grid item xs>
-          <FindMemberInfoModal />
+        <Grid container>
+          <Grid item xs>
+            <FindMemberInfoModal />
+          </Grid>
+          <Grid item>
+            <Link to="/join">회원 가입</Link>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Link to="/join">회원 가입</Link>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 }
