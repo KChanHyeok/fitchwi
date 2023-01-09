@@ -33,9 +33,9 @@ export default function Interest({ joinForm, setJoinForm }) {
   };
 
   const interestArr = useMemo(() => [], []);
-  console.log(joinForm.memberInterest);
+  // console.log(joinForm.memberInterest);
   useEffect(() => {
-    console.log(joinForm.memberInterest.length);
+    //  console.log(joinForm.memberInterest.length);
     if (joinForm.memberInterest.length !== 0) {
       setIsDisabled(false);
     } else {

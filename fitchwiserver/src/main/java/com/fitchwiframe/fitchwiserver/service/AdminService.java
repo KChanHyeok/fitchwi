@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -29,8 +28,9 @@ public class AdminService {
   private ReportRepository reportRepository;
   @Autowired
   private ReportDetailRepository reportDetailRepository;
+
   @Autowired
-  private TalkService talkService;
+  private ManagerRepository managerRepository;
 
   public Iterable<Facilities> getAllFacilitiesList() {
     log.info("adminController.getAllFacilitiesList()");
@@ -39,35 +39,33 @@ public class AdminService {
 
 
   public Map<String, Object> getFacilitiesList(Integer pageNum, String facilitiesName) {
-   log.info("getFacilitiesList()");
-    if(pageNum ==null){
-    pageNum=1;
-  }
-  int listCount = 7;
-  Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"facilitiesCode");
+    log.info("getFacilitiesList()");
+    if (pageNum == null) {
+      pageNum = 1;
+    }
+    int listCount = 7;
+    Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "facilitiesCode");
 
 
+    Page<Facilities> result = null;
 
-  Page<Facilities> result = null;
+    if (facilitiesName.equals("")) {
+      result = facilitiesRepository.findAll(pageable);
+    } else {
+      String keywordToSearch = "%" + facilitiesName + "%";
+      result = facilitiesRepository.findByFacilitiesNameLike(keywordToSearch, pageable);
+    }
 
-  if(facilitiesName.equals("")){
-    result =    facilitiesRepository.findAll(pageable);
-  }else{
-    String keywordToSearch = "%" + facilitiesName + "%";
-    result = facilitiesRepository.findByFacilitiesNameLike(keywordToSearch, pageable);
-  }
+    List<Facilities> facilitiesList = result.getContent();
+    int totalPage = result.getTotalPages();
 
-  List<Facilities> facilitiesList = result.getContent();
-  int totalPage = result.getTotalPages();
-
-  Map<String, Object> mapToReturn  = new HashMap<>();
+    Map<String, Object> mapToReturn = new HashMap<>();
     mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
     mapToReturn.put("facilitiesList", facilitiesList);
 
     return mapToReturn;
   }
-
 
 
   //시설 추가
@@ -115,7 +113,7 @@ public class AdminService {
     try {
       Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
 
-      nodayRepository.deleteAll( nodayRepository.findAllByFacilitiesCode(facilities));
+      nodayRepository.deleteAll(nodayRepository.findAllByFacilitiesCode(facilities));
       facilitiesRepository.deleteById(facilitiesCode);
       result = "ok";
     } catch (Exception e) {
@@ -212,13 +210,13 @@ public class AdminService {
         reportDetail.setReportCode(savedReport);
         reportDetail.setMemberEmail(memberRepository.findById(reportDetail.getMemberEmail().getMemberEmail()).get());
         reportDetailRepository.save(reportDetail);
-        result="ok";
-      }else{
+        result = "ok";
+      } else {
         ReportDetail reportDetail = report.getReportDetailList().get(0);
         reportDetail.setReportCode(existingReport);
         reportDetail.setMemberEmail(memberRepository.findById(reportDetail.getMemberEmail().getMemberEmail()).get());
         reportDetailRepository.save(reportDetail);
-        result="ok";
+        result = "ok";
       }
 
 //
@@ -239,10 +237,6 @@ public class AdminService {
 //        reportDetail.setReportDetailDate("2023-01-01");
 //        reportDetailRepository.save(reportDetail);
 //      }
-
-
-
-
 
 
     } catch (Exception e) {
@@ -270,9 +264,9 @@ public class AdminService {
       } else {
         if (target != 0) {//게시글 신고
           for (Report report : reportedList) {
-            ReportDetail reportDetail = reportDetailRepository.findByReportCodeAndMemberEmail(report,memberReporting);
+            ReportDetail reportDetail = reportDetailRepository.findByReportCodeAndMemberEmail(report, memberReporting);
             System.out.println("reportDetail = " + reportDetail);
-            if (reportDetail!=null) {
+            if (reportDetail != null) {
               result = "reported";
             } else {
               result = "ok";
@@ -280,8 +274,8 @@ public class AdminService {
           }
         } else {//회원신고
           for (Report report : reportedList) {
-            ReportDetail reportDetail = reportDetailRepository.findByReportCodeAndMemberEmail(report,memberReporting);
-            if (reportDetail!=null) {
+            ReportDetail reportDetail = reportDetailRepository.findByReportCodeAndMemberEmail(report, memberReporting);
+            if (reportDetail != null) {
               result = "reported";
             } else {
               result = "ok";
@@ -301,22 +295,19 @@ public class AdminService {
     log.info("adminService.getReportList()");
 
 
-
-    if(pageNum ==null){
-      pageNum=1;
+    if (pageNum == null) {
+      pageNum = 1;
     }
     int listCount = 9;
-    Pageable pageable = PageRequest.of((pageNum-1), listCount, Sort.Direction.DESC,"reportCode");
+    Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "reportCode");
     Page<Report> result = reportRepository.findAll(pageable);
     List<Report> reportList = result.getContent();
     int totalPage = result.getTotalPages();
 
 
-    Map<String, Object> mapToReturn  = new HashMap<>();
+    Map<String, Object> mapToReturn = new HashMap<>();
     mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
-
-
 
 
     try {
@@ -344,44 +335,45 @@ public class AdminService {
     System.out.println("restrictDate = " + restrictDate);
     System.out.println("targetMemberEmail = " + targetMemberEmail);
     String result = "fail";
-    try{
+    try {
       Member targetMember = memberRepository.findById(targetMemberEmail).get();
       targetMember.setMemberRestriction(restrictDate);
       System.out.println("targetMember = " + targetMember);
       memberRepository.save(targetMember);
-      result="ok";
-    }catch (Exception e){
+      result = "ok";
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return result;
 
   }
-@Transactional
+
+  @Transactional
   public String deleteReport(Long reportCode) {
     String result = "fail";
     log.info("adminService.deleteReport()");
-    try{
+    try {
       Report reportToDelete = reportRepository.findById(reportCode).get();
 
       reportDetailRepository.deleteAllByReportCode(reportToDelete);
 
       reportRepository.delete(reportToDelete);
-      result ="ok";
-    }catch (Exception e){
+      result = "ok";
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return result;
   }
 
   public String updateReportState(Long reportCode) {
-   String result ="fail";
+    String result = "fail";
     log.info("adminService.updateReportState()");
-    try{
+    try {
       Report report = reportRepository.findById(reportCode).get();
       report.setReportState("처리완료");
       reportRepository.save(report);
-      result ="ok";
-    }catch (Exception e){
+      result = "ok";
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return result;
@@ -389,13 +381,34 @@ public class AdminService {
 
   public void deleteAllByMember(Member member) {
     List<ReportDetail> reportDetailList = reportDetailRepository.findByMemberEmail(member);
-    if(!(reportDetailList.isEmpty())){
+    if (!(reportDetailList.isEmpty())) {
       reportDetailRepository.deleteAll(reportDetailList);
     }
     List<Report> reportList = reportRepository.findByMemberEmail(member);
-    if(!(reportList.isEmpty())){
+    if (!(reportList.isEmpty())) {
       reportRepository.deleteAll(reportList);
     }
   }
 
+  public String managerLogin(Manager manager) {
+    log.info("adminService.managerLogin()");
+    String result = "fail";
+    try {
+      Optional<Manager> byId = managerRepository.findById(manager.getManagerId());
+      if (byId.isPresent()) {
+        Manager dbManager = byId.get();
+        if (dbManager.getManagerPwd().equals(manager.getManagerPwd())) {
+          result = "ok";
+        }else{
+          result = "wrong pwd";
+        }
+        result = "no data";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+
+
+  }
 }

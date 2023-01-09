@@ -1,14 +1,13 @@
 package com.fitchwiframe.fitchwiserver.controller;
 
 import com.fitchwiframe.fitchwiserver.entity.Facilities;
+import com.fitchwiframe.fitchwiserver.entity.Manager;
 import com.fitchwiframe.fitchwiserver.entity.Report;
 import com.fitchwiframe.fitchwiserver.service.AdminService;
-import com.fitchwiframe.fitchwiserver.service.FeedService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -114,5 +113,11 @@ public class AdminController {
   public String updateReportState(@PathVariable Long reportCode) {
     log.info("adminController.updateReportState()");
     return adminService.updateReportState(reportCode);
+  }
+  @PostMapping("/managerLogin")
+  public String managerLogin(Manager manager){
+    System.out.println("manager = " + manager);
+    log.info("adminController.managerLogin");
+    return adminService.managerLogin(manager);
   }
 }

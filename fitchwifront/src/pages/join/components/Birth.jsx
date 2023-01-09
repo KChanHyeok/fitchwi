@@ -4,7 +4,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Birth({ onChange, joinForm }) {
-  console.log(joinForm.memberBirth);
+  //console.log(joinForm.memberBirth);
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
     if (joinForm.memberBirth !== "") {
