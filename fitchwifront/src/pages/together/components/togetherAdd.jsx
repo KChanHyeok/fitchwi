@@ -10,6 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import moment from "moment/moment";
 import { useDaumPostcodePopup } from "react-daum-postcode";
+import MapIcon from '@mui/icons-material/Map';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import AddIcCallRoundedIcon from '@mui/icons-material/AddIcCallRounded';
+import FaceRoundedIcon from '@mui/icons-material/FaceRounded';
+import SentimentSatisfiedAltRoundedIcon from '@mui/icons-material/SentimentSatisfiedAltRounded';
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -68,28 +74,31 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     },[insertForm])
 
     useEffect(() => {
+      preview();
       if (!insertForm.memberEmail.memberSaveimg) {
         getMemberInfo(sessionStorage.getItem("id"));
       }
-    preview();
     return () => preview();
   });
   
-  const preview = useCallback(() => {
-    if (!fileForm) return false
+  const preview = () => {
+
+    if (fileForm.length===0){
+      return false
+    } 
 
     const render = new FileReader();
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-  },[fileForm, imgEl])
+  }
 
   const onLoadFile = useCallback((event) => {
     const file = event.target.files;
     setFileForm(file);
   }, []);
 
-  const sendTogether = useCallback((e) => {
+  const sendTogether = (e) => {
     e.preventDefault();
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
     formDate.append("uploadImage", fileForm[0]);
@@ -105,7 +114,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     }).catch((error) => {
       console.log(error)
     })
-  },[fileForm, formDate, insertForm, nav, refreshTogetherList])
+  }
 
   const handleChange = useCallback(
     (event) => {
@@ -269,15 +278,22 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 </Typography>
               ) : (
                 <Typography variant="h6" component="div">
+                  <ApartmentIcon/>
                   시설명 : {insertForm.facilitiesCode.facilitiesName}
                   <br />
+                  <MapIcon/>
                   시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}
                   <br />
-                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원<br />
+                  <AttachMoneyIcon/>
+                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원
+                  <br />
+                  <SentimentSatisfiedAltRoundedIcon/>
                   시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}
                   <br />
+                  <FaceRoundedIcon/>
                   시설담당자 : {insertForm.facilitiesCode.facilitiesManager}
                   <br />
+                  <AddIcCallRoundedIcon/>
                   시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
                 </Typography>
               )}
@@ -315,7 +331,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <Box>
               <TextField
                 label="모이는 일자"
-                disablePast
                 value={insertForm.togetherDate}
                 focused
                 fullWidth
