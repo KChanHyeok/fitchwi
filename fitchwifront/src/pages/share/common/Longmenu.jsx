@@ -40,7 +40,6 @@ export default function LongMenu({ flist, refreshFeed, information }) {
   const [open, setOpen] = useState(false);
   const Menuopen = Boolean(anchorEl);
   const [state, setState] = useState(false);
-  const [joinList, setJoinList] = useState();
 
   const handleChange = useCallback(
     (event) => {
@@ -126,19 +125,16 @@ export default function LongMenu({ flist, refreshFeed, information }) {
     }
   };
 
-  const getTalkJoinList = useCallback(() => {
-    if (sessionStorage.getItem("id") !== undefined) {
-      axios
-        .get("/getTalkJoinListByMember", {
-          params: {
-            memberEmail: sessionStorage.getItem("id"),
-          },
-        })
-        .then((response) => {
-          setJoinList(response.data);
-        })
-        .catch((error) => console.log(error));
-    }
+  const [talkJoinList, setTalkJoinList] = useState([]);
+  const [talkOpenedList, setTalkOpenedList] = useState([]);
+
+  const getMemberTalk = useCallback(() => {
+    axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
+      const { talkJoinList, talkOpenedList } = res.data;
+      console.log(res.data);
+      setTalkJoinList(talkJoinList);
+      setTalkOpenedList(talkOpenedList);
+    });
   }, []);
 
   useEffect(() => {
@@ -153,8 +149,8 @@ export default function LongMenu({ flist, refreshFeed, information }) {
       feedDate: information.feedDate,
       feedTag: information.feedTag.split(" "),
     });
-    getTalkJoinList();
-  }, [information, getTalkJoinList]);
+    getMemberTalk();
+  }, [information, getMemberTalk]);
 
   return (
     <div>
@@ -241,7 +237,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                       component="img"
                       src={"/images/" + item.feedFileSaveimg}
                       alt={item.feedFileImg}
-                      sx={{ backgroundSize: "cover" }}
+                      height={420}
                     />
                   ))}
                 </Carousel>
@@ -257,41 +253,56 @@ export default function LongMenu({ flist, refreshFeed, information }) {
               />
             )}
             <Divider orientation="vertical" flexItem variant="middle" />
-            <Box sx={{ width: 350, height: 400 }} mt={1}>
-              {joinList === undefined || joinList.length === 0 ? (
-                <FormControl fullWidth disabled>
-                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                    참여중인 얘기해요가 없습니다.
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    label="참여중인 얘기해요"
-                    value={feedClassificationcode || ""}
-                  >
-                    <MenuItem value=""></MenuItem>
-                  </Select>
-                </FormControl>
+            <Box sx={{ width: 380, height: 400 }} mt={1}>
+              {talkJoinList === 0 || talkOpenedList === 0 ? (
+                <>
+                  <Box textAlign="right">
+                    <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
+                      🔍 얘기해요 구경하기
+                    </Button>
+                  </Box>
+                  <FormControl fullWidth disabled>
+                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                      참여중인 얘기해요가 없습니다.
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={feedClassificationcode || ""}
+                      label="참여중인 얘기해요"
+                    >
+                      <MenuItem value=""></MenuItem>
+                    </Select>
+                  </FormControl>
+                </>
               ) : (
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                    참여중인 얘기해요
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    value={feedClassificationcode}
-                    name="feedClassificationcode"
-                    onChange={handleChange}
-                    label="참여중인 얘기해요"
-                  >
-                    {joinList.map((item, index) => (
-                      <MenuItem key={index} value={item.talkCode.talkCode}>
-                        {item.talkCode.talkTitle}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <>
+                  <FormControl fullWidth disabled>
+                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                      얘기해요 리스트
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={feedClassificationcode}
+                      name="feedClassificationcode"
+                      onChange={handleChange}
+                      label="얘기해요 리스트"
+                    >
+                      <MenuItem value={""}>선택</MenuItem>
+                      {talkJoinList.map((item, index) => (
+                        <MenuItem key={index} value={item.talkCode.talkCode}>
+                          ✔️ {item.talkCode.talkTitle}
+                        </MenuItem>
+                      ))}
+                      {talkOpenedList.map((item, index) => (
+                        <MenuItem key={index} value={item.talkCode}>
+                          ☑️ {item.talkTitle}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
               )}
               <br />
               <FormControl sx={{ mt: 2 }} fullWidth>
@@ -317,7 +328,15 @@ export default function LongMenu({ flist, refreshFeed, information }) {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
-              <TextField sx={{ mt: 2 }} fullWidth value={feedTag} id="outlined-multiline-static" label="피드 태그" name="feedTag" />
+              <TextField
+                sx={{ mt: 2 }}
+                fullWidth
+                value={feedTag}
+                id="outlined-multiline-static"
+                label="피드 태그"
+                name="feedTag"
+                disabled
+              />
               <TextField
                 sx={{ mt: 2 }}
                 fullWidth

@@ -27,43 +27,43 @@ export default function HomeCategory({ setCategory }) {
 
 const itemData = [
   {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    img: "https://source.unsplash.com/featured/?culture",
     title: "문화∙예술",
     category: "culture",
     rows: 1,
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    img: "https://source.unsplash.com/featured/?exercise",
     title: "운동∙액티비티",
     category: "exercise",
   },
   {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    img: "https://source.unsplash.com/featured/?food,cook",
     title: "요리∙음식",
     category: "food",
   },
   {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    img: "https://source.unsplash.com/featured/?travel,trip",
     title: "여행",
     category: "travel",
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    img: "https://source.unsplash.com/featured/?growth",
     title: "성장∙자기계발",
     category: "growth",
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    img: "https://source.unsplash.com/featured/?crafts",
     title: "공예∙수공예",
     category: "art",
     rows: 2,
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    img: "https://source.unsplash.com/featured/?game",
     title: "게임∙오락",
     category: "game",
   },

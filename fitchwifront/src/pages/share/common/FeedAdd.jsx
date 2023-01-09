@@ -38,7 +38,6 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
   const [tagForm, setTagForm] = useState([]);
-  const [joinList, setJoinList] = useState();
   const imageInput = useRef();
   const [insertForm, setInsertForm] = useState({
     memberEmail: {
@@ -142,7 +141,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
-          window.location.reload();
+          refreshFeed();
           setFileForm("");
           setTagForm([]);
           setInsertForm({});
@@ -189,26 +188,22 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
     imageInput.current.click();
   };
 
-  const getTalkJoinList = useCallback(() => {
-    if (memberEmail !== undefined) {
-      axios
-        .get("/getTalkJoinListByMember", {
-          params: {
-            memberEmail: memberEmail,
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          setJoinList(response.data);
-        })
-        .catch((error) => console.log(error));
-    }
+  const [talkJoinList, setTalkJoinList] = useState([]);
+  const [talkOpenedList, setTalkOpenedList] = useState([]);
+
+  const getMemberTalk = useCallback(() => {
+    axios.get("/getMemberTalk", { params: { memberEmail: memberEmail } }).then((res) => {
+      const { talkJoinList, talkOpenedList } = res.data;
+      console.log(res.data);
+      setTalkJoinList(talkJoinList);
+      setTalkOpenedList(talkOpenedList);
+    });
   }, [memberEmail]);
 
   useEffect(() => {
     preview();
-    getTalkJoinList();
-  }, [preview, getTalkJoinList]);
+    getMemberTalk();
+  }, [preview, getMemberTalk]);
 
   return (
     <>
@@ -268,7 +263,15 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
                   <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 400, height: 400 }}>
                     <AddIcon />
                   </Button>
-                  <input type="file" name="feedImg" onChange={onLoadFile} multiple ref={imageInput} style={{ display: "none" }} />
+                  <input
+                    type="file"
+                    name="feedImg"
+                    onChange={onLoadFile}
+                    multiple
+                    ref={imageInput}
+                    style={{ display: "none" }}
+                    accept="image/png, image/jpeg"
+                  />
                 </>
               ) : fileForm.length > 1 ? (
                 <div id="multiple-container"></div>
@@ -285,43 +288,61 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
               )}
             </Box>
             <Divider orientation="vertical" flexItem variant="middle" />
-            <Box sx={{ width: 440, height: 400 }} mt={1}>
-              {joinList === undefined || joinList.length === 0 ? (
-                <FormControl fullWidth disabled>
-                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                    참여중인 얘기해요가 없습니다.
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    value={insertForm.feedClassificationcode}
-                    name="feedClassificationcode"
-                    onChange={handleChange}
-                    label="참여중인 얘기해요"
-                  >
-                    <MenuItem value=""></MenuItem>
-                  </Select>
-                </FormControl>
+            <Box sx={{ width: 440, height: 400 }}>
+              {talkJoinList === 0 && talkOpenedList === 0 ? (
+                <>
+                  <Box textAlign="right">
+                    <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
+                      🔍 얘기해요 구경하기
+                    </Button>
+                  </Box>
+                  <FormControl fullWidth disabled>
+                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                      참여중인 얘기해요가 없습니다.
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={insertForm.feedClassificationcode}
+                      name="feedClassificationcode"
+                      onChange={handleChange}
+                      label="참여중인 얘기해요"
+                    >
+                      <MenuItem value=""></MenuItem>
+                    </Select>
+                  </FormControl>
+                </>
               ) : (
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                    참여중인 얘기해요
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-autowidth-label"
-                    id="demo-simple-select-autowidth"
-                    value={insertForm.feedClassificationcode}
-                    name="feedClassificationcode"
-                    onChange={handleChange}
-                    label="참여중인 얘기해요"
-                  >
-                    {joinList.map((item, index) => (
-                      <MenuItem key={index} value={item.talkCode.talkCode}>
-                        {item.talkCode.talkTitle}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <>
+                  <Box textAlign="right">
+                    <Typography variant="caption">☑️ 운영중 ✔️ 참여중</Typography>
+                  </Box>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
+                      얘기해요 리스트
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={insertForm.feedClassificationcode}
+                      name="feedClassificationcode"
+                      onChange={handleChange}
+                      label="얘기해요 리스트"
+                    >
+                      <MenuItem value={""}>선택</MenuItem>
+                      {talkJoinList.map((item, index) => (
+                        <MenuItem key={index} value={item.talkCode.talkCode}>
+                          ✔️ {item.talkCode.talkTitle}
+                        </MenuItem>
+                      ))}
+                      {talkOpenedList.map((item, index) => (
+                        <MenuItem key={index} value={item.talkCode}>
+                          ☑️ {item.talkTitle}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
               )}
 
               <br />
@@ -350,7 +371,7 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
               </FormControl>
               <MultipleSelectChip insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
               <TextField
-                sx={{ mt: 2 }}
+                sx={{ mt: 1 }}
                 fullWidth
                 value={insertForm.feedContent}
                 id="outlined-multiline-static"

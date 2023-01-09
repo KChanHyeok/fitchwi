@@ -106,7 +106,7 @@ const FeedArt = ({ memberInfo, refreshFeed }) => {
           <></>
         )}
         <Box ref={obsRef}></Box>
-        <FeedAdd memberInfo={memberInfo} refreshFeed={refreshFeed} memberEmail={memberInfo.memberEmail} />
+        <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>
     </>
   );
