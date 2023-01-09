@@ -7,13 +7,13 @@ export default function FacilitiesSearch({ facilitiesName, setFacilitiesName, lo
 
     loadFacilities(1, facilitiesName);
 
-    console.log("search" + facilitiesName);
+    // console.log("search" + facilitiesName);
   };
   const onChangeToSearch = (e) => {
     setFacilitiesName(e.target.value);
   };
-  console.log("insearchComp");
-  console.log(facilitiesName);
+  // console.log("insearchComp");
+  // console.log(facilitiesName);
   return (
     <Box component="form" onSubmit={(e) => onSearchFacilities(e)}>
       <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">

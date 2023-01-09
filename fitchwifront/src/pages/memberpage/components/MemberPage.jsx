@@ -175,7 +175,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
       axios
         .delete("/deleteMember", { data: member })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data === "ok") {
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("nickName");

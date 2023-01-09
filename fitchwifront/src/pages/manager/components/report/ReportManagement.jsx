@@ -112,7 +112,7 @@ export default function ReportManagement() {
               //   console.log(talk.data);
               //   console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
 
-              console.log("개설자");
+              //  console.log("개설자");
               axios
                 .delete("/deleteTalk", { data: talk.data })
                 .then((result) => {

@@ -15,10 +15,10 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
   const [disabled, setDisabled] = useState(true);
   const [correctPwd, setCorrectPwd] = useState(null);
   useEffect(() => {
-    console.log(checkedId);
-    console.log(checkedPhone);
-    console.log(correctPwd);
-    console.log(isKakao);
+    // console.log(checkedId);
+    // console.log(checkedPhone);
+    // console.log(correctPwd);
+    // console.log(isKakao);
     if (isKakao === true && joinForm.memberAddr !== "" && checkedPhone === joinForm.memberPhone) {
       setDisabled(false);
     } else {
@@ -88,16 +88,16 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
     },
     [joinForm, setJoinForm]
   );
-  console.log(joinForm.memberPhone);
+  //console.log(joinForm.memberPhone);
   const Certification = () => {
-    console.log(joinForm.memberPhone);
+    // console.log(joinForm.memberPhone);
     if (joinForm.memberPhone === "") {
       return alert("연락처를 입력해주세요!");
     }
     axios
       .post("/checkPhone", joinForm.memberPhone, { headers: { "Content-Type": "test/plain" } })
       .then((result) => {
-        console.log(result.data);
+        //     console.log(result.data);
         if (result.data === "fail") {
           alert("이미 등록된 전화번호입니다.");
         } else {
@@ -121,7 +121,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
           function callback(response) {
             // eslint-disable-next-line no-unused-vars
             const { success, merchant_uid, error_msg } = response;
-            console.log(response);
+            //      console.log(response);
             if (success) {
               setCheckedPhone(joinForm.memberPhone);
               //    setDisabled(false);

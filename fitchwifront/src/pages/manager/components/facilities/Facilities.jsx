@@ -28,7 +28,7 @@ export default function Facilities() {
   const [load, setLoad] = useState(false);
   const loadFacilities = (pageNumInSessionStg, facilitiesName) => {
     setLoad(false);
-    console.log("로드");
+    // console.log("로드");
     axios
       .get("/getFacilitiesList", {
         params: { pageNum: pageNumInSessionStg, facilitiesName: facilitiesName },
@@ -52,9 +52,9 @@ export default function Facilities() {
   }, []);
 
   const handlepageNum = (value) => {
-    console.log("pagenum handle");
-    console.log("value =  " + value);
-    console.log("facilitiesname = " + facilitiesName);
+    // console.log("pagenum handle");
+    // console.log("value =  " + value);
+    // console.log("facilitiesname = " + facilitiesName);
     loadFacilities(value, facilitiesName);
   };
 
@@ -69,8 +69,8 @@ export default function Facilities() {
       loadFacilities(pageNum);
     });
   };
-  console.log("out");
-  console.log(facilitiesName);
+  // console.log("out");
+  // console.log(facilitiesName);
   return (
     <Container
       component="main"

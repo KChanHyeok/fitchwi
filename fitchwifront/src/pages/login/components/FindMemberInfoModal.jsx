@@ -143,12 +143,12 @@ export default function FindMemberInfoModal() {
   }, [pwd, checkPwd]);
 
   const updatePwd = () => {
-    console.log("update");
-    console.log(memberToChangePwd);
+    // console.log("update");
+    // console.log(memberToChangePwd);
     axios
       .put("/updatePwd", memberToChangePwd)
       .then((result) => {
-        console.log(result.data);
+        //    console.log(result.data);
         alert("비밀번호가 성공적으로 변경됐습니다.");
         nav("/login");
       })
@@ -244,7 +244,7 @@ export default function FindMemberInfoModal() {
                 autoFocus
                 margin="dense"
                 label="새 비밀번호 입력"
-                type="text"
+                type="password"
                 fullWidth
                 value={pwd}
                 variant="standard"
@@ -255,7 +255,7 @@ export default function FindMemberInfoModal() {
                 name="reportDetailContent"
                 margin="dense"
                 label="새 비밀번호 확인"
-                type="text"
+                type="password"
                 fullWidth
                 value={checkPwd}
                 variant="standard"

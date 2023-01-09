@@ -36,11 +36,11 @@ const JoinIndex = () => {
 
   useEffect(() => {
     if (location.state != null) {
-      console.log(location.state);
-      console.log(location.state.memberEmail);
-      console.log(location.state.memberNickname);
-      console.log(location.state.memberImg);
-      console.log(location.state.memberSaveimg);
+      // console.log(location.state);
+      // console.log(location.state.memberEmail);
+      // console.log(location.state.memberNickname);
+      // console.log(location.state.memberImg);
+      // console.log(location.state.memberSaveimg);
       setIsKakao(true);
       const joinFormObj = {
         ...joinForm,
@@ -66,7 +66,7 @@ const JoinIndex = () => {
     [joinForm]
   );
 
-  console.log(joinForm);
+  //console.log(joinForm);
 
   const sendJoin = (e) => {
     //   if (!success) {
