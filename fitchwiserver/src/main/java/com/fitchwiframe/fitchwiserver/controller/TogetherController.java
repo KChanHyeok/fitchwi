@@ -54,6 +54,12 @@ public class TogetherController {
         return togetherService.insertTogetherFreeJoinInfo(togetherJoin);
     }
 
+    @PostMapping("/insertTogetherFreeInfo")
+    public String insertTogetherFreeInfo(@RequestBody Together together) {
+        log.info("insertTogetherFreeInfo()");
+        return togetherService.insertTogetherFreeInfo(together);
+    }
+
     @GetMapping("/getAllTogetherList")
     public Iterable<Together> getAllTogetherList() {
         return togetherService.getAllTogetherList();

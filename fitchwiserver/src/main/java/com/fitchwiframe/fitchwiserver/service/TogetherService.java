@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -127,6 +125,46 @@ public class TogetherService {
     public String insertTogetherPayJoinInfo(TogetherJoinPayment togetherJoinPayment) {
         String result = null;
         try {
+            long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherJoinPayment.getTogetherJoinCode().getTogetherCode());
+            if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherMax()<=joinMemberCount+1){
+                    result="인원이 가득차서 가입할수 없습니다. (자동환불됩니다)";
+                    RestTemplate restTemplate = new RestTemplate();
+
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    Map<String,String> body = new HashMap<>();
+                    body.put("imp_key", "5177641603268324");
+                    body.put("imp_secret", "8ECw03mlg2rRO9qJmHaWsQIiWGQDakmEkO9WvMaGV29EY01MWWt2AlQXr6A3Gu0VIEtFSMfVQaAReVf1");
+                try {
+                    HttpEntity<Map> tokenEntity = new HttpEntity<>(body,headers);
+                    ResponseEntity<Map> token = restTemplate.postForEntity("https://api.iamport.kr/users/getToken",tokenEntity,Map.class);
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    TokenDto tokenDto = mapper.convertValue(token.getBody().get("response"), TokenDto.class);
+                    try{
+                        if(tokenDto.getAccess_token().equals("")){
+                            throw new Exception();
+                        }
+
+                        headers.clear();
+                        headers.add("Authorization",tokenDto.getAccess_token());
+                        body.clear();
+                        body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
+                        body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
+                        body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
+
+                        HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
+                        cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
+
+                    }catch (Exception e) {
+
+                    }
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
                 int facilitiesPrice = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherOpenedCode().getFacilitiesCode().getFacilitiesPrice();
@@ -152,11 +190,30 @@ public class TogetherService {
 
         return result;
     }
+    public String insertTogetherFreeInfo(Together together) {
+        String result = null;
+        log.info("insertTogetherFreeInfo()");
+        try {
+            together.setTogetherState("결제완료");
+            togetherRepository.save(together);
+            result="0원 결제완료";
+        }catch (Exception e) {
+            e.printStackTrace();
+            result="0원 결제실패";
+        }
+        return result;
+    }
 
     public String insertTogetherFreeJoinInfo(TogetherJoin togetherJoin) {
         String result = null;
         log.info("insertTogetherFreeJoinInfo()");
         try {
+            long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherJoin.getTogetherCode());
+            log.info(joinMemberCount+"가입한 인원수");
+            if(togetherJoin.getTogetherCode().getTogetherMax()<=joinMemberCount+1){
+                result="인원이 가득차서 가입할수 없습니다.";
+                return result;
+            }
             if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoin.setTogetherJoinState("가입중");
             }

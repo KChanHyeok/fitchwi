@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 import TogetherOpMenu from "./togetherOpMenu";
 
-const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList }) => {
+const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList }) => {
   let { togetherPageCode } = useParams();
   const [togetherInfo, setTogetherInfo] = useState(null);
   const [togetherJoinMember, setTogetherJoinMember] = useState(null);
@@ -121,6 +121,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList 
                 togetherPageCode={togetherPageCode}
                 togetherInfo={togetherInfo}
                 togetherJoinMember={togetherJoinMember}
+                refreshTogetherList={refreshTogetherList}
               >
                 최종결제 
               </TogetherJoin>
