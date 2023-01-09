@@ -38,7 +38,7 @@ const FeedLikeList = ({ children, flList }) => {
                     <Link to="/memberpage" state={{ memberId: like.memberEmail.memberEmail }} style={{ textDecoration: "none" }}>
                       <Avatar
                         alt={like.memberEmail.memberName}
-                        src={"images/" + like.memberEmail.memberSaveimg}
+                        src={like.memberEmail.memberSaveimg}
                         sx={{ width: 40, height: 40, mr: 2 }}
                       />
                     </Link>
