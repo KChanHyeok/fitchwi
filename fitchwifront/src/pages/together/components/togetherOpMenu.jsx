@@ -51,7 +51,7 @@ const StyledMenu = styled((props) => (
 }));
 
 
-const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList}) => {
+const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList, refreshTogetherList}) => {
 
     const style = {
         position: "absolute",
@@ -114,6 +114,7 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
 
         alert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.")
         setOpendelete(false)
+        refreshTogetherList();
         nav("/together");
     }
 

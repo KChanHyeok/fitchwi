@@ -38,7 +38,7 @@ const Together = ({togetherList}) => {
                 <CardMedia
                     component="img"
                     height="200"
-                    src={`/images/${togetherSaveimg}`}   
+                    src={`/images/${togetherSaveimg}`}
                     alt="green iguana"
                     />
                 <CardContent>
