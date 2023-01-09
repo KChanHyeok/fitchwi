@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-export default function Name({ onChange }) {
+import { useEffect } from "react";
+export default function Name({ onChange, joinForm }) {
+  const [isDisabled, setIsDisabled] = useState(true);
+  useEffect(() => {
+    if (joinForm.memberName !== "") {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [joinForm.memberName]);
   return (
     <div style={{ textAlign: "center" }}>
       <Typography variant="h2" gutterBottom mb={10}>
@@ -17,10 +26,11 @@ export default function Name({ onChange }) {
         InputProps={{ style: { fontSize: 40 } }}
         inputProps={{ maxLength: 10 }}
         onChange={onChange}
+        value={joinForm.memberName}
       />
       <br />
-      <Link to="/join/nickname" style={{ textDecoration: "none" }}>
-        <Button sx={{ mt: 5, width: 100 }} variant="contained">
+      <Link to="/join/gender" style={{ textDecoration: "none" }}>
+        <Button sx={{ mt: 5, width: 100 }} variant="contained" disabled={isDisabled}>
           다음
         </Button>
       </Link>

@@ -11,6 +11,7 @@ export default function Mbti({ joinForm, setJoinForm }) {
   const [ns, setNs] = React.useState("");
   const [tf, setTf] = React.useState("");
   const [jp, setJp] = React.useState("");
+  const [isDisabled, setIsDisabled] = React.useState(true);
 
   const handleChange = (event, nextValue) => {
     switch (nextValue) {
@@ -44,8 +45,15 @@ export default function Mbti({ joinForm, setJoinForm }) {
     width: "150px",
     fontSize: "40px",
   });
-  const userMbti = ei + ns + tf + jp;
 
+  const userMbti = ei + ns + tf + jp;
+  React.useEffect(() => {
+    if (userMbti.length === 4) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [userMbti]);
   const onMemberMbti = React.useCallback(
     (e) => {
       const joinObj = {
@@ -86,7 +94,12 @@ export default function Mbti({ joinForm, setJoinForm }) {
       </ToggleButtonGroup>
       <br />
       <Link to="/join/UserInfo" style={{ textDecoration: "none" }}>
-        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onMemberMbti}>
+        <Button
+          sx={{ mt: 5, width: 100 }}
+          variant="contained"
+          onClick={onMemberMbti}
+          disabled={isDisabled}
+        >
           다음
         </Button>
       </Link>

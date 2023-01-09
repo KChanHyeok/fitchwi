@@ -18,7 +18,6 @@ const TogetherCategory = ({ open, setOpen, type }) => {
     <StyleModal open={open} onClose={(e) => setOpen(false)} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box width={800} height={550} bgcolor="white" p={3} borderRadius={2}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
-          <Typography></Typography>
           <Typography variant="h6">카테고리</Typography>
           <Typography onClick={() => setOpen(false)} sx={{ cursor: "pointer" }}>
             <Close />

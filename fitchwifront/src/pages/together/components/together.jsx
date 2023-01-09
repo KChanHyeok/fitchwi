@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/system";
 
 const Together = ({togetherList}) => {
 
@@ -29,30 +30,30 @@ const Together = ({togetherList}) => {
         // togetherState,
         togetherTitle,
         // togetherType,
-        } = togetherList;
+    } = togetherList;
 
     return (
-        <Link to={`/together/${togetherCode}`} >
-            <Card sx={{ mb:3, maxWidth:1000}}>
-                <CardActionArea>
-                    <CardMedia
-                        component="img"
-                        height="200"
-                        src={`images/${togetherSaveimg}`}   
-                        alt="green iguana"
+    <Stack>
+        <Card sx={{ mb: 3, textDecoration:"none" }}  component={Link} to={`/together/${togetherCode}`}>
+            <CardActionArea>
+                <CardMedia
+                    component="img"
+                    height="200"
+                    src={`/images/${togetherSaveimg}`}   
+                    alt="green iguana"
                     />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {togetherTitle}
-                        </Typography>
-                        <Typography variant="body" color="text.secondary">
-                            {togetherContent}<br/>
-                            {facilities&& togetherPrice+facilities.facilitiesPrice }원
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </Link>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {togetherTitle}
+                    </Typography>
+                    <Typography variant="body" color="text.secondary">
+                        {togetherContent}<br/>
+                        {facilities&& togetherPrice+facilities.facilitiesPrice }원
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    </Stack>
     )
 }
 

@@ -14,4 +14,6 @@ public interface FeedLikeRepository extends CrudRepository<FeedLike, Long> {
 
     @Transactional
     void deleteAllByFeedCode(Long feedCode);
+
+  List<FeedLike> findByMemberEmail(Member member);
 }

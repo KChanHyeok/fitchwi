@@ -11,6 +11,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
 import KaKaoLogin from "./KakaoLogin";
+import FindMemberInfoModal from "./FindMemberInfoModal";
 
 export default function Login({ sucLogin }) {
   const nav = useNavigate();
@@ -41,6 +42,7 @@ export default function Login({ sucLogin }) {
             sucLogin(res.data.memberEmail, res.data.memberNickname);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
+
             alert(res.data.memberNickname + "님 환영합니다.");
             nav("/");
             break;
@@ -70,11 +72,11 @@ export default function Login({ sucLogin }) {
     },
     [loginForm, nav, sucLogin]
   );
-  const createMemeber = () => {
-    axios.get("/createMemeber").then((result) => {
-      alert(result.data);
-    });
-  };
+  // const createMemeber = () => {
+  //   axios.get("/createMemeber").then((result) => {
+  //     alert(result.data);
+  //   });
+  // };
   return (
     <>
       <Container maxWidth="xs">
@@ -119,30 +121,34 @@ export default function Login({ sucLogin }) {
               value={memberPwd}
             />
 
+
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
               로그인
             </Button>
 
-            <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => createMemeber()}>
-              구글로그인
-            </Button>
 
-            <Button fullWidth variant="text" sx={{ mt: 1, mb: 2, height: "45px" }}>
-              <KaKaoLogin />
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to="" variant="body2">
-                  아이디/비밀번호 찾기
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/join">회원 가입</Link>
-              </Grid>
-            </Grid>
-          </Box>
+          {/* <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => createMemeber()}
+          >
+            구글로그인
+          </Button> */}
+
+          <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
+            <KaKaoLogin />
+          </Button>
         </Box>
-      </Container>
-    </>
+      </Box>
+      <Grid container>
+        <Grid item xs>
+          <FindMemberInfoModal />
+        </Grid>
+        <Grid item>
+          <Link to="/join">회원 가입</Link>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function Nickname({ onChange }) {
+export default function Nickname({ onChange, joinForm }) {
+  const [isDisabled, setIsDisabled] = useState(true);
+  useEffect(() => {
+    if (joinForm.memberNickname !== "") {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [joinForm.memberNickname]);
   return (
     <div style={{ textAlign: "center" }}>
       <Typography variant="h2" gutterBottom mb={10}>
@@ -17,10 +25,11 @@ export default function Nickname({ onChange }) {
         variant="standard"
         InputProps={{ style: { fontSize: 40 } }}
         inputProps={{ maxLength: 10 }}
+        value={joinForm.memberNickname}
       />
       <br />
       <Link to="/join/userimg" style={{ textDecoration: "none" }}>
-        <Button sx={{ mt: 5, width: 100 }} variant="contained">
+        <Button sx={{ mt: 5, width: 100 }} variant="contained" disabled={isDisabled}>
           다음
         </Button>
       </Link>

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import TogetherMain from "./components/togetherMain";
 import { Box } from "@mui/material";
 import TogetherAdd from "./components/togetherAdd";
 import axios from "axios";
 import { Route, Routes } from "react-router-dom";
-import TogetherArt from "./components/togetherArt";
 import TogetherInfo from "./components/togetherInfo";
 import AddButton from "./components/common/addButton";
 import TogetherHome from "./components/togetherHome";
+
 import Footer from "../../layout/Footer";
+
+import TogetherCategoryList from "./components/togetherCategoryList";
+
 
 const Together = () => {
   const [facilitiesList, setFacilitiesList] = useState([]);
@@ -50,9 +52,16 @@ const Together = () => {
     <Box>
       <AddButton />
       <Routes>
-        <Route path="/*" element={<TogetherHome />} />
-        <Route path="main" element={<TogetherMain refreshTogetherList={getAllTogetherList} togetherList={togetherList} />} />
-        <Route path="art" element={<TogetherArt />} />
+        <Route
+          path="/*"
+          element={
+            <TogetherHome
+              togetherList={togetherList} />} />
+        <Route
+          path="/category/:togetherCategoryText"
+          element={
+            <TogetherCategoryList
+              togetherList={togetherList} />} />
         <Route
           path="/:togetherPageCode"
           element={

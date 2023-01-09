@@ -27,7 +27,7 @@ export default function UserImg({ setFileForm }) {
       <Typography variant="h4" gutterBottom mb={5}>
         *미등록시 기본 이미지로 등록됩니다.
       </Typography>
-      <Avatar src={file!=="" ? file : ""} sx={{ width: 300, height: 300, m: "auto", mb: 4 }} />
+      <Avatar src={file !== "" ? file : ""} sx={{ width: 300, height: 300, m: "auto", mb: 4 }} />
       <Button variant="outlined" sx={{ pl: 5 }}>
         <FormControlLabel
           control={
@@ -43,7 +43,7 @@ export default function UserImg({ setFileForm }) {
         />
       </Button>
       <br />{" "}
-      <Link to="/join/gender" style={{ textDecoration: "none" }}>
+      <Link to="/join/name" style={{ textDecoration: "none" }}>
         <Button sx={{ mt: 5, width: 100 }} variant="contained" style={{ textDecoration: "none" }}>
           다음
         </Button>

@@ -1,18 +1,21 @@
 import { Fab, Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Sidebar from "../../layout/Sidebar";
 
 import TalkInfo from "./components/TalkInfo";
-import TalkMain from "./components/TalkMain";
 import TalkOpened from "./components/TalkOpened";
 import TalkUpdate from "./components/TalkUpdate";
 import { Add as AddIcon } from "@mui/icons-material";
 import TalkHome from "./components/TalkHome";
+
 import Footer from "../../layout/Footer";
+
+import TalkNew from "./components/TalkNew";
+import TalkCulture from "./components/CategoryPage/TalkCulture";
+
 
 function Home() {
   const id = sessionStorage.getItem("id");
@@ -22,12 +25,7 @@ function Home() {
   const [talkList, setTalkList] = useState([]);
   const [talkTagList, setTalkTagList] = useState([]);
   const [talkJoinList, setTalkJoinList] = useState([]);
-
-  useEffect(() => {
-    getAllTalkList();
-    getAllTalkTagList();
-    getTalkJoinList();
-  }, []);
+  const [profil, setProfil] = useState({});
 
   const getAllTalkList = async () => {
     await axios
@@ -55,6 +53,21 @@ function Home() {
       })
       .catch((error) => console.log(error));
   };
+
+  const getMemberInfo = useCallback(() => {
+    if (sessionStorage.getItem("id") != null) {
+      axios.get("/getMemberInfo", { params: { userId: sessionStorage.getItem("id") } }).then((response) => {
+        setProfil(response.data);
+      });
+    }
+  }, []);
+  
+  useEffect(() => {
+    getAllTalkList();
+    getAllTalkTagList();
+    getTalkJoinList();
+    getMemberInfo();
+  }, [getMemberInfo]);
 
   //로그인 했을 때만 개설 가능하게 처리
   const isLogin = () => {
@@ -86,25 +99,27 @@ function Home() {
       )}
       <Stack>
         <Routes>
-          <Route path="/*" element={<TalkHome />} />
-          <Route path="/main" element={<TalkMain talkList={talkList} />} />
+          <Route path="/*" element={<TalkHome talkList={talkList} />} />
+          <Route path="/new" element={<TalkNew talkList={talkList} />} />
+          <Route path="/culture" element={<TalkCulture talkList={talkList} />} />
           <Route
             path="/:talkPageCode"
             element={
               <TalkInfo
-                talkList={talkList}
-                talkTagList={talkTagList}
-                talkJoinList={talkJoinList}
-                refreshTalkList={getAllTalkList}
-                refreshTalkTagList={getAllTalkTagList}
-                refreshTalkJoinList={getTalkJoinList}
+              memberInfo={profil}
+              talkList={talkList}
+              talkTagList={talkTagList}
+              talkJoinList={talkJoinList}
+              refreshTalkList={getAllTalkList}
+              refreshTalkTagList={getAllTalkTagList}
+              refreshTalkJoinList={getTalkJoinList}
               />
             }
           />
-          <Route path="opened" element={<TalkOpened memberEmail={id} refreshTalkList={getAllTalkList} />} />
+          <Route path="opened" element={<TalkOpened memberEmail={id} memberInfo={profil} refreshTalkTagList={getAllTalkTagList} refreshTalkList={getAllTalkList} />} />
           <Route
             path="update"
-            element={<TalkUpdate memberEmail={id} refreshTalkList={getAllTalkList} refreshTalkTagList={getAllTalkTagList} />}
+            element={<TalkUpdate memberEmail={id}  memberInfo={profil} refreshTalkList={getAllTalkList} refreshTalkTagList={getAllTalkTagList} />}
           />
         </Routes>
       </Stack>

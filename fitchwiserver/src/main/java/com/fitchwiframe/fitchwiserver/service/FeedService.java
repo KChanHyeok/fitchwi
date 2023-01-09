@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -372,6 +373,7 @@ public class FeedService {
 
     }
 
+
     public List<Feed> getFeedListTillPage(Integer page, String category, HttpSession session) {
         log.info("feedService.getFeedListTillPage()");
 
@@ -413,5 +415,27 @@ public class FeedService {
             }
         }
         return newList;
+
+@Transactional
+    public void deleteAllByMember(Member member, HttpSession session){
+
+        List<FeedComment> memberCommentList = feedCommentRepository.findByMemberEmail(member);
+        if(!(memberCommentList.isEmpty())){
+            feedCommentRepository.deleteAll(memberCommentList);
+        }
+
+        List<FeedLike> memberFeedLikeList = feedLikeRepository.findByMemberEmail(member);
+        if(!(memberFeedLikeList.isEmpty())){
+            feedLikeRepository.deleteAll(memberFeedLikeList);
+        }
+
+        List<Feed> memberFeedList = getMemberFeed(member.getMemberEmail());
+        if(!(memberFeedList.isEmpty())){
+            for(Feed feed : memberFeedList){
+                deleteFeed(feed, session);
+            }
+        }
+
+
     }
 }

@@ -44,7 +44,12 @@ public class TogetherService {
     TogetherJoinPayRepository togetherJoinPayRepository;
 
     @Autowired
+    TogetherPaymentRepository togetherPaymentRepository;
+
+    @Autowired
     MemberRepository memberRepository;
+
+
 
 
 
@@ -101,6 +106,22 @@ public class TogetherService {
         Iterable<Together> togetherList = togetherRepository.findAll();
         log.info(togetherList+"");
         return togetherList;
+    }
+    public String insertTogetherPay(TogetherPayment togetherPayment) {
+        String result = null;
+        try {
+            togetherPayment.getTogetherCode().setTogetherState("결제완료");
+            Together together = togetherPayment.getTogetherCode();
+            togetherPayment.setTogetherPayStatus("결제완료");
+            togetherPaymentRepository.save(togetherPayment);
+            togetherRepository.save(together);
+            result="최종결제 완료";
+
+        }catch (Exception e) {
+            result="최종결제 실패";
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public String insertTogetherPayJoinInfo(TogetherJoinPayment togetherJoinPayment) {
@@ -395,4 +416,5 @@ public class TogetherService {
 
         return togetherMap;
     }
+
 }

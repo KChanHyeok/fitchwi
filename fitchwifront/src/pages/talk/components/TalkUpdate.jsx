@@ -28,7 +28,7 @@ const imgBoxStyle2 = {
     backgroundSize: "cover",
 };
 
-function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList }) {
+function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refreshTalkTagList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".talk_img_box");
@@ -149,9 +149,10 @@ function TalkUpdate({ memberEmail, talkList, refreshTalkList, refreshTalkTagList
                         얘기해요 수정
                     </Typography>
                     <UserBox>
-                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
-                            {sessionStorage.getItem("id")}
+                            {memberInfo.memberNickname}
                         </Typography>
                     </UserBox>
                     <hr />

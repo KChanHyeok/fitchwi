@@ -1,6 +1,7 @@
 package com.fitchwiframe.fitchwiserver.repository;
 
 import com.fitchwiframe.fitchwiserver.entity.FeedComment;
+import com.fitchwiframe.fitchwiserver.entity.Member;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,4 +14,6 @@ public interface FeedCommentRepository extends CrudRepository<FeedComment, Long>
 
     @Transactional
     void deleteAllByFeedCode(Long feedCode);
+
+  List<FeedComment> findByMemberEmail(Member member);
 }
