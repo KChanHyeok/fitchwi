@@ -14,7 +14,7 @@ import TalkHome from "./components/TalkHome";
 import Footer from "../../layout/Footer";
 
 import TalkNew from "./components/TalkNew";
-import TalkCulture from "./components/CategoryPage/TalkCulture";
+import TalkCategoryList from "./components/TalkCategoryList";
 
 
 function Home() {
@@ -101,7 +101,7 @@ function Home() {
         <Routes>
           <Route path="/*" element={<TalkHome talkList={talkList} />} />
           <Route path="/new" element={<TalkNew talkList={talkList} />} />
-          <Route path="/culture" element={<TalkCulture talkList={talkList} />} />
+          <Route path="/category/:talkCategoryText" element={<TalkCategoryList talkList={talkList} />} />
           <Route
             path="/:talkPageCode"
             element={
@@ -123,7 +123,7 @@ function Home() {
           />
         </Routes>
       </Stack>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

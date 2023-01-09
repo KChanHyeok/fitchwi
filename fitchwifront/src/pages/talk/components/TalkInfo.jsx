@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
-import { Avatar, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import TalkJoin from "./TalkJoin";
 import Report from "../../../components/common/Report";
@@ -86,8 +86,14 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                 <Box className="talkSection">
                     <Box className="talkDetailBox">
                         <Box className="talkTxtLine">
-                            <span className="talkSubHeader">mbti 취미&nbsp;</span>
-                            <span className="talkSubHeader">{talkInfo.talkCategory}&nbsp;</span>
+                            {/* <span className="talkSubHeader">mbti 취미&nbsp;</span> */}
+                            <Chip
+                                color="primary"
+                                variant="outlined"
+                                label={talkInfo.talkCategory}
+                                size="small"
+                                sx={{ fontSize: 13 }}
+                            />
                             <span className="talkSubHeader">남은 자리 {1 + talkJoinMember.length}/{talkInfo.talkMax}&nbsp;</span>
                             <span className="talkSubHeader">유형 - {talkInfo.talkType}</span>
                             <Box className="talkMenu">
@@ -111,73 +117,63 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                             ></Box>)}
                         </Box>
                         <h3 className="talkTxtLine">얘기해요 소개</h3>
-                        <Box component="span">
+                        <Typography>
                             {talkInfo.talkContent}
+                        </Typography>
+                        <Box>
                             <h4 className="talkTxtLine">방장<br /></h4>
-                            <UserBox>
-                                {!talkInfo
-                                    ? <Box sx={{ display: "flex" }}>
-                                        <CircularProgress sx={{ margin: "auto" }} />
-                                    </Box>
-                                    : <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}>
-                                        <Avatar
-                                            src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
-                                            sx={{ width: 40, height: 40 }}
-                                        />
-                                    </Link>
-                                }
-                                {!talkInfo
-                                    ? <Box sx={{ display: "flex" }}>
-                                        <CircularProgress sx={{ margin: "auto" }} />
-                                    </Box>
-                                    :
-                                    <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
-                                        style={{ textDecoration: "none", color: "black" }}><Typography fontWeight={500} variant="span">
-                                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname} 님
-                                        </Typography>
-                                    </Link>
-                                }
-                            </UserBox>
-                            <span><b>참여중인 회원</b></span><br />
-                            {talkJoinMember.length === 0
-                                ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
-                                : talkJoinMember.map((data) =>
-                                    <UserBox key={data.talkJoinCode}>
-                                        {!talkJoinMember
-                                            ? <Box sx={{ display: "flex" }}>
-                                                <CircularProgress sx={{ margin: "auto" }} />
-                                            </Box>
-                                            : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
-                                                <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                            </Link>
-                                        }
-                                        {!talkJoinMember
-                                            ? <Box sx={{ display: "flex" }}>
-                                                <CircularProgress sx={{ margin: "auto" }} />
-                                            </Box>
-                                            :
-                                            <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}
-                                                style={{ textDecoration: "none", color: "black" }}>
-                                                <Typography fontWeight={500} variant="span">
-                                                    {data.memberEmail.memberNickname} 님
-                                                </Typography>
-                                            </Link>
-                                        }
-
-                                    </UserBox>)}
-                            {!talkTagInfo
-                                ? <Box sx={{ display: "flex" }}>
-                                    <CircularProgress sx={{ margin: "auto" }} />
-                                </Box>
-                                : <Box>
-                                    <h4 className="talkTxtLine">태그</h4>
-                                    {talkTagInfo.talkTagContent}
-                                </Box>}
-
-                            <Box>
-                            </Box>
-                            <h4 className="talkTxtLine">얘기해요 피드</h4>
+                            <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
+                                style={{ textDecoration: "none", color: "black", }}>
+                                <Chip sx={{ width: 170, height: 40, cursor: "pointer" }}
+                                    avatar={<Avatar alt="Natacha"
+                                        src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
+                                    />}
+                                    label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}
+                                    style={{ backgroundColor: "#ff2e73", color: "white", fontSize: 15 }}
+                                />
+                            </Link>
                         </Box>
+                        <br />
+                        <h4><b>참여중인 회원</b></h4><br />
+                        {talkJoinMember.length === 0
+                            ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
+                            : talkJoinMember.map((data) =>
+                                <UserBox key={data.talkJoinCode}>
+                                    {!talkJoinMember
+                                        ? <Box sx={{ display: "flex" }}>
+                                            <CircularProgress sx={{ margin: "auto" }} />
+                                        </Box>
+                                        : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
+                                            <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                        </Link>
+                                    }
+                                    {!talkJoinMember
+                                        ? <Box sx={{ display: "flex" }}>
+                                            <CircularProgress sx={{ margin: "auto" }} />
+                                        </Box>
+                                        :
+                                        <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}
+                                            style={{ textDecoration: "none", color: "black" }}>
+                                            <Typography fontWeight={500} variant="span">
+                                                {data.memberEmail.memberNickname} 님
+                                            </Typography>
+                                        </Link>
+                                    }
+
+                                </UserBox>)}
+                        {!talkTagInfo
+                            ? <Box sx={{ display: "flex" }}>
+                                <CircularProgress sx={{ margin: "auto" }} />
+                            </Box>
+                            : <Box>
+                                <h4 className="talkTxtLine">태그</h4>
+                                {talkTagInfo.talkTagContent}
+                            </Box>}
+
+                        <Box>
+                        </Box>
+                        <h4 className="talkTxtLine">얘기해요 피드</h4>
+
                         <Box className="talkTxtLine">
                             {!talkJoinMember
                                 ? <Box sx={{ display: "flex" }}>
@@ -221,7 +217,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                 </Box>
             }
 
-        </Stack>
+        </Stack >
     )
 
 }

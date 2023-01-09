@@ -201,7 +201,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                     </Box>
                     )
                     :
-                    (<Box Box conponent="form" width={400} height={250} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                    (<Box Box conponent="form" width={400} height={300} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
                         <Typography variant="h6" color="gray" textAlign="center">
                             얘기해요 참여하기
                             <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>

@@ -28,12 +28,9 @@ const TalkList = ({ talkList }) => {
                         src={`/images/${talkSaveimg}`}
                         alt="talkimg" />
                     <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {talkTitle.length > 10
-                                ? <Typography gutterBottom variant="h5" component="div"> {talkTitle.substr(0, 10)}... </Typography>
-                                :
-                                <Typography gutterBottom variant="h5" component="div">{talkTitle}</Typography>}
-
+                        <Typography gutterBottom variant="h5" component="div"
+                            sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}>
+                            {talkTitle}
                         </Typography>
                         <Typography variant="body" color="text.secondary">
                             {talkCategory}<br />
