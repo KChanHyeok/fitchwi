@@ -210,6 +210,10 @@ public class TogetherService {
         try {
             long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherJoin.getTogetherCode());
             log.info(joinMemberCount+"가입한 인원수");
+            if(!togetherJoin.getTogetherCode().getTogetherState().equals("결제대기중")){
+                result="이미 마감된 모임입니다 감사합니다,";
+                return result;
+            }
             if(togetherJoin.getTogetherCode().getTogetherMax()<=joinMemberCount+1){
                 result="인원이 가득차서 가입할수 없습니다.";
                 return result;
@@ -236,7 +240,11 @@ public class TogetherService {
         try {
             Member loginMember = memberRepository.findById(memberEmail).get();
             Together joinTogether = togetherRepository.findById(togetherCode).get();
-
+            if(joinTogether.getTogetherState().equals("결제완료") || joinTogether.getTogetherState().equals("삭제요청중")){
+                result = "이미 결제가 완료되었거나 삭제요청이 진행중인 모임이라 취소가 불가능 합니다 챗봇을 통해 문의해주세요";
+                return result;
+            }
+            
             TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
 
             togetherJoinRepository.delete(joinTogetherMember);
@@ -276,6 +284,11 @@ public class TogetherService {
                 }
                 Member loginMember = memberRepository.findById(memberEmail).get();
                 Together joinTogether = togetherRepository.findById(togetherCode).get();
+
+                if(joinTogether.getTogetherState().equals("결제완료") || joinTogether.getTogetherState().equals("삭제요청중")){
+                    result = "이미 결제가 완료되었거나 삭제요청이 진행중인 모임이라 취소가 불가능 합니다 챗봇을 통해 문의해주세요";
+                    return result;
+                }
 
                 TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
 

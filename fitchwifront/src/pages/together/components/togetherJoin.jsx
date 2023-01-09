@@ -180,30 +180,33 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                   setOpen(false);
                   alert(res.data);
                   refreshTogetherJoinList();
+                  refreshTogetherList();
               })
               .catch((Error) => console.log(Error))
     }
 
     
       const deleteTogetherPayJoinInfo = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
 
             axios.delete("/deleteTogetherPayJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
                 setOpen(false);
-                alert(res.data);
                 refreshTogetherJoinList();
+                refreshTogetherList();
+                alert(res.data);
+                window.location.reload();
             })
       }
 
       const deleteTogetherFreeJoinInfo = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
             axios.delete("/deleteTogetherFreeJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
                 setOpen(false);
                 alert(res.data);
-                refreshTogetherJoinList();
-            })
+                window.location.reload();
+            }).catch((error)=> console.log(error))
       }
 
     return (
@@ -221,7 +224,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
             >
-                {togetherJoinState==="대기" ? <Box sx={style}>
+                {togetherJoinState==="대기" ? 
+                <Box sx={style} component="form">
                     <UserBox>
                         <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
@@ -247,8 +251,8 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 <Typography sx={{ mt: 2, mb:2 }} variant="h6" component="div"> {/*질문*/}
                     환불 및 취소 하시겠습니까?
                 </Typography>
-                {togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0 ? <Button variant="contained" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >취소하기</Button>:
-                <Button variant="contained" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불하기</Button>}
+                {togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0 ? <Button variant="contained" type="submit" onClick={deleteTogetherFreeJoinInfo} sx={{mr:3}} >취소하기</Button>:
+                <Button variant="contained" type="submit" onClick={deleteTogetherPayJoinInfo} sx={{mr:3}} >환불하기</Button>}
                 <Button variant="contained" onClick={handleClose}>나가기</Button>
                 </Box>:
                 togetherPayState==="결제대기중" ? 

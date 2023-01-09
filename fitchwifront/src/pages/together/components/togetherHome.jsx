@@ -49,7 +49,7 @@ const TogetherHome = ({togetherList}) => {
           <Typography variant="h6">함께해요 최근모집글</Typography>
           <Typography>#당일번개 #솔로환영 #볼링내기 #맛집투어 #인스타감성카페투어</Typography>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
-            {togetherList.sort((a,b) => b.togetherCode - a.togetherCode).filter((data, index) => index < 4).map(data => (
+            {togetherList.sort((a,b) => b.togetherCode - a.togetherCode).filter((data, index) => index < 4 && data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").map(data => (
               <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine:"none" }} key={data.togetherCode} component={Link} to={`/together/${data.togetherCode}`}>
               <CardActionArea>
                 <CardMedia src={`/images/${data.togetherSaveimg}`} component="img" width="200" height="150" alt="talkimg" />
@@ -82,7 +82,7 @@ const TogetherHome = ({togetherList}) => {
           <Typography variant="h6">현재 가장많은 카테고리 [{getMode(togetherList.map(data=>(data.togetherCategory)))}]</Typography>
           <Typography> #공예 #성장 #요리 #즐겁다 #인스타감성카페투어</Typography>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
-            {togetherList.filter(data=>(getMode(togetherList.map(data=>(data.togetherCategory)))===data.togetherCategory)).filter((data, index) => index < 4).map(data => (
+            {togetherList.filter(data=>(getMode(togetherList.map(data=>(data.togetherCategory)))===data.togetherCategory)).filter((data, index) => index < 4 && data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").map(data => (
               <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine:"none" }} key={data.togetherCode} component={Link} to={`/together/${data.togetherCode}`}>
                 <CardActionArea>
                   <CardMedia src={`/images/${data.togetherSaveimg}`} component="img" width="200" height="150" alt="talkimg" />

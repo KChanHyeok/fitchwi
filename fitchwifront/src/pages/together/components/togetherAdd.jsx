@@ -184,7 +184,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           함께해요 개설
         </Typography>
         <UserBox>
-          {insertForm.memberEmail.memberSaveimg&& <Avatar src={`/images/${insertForm.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />}
+          {insertForm.memberEmail.memberSaveimg&& <Avatar src={`${insertForm.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />}
           
           <Typography fontWeight={500} variant="span">
             {sessionStorage.getItem("nickName")}

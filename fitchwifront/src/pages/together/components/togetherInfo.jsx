@@ -43,6 +43,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                   togetherAppliedMember={togetherAppliedMember}
                   togetherJoinMember={togetherJoinMember}
                   refreshTogetherJoinList={refreshTogetherJoinList}
+                  refreshTogetherList={refreshTogetherList}
                   togetherInfo={togetherInfo}
                   sx={{ fontSize: 20}}
                   />
@@ -70,7 +71,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                 component={Link}
                 to={"/memberpage"}
                 state={{ memberId: togetherInfo.togetherOpenedCode.memberEmail.memberEmail }}
-                src={`/images/${togetherInfo.togetherOpenedCode.memberEmail.memberSaveimg}`}
+                src={`${togetherInfo.togetherOpenedCode.memberEmail.memberSaveimg}`}
                 alt={"profil.memberImg"}
                 sx={{ width: 30, height: 30 }}
               />
@@ -93,7 +94,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                     component={Link}
                     to={"/memberpage"}
                     state={{ memberId: data.memberEmail.memberEmail}}
-                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                    src={`${data.memberEmail.memberSaveimg}`}
                     alt={"profil.memberImg"}
                     sx={{ width: 30, height: 30 }} />
                   <Typography fontWeight={500} variant="span">
