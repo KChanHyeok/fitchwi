@@ -182,6 +182,12 @@ public class TalkService {
         String result = null;
 
         try {
+            long talkJoinMemberCount = talkJoinRepository.countByTalkCode(talkJoin.getTalkCode());
+            log.info("가입한 인원수 : " + talkJoinMemberCount);
+            if (talkJoin.getTalkCode().getTalkMax()<=talkJoinMemberCount+1) {
+                result="인원이 가득차서 가입할 수 없습니다.";
+                return result;
+            }
             if (talkJoin.getTalkCode().getTalkType().equals("선착순")) {
                 talkJoin.setTalkJoinState("가입중");
             }

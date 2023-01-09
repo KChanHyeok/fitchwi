@@ -24,7 +24,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
     const nav = useNavigate();
     const nowdate = new Date().getFullYear() + "-"
         + ((new Date().getMonth() + 1) < 9 ? "0" + (new Date().getMonth() + 1) : (new Date().getMonth() + 1)) + "-"
-        + (new Date().getDate() < 9 ? "0" + new Date().getDate() : new Date().getDate());
+        + (new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate());
 
 
 
@@ -94,8 +94,6 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
         if (sessionStorage.getItem("id") === null) {
             alert("로그인이 필요한 서비스입니다.");
             nav("/login");
-        } else if (1 + talkJoinMember.length === talkInfo.talkMax) {
-            alert("최대인원 초과로 현재 참여가 불가능합니다.");
         } else {
             setOpenModal(true);
         }
@@ -136,7 +134,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                         </Typography>
 
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                                 sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
                                 {memberInfo.memberNickname}
@@ -160,7 +158,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                             </button>
                         </Typography>
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                                 sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
                                 {memberInfo.memberNickname}
@@ -181,7 +179,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                             </button>
                         </Typography>
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                                 sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
                                 {memberInfo.memberNickname}
@@ -209,7 +207,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                             </button>
                         </Typography>
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                                 sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
                                 {memberInfo.memberNickname}

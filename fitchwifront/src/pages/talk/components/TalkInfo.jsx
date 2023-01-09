@@ -126,7 +126,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                 style={{ textDecoration: "none", color: "black", }}>
                                 <Chip sx={{ width: 170, height: 40, cursor: "pointer" }}
                                     avatar={<Avatar alt="Natacha"
-                                        src={`/images/${talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}`}
+                                        src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                     />}
                                     label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}
                                     style={{ backgroundColor: "#ff2e73", color: "white", fontSize: 15 }}
@@ -144,7 +144,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                             <CircularProgress sx={{ margin: "auto" }} />
                                         </Box>
                                         : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
-                                            <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                                         </Link>
                                     }
                                     {!talkJoinMember

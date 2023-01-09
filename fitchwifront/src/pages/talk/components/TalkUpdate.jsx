@@ -179,13 +179,13 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                 value={updateTalk.talkCategory || ""}
                                 onChange={onChange}
                             >
-                                <MenuItem value="문화∙예술">문화∙예술</MenuItem>
-                                <MenuItem value="운동∙액티비티">운동∙액티비티</MenuItem>
-                                <MenuItem value="요리∙음식">요리∙음식</MenuItem>
+                                <MenuItem value="문화·예술">문화·예술</MenuItem>
+                                <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+                                <MenuItem value="요리·음식">요리·음식</MenuItem>
                                 <MenuItem value="여행">여행</MenuItem>
-                                <MenuItem value="성장∙자기계발">성장∙자기계발</MenuItem>
-                                <MenuItem value="공예∙수공예">공예∙수공예</MenuItem>
-                                <MenuItem value="게임∙오락">게임∙오락</MenuItem>
+                                <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+                                <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+                                <MenuItem value="게임·오락">게임·오락</MenuItem>
                                 <MenuItem value="기타">기타</MenuItem>
                             </Select>
                         </FormControl>
