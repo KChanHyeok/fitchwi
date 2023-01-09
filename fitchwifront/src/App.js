@@ -15,6 +15,7 @@ import "react-calendar/dist/Calendar.css"; // css import
 import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
+import axios from "axios";
 
 function App() {
   const nav = useNavigate();
@@ -61,14 +62,14 @@ function App() {
 
   //로그아웃함수
   const onLogout = () => {
-    // axios
-    //   .post("/logout", { data: { id: lstate.logid } })
-    //   .then((result) => console.log(result.data));
-    // alert("로그아웃");
-    const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
-    const REDIRECT_URI = "http://localhost:3000/";
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
-    window.location.href = KAKAO_AUTH_URL;
+    axios
+      .post("/logout", { data: { id: lstate.logid } })
+      .then((result) => console.log(result.data));
+    alert("로그아웃");
+    // const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
+    // const REDIRECT_URI = "http://localhost:3000/";
+    // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
+    // window.location.href = KAKAO_AUTH_URL;
 
     const newState = {
       logid: "",

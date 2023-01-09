@@ -72,11 +72,11 @@ export default function Login({ sucLogin }) {
     },
     [loginForm, nav, sucLogin]
   );
-  // const createMemeber = () => {
-  //   axios.get("/createMemeber").then((result) => {
-  //     alert(result.data);
-  //   });
-  // };
+  const createMemeber = () => {
+    axios.get("/createMemeber").then((result) => {
+      alert(result.data);
+    });
+  };
   return (
     <>
       <Container maxWidth="xs">
@@ -125,14 +125,14 @@ export default function Login({ sucLogin }) {
               로그인
             </Button>
 
-            {/* <Button
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={() => createMemeber()}
-          >
-            구글로그인
-          </Button> */}
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => createMemeber()}
+            >
+              구글로그인
+            </Button>
 
             <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
               <KaKaoLogin />
