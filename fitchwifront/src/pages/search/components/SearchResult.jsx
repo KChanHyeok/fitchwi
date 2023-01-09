@@ -55,7 +55,6 @@ const SearchResult = () => {
     axios
       .get("/getTogetherListBySearch", { params: { searchText: searchText } })
       .then((response) => {
-        console.log(response.data);
         setTogetherList(response.data);
       })
       .catch((error) => console.log(error));
@@ -63,7 +62,6 @@ const SearchResult = () => {
     axios
       .get("/getFeedListBySearch", { params: { searchText: searchText } })
       .then((response) => {
-        console.log(response.data);
         setFeedList(response.data);
       })
       .catch((error) => console.log(error));
@@ -71,7 +69,6 @@ const SearchResult = () => {
     axios
       .get("/getTalkListBySearch", { params: { searchText: searchText } })
       .then((response) => {
-        console.log(response.data);
         setTalkList(response.data);
       })
       .catch((error) => console.log(error));

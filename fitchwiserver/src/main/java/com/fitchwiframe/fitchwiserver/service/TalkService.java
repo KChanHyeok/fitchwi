@@ -345,7 +345,7 @@ public class TalkService {
 
     public Talk getTalk(long talkCode) {
         log.info("talkService.getTalk()");
-        Talk talkInfo = new Talk();
+        Talk talkInfo = null;
         try {
             talkInfo = talkRepository.findById(talkCode).get();
         } catch (Exception e){
