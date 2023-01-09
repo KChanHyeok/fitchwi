@@ -393,7 +393,6 @@ public class TogetherService {
                     together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
                 }
             }
-
             List<Together> togetherListWithMemberCount = new ArrayList<>();
 
 
@@ -404,7 +403,6 @@ public class TogetherService {
                     together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
                     togetherListWithMemberCount.add(together);
                 }
-
             }
 
 
@@ -417,4 +415,15 @@ public class TogetherService {
         return togetherMap;
     }
 
+    public boolean isAvailableToDeleteMember(Member member){
+        boolean result = false;
+        List<TogetherJoin> togetherJoinListByMember = getTogetherJoinListByMember(member.getMemberEmail());
+        List<TogetherOpened> togetherOpenedListByMember = getTogetherOpenedListByMember(member.getMemberEmail());
+
+        if(togetherJoinListByMember.isEmpty() && togetherOpenedListByMember.isEmpty()){
+            result = true;
+        }
+        return result;
+
+    }
 }

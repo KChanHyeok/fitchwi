@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitchwiframe.fitchwiserver.dto.KakaoProfile;
 import com.fitchwiframe.fitchwiserver.entity.*;
 
-import com.fitchwiframe.fitchwiserver.repository.FeedRepository;
 import com.fitchwiframe.fitchwiserver.repository.FollowRepository;
 import com.fitchwiframe.fitchwiserver.repository.MemberRepository;
-import com.fitchwiframe.fitchwiserver.repository.TalkRepository;
+
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -38,6 +37,7 @@ public class MemberService {
 
   @Autowired private TalkService talkService;
 @Autowired private AdminService adminService;
+@Autowired private TogetherService togetherService;
 
 
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -200,10 +200,15 @@ public class MemberService {
   public String deleteMemberInfo(Member member, HttpSession session) {
     String result = "fail";
     try {
+      //함께해요 관련 처리 필요
+      if(!togetherService.isAvailableToDeleteMember(member)){
+        return "togetherExist";
+      }
+
       feedService.deleteAllByMember(member,session);
       talkService.deleteAllByMember(member,session);
       adminService.deleteAllByMember(member);
-//함께해요 관련 처리 필요
+
 
 
       List<Follow> allByFollowId = followRepository.findAllByFollowId(member.getMemberEmail());
