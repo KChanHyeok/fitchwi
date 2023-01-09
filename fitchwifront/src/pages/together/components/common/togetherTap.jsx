@@ -49,80 +49,10 @@ export default function TogetherTap({ list }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="운동"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="오운완"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="OOTD"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="..."
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
+        안녕하세용
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="운동"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="오운완"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="OOTD"
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
-        <Chip
-          color="primary"
-          variant="outlined"
-          label="..."
-          style={{
-            fontSize: 10,
-            marginRight: 10,
-          }}
-        />
+        반가워용
       </TabPanel>
     </Box>
   );

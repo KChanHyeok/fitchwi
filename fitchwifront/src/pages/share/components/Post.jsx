@@ -189,7 +189,7 @@ const Post = ({
             <CardHeader
               avatar={
                 <Link to="/memberpage" state={{ memberId: memberWriterInfo.memberEmail }}>
-                  <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe" src={"/images/" + memberWriterInfo.memberSaveimg}></Avatar>
+                  <Avatar sx={{ bgcolor: "orange" }} aria-label="recipe" src={memberWriterInfo.memberSaveimg}></Avatar>
                 </Link>
               }
               action={<LongMenu refreshFeed={refreshFeed} flist={file} information={information} />}
@@ -248,7 +248,7 @@ const Post = ({
                     >
                       <Avatar
                         alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
-                        src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                        src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
                         sx={{ width: 20, height: 20, mr: 1 }}
                       />
                       <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
@@ -323,7 +323,7 @@ const Post = ({
                   </>
                 ) : (
                   <>
-                    <Avatar alt={memberInfo.memberName} src={"/images/" + memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
+                    <Avatar alt={memberInfo.memberName} src={memberInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 2 }} />
                   </>
                 )}
 
@@ -381,7 +381,7 @@ const Post = ({
                     <Box display="flex" alignItems="center">
                       <Avatar
                         alt={memberWriterInfo.memberName}
-                        src={"/images/" + memberWriterInfo.memberSaveimg}
+                        src={memberWriterInfo.memberSaveimg}
                         sx={{ width: 30, height: 30, mr: 1 }}
                       />
                       <Typography fontWeight={500} variant="span">
@@ -393,11 +393,7 @@ const Post = ({
                   <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
                   <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
                     <UserBox mb={2}>
-                      <Avatar
-                        alt={memberWriterInfo.memberName}
-                        src={"/images/" + memberWriterInfo.memberSaveimg}
-                        sx={{ width: 30, height: 30 }}
-                      />
+                      <Avatar alt={memberWriterInfo.memberName} src={memberWriterInfo.memberSaveimg} sx={{ width: 30, height: 30 }} />
                       <Typography>
                         <b>{memberWriterInfo.memberNickname}</b>
                       </Typography>
@@ -445,7 +441,7 @@ const Post = ({
                             >
                               <Avatar
                                 alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
-                                src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                                src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
                                 sx={{ width: 20, height: 20, mr: 1 }}
                               />
                               <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>

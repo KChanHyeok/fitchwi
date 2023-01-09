@@ -6,6 +6,7 @@ import { useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import HomeCategory from "./HomeCategory";
 import HomeTalkList from "./HomeTalkList";
+import HomeTapPanel from "./HomeTapPanel";
 import HomeTogetherList from "./HomeTogetherList";
 
 const Home = () => {
@@ -49,6 +50,7 @@ const Home = () => {
       <Container>
         <Box flex={4}>
           <Box ml={4} mr={4}>
+            <HomeTapPanel />
             <HomeCategory setCategory={setCategory} />
             <HomeTalkList category={category} talkList={talkList} />
             <HomeTogetherList category={category} togetherList={togetherList} />
