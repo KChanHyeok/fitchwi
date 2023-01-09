@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Card, CardActionArea, CardContent, CardMedia, Typography, Stack } from "@mui/material";
 
 const Together = ({togetherList}) => {
 

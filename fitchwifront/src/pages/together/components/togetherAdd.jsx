@@ -230,15 +230,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               시설을 골라주세요
             </Typography>
             <List
-              sx={{
-                width: "100%",
-                maxWidth: 360,
-                maxHeight: 200,
-                mt: 3,
-                border: "1px solid lightgray",
-                borderRadius: 1.2,
-                overflowY: "auto",
-              }}
               sx={{ width: '100%', maxWidth: 360, maxHeight:170, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
               aria-label="contacts"
             >
