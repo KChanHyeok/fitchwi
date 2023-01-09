@@ -74,25 +74,25 @@ export default function Facilities() {
   return (
     <Container
       component="main"
-      style={{ maxWidth: "1200px" }}
+      style={{ maxWidth: "1200px", marginTop: "100px" }}
       align="center"
-      sx={{ margin: "auto", ml: 40 }}
+      sx={{ margin: "auto" }}
     >
+      <Box>
+        <Typography variant="h4">시설 관리</Typography>
+
+        <Link to="/manager/facilities/insertFacilities" style={{ textDecoration: "none" }}>
+          <Button variant="contained" style={{ float: "right" }}>
+            시설 등록
+          </Button>
+        </Link>
+      </Box>
       <FacilitiesSearch
         facilitiesName={facilitiesName}
         setFacilitiesName={setFacilitiesName}
         pageNum={pageNum}
         loadFacilities={loadFacilities}
       />
-      <Box>
-        <Typography variant="h4">시설 관리</Typography>
-
-        <Link to="/manager/facilities/insertFacilities" style={{ textDecoration: "none" }}>
-          <Button variant="contained" style={{ float: "right", marginTop: 10 }}>
-            시설 등록
-          </Button>
-        </Link>
-      </Box>
       <TableContainer component="main" sx={{ width: "100%", height: 570 }}>
         <Table sx={{ mt: 2 }} aria-label="simple table">
           <TableHead style={{ borderBottom: "2px solid black" }}>

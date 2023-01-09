@@ -16,6 +16,7 @@ import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
 import axios from "axios";
+import ManagerNav from "./pages/manager/components/common/ManagerNav";
 
 function App() {
   const nav = useNavigate();
@@ -84,9 +85,11 @@ function App() {
     nav("/"); //첫페이지로 돌아감.
   };
 
+  const [isManager, setIsManager] = useState(false);
+
   return (
     <>
-      <Header lstate={lstate} onLogout={onLogout} />
+      {isManager === true ? <ManagerNav /> : <Header lstate={lstate} onLogout={onLogout} />}
       <Routes>
         <Route path="/*" element={<Home />}></Route>
         <Route path="/about" element={<About />}></Route>
@@ -100,7 +103,10 @@ function App() {
           path="/memberpage/*"
           element={<MemberPage onLogout={onLogout} lstate={lstate} />}
         ></Route>
-        <Route path="/manager/*" element={<Manager />}></Route>
+        <Route
+          path="/manager/*"
+          element={<Manager isManager={isManager} setIsManager={setIsManager} />}
+        ></Route>
         <Route
           path="/login/kakao/callback"
           element={<KaKaoLoginRedirect sucLogin={sucLogin} />}

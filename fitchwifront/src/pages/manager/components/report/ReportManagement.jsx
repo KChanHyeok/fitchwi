@@ -41,6 +41,7 @@ export default function ReportManagement() {
   useEffect(() => {
     pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
     // console.log("axios");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getReports = (pageNumInSessionStg) => {
@@ -148,7 +149,7 @@ export default function ReportManagement() {
   });
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main" style={{ maxWidth: "1200px" }} align="center" sx={{ ml: 40 }}>
+    <Container component="main" style={{ maxWidth: "1200px", marginTop: "100px" }} align="center">
       <Box sx={{ mb: 5 }}>
         <Typography variant="h4">신고 관리</Typography>
       </Box>

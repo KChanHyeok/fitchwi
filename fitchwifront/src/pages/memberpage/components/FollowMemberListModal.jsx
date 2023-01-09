@@ -68,7 +68,7 @@ export default function FollowMemberListModal({ children, followList, lstate }) 
                         <Avatar
                           sx={{ bgcolor: "orange" }}
                           aria-label="recipe"
-                          src={"images/" + member.memberSaveimg}
+                          src={member.memberSaveimg}
                           onClick={handleClose}
                         ></Avatar>
                       </ListItemAvatar>

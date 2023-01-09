@@ -115,7 +115,7 @@ public class AdminController {
     return adminService.updateReportState(reportCode);
   }
   @PostMapping("/managerLogin")
-  public String managerLogin(Manager manager){
+  public String managerLogin(@RequestBody Manager manager){
     System.out.println("manager = " + manager);
     log.info("adminController.managerLogin");
     return adminService.managerLogin(manager);
