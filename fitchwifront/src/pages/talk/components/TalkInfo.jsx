@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
-import { Avatar, Box, Button, CardContent, CardMedia, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ImageList, ImageListItem, ImageListItemBar, ListSubheader, Modal, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import TalkJoin from "./TalkJoin";
 import Report from "../../../components/common/Report";
@@ -257,44 +257,47 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
 
                         <Box>
                         </Box>
-                        <h4 className="talkTxtLine">얘기해요 피드</h4>
+                        <h4>얘기해요 피드</h4>
                         {feedList.length === 0 ? <Typography>아직 작성된 피드가 없습니다.</Typography>
-                            : feedList.map((feed, index) => (
+                            : feedList.sort((a, b) => b.feedCode - a.feedCode).filter((data, index) => index < 4).map((feed, index) => (
                                 <>
-                                    <Link to={`/share/${feed.feedCode}`} key={index} style={{ textDecoration: "none", color: "black" }}>
-                                        <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
-                                            <CardMedia
-                                                component="img"
-                                                sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
-                                                image={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                                            />
-                                            <CardContent>
-                                                <Typography variant="h6" sx={{ fontSize: 16 }}>
-                                                    {feed.feedContent}
-                                                </Typography>
-                                                <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
-                                                    {talkInfo.feedTag}
-                                                </Typography>
-                                                <Box
+                                    <Link to={`/share/${feed.feedCode}`} key={index} style={{ textDecoration: "none", color: "black", float: "left" }}>
+                                        <Box flexDirection="column" alignItems="center" boxShadow={2} ml={1.5} borderRadius={2} width={200}>
+                                            <CardActionArea>
+                                                <CardMedia
+                                                    component="img"
                                                     sx={{
-                                                        mt: 1,
-                                                        display: "flex",
-                                                        alignItems: "center",
+                                                        width: 200, height: 200,
+                                                        borderTopLeftRadius: 8, borderBottomLeftRadius: 8,
+                                                        borderTopRightRadius: 8, borderBottomRightRadius: 8
                                                     }}
-                                                >
-                                                    <Avatar
-                                                        alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
-                                                        src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
-                                                        sx={{ width: 20, height: 20, mr: 1 }}
-                                                    />
-                                                    <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
-                                                        {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                                                    image={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                                                />
+                                                <CardContent>
+                                                    <Typography variant="h6"
+                                                        sx={{ fontSize: 16, fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}>
+                                                        {feed.feedContent}
                                                     </Typography>
-                                                </Box>
-                                            </CardContent>
+                                                    <Box
+                                                        sx={{
+                                                            mt: 1,
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                        }}
+                                                    >
+                                                        <Avatar
+                                                            alt={feed.memberEmail.memberNickname}
+                                                            src={feed.memberEmail.memberSaveimg}
+                                                            sx={{ width: 30, height: 30, mr: 1 }}
+                                                        />
+                                                        <Typography mr={1} sx={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                                            {feed.memberEmail.memberNickname}
+                                                        </Typography>
+                                                    </Box>
+                                                </CardContent>
+                                            </CardActionArea>
                                         </Box>
                                     </Link>
-
                                 </>
                             ))
                         }
@@ -312,7 +315,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                     ? (<Button className="talkSticky" onClick={isDelete}>삭제하기</Button>)
                                     : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                         && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                                        ? <TalkJoin memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
+                                        ? <TalkJoin className="talkSticky" memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
                                             talkJoinMember={talkJoinMember}>참여하기</TalkJoin>
                                         : (<TalkJoin memberInfo={memberInfo} talkInfo={talkInfo}
                                             talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)

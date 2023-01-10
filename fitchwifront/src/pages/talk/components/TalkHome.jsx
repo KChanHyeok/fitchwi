@@ -17,8 +17,6 @@ const UserBox = styled(Box)({
 
 const TalkHome = ({ talkList }) => {
 
-  // console.log(talkList[0].talkOpenCode.memberEmail.memberNickname)
-
   const [open, setOpen] = useState(false);
   return (
     <Container fixed>
