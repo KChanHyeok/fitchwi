@@ -1,4 +1,4 @@
-import { Box, Stack, styled, Avatar, Typography, Button, TextField } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography, Button, TextField, CircularProgress } from "@mui/material";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -39,7 +39,11 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
       {!togetherInfo || !togetherJoinMember ? (
-        <h1>로딩중</h1>
+        <Box
+        textAlign="center" lineHeight={40}
+        >
+          <CircularProgress/>
+        </Box>
       ) : (
         <Box>
           <Stack flex={2} direction={"row"} justifyContent="space-between" sx={{mb:2}}>
