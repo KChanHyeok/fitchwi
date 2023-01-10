@@ -105,7 +105,6 @@ const Feed = ({ memberInfo }) => {
             )}
           </>
         )}
-
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>

@@ -2,15 +2,17 @@ import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Typography }
 import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const HomeTogetherList = ({ category, togetherList }) => {
+const HomeTogetherList = ({ category, togetherList, korCategory }) => {
   const [togetherListByCategory, setTogetherListCategory] = useState();
+  const nav = useNavigate();
 
   useEffect(() => {
     try {
-      setTogetherListCategory(togetherList.filter((data) => data.togetherCategory === category));
+      setTogetherListCategory(togetherList.filter((data) => data.togetherCategory === korCategory));
     } catch (e) {}
-  }, [category, togetherList]);
+  }, [korCategory, togetherList]);
 
   return (
     <>
@@ -20,7 +22,7 @@ const HomeTogetherList = ({ category, togetherList }) => {
         <>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={10}>
             <Box disabled></Box>
-            <Button>전체보기</Button>
+            <Button onClick={() => nav(`/together/category/${category}`)}>전체보기</Button>
           </Stack>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
             {togetherListByCategory.map((item) => (

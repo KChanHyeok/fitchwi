@@ -19,7 +19,7 @@ function TabPanel(props) {
         <Box sx={{ p: 3 }} display="flex" flexDirection="column" alignItems="center" width="100%">
           <Box mb={3}>
             <Typography variant="h6" fontWeight={100}>
-              {children}에게 추천
+              {children} 취미
             </Typography>
           </Box>
           <ImageList sx={{ width: "100%", height: 200 }} cols={3} gap={10}>
@@ -85,9 +85,34 @@ function a11yProps(index) {
   };
 }
 
-export default function HomeTapPanel() {
-  const [value, setValue] = useState(0);
+const mbti = [
+  "INFP",
+  "INFJ",
+  "INTP",
+  "INTJ",
+  "ISFP",
+  "ISFJ",
+  "ISTP",
+  "ISTJ",
+  "ENFP",
+  "ENFJ",
+  "ENTP",
+  "ENTJ",
+  "ESFP",
+  "ESFJ",
+  "ESTP",
+  "ESTJ",
+];
 
+if (sessionStorage.getItem("mbti") !== null) {
+  const MyMbti = sessionStorage.getItem("mbti");
+  var even = mbti.findIndex((item, index) => item === MyMbti);
+} else {
+  even = Math.floor(Math.random() * 10);
+}
+
+export default function HomeTapPanel() {
+  const [value, setValue] = useState(even);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

@@ -95,7 +95,6 @@ const Post = ({
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
       axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => {
-        console.log(res.data);
         setTalkInfo(res.data);
       });
     }

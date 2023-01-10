@@ -167,6 +167,7 @@ public class MemberService {
           result.put("state", "ok");
           result.put("memberEmail", dbMember.getMemberEmail());
           result.put("memberNickname", dbMember.getMemberNickname());
+          result.put("mbti", dbMember.getMemberMbti());
 
         } else {
           result.put("state", "wrong pwd");
@@ -531,12 +532,14 @@ public class MemberService {
             resultMap.put("memberRestriction", dbMember.getMemberRestriction());
             resultMap.put("memberEmail", dbMember.getMemberEmail());
             resultMap.put("memberNickname", dbMember.getMemberNickname());
+            resultMap.put("mbti", dbMember.getMemberMbti());
           } else {
             resultMap.put("isPresent", "ok");
             resultMap.put("state", "released");
             resultMap.put("memberRestriction", dbMember.getMemberRestriction());
             resultMap.put("memberEmail", dbMember.getMemberEmail());
             resultMap.put("memberNickname", dbMember.getMemberNickname());
+            resultMap.put("mbti", dbMember.getMemberMbti());
             session.setAttribute("at", accessToken);
             System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
 
@@ -551,6 +554,7 @@ public class MemberService {
         resultMap.put("state", "ok");
         resultMap.put("memberEmail", dbMember.getMemberEmail());
         resultMap.put("memberNickname", dbMember.getMemberNickname());
+        resultMap.put("mbti", dbMember.getMemberMbti());
         session.setAttribute("at", accessToken);
         System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
         return resultMap;

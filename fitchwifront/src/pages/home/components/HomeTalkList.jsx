@@ -2,15 +2,17 @@ import { Button, Chip, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const HomeTalkList = ({ category, talkList }) => {
+const HomeTalkList = ({ category, talkList, korCategory }) => {
+  const nav = useNavigate();
   const [talkListByCategory, setTalkListCategory] = useState();
 
   useEffect(() => {
     try {
-      setTalkListCategory(talkList.filter((data) => data.talkCategory === category));
+      setTalkListCategory(talkList.filter((data) => data.talkCategory === korCategory));
     } catch (e) {}
-  }, [category, talkList]);
+  }, [korCategory, talkList]);
 
   return (
     <>
@@ -19,8 +21,8 @@ const HomeTalkList = ({ category, talkList }) => {
       ) : (
         <>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={3}>
-            <Typography variant="h5">📌 {category}</Typography>
-            <Button>전체보기</Button>
+            <Typography variant="h5">📌 {korCategory}</Typography>
+            <Button onClick={() => nav(`/talk/category/${category}`)}>전체보기</Button>
           </Stack>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between">
             {talkListByCategory.map((item) => (
