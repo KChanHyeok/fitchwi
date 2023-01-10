@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Typography }
 import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const HomeTogetherList = ({ category, togetherList, korCategory }) => {
   const [togetherListByCategory, setTogetherListCategory] = useState();
@@ -14,6 +14,11 @@ const HomeTogetherList = ({ category, togetherList, korCategory }) => {
     } catch (e) {}
   }, [korCategory, togetherList]);
 
+  if (togetherListByCategory !== undefined) {
+    console.log(togetherListByCategory);
+    togetherListByCategory.length = 4;
+  }
+
   return (
     <>
       {togetherListByCategory === undefined ? (
@@ -21,20 +26,29 @@ const HomeTogetherList = ({ category, togetherList, korCategory }) => {
       ) : (
         <>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={10}>
-            <Box disabled></Box>
+            <Typography variant="h5">👾 추천 함께해요</Typography>
             <Button onClick={() => nav(`/together/category/${category}`)}>전체보기</Button>
           </Stack>
-          <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
+          <Stack direction="row" spacing={3} alignItems="flex-start" justifyContent="space-between" mt={1}>
             {togetherListByCategory.map((item) => (
-              <Card sx={{ mb: 3, maxWidth: 200, maxHeight: 235 }} key={item.togetherCode}>
-                <CardActionArea>
-                  <CardMedia component="img" width="200" height="150" alt="talkimg" />
-                  <CardContent>
-                    <Typography variant="h5">{item.togetherTitle}</Typography>
-                    <Typography variant="subtitle1">{item.togetherContent}</Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={item.talkCode}>
+                <Card sx={{ mb: 3, width: 250, height: 235 }} key={item.togetherCode}>
+                  <CardActionArea>
+                    <CardMedia component="img" width="200" height="150" alt="talkimg" src={`/images/${item.togetherSaveimg}`} />
+                    <CardContent>
+                      <Typography variant="h6" fontWeight={100}>
+                        {item.togetherTitle}
+                      </Typography>
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Typography variant="caption">{item.togetherDate}</Typography>
+                        <Typography variant="button" fontWeight={100}>
+                          {item.togetherPosition}
+                        </Typography>
+                      </Stack>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Link>
             ))}
           </Stack>
         </>

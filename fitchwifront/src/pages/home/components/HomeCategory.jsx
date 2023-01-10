@@ -34,19 +34,19 @@ export default function HomeCategory({ setCategory, setKorCategory }) {
 const itemData = [
   {
     img: "https://source.unsplash.com/featured/?culture",
-    title: "문화∙예술",
+    title: "문화·예술",
     category: "culture",
     rows: 1,
     cols: 2,
   },
   {
     img: "https://source.unsplash.com/featured/?exercise",
-    title: "운동∙액티비티",
+    title: "운동·액티비티",
     category: "exercise",
   },
   {
     img: "https://source.unsplash.com/featured/?food,cook",
-    title: "요리∙음식",
+    title: "요리·음식",
     category: "food",
   },
   {
@@ -57,20 +57,20 @@ const itemData = [
   },
   {
     img: "https://source.unsplash.com/featured/?growth",
-    title: "성장∙자기계발",
+    title: "성장·자기계발",
     category: "growth",
     cols: 2,
   },
   {
     img: "https://source.unsplash.com/featured/?crafts",
-    title: "공예∙수공예",
+    title: "공예·수공예",
     category: "art",
     rows: 2,
     cols: 2,
   },
   {
     img: "https://source.unsplash.com/featured/?game",
-    title: "게임∙오락",
+    title: "게임·오락",
     category: "game",
   },
 ];

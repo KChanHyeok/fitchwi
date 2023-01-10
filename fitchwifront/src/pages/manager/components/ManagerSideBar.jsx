@@ -51,7 +51,7 @@
 //               <ListItemIcon>
 //                 <Fastfood />
 //               </ListItemIcon>
-//               <ListItemText primary="요리∙음식" />
+//               <ListItemText primary="요리·음식" />
 //             </ListItemButton>
 //           </ListItem>
 //           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -67,7 +67,7 @@
 //               <ListItemIcon>
 //                 <LocalLibrary />
 //               </ListItemIcon>
-//               <ListItemText primary="성장∙자기계발" />
+//               <ListItemText primary="성장·자기계발" />
 //             </ListItemButton>
 //           </ListItem>
 //           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -75,7 +75,7 @@
 //               <ListItemIcon>
 //                 <AutoAwesome />
 //               </ListItemIcon>
-//               <ListItemText primary="공예∙수공예" />
+//               <ListItemText primary="공예·수공예" />
 //             </ListItemButton>
 //           </ListItem>
 //           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -83,7 +83,7 @@
 //               <ListItemIcon>
 //                 <Extension />
 //               </ListItemIcon>
-//               <ListItemText primary="게임∙오락" />
+//               <ListItemText primary="게임·오락" />
 //             </ListItemButton>
 //           </ListItem>
 //           <ListItem disablePadding sx={{ mb: 2 }}>

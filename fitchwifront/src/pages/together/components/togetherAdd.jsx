@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import moment from "moment/moment";
 import { useDaumPostcodePopup } from "react-daum-postcode";
-import MapIcon from '@mui/icons-material/Map';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import AddIcCallRoundedIcon from '@mui/icons-material/AddIcCallRounded';
-import FaceRoundedIcon from '@mui/icons-material/FaceRounded';
-import SentimentSatisfiedAltRoundedIcon from '@mui/icons-material/SentimentSatisfiedAltRounded';
+import MapIcon from "@mui/icons-material/Map";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
+import FaceRoundedIcon from "@mui/icons-material/FaceRounded";
+import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatisfiedAltRounded";
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -66,32 +66,39 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherTagContent: "", //태그 내용
   });
 
-  const getMemberInfo = useCallback((id) => {
-      axios.get("/getMemberInfo", { params: { userId: id } }).then((res) => setInsertForm({
-          ...insertForm,
-          memberEmail: res.data
-        })).catch((error)=> console.log(error))
-    },[insertForm])
+  const getMemberInfo = useCallback(
+    (id) => {
+      axios
+        .get("/getMemberInfo", { params: { userId: id } })
+        .then((res) =>
+          setInsertForm({
+            ...insertForm,
+            memberEmail: res.data,
+          })
+        )
+        .catch((error) => console.log(error));
+    },
+    [insertForm]
+  );
 
-    useEffect(() => {
-      preview();
-      if (!insertForm.memberEmail.memberSaveimg) {
-        getMemberInfo(sessionStorage.getItem("id"));
-      }
+  useEffect(() => {
+    preview();
+    if (!insertForm.memberEmail.memberSaveimg) {
+      getMemberInfo(sessionStorage.getItem("id"));
+    }
     return () => preview();
   });
-  
-  const preview = () => {
 
-    if (fileForm.length===0){
-      return false
-    } 
+  const preview = () => {
+    if (fileForm.length === 0) {
+      return false;
+    }
 
     const render = new FileReader();
 
     render.readAsDataURL(fileForm[0]);
     render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
-  }
+  };
 
   const onLoadFile = useCallback((event) => {
     const file = event.target.files;
@@ -106,15 +113,17 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
-    axios.post("/addTogether",formDate, config)
-    .then((res)=> {
-      alert(res.data);
-      nav("/together");
-      refreshTogetherList(); 
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
+    axios
+      .post("/addTogether", formDate, config)
+      .then((res) => {
+        alert(res.data);
+        nav("/together");
+        refreshTogetherList();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleChange = useCallback(
     (event) => {
@@ -132,7 +141,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     width: "300px",
     height: "200px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover"
+    backgroundSize: "cover",
   };
 
   // const disableDates = () => {
@@ -147,10 +156,8 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   //           }
   //       }
   // }
-  
-  const open = useDaumPostcodePopup(
-    "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
-  );
+
+  const open = useDaumPostcodePopup("http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
 
   const handleComplete = (data) => {
     let fullAddress = data.address;
@@ -169,7 +176,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     // console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
     setInsertForm({
       ...insertForm,
-      togetherPosition:fullAddress
+      togetherPosition: fullAddress,
     });
   };
 
@@ -178,14 +185,16 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   };
 
   return (
-    <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
-      <Box bgcolor="white" sx={{ mb: 5 }} component="form"  onSubmit={sendTogether}>
+    <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
+      <Box bgcolor="white" sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
         <UserBox>
-          {insertForm.memberEmail.memberSaveimg&& <Avatar src={`${insertForm.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />}
-          
+          {insertForm.memberEmail.memberSaveimg && (
+            <Avatar src={`${insertForm.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+          )}
+
           <Typography fontWeight={500} variant="span">
             {sessionStorage.getItem("nickName")}
           </Typography>
@@ -201,15 +210,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherTitle"
           required
         />
-        <TextField
-          fullWidth
-          label="최대참여인원"
-          sx={{ mt: 3 }}
-          type="number"
-          onChange={handleChange}
-          name="togetherMax"
-          required
-        />
+        <TextField fullWidth label="최대참여인원" sx={{ mt: 3 }} type="number" onChange={handleChange} name="togetherMax" required />
         <FormControl sx={{ mt: 2 }} fullWidth>
           <InputLabel>모임카테고리선정</InputLabel>
           <Select
@@ -221,25 +222,33 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             label="모임카테고리선정"
             required
           >
-            <MenuItem value="문화∙예술">문화·예술</MenuItem>
-            <MenuItem value="운동∙액티비티">운동·액티비티</MenuItem>
-            <MenuItem value="요리∙음식">요리·음식</MenuItem>
+            <MenuItem value="문화·예술">문화·예술</MenuItem>
+            <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+            <MenuItem value="요리·음식">요리·음식</MenuItem>
             <MenuItem value="여행">여행</MenuItem>
-            <MenuItem value="성장∙자기계발">성장·자기계발</MenuItem>
-            <MenuItem value="공예∙수공예">공예·수공예</MenuItem>
-            <MenuItem value="게임∙오락">게임·오락</MenuItem>
+            <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+            <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+            <MenuItem value="게임·오락">게임·오락</MenuItem>
             <MenuItem value="기타">기타</MenuItem>
           </Select>
         </FormControl>
-        
+
         {/* 시설 내역과 정보 제공 */}
-         <Grid container spacing={3}>
+        <Grid container spacing={3}>
           <Grid item xs={4}>
             <Typography variant="h5" sx={{ mt: 3 }}>
               시설을 골라주세요
             </Typography>
             <List
-              sx={{ width: '100%', maxWidth: 360, maxHeight:170, mt:3, border:"1px solid lightgray", borderRadius:1.2, overflowY:"auto" }}
+              sx={{
+                width: "100%",
+                maxWidth: 360,
+                maxHeight: 170,
+                mt: 3,
+                border: "1px solid lightgray",
+                borderRadius: 1.2,
+                overflowY: "auto",
+              }}
               aria-label="contacts"
             >
               <ListItem disablePadding>
@@ -255,19 +264,23 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                   <ListItemText inset primary="이용안함" />
                 </ListItemButton>
               </ListItem>
-              {data.filter(data=>data.facilitiesCode!==0).map(data=>(
-                <ListItem disablePadding key={data.facilitiesCode}>
-                <ListItemButton onClick={()=> {
-                  setInsertForm({
-                    ...insertForm,
-                    facilitiesCode:data,
-                    togetherPosition:data.facilitiesPosition
-                  })
-                }}>
-                  <ListItemText inset primary={`${data.facilitiesName}`} />
-                </ListItemButton>
-              </ListItem>
-              ))}
+              {data
+                .filter((data) => data.facilitiesCode !== 0)
+                .map((data) => (
+                  <ListItem disablePadding key={data.facilitiesCode}>
+                    <ListItemButton
+                      onClick={() => {
+                        setInsertForm({
+                          ...insertForm,
+                          facilitiesCode: data,
+                          togetherPosition: data.facilitiesPosition,
+                        });
+                      }}
+                    >
+                      <ListItemText inset primary={`${data.facilitiesName}`} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
             </List>
           </Grid>
           <Grid item xs>
@@ -278,35 +291,31 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 </Typography>
               ) : (
                 <Typography variant="h6" component="div">
-                  <ApartmentIcon/>
+                  <ApartmentIcon />
                   시설명 : {insertForm.facilitiesCode.facilitiesName}
                   <br />
-                  <MapIcon/>
+                  <MapIcon />
                   시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}
                   <br />
-                  <AttachMoneyIcon/>
+                  <AttachMoneyIcon />
                   시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원
                   <br />
-                  <SentimentSatisfiedAltRoundedIcon/>
+                  <SentimentSatisfiedAltRoundedIcon />
                   시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}
                   <br />
-                  <FaceRoundedIcon/>
+                  <FaceRoundedIcon />
                   시설담당자 : {insertForm.facilitiesCode.facilitiesManager}
                   <br />
-                  <AddIcCallRoundedIcon/>
+                  <AddIcCallRoundedIcon />
                   시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
                 </Typography>
               )}
             </Box>
           </Grid>
         </Grid>
-        
+
         {/* 주소 입력 란 */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={2}
-        >
+        <Stack direction="row" alignItems="center" spacing={2}>
           <TextField
             fullWidth
             label="모이는 장소의 주소"
@@ -316,40 +325,28 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             name="togetherPosition"
             required
           />
-          <Button variant="outlined" onClick={handleClick} style={{ width: "40%", lineHeight:3 }}>
+          <Button variant="outlined" onClick={handleClick} style={{ width: "40%", lineHeight: 3 }}>
             주소 검색
           </Button>
         </Stack>
 
-        <Stack
-        direction="row"
-        justifyContent="space-around"
-        alignItems="center"
-        spacing={3}
-        >
+        <Stack direction="row" justifyContent="space-around" alignItems="center" spacing={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box>
-              <TextField
-                label="모이는 일자"
-                value={insertForm.togetherDate}
-                focused
-                fullWidth
-                color="grey"
-                required
-              />
+              <TextField label="모이는 일자" value={insertForm.togetherDate} focused fullWidth color="grey" required />
               <StaticDatePicker
                 displayStaticWrapperAs="desktop"
                 label="모이는 일자"
                 disablePast
                 value={insertForm.togetherDate}
-                onChange={(e)=>{
+                onChange={(e) => {
                   setInsertForm({
                     ...insertForm,
                     togetherDate: moment(e.$d).format("YYYY-MM-DD"),
                     togetherRecruitStartDate: "",
-                    togetherRecruitEndDate:""
+                    togetherRecruitEndDate: "",
                   });
-                  setFirstDateOpen(false)
+                  setFirstDateOpen(false);
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -398,21 +395,21 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 required
               />
               <StaticDatePicker
-                  displayStaticWrapperAs="desktop"
-                  label="모집신청 마감일"
-                  disablePast
-                  value={insertForm.togetherRecruitEndDate}
-                  minDate={insertForm.togetherRecruitStartDate}
-                  maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
-                  // shouldDisableDate={ }
-                  onChange={(e)=>{
-                    setInsertForm({
-                      ...insertForm,
-                      togetherRecruitEndDate:moment(e.$d).format("YYYY-MM-DD")
-                    });
-                  }}
-                  disabled={secondDateOpen}
-                  renderInput={(params) => <TextField {...params} />}
+                displayStaticWrapperAs="desktop"
+                label="모집신청 마감일"
+                disablePast
+                value={insertForm.togetherRecruitEndDate}
+                minDate={insertForm.togetherRecruitStartDate}
+                maxDate={moment(insertForm.togetherDate).subtract(1, "days").format()}
+                // shouldDisableDate={ }
+                onChange={(e) => {
+                  setInsertForm({
+                    ...insertForm,
+                    togetherRecruitEndDate: moment(e.$d).format("YYYY-MM-DD"),
+                  });
+                }}
+                disabled={secondDateOpen}
+                renderInput={(params) => <TextField {...params} />}
               />
             </Box>
           </LocalizationProvider>
@@ -445,17 +442,17 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           </Select>
         </FormControl>
         <Stack>
-          <Box style={imgBoxStyle} className="img_box">
-          </Box>
-          <Typography variant="h7" sx={{mt:3}}>대표사진을 넣어주세요
-            <Button sx={{ml:4}} variant="contained" component="label" size="large">
+          <Box style={imgBoxStyle} className="img_box"></Box>
+          <Typography variant="h7" sx={{ mt: 3 }}>
+            대표사진을 넣어주세요
+            <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
               Upload
               <TextField
                 label="모임대표사진"
                 type="file"
                 accept="image/*"
                 focused
-                sx={{ mt: 3, display:"none"}}
+                sx={{ mt: 3, display: "none" }}
                 color="grey"
                 onChange={onLoadFile}
                 required
@@ -491,9 +488,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           onChange={handleChange}
           required
           value={insertForm.togetherTagContent}
-        />     
-        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4, mb:4 }}>개설하기</Button>
-        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb:4 }}>
+        />
+        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
+          개설하기
+        </Button>
+        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb: 4 }}>
           취소
         </Button>
       </Box>
