@@ -75,16 +75,16 @@ public class AdminService {
     try {
       facilitiesRepository.save(facilities);
 
-//      for(int i =1;i<=50;i++){
-//        Facilities f = new Facilities();
-//        f.setFacilitiesName("시설명"+i);
-//        f.setFacilitiesGrade("기본"+i);
-//        f.setFacilitiesPhone("101010010");
-//         f.setFacilitiesManager("이름"+i);
-//         f.setFacilitiesPrice(i + 10000);
-//         f.setFacilitiesPosition("위치"+i);
-//         facilitiesRepository.save(f);
-//      }
+      for(int i =1;i<=50;i++){
+        Facilities f = new Facilities();
+        f.setFacilitiesName("시설명"+i);
+        f.setFacilitiesGrade("기본"+i);
+        f.setFacilitiesPhone("101010010");
+         f.setFacilitiesManager("이름"+i);
+         f.setFacilitiesPrice(i + 10000);
+         f.setFacilitiesPosition("위치"+i);
+         facilitiesRepository.save(f);
+      }
       result = "ok";
 
     } catch (Exception e) {
@@ -105,15 +105,25 @@ public class AdminService {
     return facilities;
 
   }
-
+@Autowired TogetherOpenedRepository togetherOpenedRepository;
   //시설 삭제
   public String deleteFacilities(Long facilitiesCode) {
     log.info("adminService.deleteFacilities()");
     String result = "fail";
     try {
       Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
+      List<TogetherOpened> togetherOpenedList= togetherOpenedRepository.findByFacilitiesCode(facilities);
 
+      if(!(togetherOpenedList.isEmpty())){
+        result = "togetherExist";
+        return result;
+      }
+
+
+      System.out.println("facilities = " + nodayRepository.findAllByFacilitiesCode(facilities));
       nodayRepository.deleteAll(nodayRepository.findAllByFacilitiesCode(facilities));
+      System.out.println("facilitiesCode = " + facilitiesCode);
+          
       facilitiesRepository.deleteById(facilitiesCode);
       result = "ok";
     } catch (Exception e) {
@@ -219,24 +229,24 @@ public class AdminService {
         result = "ok";
       }
 
-//
-//      for(int i=1;i<=45;i++){
-//        if(i==43){
-//          break;
-//        }
-//        Report report1 = new Report();
-//        report1.setMemberEmail(memberRepository.findById("test"+i+"@test.com").get());
-//        report1.setReportCategory("memberpage");
-//        report1.setReportTarget(0L);
-//        reportRepository.save(report1);
-//
-//        ReportDetail reportDetail = new ReportDetail();
-//        reportDetail.setReportCode(report1);
-//        reportDetail.setMemberEmail(memberRepository.findById("test"+(i+1)+"@test.com").get());
-//        reportDetail.setReportDetailContent("내용"+i);
-//        reportDetail.setReportDetailDate("2023-01-01");
-//        reportDetailRepository.save(reportDetail);
-//      }
+
+      for(int i=1;i<=45;i++){
+        if(i==43){
+          break;
+        }
+        Report report1 = new Report();
+        report1.setMemberEmail(memberRepository.findById("test"+i+"@test.com").get());
+        report1.setReportCategory("memberpage");
+        report1.setReportTarget(0L);
+        reportRepository.save(report1);
+
+        ReportDetail reportDetail = new ReportDetail();
+        reportDetail.setReportCode(report1);
+        reportDetail.setMemberEmail(memberRepository.findById("test"+(i+1)+"@test.com").get());
+        reportDetail.setReportDetailContent("내용"+i);
+        reportDetail.setReportDetailDate("2023-01-01");
+        reportDetailRepository.save(reportDetail);
+      }
 
 
     } catch (Exception e) {
@@ -298,7 +308,7 @@ public class AdminService {
     if (pageNum == null) {
       pageNum = 1;
     }
-    int listCount = 9;
+    int listCount = 10;
     Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "reportCode");
     Page<Report> result = reportRepository.findAll(pageable);
     List<Report> reportList = result.getContent();

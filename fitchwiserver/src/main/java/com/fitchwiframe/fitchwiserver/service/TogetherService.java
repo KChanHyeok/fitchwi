@@ -507,7 +507,7 @@ public class TogetherService {
         if (pageNum == null) {
             pageNum = 1;
         }
-        int listCount = 7;
+        int listCount = 10;
         Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "togetherCode");
 
         Page<Together> result = null;

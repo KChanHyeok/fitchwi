@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Box, Grid, ListItemButton, ListItemText } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -32,11 +32,11 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
   const [checkPwd, setCheckPwd] = useState("");
 
   const [correctPwd, setCorrectPwd] = useState(null);
-  console.log(memberToCheck);
-  console.log(currentPwd);
-  console.log(pwd);
-  console.log(checkPwd);
-  console.log(memberToChange);
+  // console.log(memberToCheck);
+  // console.log(currentPwd);
+  // console.log(pwd);
+  // console.log(checkPwd);
+  // console.log(memberToChange);
 
   const [msg, setMsg] = useState("");
   useEffect(() => {
@@ -106,9 +106,13 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
   };
   return (
     <div>
-      <ListItemButton component="a" onClick={() => setOpenChangePwd(() => true)}>
-        <ListItemText primary={children} />
-      </ListItemButton>
+      <Button
+        variant="outlined"
+        onClick={() => setOpenChangePwd(() => true)}
+        sx={{ width: "100%" }}
+      >
+        <Typography>{children}</Typography>
+      </Button>
 
       <Dialog open={openChangePwd} onClose={handleClose}>
         <DialogTitle>회원정보 수정</DialogTitle>

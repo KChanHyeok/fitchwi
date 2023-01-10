@@ -71,8 +71,8 @@ export default function TogeterManagement() {
   });
 
   return (
-    <Container component="main" style={{ maxWidth: "1200px", marginTop: "100px" }} align="center">
-      <Box sx={{ mb: 5 }}>
+    <Container component="main" align="center" sx={{ mt: 13 }}>
+      <Box sx={{ mb: 4 }}>
         <Typography variant="h4">함께해요 취소 관리</Typography>
       </Box>
       <TogetherSearch
@@ -110,7 +110,7 @@ export default function TogeterManagement() {
           </Typography>
         </AccordionSummary>
       </Accordion>
-      <Box sx={{ height: 570 }}>
+      <Box>
         {load === false ? (
           <Box
             style={{
@@ -197,7 +197,7 @@ export default function TogeterManagement() {
       </Box>
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
-          sx={{ mb: 10 }}
+          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"
