@@ -17,7 +17,7 @@ const imgBoxStyle = {
     width: "700px",
     height: "300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "contain"
+    backgroundSize: "contain",
 };
 
 function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagList }) {
@@ -82,11 +82,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
         const file = event.target.files;
         setFileForm(file);
     }, []);
-
-    // 파일 삭제
-    // const deleteFileImage = () => {
-
-    // };
 
     //작성 내용 전송 함수
     const onTalkOpened = (e) => {
@@ -163,7 +158,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                 label="최대 참여인원"
                                 type="number"
                                 name="talkMax"
-                                value={insertTalkOp.talkMax}
                                 sx={{ mt: 3 }}
                                 onChange={onChange}
                                 required

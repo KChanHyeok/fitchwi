@@ -100,7 +100,8 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                 {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
                                     ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} talkTagInfo={talkTagInfo}
                                         talkJoinList={talkJoinList} talkJoinMember={talkJoinMember}
-                                        refreshTalkTagList={refreshTalkTagList} refreshTalkList={refreshTalkList} />)
+                                        refreshTalkTagList={refreshTalkTagList} refreshTalkList={refreshTalkList}
+                                        refreshTalkJoinList={refreshTalkJoinList} />)
                                     : (<Report type="MenuItem"
                                         target={talkInfo.talkCode}
                                         targetMember={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail}
@@ -111,7 +112,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                         <Box sx={{ maxWidth: 900 }}>
                             {talkInfo.talkSaveimg && (<Box
                                 component="img"
-                                sx={{ maxHeight: 400, textAlign: "center" }}
+                                sx={{ maxWidth: 800, maxHeight: 400, textAlign: "center" }}
                                 src={`/images/${talkInfo.talkSaveimg}`}
                                 alt="talkimg"
                             ></Box>)}
@@ -128,8 +129,8 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                     avatar={<Avatar alt="Natacha"
                                         src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                     />}
-                                    label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname}
-                                    style={{ backgroundColor: "#ff2e73", color: "white", fontSize: 15 }}
+                                    label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                    style={{ fontSize: 15 }}
                                 />
                             </Link>
                         </Box>
