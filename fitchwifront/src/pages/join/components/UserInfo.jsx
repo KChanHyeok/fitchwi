@@ -136,6 +136,13 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
       });
   };
 
+  const handlePhoneNumber = (e) => {
+    const regex = /^[0-9]{0,13}$/;
+    if (regex.test(e.target.value)) {
+      setJoinForm({ ...joinForm, memberPhone: e.target.value });
+    }
+  };
+
   return (
     <div style={{ textAlign: "center", width: 400 }}>
       <Typography variant="h2" gutterBottom mb={10}>
@@ -243,7 +250,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
           <TextField
             required
             type="text"
-            onChange={onChange}
+            onChange={(e) => handlePhoneNumber(e)}
             name="memberPhone"
             sx={{ width: "100%" }}
             label="연락처"

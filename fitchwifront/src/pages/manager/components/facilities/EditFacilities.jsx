@@ -4,7 +4,11 @@ import {
   Button,
   CircularProgress,
   Container,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -127,16 +131,21 @@ export default function EditFacilities() {
                   value={facilitiesPrice}
                   onChange={(e) => onInputChange(e)}
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="facilitiesGrade"
-                  label="등급"
-                  type="text"
-                  value={facilitiesGrade}
-                  onChange={(e) => onInputChange(e)}
-                />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">등급</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="facilitiesGrade"
+                    value={facilitiesGrade}
+                    label="Age"
+                    onChange={(e) => onInputChange(e)}
+                  >
+                    <MenuItem value={"제휴"}>제휴</MenuItem>
+                    <MenuItem value={"비제휴"}>비제휴</MenuItem>
+                  </Select>
+                </FormControl>
+
                 <TextField
                   margin="normal"
                   required

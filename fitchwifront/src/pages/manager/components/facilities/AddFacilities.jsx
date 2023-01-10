@@ -4,8 +4,12 @@ import {
   Button,
   Checkbox,
   Container,
+  FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -49,6 +53,13 @@ export default function AddFacilities() {
         alert("시설 등록에 실패했습니다.");
       }
     });
+  };
+
+  const handlePhoneNumber = (e) => {
+    const regex = /^[0-9]{0,13}$/;
+    if (regex.test(e.target.value)) {
+      setFacilities({ ...facilities, facilitiesPhone: e.target.value });
+    }
   };
 
   return (
@@ -95,11 +106,25 @@ export default function AddFacilities() {
             fullWidth
             name="facilitiesPrice"
             label="시설 1인 이용료"
-            type="text"
+            type="number"
             value={facilitiesPrice}
             onChange={(e) => onInputChange(e)}
           />
-          <TextField
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">등급</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              name="facilitiesGrade"
+              value={facilitiesGrade}
+              label="Age"
+              onChange={(e) => onInputChange(e)}
+            >
+              <MenuItem value={"제휴"}>제휴</MenuItem>
+              <MenuItem value={"비제휴"}>비제휴</MenuItem>
+            </Select>
+          </FormControl>
+          {/* <TextField
             margin="normal"
             required
             fullWidth
@@ -108,7 +133,7 @@ export default function AddFacilities() {
             type="text"
             value={facilitiesGrade}
             onChange={(e) => onInputChange(e)}
-          />
+          /> */}
           <TextField
             margin="normal"
             required
@@ -127,7 +152,7 @@ export default function AddFacilities() {
             label="담당자 연락처"
             type="text"
             value={facilitiesPhone}
-            onChange={(e) => onInputChange(e)}
+            onChange={(e) => handlePhoneNumber(e)}
           />
 
           <Grid container spacing={1}>

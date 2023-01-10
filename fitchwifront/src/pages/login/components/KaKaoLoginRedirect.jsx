@@ -20,27 +20,30 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
             switch (res.data.state) {
               case "ok":
                 //       console.log(res.data);
+                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
                 sessionStorage.setItem("mbti", res.data.mbti);
+                sessionStorage.setItem("profileImg", res.data.profileImg);
                 alert(res.data.memberNickname + "님 환영합니다.");
                 window.location.href = "/";
                 break;
               case "reported":
                 alert("신고누적으로, " + res.data.memberRestriction + "까지 이용이 불가능합니다.");
-                nav("/");
+                nav("/", { replace: true });
 
                 break;
               case "released":
                 alert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.");
-                sucLogin(res.data.memberEmail, res.data.memberNickname);
+                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
                 sessionStorage.setItem("mbti", res.data.mbti);
+                sessionStorage.setItem("profileImg", res.data.profileImg);
 
-                nav("/");
+                nav("/", { replace: true });
                 break;
 
               default:

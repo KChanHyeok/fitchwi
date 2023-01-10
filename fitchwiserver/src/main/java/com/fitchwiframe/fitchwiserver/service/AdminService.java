@@ -75,15 +75,15 @@ public class AdminService {
     try {
       facilitiesRepository.save(facilities);
 
-      for(int i =1;i<=50;i++){
+      for (int i = 1; i <= 50; i++) {
         Facilities f = new Facilities();
-        f.setFacilitiesName("시설명"+i);
-        f.setFacilitiesGrade("기본"+i);
+        f.setFacilitiesName("시설명" + i);
+        f.setFacilitiesGrade("기본" + i);
         f.setFacilitiesPhone("101010010");
-         f.setFacilitiesManager("이름"+i);
-         f.setFacilitiesPrice(i + 10000);
-         f.setFacilitiesPosition("위치"+i);
-         facilitiesRepository.save(f);
+        f.setFacilitiesManager("이름" + i);
+        f.setFacilitiesPrice(i + 10000);
+        f.setFacilitiesPosition("위치" + i);
+        facilitiesRepository.save(f);
       }
       result = "ok";
 
@@ -105,16 +105,19 @@ public class AdminService {
     return facilities;
 
   }
-@Autowired TogetherOpenedRepository togetherOpenedRepository;
+
+  @Autowired
+  TogetherOpenedRepository togetherOpenedRepository;
+
   //시설 삭제
   public String deleteFacilities(Long facilitiesCode) {
     log.info("adminService.deleteFacilities()");
     String result = "fail";
     try {
       Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
-      List<TogetherOpened> togetherOpenedList= togetherOpenedRepository.findByFacilitiesCode(facilities);
+      List<TogetherOpened> togetherOpenedList = togetherOpenedRepository.findByFacilitiesCode(facilities);
 
-      if(!(togetherOpenedList.isEmpty())){
+      if (!(togetherOpenedList.isEmpty())) {
         result = "togetherExist";
         return result;
       }
@@ -123,7 +126,7 @@ public class AdminService {
       System.out.println("facilities = " + nodayRepository.findAllByFacilitiesCode(facilities));
       nodayRepository.deleteAll(nodayRepository.findAllByFacilitiesCode(facilities));
       System.out.println("facilitiesCode = " + facilitiesCode);
-          
+
       facilitiesRepository.deleteById(facilitiesCode);
       result = "ok";
     } catch (Exception e) {
@@ -230,20 +233,20 @@ public class AdminService {
       }
 
 
-      for(int i=1;i<=45;i++){
-        if(i==43){
+      for (int i = 1; i <= 45; i++) {
+        if (i == 43) {
           break;
         }
         Report report1 = new Report();
-        report1.setMemberEmail(memberRepository.findById("test"+i+"@test.com").get());
+        report1.setMemberEmail(memberRepository.findById("test" + i + "@test.com").get());
         report1.setReportCategory("memberpage");
         report1.setReportTarget(0L);
         reportRepository.save(report1);
 
         ReportDetail reportDetail = new ReportDetail();
         reportDetail.setReportCode(report1);
-        reportDetail.setMemberEmail(memberRepository.findById("test"+(i+1)+"@test.com").get());
-        reportDetail.setReportDetailContent("내용"+i);
+        reportDetail.setMemberEmail(memberRepository.findById("test" + (i + 1) + "@test.com").get());
+        reportDetail.setReportDetailContent("내용" + i);
         reportDetail.setReportDetailDate("2023-01-01");
         reportDetailRepository.save(reportDetail);
       }
@@ -380,9 +383,9 @@ public class AdminService {
     log.info("adminService.updateReportState()");
     try {
       Report report = reportRepository.findById(reportCode).get();
-      if(reportTreatment.equals("신고대상삭제")){
+      if (reportTreatment.equals("신고대상삭제")) {
         report.setReportState(reportTreatment);
-      }else{
+      } else {
         report.setReportState(reportTreatment + "까지 이용 제한");
       }
 
@@ -395,14 +398,28 @@ public class AdminService {
   }
 
   public void deleteAllByMember(Member member) {
+    //내가 신고한 reportdetail
     List<ReportDetail> reportDetailList = reportDetailRepository.findByMemberEmail(member);
+    System.out.println("reportDetailList = " + reportDetailList);
     if (!(reportDetailList.isEmpty())) {
       reportDetailRepository.deleteAll(reportDetailList);
     }
+
+    //내가 신고받은 report
     List<Report> reportList = reportRepository.findByMemberEmail(member);
+
     if (!(reportList.isEmpty())) {
+      for (Report report : reportList) {
+        //나를 신고한 reportdetail
+        List<ReportDetail> reportedDetailList = reportDetailRepository.findByReportCode(report);
+        reportDetailRepository.deleteAll(reportedDetailList);
+      }
+      System.out.println("reportList = " + reportList);
+
       reportRepository.deleteAll(reportList);
     }
+
+
   }
 
   public String managerLogin(Manager manager) {
@@ -412,15 +429,15 @@ public class AdminService {
     try {
       Optional<Manager> byId = managerRepository.findById(manager.getManagerId());
       if (byId.isPresent()) {
-      System.out.println("byId.get() = " + byId.get());
+        System.out.println("byId.get() = " + byId.get());
         Manager dbManager = byId.get();
         if (dbManager.getManagerPwd().equals(manager.getManagerPwd())) {
           result = "ok";
-        }else{
+        } else {
           result = "wrong pwd";
         }
 
-      }else{
+      } else {
         result = "no data";
       }
 

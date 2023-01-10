@@ -25,6 +25,7 @@ function App() {
   const [lstate, setLstate] = useState({
     logid: "",
     nickName: "",
+    profileImg: "",
     flink: "/login",
   });
 
@@ -32,6 +33,7 @@ function App() {
     //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
     const id = sessionStorage.getItem("id");
     const nickName = sessionStorage.getItem("nickName");
+    const profileImg = sessionStorage.getItem("profileImg");
     ChannelService.boot({
       pluginKey: "261174a2-5819-4674-be05-d9bb582cd3b9",
       memberId: id,
@@ -45,6 +47,7 @@ function App() {
       const newState = {
         logid: id,
         nickName: nickName,
+        profileImg: profileImg,
         flink: "/memberpage",
       };
       setLstate(newState);
@@ -52,10 +55,11 @@ function App() {
   }, []);
 
   //로그인 성공 시 로그인 상태 변경 함수
-  const sucLogin = useCallback((id, nickName) => {
+  const sucLogin = useCallback((id, nickName, profileImg) => {
     const newState = {
       logid: id,
       nickName: nickName,
+      profileImg: profileImg,
       flink: "/memberpage",
     };
     setLstate(newState);
@@ -63,7 +67,9 @@ function App() {
 
   //로그아웃함수
   const onLogout = () => {
-    axios.post("/logout", { data: { id: lstate.logid } }).then((result) => console.log(result.data));
+    axios
+      .post("/logout", { data: { id: lstate.logid } })
+      .then((result) => console.log(result.data));
     alert("로그아웃");
     // const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
     // const REDIRECT_URI = "http://localhost:3000/";
@@ -81,6 +87,7 @@ function App() {
     sessionStorage.removeItem("nickName");
     sessionStorage.removeItem("mbti");
     sessionStorage.removeItem("classification");
+    sessionStorage.removeItem("profileImg");
     nav("/"); //첫페이지로 돌아감.
   };
 
@@ -98,9 +105,18 @@ function App() {
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} />}></Route>
-        <Route path="/manager/*" element={<Manager isManager={isManager} setIsManager={setIsManager} />}></Route>
-        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect sucLogin={sucLogin} />}></Route>
+        <Route
+          path="/memberpage/*"
+          element={<MemberPage onLogout={onLogout} lstate={lstate} sucLogin={sucLogin} />}
+        ></Route>
+        <Route
+          path="/manager/*"
+          element={<Manager isManager={isManager} setIsManager={setIsManager} />}
+        ></Route>
+        <Route
+          path="/login/kakao/callback"
+          element={<KaKaoLoginRedirect sucLogin={sucLogin} />}
+        ></Route>
       </Routes>
     </>
   );

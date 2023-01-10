@@ -35,17 +35,17 @@ export default function Login({ sucLogin }) {
     (e) => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
-        //0: result /1:id / 2:nickname
-
+        console.log(res.data);
         switch (res.data.state) {
           case "ok":
-            sucLogin(res.data.memberEmail, res.data.memberNickname);
+            sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
             sessionStorage.setItem("mbti", res.data.mbti);
+            sessionStorage.setItem("profileImg", res.data.profileImg);
 
             alert(res.data.memberNickname + "님 환영합니다.");
-            nav("/");
+            nav("/", { replace: true });
             break;
 
           case "wrong pwd":
@@ -56,16 +56,17 @@ export default function Login({ sucLogin }) {
             break;
           case "reported":
             alert("신고누적으로, " + res.data.memberRestriction + "부터 이용 가능합니다.");
-            nav("/");
+            nav("/", { replace: true });
             break;
           case "released":
             alert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.");
-            sucLogin(res.data.memberEmail, res.data.memberNickname);
+            sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
             sessionStorage.setItem("mbti", res.data.mbti);
+            sessionStorage.setItem("profileImg", res.data.profileImg);
             alert(res.data.memberNickname + "님 환영합니다.");
-            nav("/");
+            nav("/", { replace: true });
             break;
           default:
             break;
@@ -127,7 +128,12 @@ export default function Login({ sucLogin }) {
               로그인
             </Button>
 
-            <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => createMemeber()}
+            >
               구글로그인
             </Button>
 
