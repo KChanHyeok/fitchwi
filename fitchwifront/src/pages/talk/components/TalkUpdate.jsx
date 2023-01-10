@@ -15,13 +15,14 @@ const UserBox = styled(Box)({
 
 const imgBoxStyle = {
     marginTop: "20px",
-    width: "300px",
-    height: "200px",
+    width: "700px",
+    height: "300px",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
+    backgroundSize: "contain",
 };
 
 const imgBoxStyle2 = {
+    marginTop: "20px",
     width: "300px",
     height: "200px",
     backgroundRepeat: "no-repeat",
@@ -31,7 +32,7 @@ const imgBoxStyle2 = {
 function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refreshTalkTagList }) {
     let formData = new FormData();
     const nav = useNavigate();
-    const imgEl = document.querySelector(".talk_img_box");
+    const imgEl = document.querySelector(".img_box");
 
     const [updateTalk, setUpdateTalk] = useState({});
     const [updateTalkTag, setUpdateTalkTag] = useState({});
@@ -39,15 +40,18 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     const { state } = useLocation();
 
     useEffect(() => {
-        preview();
         try {
             setUpdateTalk(state.talkInfo);
             setUpdateTalkTag(state.talkTagInfo);
         } catch (e) {
 
         }
-        return () => preview();
     }, []);
+
+    useEffect(() => {
+        preview();
+        return () => preview();
+    })
 
     const onChange = useCallback(
         (e) => {
@@ -68,21 +72,18 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     const [fileForm, setFileForm] = useState("");
 
     const preview = () => {
-        if (!fileForm) return false;
+        if (fileForm.length === 0) {
+            return false;
+        }
         const render = new FileReader();
-        render.readAsDataURL(fileForm[0])
-        render.onload = () =>
-            (imgEl.style.backgroundImage = `url(${render.result})`);
-        ;
-        console.log(render);
-    };
+        render.readAsDataURL(fileForm[0]);
+        render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
+    }
 
-    const onLoadFile = useCallback(
-        (e) => {
-            const file = e.target.files;
-            setFileForm(file);
-            console.log(e.target.file);
-        }, []);
+    const onLoadFile = useCallback((event) => {
+        const file = event.target.files;
+        setFileForm(file);
+    }, []);
 
     //talk 수정
     const onTalkUpdate = (e) => {
@@ -139,7 +140,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
         setShowInquiry(false);
     }
 
-    console.log(updateTalk.talkType);
+    console.log(fileForm);
 
     return (
         <>
@@ -190,7 +191,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                             </Select>
                         </FormControl>
                         <div>
-                            <FormControl sx={{ mt: 2, minWidth: 130, minHeight: 100 }}>
+                            <FormControl sx={{ mt: 2, minWidth: 130 }}>
                                 <InputLabel className="talkTypeSt">가입유형</InputLabel>
                                 <Select label="가입유형" name="talkType"
                                     value={updateTalk.talkType || ""}
@@ -211,18 +212,29 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                     onChange={onChange} />
                                 : <div></div>}
                         </div>
-                        <TextField fullWidth
-                            label="얘기해요 대표 사진"
-                            type="file"
-                            name="talkImg"
-                            sx={{ mt: 3 }}
-                            onChange={onLoadFile}
-                            color="grey"
-                            focused
-                        />
-                        <div style={imgBoxStyle} className="talk_img_box">
-                            <img style={imgBoxStyle2} src={"/images/" + updateTalk.talkSaveimg} alt={updateTalk.talkImg} />
-                        </div>
+                        <Stack>
+                            <Typography variant="h7" sx={{ mt: 3 }}>대표사진을 넣어주세요
+                                <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
+                                    Upload
+                                    <TextField
+                                        label="모임대표사진"
+                                        type="file"
+                                        accept="image/*"
+                                        focused
+                                        sx={{ mt: 3, display: "none" }}
+                                        color="grey"
+                                        onChange={onLoadFile}
+                                        required
+                                    />
+                                </Button>
+                            </Typography>
+                            <Box style={imgBoxStyle} className="img_box">
+                                {fileForm === ""
+                                    ? <img style={imgBoxStyle2} src={"/images/" + updateTalk.talkSaveimg} alt={updateTalk.talkImg} />
+                                    : <div />
+                                }
+                            </Box>
+                        </Stack>
                         <TextField fullWidth
                             label="모임을 소개해주세요"
                             name="talkContent"
