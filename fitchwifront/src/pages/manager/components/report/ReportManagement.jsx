@@ -61,13 +61,14 @@ export default function ReportManagement() {
   const handlepageNum = useCallback((value) => {
     getReports(value);
   }, []);
+
   const onRistrict = (period, memberEmail, reportCode) => {
     // console.log(period);
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
 
     axios.put(`/restrictMember/${restrictDate}/${memberEmail}`).then((result) => {
       //   console.log(result);
-      updateReportState(reportCode);
+      updateReportState(reportCode, restrictDate);
     });
   };
 
@@ -99,7 +100,7 @@ export default function ReportManagement() {
               //     console.log(feed.data);
               axios
                 .delete("/deleteFeed", { data: feed.data })
-                .then((result) => updateReportState(reportCode))
+                .then((result) => updateReportState(reportCode, "신고대상삭제"))
                 .catch((error) => console.log(error));
             })
             .catch((error) => console.log(error));
@@ -117,7 +118,7 @@ export default function ReportManagement() {
               axios
                 .delete("/deleteTalk", { data: talk.data })
                 .then((result) => {
-                  updateReportState(reportCode);
+                  updateReportState(reportCode, "신고 대상 삭제");
                   alert("해당 '얘기해요'를 삭제했습니다.");
                 })
                 .catch((error) => {
@@ -135,10 +136,10 @@ export default function ReportManagement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const updateReportState = (reportCode) => {
+  const updateReportState = (reportCode, reportTreatment) => {
     // console.log(reportCode);
-    axios.put(`/updateReportState/${reportCode}`).then((result) => {
-      alert(result.data + "처리 완료");
+    axios.put(`/updateReportState/${reportCode}/${reportTreatment}`).then((result) => {
+      alert(result.data);
       getReports(pageNum);
     });
   };
@@ -163,22 +164,22 @@ export default function ReportManagement() {
           disabled
           style={{ opacity: "1" }}
         >
-          <Typography align="center" sx={{ width: "100%" }}>
+          <Typography align="center" sx={{ width: "15%" }}>
             신고 코드
           </Typography>
 
-          <Typography align="center" sx={{ width: "100%" }}>
+          <Typography align="center" sx={{ width: "20%" }}>
             신고 대상
           </Typography>
 
-          <Typography align="center" sx={{ width: "100%" }}>
+          <Typography align="center" sx={{ width: "20%" }}>
             피신고 회원
           </Typography>
 
-          <Typography align="center" sx={{ width: "100%" }}>
+          <Typography align="center" sx={{ width: "15%" }}>
             신고 건수
           </Typography>
-          <Typography align="center" sx={{ width: "100%" }}>
+          <Typography align="center" sx={{ width: "25%" }}>
             처리 상태
           </Typography>
         </AccordionSummary>
@@ -225,7 +226,7 @@ export default function ReportManagement() {
                         </Typography>
                       )}
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                       <Link
                         to={`/${report.reportCategory}`}
                         state={{ memberId: report.memberEmail.memberEmail }}
@@ -233,11 +234,15 @@ export default function ReportManagement() {
                         <Typography>{report.memberEmail.memberEmail}</Typography>
                       </Link>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                       <Typography>{report.reportDetailList.length}</Typography>
                     </Grid>
-                    <Grid item xs={2}>
-                      <Typography>{report.reportState}</Typography>
+                    <Grid item xs={4}>
+                      {report.reportState === "대기" ? (
+                        <Typography>{report.reportState}</Typography>
+                      ) : (
+                        <Typography>{report.reportState}</Typography>
+                      )}
                     </Grid>
                   </Grid>
                 </AccordionSummary>

@@ -365,12 +365,17 @@ public class AdminService {
     return result;
   }
 
-  public String updateReportState(Long reportCode) {
+  public String updateReportState(Long reportCode, String reportTreatment) {
     String result = "fail";
     log.info("adminService.updateReportState()");
     try {
       Report report = reportRepository.findById(reportCode).get();
-      report.setReportState("처리완료");
+      if(reportTreatment.equals("신고대상삭제")){
+        report.setReportState(reportTreatment);
+      }else{
+        report.setReportState(reportTreatment + "까지 이용 제한");
+      }
+
       reportRepository.save(report);
       result = "ok";
     } catch (Exception e) {

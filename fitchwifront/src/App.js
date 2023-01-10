@@ -16,7 +16,7 @@ import "./pages/manager/components/facilities/CalendarApp.scss";
 import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
 import axios from "axios";
-import ManagerNav from "./pages/manager/components/common/ManagerNav";
+import ManagerNav from "./pages/manager/components/ManagerNav";
 
 function App() {
   const nav = useNavigate();
