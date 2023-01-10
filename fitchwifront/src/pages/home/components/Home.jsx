@@ -42,7 +42,7 @@ const Home = () => {
 
   return (
     <>
-      <Box mb={4} height={400} width="100%">
+      <Box mb={5} height={400} width="100%">
         <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
           <Box
             height={400}

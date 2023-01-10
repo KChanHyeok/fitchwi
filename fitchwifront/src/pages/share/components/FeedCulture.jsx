@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import FeedAdd from "../common/FeedAdd";
 import Post from "./Post";
 
-const FeedCulture = ({ memberInfo, refreshFeed }) => {
+const FeedCulture = ({ memberInfo }) => {
   const [loading, setLoading] = useState(false);
   const [feedCulture, setFeedCulture] = useState([]);
   const [page, setPage] = useState(0);

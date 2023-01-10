@@ -30,13 +30,15 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
+const FeedAdd = () => {
   let formdata = new FormData();
   const nav = useNavigate();
   const [state, setState] = useState(false);
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
+  const [talkJoinList, setTalkJoinList] = useState([]);
+  const [talkOpenedList, setTalkOpenedList] = useState([]);
   const [tagForm, setTagForm] = useState([]);
   const imageInput = useRef();
   const [insertForm, setInsertForm] = useState({
@@ -190,19 +192,13 @@ const FeedAdd = ({ memberInfo, refreshFeed, memberEmail }) => {
     imageInput.current.click();
   };
 
-  const [talkJoinList, setTalkJoinList] = useState([]);
-  const [talkOpenedList, setTalkOpenedList] = useState([]);
-
   const getMemberTalk = useCallback(() => {
-    axios
-      .get("/getMemberTalk", { params: { memberEmail: memberEmail } })
-      .then((res) => {
-        const { talkJoinList, talkOpenedList } = res.data;
-        setTalkJoinList(talkJoinList);
-        setTalkOpenedList(talkOpenedList);
-      })
-      .catch((error) => console.log(error));
-  }, [memberEmail]);
+    axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
+      const { talkJoinList, talkOpenedList } = res.data;
+      setTalkJoinList(talkJoinList);
+      setTalkOpenedList(talkOpenedList);
+    });
+  }, []);
 
   useEffect(() => {
     preview();

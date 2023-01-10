@@ -56,7 +56,6 @@ const Post = ({
   // 피드 작성시간
   const toDay = new Date();
   const toDayD = toDay.getTime();
-  console.log(feedClassificationcode);
 
   let divide = 1000 * 60 * 60 * 24;
   let date = (toDayD - feedDate) / divide;
