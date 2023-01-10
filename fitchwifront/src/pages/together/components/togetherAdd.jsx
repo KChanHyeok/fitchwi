@@ -16,6 +16,7 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import FaceRoundedIcon from "@mui/icons-material/FaceRounded";
 import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatisfiedAltRounded";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -43,6 +44,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   const [fileForm, setFileForm] = useState("");
   const [firstDateOpen, setFirstDateOpen] = useState(true);
   const [secondDateOpen, setSecondDateOpen] = useState(true);
+  const [load, setLoad] = useState(false);
   const [noday, setNoday] = useState([])
 
   const imgEl = document.querySelector(".img_box");
@@ -118,6 +120,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
   const sendTogether = (e) => {
     e.preventDefault();
+    setLoad(true)
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
     formDate.append("uploadImage", fileForm[0]);
 
@@ -127,6 +130,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     axios
       .post("/addTogether", formDate, config)
       .then((res) => {
+        setLoad(false)
         alert(res.data);
         nav("/together");
         refreshTogetherList();
@@ -198,7 +202,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
-      <Box bgcolor="white" sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
+      {load ? 
+      <Box>
+        <CircularProgress/>
+      </Box>
+      :<Box bgcolor="white" sx={{ mb: 5 }} component="form" onSubmit={sendTogether}>
         <Typography variant="h6" color="gray" textAlign="center">
           함께해요 개설
         </Typography>
@@ -460,15 +468,16 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             대표사진을 넣어주세요
             <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
               Upload
-              <TextField
+              <input
                 label="모임대표사진"
                 type="file"
-                accept="image/*"
                 focused
-                sx={{ mt: 3, display: "none" }}
+                hidden
+                sx={{ mt: 3 }}
                 color="grey"
                 onChange={onLoadFile}
                 required
+                accept="image/*"
               />
             </Button>
           </Typography>
@@ -508,7 +517,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb: 4 }}>
           취소
         </Button>
-      </Box>
+      </Box>}
     </Stack>
   );
 };
