@@ -54,10 +54,7 @@ export default function UpdateMember({ member, lstate }) {
   const onUpdate = (e) => {
     e.preventDefault();
 
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" })
-    );
+    formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
 
     const config = {
@@ -193,25 +190,25 @@ export default function UpdateMember({ member, lstate }) {
 
       interestArray.forEach((e) => {
         switch (e) {
-          case "문화∙예술":
+          case "문화·예술":
             temporaryChecked.culture = true;
             break;
-          case "운동∙액티비티":
+          case "운동·액티비티":
             temporaryChecked.activity = true;
             break;
-          case "요리∙음식":
+          case "요리·음식":
             temporaryChecked.food = true;
             break;
           case "여행":
             temporaryChecked.travel = true;
             break;
-          case "성장∙자기계발":
+          case "성장·자기계발":
             temporaryChecked.grownup = true;
             break;
-          case "공예∙수공예":
+          case "공예·수공예":
             temporaryChecked.making = true;
             break;
-          case "게임∙오락":
+          case "게임·오락":
             temporaryChecked.game = true;
             break;
           case "기타":
@@ -263,25 +260,25 @@ export default function UpdateMember({ member, lstate }) {
     selectedInterest.forEach((e) => {
       switch (e) {
         case "culture":
-          stringInterest += "문화∙예술 ";
+          stringInterest += "문화·예술 ";
           break;
         case "activity":
-          stringInterest += "운동∙액티비티 ";
+          stringInterest += "운동·액티비티 ";
           break;
         case "food":
-          stringInterest += "요리∙음식 ";
+          stringInterest += "요리·음식 ";
           break;
         case "travel":
           stringInterest += "여행 ";
           break;
         case "grownup":
-          stringInterest += "성장∙자기계발 ";
+          stringInterest += "성장·자기계발 ";
           break;
         case "making":
-          stringInterest += "공예∙수공예 ";
+          stringInterest += "공예·수공예 ";
           break;
         case "game":
-          stringInterest += "게임∙오락 ";
+          stringInterest += "게임·오락 ";
           break;
         case "etc":
           stringInterest += "기타 ";
@@ -345,22 +342,11 @@ export default function UpdateMember({ member, lstate }) {
         ) : (
           <>
             <Box>
-              <Avatar
-                src={file !== "" ? file : memberSaveimg}
-                sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
-              />
+              <Avatar src={file !== "" ? file : memberSaveimg} sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }} />
               <ButtonGroup>
                 <Button variant="outlined" sx={{ pl: 5 }}>
                   <FormControlLabel
-                    control={
-                      <TextField
-                        onChange={fileHandler}
-                        type="file"
-                        label="사진"
-                        variant="standard"
-                        style={{ display: "none" }}
-                      />
-                    }
+                    control={<TextField onChange={fileHandler} type="file" label="사진" variant="standard" style={{ display: "none" }} />}
                     label="프로필 수정하기"
                   />
                 </Button>
@@ -532,12 +518,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.culture}
                         onChange={(e) => onClickInterest(e)}
                         name="culture"
-                        value="문화∙예술"
+                        value="문화·예술"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>문화∙예술</Typography>}
+                    label={<Typography style={{ position: "relative" }}>문화·예술</Typography>}
                   />
 
                   <FormControlLabel
@@ -546,12 +532,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.activity}
                         onChange={(e) => onClickInterest(e)}
                         name="activity"
-                        value="운동∙액티비티"
+                        value="운동·액티비티"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>운동∙액티비티</Typography>}
+                    label={<Typography style={{ position: "relative" }}>운동·액티비티</Typography>}
                   />
 
                   <FormControlLabel
@@ -560,12 +546,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.food}
                         onChange={(e) => onClickInterest(e)}
                         name="food"
-                        value="요리∙음식"
+                        value="요리·음식"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>요리∙음식</Typography>}
+                    label={<Typography style={{ position: "relative" }}>요리·음식</Typography>}
                   />
 
                   <FormControlLabel
@@ -588,12 +574,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.grownup}
                         onChange={(e) => onClickInterest(e)}
                         name="grownup"
-                        value="성장∙자기계발"
+                        value="성장·자기계발"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>성장∙자기계발</Typography>}
+                    label={<Typography style={{ position: "relative" }}>성장·자기계발</Typography>}
                   />
 
                   <FormControlLabel
@@ -602,12 +588,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.making}
                         onChange={(e) => onClickInterest(e)}
                         name="making"
-                        value="공예∙수공예"
+                        value="공예·수공예"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>공예∙수공예</Typography>}
+                    label={<Typography style={{ position: "relative" }}>공예·수공예</Typography>}
                   />
 
                   <FormControlLabel
@@ -616,12 +602,12 @@ export default function UpdateMember({ member, lstate }) {
                         checked={checked.game}
                         onChange={(e) => onClickInterest(e)}
                         name="game"
-                        value="게임∙오락"
+                        value="게임·오락"
                         icon={<FavoriteBorder sx={{ fontSize: 30 }} />}
                         checkedIcon={<Favorite sx={{ fontSize: 30 }} />}
                       />
                     }
-                    label={<Typography style={{ position: "relative" }}>게임∙오락</Typography>}
+                    label={<Typography style={{ position: "relative" }}>게임·오락</Typography>}
                   />
 
                   <FormControlLabel

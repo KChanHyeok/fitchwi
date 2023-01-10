@@ -21,7 +21,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <Palette />
               </ListItemIcon>
-              <ListItemText primary="문화∙예술" />
+              <ListItemText primary="문화·예술" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -29,7 +29,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <RunCircle />
               </ListItemIcon>
-              <ListItemText primary="운동∙액티비티" />
+              <ListItemText primary="운동·액티비티" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -37,7 +37,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <Fastfood />
               </ListItemIcon>
-              <ListItemText primary="요리∙음식" />
+              <ListItemText primary="요리·음식" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -53,7 +53,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <LocalLibrary />
               </ListItemIcon>
-              <ListItemText primary="성장∙자기계발" />
+              <ListItemText primary="성장·자기계발" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -61,7 +61,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <AutoAwesome />
               </ListItemIcon>
-              <ListItemText primary="공예∙수공예" />
+              <ListItemText primary="공예·수공예" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>
@@ -69,7 +69,7 @@ const Sidebar = ({ pageurl }) => {
               <ListItemIcon>
                 <Extension />
               </ListItemIcon>
-              <ListItemText primary="게임∙오락" />
+              <ListItemText primary="게임·오락" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ mb: 2 }}>

@@ -13,7 +13,7 @@ import HomeTogetherList from "./HomeTogetherList";
 const Home = () => {
   const nav = useNavigate();
   const [category, setCategory] = useState("culture");
-  const [korCategory, setKorCategory] = useState("문화∙예술");
+  const [korCategory, setKorCategory] = useState("문화·예술");
   const [talkList, setTalkList] = useState([]);
   const [togetherList, setTogetherList] = useState([]);
 
@@ -21,7 +21,6 @@ const Home = () => {
     await axios
       .get("/getAllTalkList")
       .then((res) => {
-        console.log(res.data);
         setTalkList(res.data);
       })
       .catch((error) => console.log(error));
