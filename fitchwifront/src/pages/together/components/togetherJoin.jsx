@@ -1,6 +1,7 @@
 import { Avatar, Button, Modal, styled, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
+import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 
@@ -75,12 +76,24 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       }
       const togetherJoinSend = (e) => {
         e.preventDefault();
+        if(togetherInfo.togetherRecruitStartDate>moment().format("YYYY-MM-DD")){
+            setOpen(false);
+            alert("아직 모집 기간이 아닙니다");
+            return 
+            
+        }
+        if(togetherInfo.togetherRecruitEndDate<moment().format("YYYY-MM-DD")){
+            setOpen(false);
+            alert("이미 지난 기간입니다.")
+            return 
+        }
+
         if(togetherInfo.togetherPrice===0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0) {
             insertTogetherFreeJoinInfo();
         }else {
             requestJoinPay()
         }
-      }
+        }
 
       const requestJoinPay = () => {
         IMP.request_pay({ // param
@@ -107,9 +120,14 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             
             axios.post("/insertTogetherPayJoinInfo", insertPayForm)
               .then((res) => {
-                  setOpen(false);
-                  alert(res.data);
-                  refreshTogetherJoinList();
+                if(res.data==="성공"){
+                    setOpen(false);
+                    alert(res.data);
+                    refreshTogetherJoinList();
+                }else {
+                    alert(res.data);
+                    window.location.reload();
+                }
               })
               .catch((Error) => console.log(Error))
           } else {

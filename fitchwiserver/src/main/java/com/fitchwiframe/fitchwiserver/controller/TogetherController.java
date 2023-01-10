@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class TogetherController {
     }
 
     @PostMapping("/insertTogetherFreeJoinInfo")
-    public String insertTogetherFreeJoinInfo(@RequestBody TogetherJoin togetherJoin) {
+    public String insertTogetherFreeJoinInfo(@RequestBody TogetherJoin togetherJoin) throws ParseException {
         log.info("insertTogetherFreeJoinInfo()");
         return togetherService.insertTogetherFreeJoinInfo(togetherJoin);
     }
