@@ -340,7 +340,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         spacing={3}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box>
+            <Box sx={{mt:3}}>
               <TextField
                 label="모이는 일자"
                 value={insertForm.togetherDate}

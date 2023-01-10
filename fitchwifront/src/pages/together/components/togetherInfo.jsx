@@ -1,8 +1,10 @@
-import { Box, Stack, styled, Avatar, Typography, Button } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography, Button, TextField } from "@mui/material";
+import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 import TogetherOpMenu from "./togetherOpMenu";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList }) => {
   let { togetherPageCode } = useParams();
@@ -29,6 +31,10 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
     gap: "10px",
     marginBottom: "20px",
   });
+
+  const onChange = () => {
+
+  }
   
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -54,7 +60,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
             {togetherInfo.togetherSaveimg && (
               <Box
                 component="img"
-                sx={{width:"100%",textAlign: "center" }}
+                sx={{width:"50%", height:"50%", textAlign: "center" }}
                 src={`/images/${togetherInfo.togetherSaveimg}`}
                 alt="green iguana"
               ></Box>
@@ -109,9 +115,53 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
             모집인원 : {togetherInfo.togetherMax}명 <br />
             모집유형 : {togetherInfo.togetherType} <br />
             1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}원 <br />
-            모이는 일자 : {togetherInfo.togetherDate}
             <br />
-            모집일정 : {togetherInfo.togetherRecruitStartDate} 부터 {togetherInfo.togetherRecruitEndDate}까지
+            <Stack 
+              direction="row"
+
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box>
+                <Typography variant="h5">
+                모집일정
+                </Typography> 
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  label="모집"
+                  disablePast
+                  value={togetherInfo.togetherDate || '2022-01-10'}
+                  renderInput={(params) => <TextField {...params} />}
+                  onChange={onChange}
+                  />
+                </Box>
+                <Box>
+                  <Typography variant="h5">
+                  모집시작기간
+                  </Typography>
+                  <StaticDatePicker
+                    displayStaticWrapperAs="desktop"
+                    label="시작"
+                    disablePast
+                    value={togetherInfo.togetherRecruitStartDate || '2022-01-10'}
+                    renderInput={(params) => <TextField {...params} />}
+                    onChange={onChange}
+                  />
+                </Box>
+                <Box>
+                  <Typography variant="h5">
+                  모집마감기간
+                  </Typography>
+                  <StaticDatePicker
+                    displayStaticWrapperAs="desktop"
+                    label="종료"
+                    disablePast
+                    value={togetherInfo.togetherRecruitEndDate || '2022-01-10'}
+                    renderInput={(params) => <TextField {...params} />}
+                    onChange={onChange}
+                    />
+                </Box>
+              </LocalizationProvider>
+            </Stack>
             <br />
             장소 : {togetherInfo.togetherPosition}
           </Box>
