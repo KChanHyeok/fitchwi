@@ -108,7 +108,7 @@ if (sessionStorage.getItem("mbti") !== null) {
   const MyMbti = sessionStorage.getItem("mbti");
   var even = mbti.findIndex((item, index) => item === MyMbti);
 } else {
-  even = Math.floor(Math.random() * 10);
+  even = Math.floor(Math.random() * 15);
 }
 
 export default function HomeTapPanel() {
