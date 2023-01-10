@@ -31,7 +31,7 @@ const HomeTogetherList = ({ category, togetherList, korCategory }) => {
           </Stack>
           <Stack direction="row" spacing={3} alignItems="flex-start" justifyContent="space-between" mt={1}>
             {togetherListByCategory.map((item) => (
-              <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={item.talkCode}>
+              <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={item.togetherCode}>
                 <Card sx={{ mb: 3, width: 250, height: 235 }} key={item.togetherCode}>
                   <CardActionArea>
                     <CardMedia component="img" width="200" height="150" alt="talkimg" src={`/images/${item.togetherSaveimg}`} />

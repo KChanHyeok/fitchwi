@@ -31,10 +31,10 @@ const StyleModal = styled(Modal)({
 });
 
 export default function LongMenu({ flist, refreshFeed, information }) {
-  const [feedToUpdate, setFeedUpdate] = useState({});
-  const { feedCategory, feedContent, feedClassificationcode, feedTag } = feedToUpdate;
   let formdata = new FormData();
   const nav = useNavigate();
+  const [feedToUpdate, setFeedUpdate] = useState({});
+  const { feedCategory, feedContent, feedClassificationcode, feedTag } = feedToUpdate;
   const [anchorEl, setAnchorEl] = useState(null);
   const [tagForm, setTagForm] = useState([]);
   const [open, setOpen] = useState(false);
@@ -67,9 +67,9 @@ export default function LongMenu({ flist, refreshFeed, information }) {
         if (response.data === "ok") {
           setOpen(false);
           alert("성공");
+          window.location.reload();
           // setTagForm([]);
           // setFeedUpdate({});
-          window.location.reload();
         } else {
           alert("실패");
         }

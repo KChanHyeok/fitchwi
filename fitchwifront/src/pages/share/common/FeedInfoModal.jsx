@@ -52,7 +52,6 @@ const FeedInfoModal = ({
   const [isLike, setIsLike] = useState(false);
   const [open, setOpen] = useState(false);
   const [tagList, setTagList] = useState([]);
-
   const [talkInfo, setTalkInfo] = useState();
 
   const getTalkInfo = useCallback(() => {
@@ -167,7 +166,7 @@ const FeedInfoModal = ({
                       component="img"
                       src={"/images/" + item.feedFileSaveimg}
                       alt={item.feedFileImg}
-                      sx={{ width: 700, height: 700 }}
+                      sx={{ height: 700 }}
                     />
                   ))}
                 </Carousel>
@@ -185,11 +184,7 @@ const FeedInfoModal = ({
             <Box flex={1} p={1}>
               <UserBox display="flex" justifyContent="space-between" mb={1}>
                 <Box display="flex" alignItems="center">
-                  <Avatar
-                    alt={memberWriterInfo.memberName}
-                    src={"/images/" + memberWriterInfo.memberSaveimg}
-                    sx={{ width: 30, height: 30, mr: 1 }}
-                  />
+                  <Avatar alt={memberWriterInfo.memberName} src={memberWriterInfo.memberSaveimg} sx={{ width: 30, height: 30, mr: 1 }} />
                   <Typography fontWeight={500} variant="span">
                     <b>{memberWriterInfo.memberNickname}</b> {}
                   </Typography>
@@ -199,11 +194,7 @@ const FeedInfoModal = ({
               <Divider />
               <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
                 <UserBox mb={2}>
-                  <Avatar
-                    alt={memberWriterInfo.memberName}
-                    src={"/images/" + memberWriterInfo.memberSaveimg}
-                    sx={{ width: 30, height: 30 }}
-                  />
+                  <Avatar alt={memberWriterInfo.memberName} src={memberWriterInfo.memberSaveimg} sx={{ width: 30, height: 30 }} />
                   <Typography>
                     <b>{memberWriterInfo.memberNickname}</b>
                   </Typography>
@@ -245,7 +236,7 @@ const FeedInfoModal = ({
                         >
                           <Avatar
                             alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
-                            src={"/images/" + talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                            src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
                             sx={{ width: 20, height: 20, mr: 1 }}
                           />
                           <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>

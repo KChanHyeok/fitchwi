@@ -127,6 +127,16 @@ const FeedAdd = () => {
   };
 
   const sendFeed = () => {
+    if (insertForm.feedCategory === "") {
+      alert("카테고리를 선택하세요!");
+      return;
+    } else if (insertForm.feedContent === "") {
+      alert("내용을 입력하세요!");
+      return;
+    } else if (insertForm.feedTag.length === 0) {
+      alert("태그를 선택하세요!");
+      return;
+    }
     formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
 
     for (let i = 0; i < fileForm.length; i++) {
@@ -141,8 +151,6 @@ const FeedAdd = () => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
-          setOpen(false);
-          alert("성공");
           window.location.reload();
           // setState(false);
           // setFileForm("");
@@ -195,7 +203,8 @@ const FeedAdd = () => {
   const getMemberTalk = useCallback(() => {
     axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
       const { talkJoinList, talkOpenedList } = res.data;
-      setTalkJoinList(talkJoinList);
+      console.log(res.data);
+      setTalkJoinList(talkJoinList.filter((item) => item.talkJoinState === "가입중"));
       setTalkOpenedList(talkOpenedList);
     });
   }, []);
@@ -270,7 +279,7 @@ const FeedAdd = () => {
                     multiple
                     ref={imageInput}
                     style={{ display: "none" }}
-                    accept="image/png, image/jpeg"
+                    accept="image/*"
                   />
                 </>
               ) : fileForm.length > 1 ? (
@@ -352,6 +361,7 @@ const FeedAdd = () => {
                   labelId="demo-simple-select-autowidth-label"
                   id="demo-simple-select-autowidth"
                   value={insertForm.feedCategory}
+                  required
                   name="feedCategory"
                   onChange={handleChange}
                   label="카테고리"
