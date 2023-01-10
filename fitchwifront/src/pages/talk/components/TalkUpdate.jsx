@@ -150,7 +150,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                         얘기해요 수정
                     </Typography>
                     <UserBox>
-                        <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                        <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                             sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
                             {memberInfo.memberNickname}
@@ -224,7 +224,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                         sx={{ mt: 3, display: "none" }}
                                         color="grey"
                                         onChange={onLoadFile}
-                                        required
                                     />
                                 </Button>
                             </Typography>
@@ -243,7 +242,12 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                             onChange={onChange}
                             multiline />
                         {!updateTalkTag
-                            ? <Box sx={{ display: "flex" }}>
+                            ? <Box style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}>
                                 <CircularProgress sx={{ margin: "auto" }} />
                             </Box>
                             : <TextField fullWidth
