@@ -64,20 +64,23 @@ export default function Facilities() {
   });
 
   const deleteFacilities = (facilitiesCode) => {
+    console.log(facilitiesCode);
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
-      alert(result.data);
-      loadFacilities(pageNum);
+      if (result.data === "togetherExist") {
+        alert("해당 시설에서 진행 예정인 함께해요가 존재하여 삭제가 불가능합니다.");
+        loadFacilities(pageNum, facilitiesName);
+      } else if (result.data === "ok") {
+        alert("삭제됐습니다.");
+        loadFacilities(pageNum, facilitiesName);
+      } else {
+        alert("문제발셍");
+      }
     });
   };
   // console.log("out");
   // console.log(facilitiesName);
   return (
-    <Container
-      component="main"
-      style={{ maxWidth: "1200px", marginTop: "100px" }}
-      align="center"
-      sx={{ margin: "auto" }}
-    >
+    <Container component="main" align="center" sx={{ mt: 13 }}>
       <Box>
         <Typography variant="h4">시설 관리</Typography>
 
@@ -163,7 +166,7 @@ export default function Facilities() {
 
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
-          sx={{ mb: 10 }}
+          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"
