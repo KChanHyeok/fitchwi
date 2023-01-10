@@ -23,6 +23,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
+                sessionStorage.setItem("mbti", res.data.mbti);
                 alert(res.data.memberNickname + "님 환영합니다.");
                 window.location.href = "/";
                 break;
@@ -37,6 +38,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
+                sessionStorage.setItem("mbti", res.data.mbti);
 
                 nav("/");
                 break;

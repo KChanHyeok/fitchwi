@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import FeedAdd from "../common/FeedAdd";
 import Post from "./Post";
 
-const FeedGrowth = ({ memberInfo, refreshFeed }) => {
+const FeedGrowth = ({ memberInfo }) => {
   const [loading, setLoading] = useState(false);
   const [feed, setFeed] = useState([]);
   const [page, setPage] = useState(0);

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import FeedAdd from "../common/FeedAdd";
 import Post from "./Post";
 
-const Feed = ({ memberInfo, refreshFeed }) => {
+const Feed = ({ memberInfo }) => {
   const [loading, setLoading] = useState(false);
   const [feed, setFeed] = useState([]);
   const [page, setPage] = useState(0);
@@ -105,7 +105,6 @@ const Feed = ({ memberInfo, refreshFeed }) => {
             )}
           </>
         )}
-
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>

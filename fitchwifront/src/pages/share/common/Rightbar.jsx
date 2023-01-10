@@ -70,7 +70,12 @@ const Rightbar = () => {
             </Typography>
             <ImageList cols={3} sx={{ mb: 5, width: "100%", height: 310 }}>
               {tagList.map((item) => (
-                <ImageListItem style={{ height: "100px" }} onClick={() => nav(`/search/${item.tagContent}`)} sx={{ cursor: "pointer" }}>
+                <ImageListItem
+                  style={{ height: "100px" }}
+                  onClick={() => nav(`/search/${item.tagContent}`)}
+                  sx={{ cursor: "pointer" }}
+                  key={item.tagCode}
+                >
                   <img
                     src={`https://source.unsplash.com/featured/?tag,${item.tagContent}`}
                     alt={item.tagCode}

@@ -12,7 +12,8 @@ import HomeTogetherList from "./HomeTogetherList";
 
 const Home = () => {
   const nav = useNavigate();
-  const [category, setCategory] = useState("문화∙예술");
+  const [category, setCategory] = useState("culture");
+  const [korCategory, setKorCategory] = useState("문화∙예술");
   const [talkList, setTalkList] = useState([]);
   const [togetherList, setTogetherList] = useState([]);
 
@@ -30,6 +31,7 @@ const Home = () => {
     await axios
       .get("/getAllTogetherList")
       .then((res) => {
+        console.log(res.data);
         setTogetherList(res.data);
       })
       .catch((error) => console.log(error));
@@ -42,7 +44,7 @@ const Home = () => {
 
   return (
     <>
-      <Box mb={4} height={400} width="100%">
+      <Box mb={5} height={400} width="100%">
         <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
           <Box
             height={400}
@@ -77,9 +79,9 @@ const Home = () => {
             <Typography variant="h6" mb={1}>
               📕 카테고리
             </Typography>
-            <HomeCategory setCategory={setCategory} />
-            <HomeTalkList category={category} talkList={talkList} />
-            <HomeTogetherList category={category} togetherList={togetherList} />
+            <HomeCategory setCategory={setCategory} setKorCategory={setKorCategory} />
+            <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} />
+            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} />
             <Box border={1} p={2} minHeight={200} mt={10} mb={10}>
               <Typography>내 지역주변의 함께해요</Typography>
               <Stack direction="row" spacing={1} justifyContent="space-between">

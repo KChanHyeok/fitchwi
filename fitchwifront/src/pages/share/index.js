@@ -16,17 +16,17 @@ import FeedOther from "./components/FeedOther";
 import FeedInfo from "./common/FeedInfo";
 
 function Feedindex() {
-  const [feedList, setFeedList] = useState([]);
+  // const [feedList, setFeedList] = useState([]);
   const [profil, setProfil] = useState({});
 
-  const getAllFeedList = async () => {
-    await axios
-      .get("/getAllFeedList")
-      .then((response) => {
-        setFeedList(response.data);
-      })
-      .catch((error) => console.log(error));
-  };
+  // const getAllFeedList = async () => {
+  //   await axios
+  //     .get("/getAllFeedList")
+  //     .then((response) => {
+  //       setFeedList(response.data);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   const getMemberInfo = useCallback(() => {
     if (sessionStorage.getItem("id") != null) {
@@ -37,7 +37,7 @@ function Feedindex() {
   }, []);
 
   useEffect(() => {
-    getAllFeedList();
+    // getAllFeedList();
     getMemberInfo();
   }, [getMemberInfo]);
 
@@ -46,16 +46,16 @@ function Feedindex() {
       <Stack direction="row" spacing={7} justifyContent="space-between">
         <Sidebar pageurl={"share"} />
         <Routes>
-          <Route path="/*" element={<Feed feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="culture" element={<FeedCulture feedList={feedList} memberInfo={profil} />} />
-          <Route path="exercise" element={<FeedExercise feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="food" element={<FeedFood feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="travel" element={<FeedTravel feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="growth" element={<FeedGrowth feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="art" element={<FeedArt feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="game" element={<FeedGame feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="other" element={<FeedOther feedList={feedList} memberInfo={profil} refreshFeed={getAllFeedList} />} />
-          <Route path="/:feedCode" element={<FeedInfo memberInfo={profil} refreshFeed={getAllFeedList} />} />
+          <Route path="/*" element={<Feed memberInfo={profil} />} />
+          <Route path="culture" element={<FeedCulture memberInfo={profil} />} />
+          <Route path="exercise" element={<FeedExercise memberInfo={profil} />} />
+          <Route path="food" element={<FeedFood memberInfo={profil} />} />
+          <Route path="travel" element={<FeedTravel memberInfo={profil} />} />
+          <Route path="growth" element={<FeedGrowth memberInfo={profil} />} />
+          <Route path="art" element={<FeedArt memberInfo={profil} />} />
+          <Route path="game" element={<FeedGame memberInfo={profil} />} />
+          <Route path="other" element={<FeedOther memberInfo={profil} />} />
+          <Route path="/:feedCode" element={<FeedInfo memberInfo={profil} />} />
         </Routes>
         <Rightbar />
       </Stack>

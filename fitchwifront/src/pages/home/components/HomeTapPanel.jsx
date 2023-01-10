@@ -19,14 +19,15 @@ function TabPanel(props) {
         <Box sx={{ p: 3 }} display="flex" flexDirection="column" alignItems="center" width="100%">
           <Box mb={3}>
             <Typography variant="h6" fontWeight={100}>
-              {children}
+              {children} 취미
             </Typography>
           </Box>
           <ImageList sx={{ width: "100%", height: 200 }} cols={3} gap={10}>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ cursor: "pointer" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[0]}`}
                 alt={"index"}
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",
@@ -36,10 +37,11 @@ function TabPanel(props) {
               />
               <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ cursor: "pointer" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[1]}`}
                 alt={"index"}
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",
@@ -49,10 +51,11 @@ function TabPanel(props) {
               />
               <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ cursor: "pointer" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[2]}`}
                 alt={"index"}
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",
@@ -82,15 +85,40 @@ function a11yProps(index) {
   };
 }
 
-export default function HomeTapPanel() {
-  const [value, setValue] = useState(0);
+const mbti = [
+  "INFP",
+  "INFJ",
+  "INTP",
+  "INTJ",
+  "ISFP",
+  "ISFJ",
+  "ISTP",
+  "ISTJ",
+  "ENFP",
+  "ENFJ",
+  "ENTP",
+  "ENTJ",
+  "ESFP",
+  "ESFJ",
+  "ESTP",
+  "ESTJ",
+];
 
+if (sessionStorage.getItem("mbti") !== null) {
+  const MyMbti = sessionStorage.getItem("mbti");
+  var even = mbti.findIndex((item, index) => item === MyMbti);
+} else {
+  even = Math.floor(Math.random() * 15);
+}
+
+export default function HomeTapPanel() {
+  const [value, setValue] = useState(even);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 300, border: 1, borderRadius: 2 }} mb={10} mt={5}>
+    <Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 300, border: 1 }} mb={4}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
