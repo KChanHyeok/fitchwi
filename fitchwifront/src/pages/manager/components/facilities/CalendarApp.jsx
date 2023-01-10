@@ -140,7 +140,7 @@ export default function CalendarApp({ facilitiesCode }) {
         formatDay={(locale, date) => moment(date).format("DD")}
         tileContent={({ date, view }) => {
           if (noDayList.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
-            return <Close />;
+            return "❌";
           }
         }}
         onClickDay={(v) => onClickDay(moment(v).format("YYYY-MM-DD"))}

@@ -371,31 +371,8 @@ export default function UpdateMember({ member, lstate }) {
                   />
                 </Grid>
                 {sessionStorage.getItem("classification") !== "k" ? (
-                  <Grid item xs={12} sm={6}>
-                    {/* <TextField
-                margin="normal"
-                fullWidth
-                name="memberPwd"
-                label="비밀번호 변경 시 입력"
-                type="password"
-                variant="standard"
-                focused={true}
-                onChange={(e) => inputChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                margin="normal"
-                fullWidth
-                label="비밀번호 확인"
-                type="password"
-                variant="standard"
-                focused={true}
-                onChange={onCheckPwd}
-              /> */}
-
+                  <Grid item xs={12}>
                     <ChangePwdModal
-                      sx={{ width: "100%" }}
                       onClick={() => setOpenChangePwd(() => true)}
                       openChangePwd={openChangePwd}
                       setOpenChangePwd={setOpenChangePwd}

@@ -150,8 +150,8 @@ export default function ReportManagement() {
   });
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main" style={{ maxWidth: "1200px", marginTop: "100px" }} align="center">
-      <Box sx={{ mb: 5 }}>
+    <Container component="main" align="center" sx={{ mt: 13 }}>
+      <Box sx={{ mb: 12 }}>
         <Typography variant="h4">신고 관리</Typography>
       </Box>
 
@@ -184,7 +184,7 @@ export default function ReportManagement() {
           </Typography>
         </AccordionSummary>
       </Accordion>
-      <Box sx={{ height: 570 }}>
+      <Box>
         {load === false ? (
           <Box
             style={{
@@ -211,13 +211,17 @@ export default function ReportManagement() {
                     <Grid item xs={2}>
                       {report.reportTarget === 0 ? (
                         <Link
+                          style={{ textDecoration: "none", color: "black" }}
                           to={`/${report.reportCategory}`}
                           state={{ memberId: report.memberEmail.memberEmail }}
                         >
                           <Typography>{report.reportCategory}</Typography>
                         </Link>
                       ) : report.reportState === "대기" ? (
-                        <Link to={`/${report.reportCategory}/${report.reportTarget}`}>
+                        <Link
+                          to={`/${report.reportCategory}/${report.reportTarget}`}
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <Typography>{report.reportCategory}</Typography>
                         </Link>
                       ) : (
@@ -230,6 +234,7 @@ export default function ReportManagement() {
                       <Link
                         to={`/${report.reportCategory}`}
                         state={{ memberId: report.memberEmail.memberEmail }}
+                        style={{ textDecoration: "none", color: "black" }}
                       >
                         <Typography>{report.memberEmail.memberEmail}</Typography>
                       </Link>
@@ -353,7 +358,7 @@ export default function ReportManagement() {
       </Box>
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
-          sx={{ mb: 10 }}
+          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"

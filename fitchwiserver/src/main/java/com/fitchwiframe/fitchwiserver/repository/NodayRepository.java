@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface NodayRepository extends CrudRepository<Noday,Long > {
+public interface NodayRepository extends CrudRepository<Noday, Long> {
   List<Noday> findAllByFacilitiesCode(Facilities facilities);
 
 }

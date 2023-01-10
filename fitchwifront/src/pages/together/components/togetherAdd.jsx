@@ -43,6 +43,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   const [fileForm, setFileForm] = useState("");
   const [firstDateOpen, setFirstDateOpen] = useState(true);
   const [secondDateOpen, setSecondDateOpen] = useState(true);
+  const [noday, setNoday] = useState([])
 
   const imgEl = document.querySelector(".img_box");
 
@@ -88,6 +89,16 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     }
     return () => preview();
   });
+
+
+  const getNodayList = useCallback(
+    (facilitiesCode) => {
+      axios.get("/getNodayList", { params: {facilitiesCode: facilitiesCode}}).then((res) => {
+        setNoday(res.data)
+      }).catch((error)=> console.log(error));
+    },[])
+  
+
 
   const preview = () => {
     if (fileForm.length === 0) {
@@ -144,20 +155,20 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     backgroundSize: "cover",
   };
 
-  // const disableDates = () => {
-  //   const day = date.date();
-  //       console.log(moment(bookedDays[0]).format("DD"));
-  //       // for (let i = 0; i < bookedDays.length; i++) {
-  //       // moment(bookedDays[i]).format("DD");
-  //       // }
-  //       for (let i = 0; i < bookedDays.length; i++) {
-  //           if (day === moment(bookedDays[i]).format("DD") * 1) {
-  //           return true;
-  //           }
-  //       }
-  // }
 
-  const open = useDaumPostcodePopup("http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js");
+  const disableDates = (date) => {
+    const day = moment(date.$d).format("YYYY-MM-DD")
+        for (let i = 0; i < noday.length; i++) {
+            if (day === moment(noday[i]).format("YYYY-MM-DD")) {
+            return true;
+            }
+        }
+  }
+  
+  const open = useDaumPostcodePopup(
+    "http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+  );
+
 
   const handleComplete = (data) => {
     let fullAddress = data.address;
@@ -183,6 +194,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   const handleClick = () => {
     open({ onComplete: handleComplete });
   };
+
 
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -259,28 +271,28 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                       facilitiesCode: facilities,
                       togetherPosition: facilities.facilitiesPosition,
                     });
+                    getNodayList(data.facilitiesCode);
                   }}
                 >
                   <ListItemText inset primary="이용안함" />
                 </ListItemButton>
               </ListItem>
-              {data
-                .filter((data) => data.facilitiesCode !== 0)
-                .map((data) => (
-                  <ListItem disablePadding key={data.facilitiesCode}>
-                    <ListItemButton
-                      onClick={() => {
-                        setInsertForm({
-                          ...insertForm,
-                          facilitiesCode: data,
-                          togetherPosition: data.facilitiesPosition,
-                        });
-                      }}
-                    >
-                      <ListItemText inset primary={`${data.facilitiesName}`} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
+
+              {data.filter(data=>data.facilitiesCode!==0).map(data=>(
+                <ListItem disablePadding key={data.facilitiesCode}>
+                <ListItemButton onClick={()=> {
+                  setInsertForm({
+                    ...insertForm,
+                    facilitiesCode:data,
+                    togetherPosition:data.facilitiesPosition
+                  });
+                  getNodayList(data.facilitiesCode);
+                }}>
+                  <ListItemText inset primary={`${data.facilitiesName}`} />
+                </ListItemButton>
+              </ListItem>
+              ))}
+
             </List>
           </Grid>
           <Grid item xs>
@@ -338,6 +350,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 displayStaticWrapperAs="desktop"
                 label="모이는 일자"
                 disablePast
+                shouldDisableDate={disableDates}
                 value={insertForm.togetherDate}
                 onChange={(e) => {
                   setInsertForm({
