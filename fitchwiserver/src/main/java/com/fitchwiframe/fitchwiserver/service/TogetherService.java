@@ -5,6 +5,10 @@ import com.fitchwiframe.fitchwiserver.entity.*;
 import com.fitchwiframe.fitchwiserver.repository.*;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -496,4 +500,39 @@ public class TogetherService {
         return result;
 
     }
+
+    public Map<String, Object> getTogetherCancelRequestList(Integer pageNum ,String togetherTitle) {
+        log.info("togetherService.getTogetherCancelRequestList()");
+
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        int listCount = 7;
+        Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "togetherCode");
+
+        Page<Together> result = null;
+        if (togetherTitle.equals("")) {
+            result = togetherRepository.findByTogetherStateLike("삭제신청중",pageable);
+        } else {
+            String keywordToSearch = "%" + togetherTitle + "%";
+            result = togetherRepository.findByTogetherStateAndTogetherTitleLike("삭제신청중",keywordToSearch, pageable);
+        }
+        List<Together> togetherList = result.getContent();
+        int totalPage = result.getTotalPages();
+
+        Map<String, Object> mapToReturn = new HashMap<>();
+        mapToReturn.put("totalPage", totalPage);
+        mapToReturn.put("pageNum", pageNum);
+        mapToReturn.put("togetherList", togetherList);
+
+        return mapToReturn;
+
+    }
+
+
+
+
+
+
+
 }

@@ -109,10 +109,10 @@ public class AdminController {
     return adminService.deleteReport(reportCode);
   }
 
-  @PutMapping("/updateReportState/{reportCode}")
-  public String updateReportState(@PathVariable Long reportCode) {
+  @PutMapping("/updateReportState/{reportCode}/{reportTreatment}")
+  public String updateReportState(@PathVariable Long reportCode,@PathVariable String reportTreatment) {
     log.info("adminController.updateReportState()");
-    return adminService.updateReportState(reportCode);
+    return adminService.updateReportState(reportCode,reportTreatment);
   }
   @PostMapping("/managerLogin")
   public String managerLogin(@RequestBody Manager manager){

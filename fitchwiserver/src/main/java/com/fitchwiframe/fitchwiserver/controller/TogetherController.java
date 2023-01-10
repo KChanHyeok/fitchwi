@@ -117,4 +117,10 @@ public class TogetherController {
         return togetherService.getMemberTogether(memberEmail);
     }
 
+
+    @GetMapping("/getTogetherCancelRequestList")
+    public Map<String, Object>getTogetherCancelRequestList(@RequestParam Integer pageNum, @RequestParam String togetherTitle) {
+        log.info("TogetherController.getTogetherCancelRequestList");
+        return togetherService.getTogetherCancelRequestList(pageNum,togetherTitle);
+    }
 }

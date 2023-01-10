@@ -29,6 +29,6 @@ public class Report {
     @Transient
     private List<ReportDetail> reportDetailList;
 
-    @Column(columnDefinition = "varchar(10) default '대기'")
+    @Column(columnDefinition = "varchar(30) default '대기'")
     private String reportState;
 }

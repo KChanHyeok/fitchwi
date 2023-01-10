@@ -7,8 +7,8 @@ import EditFacilities from "./components/facilities/EditFacilities";
 import Facilities from "./components/facilities/Facilities";
 import ViewFacilities from "./components/facilities/ViewFacilities";
 import Manager from "./components/Manager";
-// import ManagerSideBar from "./components/ManagerSideBar";
 import ReportManagement from "./components/report/ReportManagement";
+import TogeterManagement from "./components/togethermanagement/TogetherManagement";
 
 export default function ManagerIndex({ setIsManager, isManager }) {
   // const [isManager, setIsManager] = useState(false);
@@ -19,7 +19,6 @@ export default function ManagerIndex({ setIsManager, isManager }) {
         <CheckMangerPwdModal setIsManager={setIsManager} />
       ) : (
         <div>
-          {/* <ManagerSideBar pageurl={"manager"} /> */}
           <Routes>
             <Route path="/" element={<Manager />} />
 
@@ -34,6 +33,7 @@ export default function ManagerIndex({ setIsManager, isManager }) {
               element={<ViewFacilities />}
             />
             <Route path="/report" element={<ReportManagement />} />
+            <Route path="/togetherManagement" element={<TogeterManagement />} />
           </Routes>
         </div>
       )}
