@@ -86,7 +86,7 @@ const JoinIndex = () => {
       .then((res) => {
         if (res.data === "ok") {
           alert("성공");
-          nav("/", { replace: true });
+          nav("/login", { replace: true });
         } else {
           alert("실패");
         }

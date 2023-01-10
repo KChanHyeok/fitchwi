@@ -37,6 +37,7 @@ export default function UserImg({ setFileForm }) {
               label="사진"
               variant="standard"
               style={{ display: "none" }}
+              inputProps={{ accept: "image/*" }}
             />
           }
           label="등록하기"

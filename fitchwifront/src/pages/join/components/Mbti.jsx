@@ -70,9 +70,7 @@ export default function Mbti({ joinForm, setJoinForm }) {
       <Typography variant="h2" gutterBottom>
         MBTI를 입력해주세요
       </Typography>
-      <Typography variant="h4" mb={10}>
-        (*선택사항)
-      </Typography>
+
       <ToggleButtonGroup orientation="vertical" value={ei} exclusive onChange={handleChange}>
         <MbtiToggleBtn value="E">E</MbtiToggleBtn>
         <MbtiToggleBtn value="I">I</MbtiToggleBtn>

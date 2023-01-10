@@ -78,12 +78,14 @@ export default function FindMemberInfoModal() {
       if (success) {
         setCheckPhone(true);
         //    setDisabled(false);
-        alert("본인인증 성공");
+        // alert("본인인증 성공");
 
         axios.get("/getMemberByPhone", { params: { memberPhone: memberPhone } }).then((result) => {
           console.log(result.data);
-          if (result.data === "no data") {
-            alert("등록되지 않은 전화번호입니다. 회원가입을 먼저 진행해주세요");
+          if (result.data[0] === "no data") {
+            // alert("등록되지 않은 전화번호입니다. 회원가입을 먼저 진행해주세요");
+            //  setOpen(false);
+            return;
           } else {
             if (result.data === "kakao") {
               setCheckPhone(true);
@@ -225,8 +227,8 @@ export default function FindMemberInfoModal() {
               <Button onClick={handleClose}>닫기</Button>
             </DialogActions>
           </Box>
-        ) : (
-          //아닐때
+        ) : //아닐때
+        memberInfo.kindOfMember === "common" ? (
           <Box>
             <DialogContent>
               <DialogContentText fontSize={20} color="black">
@@ -289,6 +291,21 @@ export default function FindMemberInfoModal() {
               <Button disabled={!isCorrectPwd} onClick={() => updatePwd()}>
                 비밀번호 변경
               </Button>
+            </DialogActions>
+          </Box>
+        ) : (
+          <Box>
+            <DialogContent>
+              <DialogContentText fontSize={20} color="black">
+                인증하신 연락처로 가입된 회원 정보가 없습니다.
+              </DialogContentText>
+              <DialogContentText color="black" mt={2}>
+                회원가입 페이지로 이동하시겠습니까?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>취소하기</Button>
+              <Button onClick={() => nav("/join")}>회원가입</Button>
             </DialogActions>
           </Box>
         )}

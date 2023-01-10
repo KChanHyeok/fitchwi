@@ -232,16 +232,18 @@ export default function ReportManagement() {
                     </Grid>
                     <Grid item xs={3}>
                       <Link
-                        to={`/${report.reportCategory}`}
-                        state={{ memberId: report.memberEmail.memberEmail }}
                         style={{ textDecoration: "none", color: "black" }}
+                        to={`/memberpage`}
+                        state={{ memberId: report.memberEmail.memberEmail }}
                       >
                         <Typography>{report.memberEmail.memberEmail}</Typography>
                       </Link>
                     </Grid>
+
                     <Grid item xs={1}>
                       <Typography>{report.reportDetailList.length}</Typography>
                     </Grid>
+
                     <Grid item xs={4}>
                       {report.reportState === "대기" ? (
                         <Typography>{report.reportState}</Typography>
