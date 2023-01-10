@@ -54,7 +54,10 @@ export default function UpdateMember({ member, lstate }) {
   const onUpdate = (e) => {
     e.preventDefault();
 
-    formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" })
+    );
     formData.append("uploadImage", fileForm);
 
     const config = {
@@ -342,11 +345,23 @@ export default function UpdateMember({ member, lstate }) {
         ) : (
           <>
             <Box>
-              <Avatar src={file !== "" ? file : memberSaveimg} sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }} />
+              <Avatar
+                src={file !== "" ? file : memberSaveimg}
+                sx={{ width: 150, height: 150, m: "auto", mb: 3, mt: 3 }}
+              />
               <ButtonGroup>
                 <Button variant="outlined" sx={{ pl: 5 }}>
                   <FormControlLabel
-                    control={<TextField onChange={fileHandler} type="file" label="사진" variant="standard" style={{ display: "none" }} />}
+                    control={
+                      <TextField
+                        onChange={fileHandler}
+                        type="file"
+                        label="사진"
+                        variant="standard"
+                        style={{ display: "none" }}
+                        inputProps={{ accept: "image/*" }}
+                      />
+                    }
                     label="프로필 수정하기"
                   />
                 </Button>

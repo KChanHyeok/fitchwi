@@ -73,7 +73,6 @@ export default function Interest({ joinForm, setJoinForm }) {
       <Typography variant="h2" gutterBottom mb={10}>
         관심있는 건 뭐예요
       </Typography>
-      <Typography variant="h5">잘 모르겠으면 클릭 !</Typography>
 
       <FormControlLabel
         control={
