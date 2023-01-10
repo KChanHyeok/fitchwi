@@ -49,8 +49,8 @@ public class TogetherService {
     @Autowired
     MemberRepository memberRepository;
 
-
-
+    @Autowired
+    NodayRepository nodayRepository;
 
 
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
@@ -67,10 +67,16 @@ public class TogetherService {
         together.setTogetherOpenedCode(togetherOpened);
         together.setTogetherTotalPrice(together.getTogetherPrice() + togetherOpened.getFacilitiesCode().getFacilitiesPrice());
         togetherTag.setTogetherCode(together);
+        Noday noday = new Noday();
+        noday.setNodayDate(together.getTogetherDate());
+        noday.setFacilitiesCode(togetherOpened.getFacilitiesCode());
+
         togetherOpenedRepository.save(togetherOpened);
         togetherRepository.save(together);
         togetherTagRepository.save(togetherTag);
+        nodayRepository.save(noday);
         result = "성공";
+
         }catch (Exception e) {
             e.printStackTrace();
             result = "실패";
