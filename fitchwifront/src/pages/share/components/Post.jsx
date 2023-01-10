@@ -95,6 +95,7 @@ const Post = ({
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
       axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => {
+        console.log(res.data);
         setTalkInfo(res.data);
       });
     }
@@ -365,7 +366,7 @@ const Post = ({
                           component="img"
                           src={"/images/" + item.feedFileSaveimg}
                           alt={item.feedFileImg}
-                          sx={{ width: 700, height: 700 }}
+                          sx={{ height: 700 }}
                         />
                       ))}
                     </Carousel>
