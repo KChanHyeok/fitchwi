@@ -70,6 +70,31 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
         setOpenDeleteModal(false);
     };
 
+    //해당 얘기해요 피드 불러오기
+    const [feedList, setFeedList] = useState([]);
+
+    console.log(talkInfo);
+    const getFeedListByTalk = useCallback(() => {
+        if (talkInfo !== undefined) {
+            if (talkInfo.talkCode !== undefined) {
+                console.log(talkInfo.talkCode);
+                axios
+                    .get("/getFeedListByTalk", { params: { feedClassificationcode: talkInfo.talkCode } })
+                    .then((res) => {
+                        setFeedList(res.data);
+                        console.log(res.data);
+                    })
+                    .catch((error) => console.log(error));
+            }
+        }
+    }, [talkInfo])
+
+    useEffect(() => {
+        getFeedListByTalk();
+    }, [getFeedListByTalk]);
+
+    console.log(feedList);
+
     return (
         <Stack
             flex={4} p={2}
@@ -174,7 +199,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                         <Box>
                         </Box>
                         <h4 className="talkTxtLine">얘기해요 피드</h4>
-
+                        <Box></Box>
                         <Box className="talkTxtLine">
                             {!talkJoinMember
                                 ? <Box sx={{ display: "flex" }}>

@@ -143,4 +143,11 @@ public class TalkController {
         return talkService.getTalk(talkCode);
     }
 
+    @GetMapping("/getFeedListByTalk")
+    public List<Feed> getFeedListByTalk(Long feedClassificationcode) {
+        System.out.println("feedClassificationcode = " + feedClassificationcode);
+        log.info("talkController.getFeedListByTalk()");
+        return talkService.getFeedListByTalk(feedClassificationcode);
+    }
+
 }

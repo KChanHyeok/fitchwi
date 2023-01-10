@@ -32,6 +32,9 @@ public class TalkService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private FeedRepository feedRepository;
+
     public String addTalk(Talk newTalk, TalkTag talkTag , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
         String result = null;
@@ -368,28 +371,37 @@ public class TalkService {
         return talkList;
     }
 
-
-
     public void deleteAllByMember(Member member, HttpSession session){
         //가입중
-      List<TalkJoin> talkJoinListByMember = getTalkJoinListByMember(member.getMemberEmail());
-      if(!(talkJoinListByMember.isEmpty())){
-        talkJoinRepository.deleteAll(talkJoinListByMember);
-      }
+        List<TalkJoin> talkJoinListByMember = getTalkJoinListByMember(member.getMemberEmail());
+        if(!(talkJoinListByMember.isEmpty())){
+            talkJoinRepository.deleteAll(talkJoinListByMember);
+        }
       //운영중
-      List<Talk> talkList =new ArrayList<>();
+        List<Talk> talkList =new ArrayList<>();
 
-      List<TalkOpened> talkOpenedListByMember = getTalkOpenedListByMember(member.getMemberEmail());
-      if(!(talkOpenedListByMember.isEmpty())){
-        for(TalkOpened talkOpen : talkOpenedListByMember){
-          talkList.add(talkRepository.findByTalkOpenCode(talkOpen));
+        List<TalkOpened> talkOpenedListByMember = getTalkOpenedListByMember(member.getMemberEmail());
+        if(!(talkOpenedListByMember.isEmpty())){
+            for(TalkOpened talkOpen : talkOpenedListByMember){
+                talkList.add(talkRepository.findByTalkOpenCode(talkOpen));
         }
 
         for(Talk talk : talkList){
-          deleteTalk(talk, session);
+            deleteTalk(talk, session);
         }
-
-      }
+        }
     }
 
+    public List<Feed> getFeedListByTalk(Long feedClassificationcode) {
+        log.info("talkService.getFeedListByTalk()");
+        List<Feed> talkFeedList = new ArrayList<>();
+        try {
+        talkFeedList = feedRepository.findAllByFeedClassificationcode(feedClassificationcode);
+//            System.out.println("feedClassificationcode = " + feedClassificationcode);
+            System.out.println("talkFeedList = " + talkFeedList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return talkFeedList;
+    }
 }
