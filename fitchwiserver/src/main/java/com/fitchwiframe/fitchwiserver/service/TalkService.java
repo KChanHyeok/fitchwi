@@ -322,7 +322,7 @@ public class TalkService {
             if(!(talkJoinListByMember.isEmpty())) {
                 for (TalkJoin tj : talkJoinListByMember) {
                     Talk talk = tj.getTalkCode();
-                    talk.setTalkMemberCount(talkJoinRepository.countByTalkCode(talk));
+                    talk.setTalkMemberCount(talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(talk,"가입중"));
 
                 }
             }
@@ -333,7 +333,7 @@ public class TalkService {
             if(!talkOpenedListByMember.isEmpty()) {
                 for (TalkOpened to : talkOpenedListByMember) {
                  Talk   talk = talkRepository.findByTalkOpenCode(to);
-                 talk.setTalkMemberCount(talkJoinRepository.countByTalkCode(talk));
+                 talk.setTalkMemberCount(talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(talk,"가입중"));
 
 
                  talkListWithMemberCount.add(talk);

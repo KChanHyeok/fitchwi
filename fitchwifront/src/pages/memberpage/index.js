@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import MemberPage from "./components/MemberPage";
 import UpdateMember from "./components/UpdateMember";
-export default function MemberPageIndex({ onLogout, lstate }) {
+export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
   const location = useLocation();
   const nav = useNavigate();
   const [member, setMember] = useState({});
@@ -42,7 +42,7 @@ export default function MemberPageIndex({ onLogout, lstate }) {
 
         <Route
           path="/updateMember"
-          element={<UpdateMember member={member} lstate={lstate} />}
+          element={<UpdateMember member={member} lstate={lstate} sucLogin={sucLogin} />}
         ></Route>
       </Routes>
     </div>

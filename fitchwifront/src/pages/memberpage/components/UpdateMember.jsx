@@ -1,7 +1,6 @@
 // import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import {
-  Alert,
   Avatar,
   Button,
   ButtonGroup,
@@ -26,7 +25,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Postcode from "../../join/components/Postcode";
 import ChangePwdModal from "./ChangePwdModal";
-export default function UpdateMember({ member, lstate }) {
+export default function UpdateMember({ member, lstate, sucLogin }) {
   const [memberToUpdate, setMemberToUpdate] = useState({});
   const [openChangePwd, setOpenChangePwd] = React.useState(false);
   useEffect(() => {
@@ -53,7 +52,13 @@ export default function UpdateMember({ member, lstate }) {
 
   const onUpdate = (e) => {
     e.preventDefault();
-
+    if (
+      memberToUpdate.memberPhone !== checkedPhone ||
+      originalPhone !== memberToUpdate.memberPhone
+    ) {
+      alert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.");
+      return;
+    }
     formData.append(
       "data",
       new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" })
@@ -67,7 +72,13 @@ export default function UpdateMember({ member, lstate }) {
     axios
       .post("/updateMemberInfo", formData, config)
       .then((res) => {
-        if (res.data === "ok") {
+        console.log(typeof sucLogin);
+        if (res.data !== null) {
+          sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.memberSaveimg);
+          sessionStorage.setItem("id", res.data.memberEmail);
+          sessionStorage.setItem("nickName", res.data.memberNickname);
+          sessionStorage.setItem("mbti", res.data.memberMbti);
+          sessionStorage.setItem("profileImg", res.data.memberSaveimg);
           alert("성공");
           nav("/");
         } else {
@@ -91,31 +102,6 @@ export default function UpdateMember({ member, lstate }) {
   useEffect(() => {
     //   console.log(memberToUpdate);
   }, [memberToUpdate]);
-  //비밀번호 확인
-  const [correctPwd, setCorrectPwd] = useState(null);
-  const [formPwd, setFormPwd] = useState("");
-  const [msg, setMsg] = useState("");
-  const onCheckPwd = useCallback(
-    (e) => {
-      let checkPwd = e.target.value;
-      //  console.log(checkPwd);
-
-      if (checkPwd === "") {
-        setMsg("미입력");
-      } else if (checkPwd === formPwd) {
-        setCorrectPwd(true);
-        setMsg("비밀번호 확인이 완료됐습니다.");
-      } else {
-        setCorrectPwd(false);
-        setMsg("올바른 비밀번호를 입력해주세요");
-      }
-    },
-    [formPwd]
-  );
-  useEffect(() => {
-    setFormPwd(memberToUpdate.memberPwd);
-    return () => onCheckPwd;
-  }, [memberToUpdate.memberPwd, onCheckPwd]);
 
   //mbti 처리
   const [userMbTi, setUserMbti] = useState();
@@ -319,6 +305,60 @@ export default function UpdateMember({ member, lstate }) {
     //  console.log(file);
   };
 
+  const handlePhoneNumber = (e) => {
+    const regex = /^[0-9]{0,13}$/;
+    if (regex.test(e.target.value)) {
+      setMemberToUpdate({ ...memberToUpdate, memberPhone: e.target.value });
+    }
+  };
+
+  const [checkedPhone, setCheckedPhone] = useState(member.memberPhone);
+  const [originalPhone, setOritinalPhone] = useState(member.memberPhone);
+
+  const Certification = () => {
+    // console.log(joinForm.memberPhone);
+    if (memberToUpdate.memberPhone === "") {
+      return alert("연락처를 입력해주세요!");
+    }
+    axios
+      .post("/checkPhone", memberToUpdate.memberPhone, {
+        headers: { "Content-Type": "test/plain" },
+      })
+      .then((result) => {
+        //     console.log(result.data);
+        if (result.data === "fail") {
+          alert("이미 등록된 전화번호입니다.");
+        } else {
+          const { IMP } = window;
+
+          IMP.init("imp10391932");
+
+          const data = {
+            merchant_uid: `mid_${new Date().getTime()}`,
+            company: "아임포트",
+            carrier: "",
+            phone: memberToUpdate.memberPhone,
+          };
+          IMP.certification(data, callback);
+
+          function callback(response) {
+            // eslint-disable-next-line no-unused-vars
+            const { success, merchant_uid, error_msg } = response;
+            //      console.log(response);
+            if (success) {
+              setCheckedPhone(memberToUpdate.memberPhone);
+              //    setDisabled(false);
+              alert("본인인증 성공");
+              //   console.log(response);
+              //  console.log(merchant_uid);
+            } else {
+              alert(`본인인증 실패: ${error_msg}`);
+            }
+          }
+        }
+      });
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -399,29 +439,6 @@ export default function UpdateMember({ member, lstate }) {
                     </ChangePwdModal>
                   </Grid>
                 ) : null}
-                <Grid item xs={12}>
-                  {correctPwd == null ? null : correctPwd ? (
-                    <Alert
-                      severity="info"
-                      sx={{
-                        width: "100%",
-                        margin: "auto",
-                      }}
-                    >
-                      {msg}
-                    </Alert>
-                  ) : (
-                    <Alert
-                      severity="error"
-                      sx={{
-                        width: "100%",
-                        margin: "auto",
-                      }}
-                    >
-                      {msg}
-                    </Alert>
-                  )}
-                </Grid>
                 <Grid item xs={12} sm={12}>
                   <TextField
                     value={memberNickname || ""}
@@ -495,7 +512,7 @@ export default function UpdateMember({ member, lstate }) {
                     onChange={(e) => inputChange(e)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={8}>
                   <TextField
                     value={memberPhone || ""}
                     margin="normal"
@@ -506,8 +523,13 @@ export default function UpdateMember({ member, lstate }) {
                     name="memberPhone"
                     variant="standard"
                     focused={true}
-                    onChange={(e) => inputChange(e)}
+                    onChange={(e) => handlePhoneNumber(e)}
                   />
+                </Grid>{" "}
+                <Grid item xs={12} sm={4}>
+                  <Button variant="outlined" style={{ width: "100%" }} onClick={Certification}>
+                    본인인증
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                   <TextField

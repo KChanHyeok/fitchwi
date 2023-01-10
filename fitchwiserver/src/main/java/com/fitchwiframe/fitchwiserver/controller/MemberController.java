@@ -111,7 +111,7 @@ public class MemberController {
   }
 
   @PostMapping("/updateMemberInfo")
-  private String updateMemberInfo(@RequestPart(value = "data", required = true) Member memberToUpdate,
+  private Member updateMemberInfo(@RequestPart(value = "data", required = true) Member memberToUpdate,
                                   @RequestPart(value = "uploadImage", required = false) MultipartFile pic,
                                   HttpSession session){
     log.info("memberController.updateMemberInfo");

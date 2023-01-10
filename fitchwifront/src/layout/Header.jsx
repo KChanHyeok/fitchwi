@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Button, Container, styled, Toolbar } from "@mui/material";
+import { AppBar, Avatar, Button, Container, styled, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 import { Search } from "@mui/icons-material";
 
@@ -9,9 +9,10 @@ const StyledToolbar = styled(Toolbar)({
 });
 
 const Header = ({ lstate, onLogout }) => {
-  const { logid, nickName, flink } = lstate;
+  const { logid, nickName, profileImg, flink } = lstate;
   //로고 클릭(로그인 후 main, 로그인 전 home)
   const homeLink = logid === "" ? "/" : "/";
+  console.log(lstate);
 
   return (
     <AppBar position="sticky" style={{ boxShadow: "0 1px 1px  lightgray" }}>
@@ -29,7 +30,10 @@ const Header = ({ lstate, onLogout }) => {
             <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/about"}>
               소개페이지
             </Link>
-            <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/together"}>
+            <Link
+              style={{ textDecoration: "none", marginRight: 50, color: "black" }}
+              to={"/together"}
+            >
               함께해요
             </Link>
             <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/talk"}>
@@ -43,8 +47,15 @@ const Header = ({ lstate, onLogout }) => {
             <Link to={"/search"} style={{ textDecoration: "none" }}>
               <Search color="error" />
             </Link>
+
             <Link to={flink} style={{ textDecoration: "none" }}>
-              <Button color="primary" variant="text" sx={{ ml: 3 }}>
+              <Button
+                color="primary"
+                variant="text"
+                sx={{ ml: 3 }}
+                size="small"
+                startIcon={profileImg !== undefined ? <Avatar src={profileImg} /> : null}
+              >
                 {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
               </Button>
             </Link>

@@ -168,6 +168,7 @@ public class MemberService {
           result.put("memberEmail", dbMember.getMemberEmail());
           result.put("memberNickname", dbMember.getMemberNickname());
           result.put("mbti", dbMember.getMemberMbti());
+          result.put("profileImg", dbMember.getMemberSaveimg());
 
         } else {
           result.put("state", "wrong pwd");
@@ -236,14 +237,19 @@ public class MemberService {
 
   //회원 탈퇴시 이미지 삭제
   private void deleteFile(String filsSysname, HttpSession session) {
-    if (filsSysname.equals("DefaultProfileImageSystemName.jpg")) {
+    String realSysname = filsSysname.substring(8);
+
+    System.out.println("realSysname = " + realSysname);
+
+    System.out.println(realSysname);
+    if (realSysname.equals("DefaultProfileImageSystemName.jpg")) {
       return;
     }
     String realPath = session.getServletContext().getRealPath("/");
 
     realPath += "images/";
 
-    File fileToDelete = new File(realPath + filsSysname);
+    File fileToDelete = new File(realPath + realSysname);
 
 
     if (fileToDelete.exists()) {
@@ -404,12 +410,12 @@ public class MemberService {
 
 
 
-  public String updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
+  public Member updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
     log.info("memberService.updateMemberInfo();");
-    String result = "fail";
+    Member updatedMember = new Member();
     System.out.println("memberToUpdate = " + memberToUpdate);
     System.out.println("pic = " + pic);
-
+    System.out.println("updatedMember = " + updatedMember);
 
     try {
 
@@ -428,13 +434,17 @@ public class MemberService {
         deleteFile(memberToUpdate.getMemberSaveimg(), session);
         fileUpload(memberToUpdate, pic, session);
       }
-      memberRepository.save(memberToUpdate);
-      result = "ok";
+      Member savedMember = memberRepository.save(memberToUpdate);
+      System.out.println("savedMember = " + savedMember);
+      updatedMember.setMemberEmail(savedMember.getMemberEmail());
+      updatedMember.setMemberNickname(savedMember.getMemberNickname());
+      updatedMember.setMemberSaveimg(savedMember.getMemberSaveimg());
+      updatedMember.setMemberMbti(savedMember.getMemberMbti());
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    return result;
+    return updatedMember;
   }
 
 
@@ -533,6 +543,7 @@ public class MemberService {
             resultMap.put("memberEmail", dbMember.getMemberEmail());
             resultMap.put("memberNickname", dbMember.getMemberNickname());
             resultMap.put("mbti", dbMember.getMemberMbti());
+            resultMap.put("profileImg", dbMember.getMemberSaveimg());
           } else {
             resultMap.put("isPresent", "ok");
             resultMap.put("state", "released");
@@ -540,6 +551,7 @@ public class MemberService {
             resultMap.put("memberEmail", dbMember.getMemberEmail());
             resultMap.put("memberNickname", dbMember.getMemberNickname());
             resultMap.put("mbti", dbMember.getMemberMbti());
+            resultMap.put("profileImg", dbMember.getMemberSaveimg());
             session.setAttribute("at", accessToken);
             System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
 
@@ -555,6 +567,7 @@ public class MemberService {
         resultMap.put("memberEmail", dbMember.getMemberEmail());
         resultMap.put("memberNickname", dbMember.getMemberNickname());
         resultMap.put("mbti", dbMember.getMemberMbti());
+        resultMap.put("profileImg", dbMember.getMemberSaveimg());
         session.setAttribute("at", accessToken);
         System.out.println("session.getAttribute(\"at\") = " + session.getAttribute("at"));
         return resultMap;
