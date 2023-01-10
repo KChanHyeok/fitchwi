@@ -90,7 +90,7 @@ const Rightbar = () => {
               ))}
             </ImageList>
             <Typography variant="button" mb={4}>
-              소개∙도움말∙홍보 센터∙API∙채용 정보∙개인정보처리방침∙약관∙위치∙언어
+              소개·도움말·홍보 센터·API·채용 정보·개인정보처리방침·약관·위치·언어
             </Typography>
             <br />
             <Typography variant="caption">© 2023 FITCHWI FROM ICIA ACADEMY</Typography>

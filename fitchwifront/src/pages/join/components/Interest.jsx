@@ -82,12 +82,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="culture"
-            value="문화∙예술"
+            value="문화·예술"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>문화∙예술</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>문화·예술</Typography>}
         labelPlacement="bottom"
       />
 
@@ -98,12 +98,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="activity"
-            value="운동∙액티비티"
+            value="운동·액티비티"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>운동∙액티비티</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>운동·액티비티</Typography>}
         labelPlacement="bottom"
       />
 
@@ -114,12 +114,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="food"
-            value="요리∙음식"
+            value="요리·음식"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>요리∙음식</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>요리·음식</Typography>}
         labelPlacement="bottom"
       />
 
@@ -146,12 +146,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="grownup"
-            value="성장∙자기계발"
+            value="성장·자기계발"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>성장∙자기계발</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>성장·자기계발</Typography>}
         labelPlacement="bottom"
       />
 
@@ -162,12 +162,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="making"
-            value="공예∙수공예"
+            value="공예·수공예"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>공예∙수공예</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>공예·수공예</Typography>}
         labelPlacement="bottom"
       />
 
@@ -178,12 +178,12 @@ export default function Interest({ joinForm, setJoinForm }) {
             onClick={handleClick}
             onChange={onCheck}
             name="game"
-            value="게임∙오락"
+            value="게임·오락"
             icon={<FavoriteBorder sx={{ fontSize: 50 }} />}
             checkedIcon={<Favorite sx={{ fontSize: 50 }} />}
           />
         }
-        label={<Typography style={{ position: "relative", top: -30 }}>게임∙오락</Typography>}
+        label={<Typography style={{ position: "relative", top: -30 }}>게임·오락</Typography>}
         labelPlacement="bottom"
       />
 

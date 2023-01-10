@@ -127,7 +127,12 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
     return (
         <>
             {sessionStorage.getItem("id") === null
-                ? <Box sx={{ display: "flex" }}>
+                ? <Box style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}>
                     <CircularProgress sx={{ margin: "auto" }} />
                 </Box>
                 :
@@ -137,7 +142,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                             얘기해요 개설
                         </Typography>
                         <UserBox>
-                            <Avatar alt={"profil.memberImg"} src={`/images/${memberInfo.memberSaveimg}`}
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
                                 sx={{ width: 30, height: 30 }} />
                             <Typography fontWeight={500} variant="span">
                                 {memberInfo.memberNickname}

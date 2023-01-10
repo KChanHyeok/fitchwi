@@ -13,7 +13,6 @@ const JoinMember = () => {
 
   const imgEl = document.querySelector(".img_box");
 
-
   const [joinForm, setJoinForm] = useState({
     memberEmail: "",
     memberPwd: "",
@@ -35,7 +34,6 @@ const JoinMember = () => {
 
   const preview = () => {
     if (!fileForm) return false;
-    
 
     const reader = new FileReader();
     reader.readAsDataURL(fileForm[0]);
@@ -118,16 +116,14 @@ const JoinMember = () => {
       alert("사용하실 Email을 입력해주세요.");
       return;
     }
-    axios
-      .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
-      .then((res) => {
-        if (res.data === "ok") {
-          setDisabled(!disabled);
-          alert("사용 가능한 Email 입니다.");
-        } else {
-          alert("사용할 수 없는 Email 입니다.");
-        }
-      });
+    axios.get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } }).then((res) => {
+      if (res.data === "ok") {
+        setDisabled(!disabled);
+        alert("사용 가능한 Email 입니다.");
+      } else {
+        alert("사용할 수 없는 Email 입니다.");
+      }
+    });
     //console.log(typeof joinForm.memberEmail);
   };
 
@@ -150,8 +146,7 @@ const JoinMember = () => {
           <button onClick={onCheckId}>중복확인</button>
         </div>
         <div>
-          비밀번호 :{" "}
-          <input type="password" name="memberPwd" onChange={onChange} ref={inputPwd} required />
+          비밀번호 : <input type="password" name="memberPwd" onChange={onChange} ref={inputPwd} required />
         </div>
         <div>
           비밀번호확인 : <input type="password" onChange={onCheckPwd} required />
@@ -164,8 +159,7 @@ const JoinMember = () => {
           닉네임 : <input type="text" name="memberNickname" onChange={onChange} />
         </div>
         <div>
-          성별 : 남{" "}
-          <input type="radio" name="memberGender" value="남" onChange={onChange} required /> 여
+          성별 : 남 <input type="radio" name="memberGender" value="남" onChange={onChange} required /> 여
           <input type="radio" name="memberGender" value="여" onChange={onChange} required />
         </div>
         <div>
@@ -189,20 +183,20 @@ const JoinMember = () => {
         <div>
           관심 주제 :
           <span>
-            <input type="checkbox" name="memberInterest" value="문화∙예술" onChange={onCheck} />
-            문화∙예술
-            <input type="checkbox" name="memberInterest" value="운동∙액티비티" onChange={onCheck} />
-            운동∙액티비티
-            <input type="checkbox" name="memberInterest" value="요리∙음식" onChange={onCheck} />
-            요리∙음식
+            <input type="checkbox" name="memberInterest" value="문화·예술" onChange={onCheck} />
+            문화·예술
+            <input type="checkbox" name="memberInterest" value="운동·액티비티" onChange={onCheck} />
+            운동·액티비티
+            <input type="checkbox" name="memberInterest" value="요리·음식" onChange={onCheck} />
+            요리·음식
             <input type="checkbox" name="memberInterest" value="여행" onChange={onCheck} />
             여행
-            <input type="checkbox" name="memberInterest" value="성장∙자기계발" onChange={onCheck} />
-            성장∙자기계발
-            <input type="checkbox" name="memberInterest" value="공예∙수공예" onChange={onCheck} />
-            공예∙수공예
-            <input type="checkbox" name="memberInterest" value="게임∙오락" onChange={onCheck} />
-            게임∙오락
+            <input type="checkbox" name="memberInterest" value="성장·자기계발" onChange={onCheck} />
+            성장·자기계발
+            <input type="checkbox" name="memberInterest" value="공예·수공예" onChange={onCheck} />
+            공예·수공예
+            <input type="checkbox" name="memberInterest" value="게임·오락" onChange={onCheck} />
+            게임·오락
             <input type="checkbox" name="memberInterest" value="기타" onChange={onCheck} />
             기타
           </span>

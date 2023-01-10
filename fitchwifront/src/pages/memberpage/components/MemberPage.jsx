@@ -246,17 +246,12 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 <List>
                   <ListItem disablePadding>
                     <ListItemButton sx={{ justifyContent: "center" }}>
-                      <Link to="/memberpage/updateMember">정보수정</Link>
-                      {/* <CheckPwdModal
-                      sx={{ width: "100%" }}
-                      onClick={() => setOpenCheckPwd(() => true)}
-                      openCheckPwd={openCheckPwd}
-                      setOpenCheckPwd={setOpenCheckPwd}
-                      member={member}
-                      lstate={lstate}
-                    >
-             
-                    </CheckPwdModal> */}
+                      <Link
+                        to="/memberpage/updateMember"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        정보수정
+                      </Link>
                     </ListItemButton>
                   </ListItem>
                   <Divider variant="middle" component="li" />

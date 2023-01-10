@@ -35,6 +35,9 @@ public class TalkService {
     @Autowired
     private FeedRepository feedRepository;
 
+    @Autowired
+    private FeedFileRepository feedFileRepository;
+
     public String addTalk(Talk newTalk, TalkTag talkTag , MultipartFile pic, HttpSession session) {
         log.info("talkService.addTalk");
         String result = null;
@@ -397,7 +400,10 @@ public class TalkService {
         List<Feed> talkFeedList = new ArrayList<>();
         try {
         talkFeedList = feedRepository.findAllByFeedClassificationcode(feedClassificationcode);
-//            System.out.println("feedClassificationcode = " + feedClassificationcode);
+        for (Feed a : talkFeedList) {
+            List<FeedFile> feedFiles = feedFileRepository.findByFeedCode(a.getFeedCode());
+            a.setFfList(feedFiles);
+        }
             System.out.println("talkFeedList = " + talkFeedList);
         } catch (Exception e) {
             e.printStackTrace();

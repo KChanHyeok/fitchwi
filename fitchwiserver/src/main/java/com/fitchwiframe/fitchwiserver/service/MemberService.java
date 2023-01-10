@@ -343,7 +343,7 @@ public class MemberService {
   public String createMember() {
     String result = null;
     try {
-      for (int i = 0; i <= 10; i++) {
+      for (int i = 0; i <= 50; i++) {
         Member member = new Member();
         member.setMemberName("테스트이름" + i);
         member.setMemberEmail("test" + i + "@test.com");

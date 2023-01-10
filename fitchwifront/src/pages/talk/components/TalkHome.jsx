@@ -1,6 +1,6 @@
 import React from "react";
 import { AssignmentTurnedIn, Category } from "@mui/icons-material";
-import { Avatar, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Container, Divider, Stack, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardActionArea, CardContent, CardMedia, Chip, Container, Divider, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import Carousel from "react-material-ui-carousel";

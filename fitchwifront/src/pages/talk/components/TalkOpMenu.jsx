@@ -222,14 +222,19 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     <hr />
                     <DialogContent>
                         {!talkJoinMember
-                            ? <Box sx={{ display: "flex" }}>
+                            ? <Box style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}>
                                 <CircularProgress sx={{ margin: "auto" }} />
                             </Box>
                             : talkJoinMember.length === 0
                                 ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
                                 : talkJoinMember.map((data) =>
                                     <UserBox key={data.talkJoinCode}>
-                                        <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                        <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                                         <Typography fontWeight={500} variant="span">
                                             <b>{data.memberEmail.memberNickname}님</b>
                                             <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
@@ -252,7 +257,12 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     <DialogContent>
                         <Typography>회원 / 답변</Typography>
                         {!waitingMemberList
-                            ? <Box sx={{ display: "flex" }}>
+                            ? <Box style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}>
                                 <CircularProgress sx={{ margin: "auto" }} />
                             </Box>
                             : waitingMemberList.length === 0
@@ -260,7 +270,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                                 : waitingMemberList.map((data) =>
                                     <Typography fontWeight={500} variant="span">
                                         <UserBox key={data.talkJoinCode}>
-                                            <Avatar src={`/images/${data.memberEmail.memberSaveimg}`} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                                             <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {data.talkJoinAnswer}
                                             <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>

@@ -129,10 +129,7 @@ export default function AddFacilities() {
             value={facilitiesPhone}
             onChange={(e) => onInputChange(e)}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

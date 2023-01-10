@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
 import { Stack } from "@mui/system";
-import { Avatar, Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, CardContent, CardMedia, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import TalkJoin from "./TalkJoin";
 import Report from "../../../components/common/Report";
@@ -95,6 +95,8 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
 
     console.log(feedList);
 
+    // const nicknameLength = talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length;
+
     return (
         <Stack
             flex={4} p={2}
@@ -104,7 +106,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
             spacing={2}
         >
             {talkList.length === 0 || !talkInfo || !talkTagInfo || !talkJoinMember
-                ? <Box sx={{ display: "flex" }}>
+                ? <Box style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}>
                     <CircularProgress sx={{ margin: "auto" }} />
                 </Box>
                 :
@@ -150,13 +157,50 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                             <h4 className="talkTxtLine">방장<br /></h4>
                             <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
                                 style={{ textDecoration: "none", color: "black", }}>
-                                <Chip sx={{ width: 170, height: 40, cursor: "pointer" }}
-                                    avatar={<Avatar alt="Natacha"
+                                {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 15
+                                    ?
+                                    <Chip sx={{ width: 320, height: 50, cursor: "pointer" }}
+                                        avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
+                                            src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
+                                        />}
+                                        label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                        style={{ fontSize: 15 }}
+                                    />
+                                    : talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 10
+                                        ?
+                                        <Chip sx={{ width: 240, height: 50, cursor: "pointer" }}
+                                            avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
+                                                src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
+                                            />}
+                                            label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                            style={{ fontSize: 15 }}
+                                        />
+                                        : talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 4
+                                            ?
+                                            <Chip sx={{ width: 190, height: 50, cursor: "pointer" }}
+                                                avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
+                                                    src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
+                                                />}
+                                                label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                                style={{ fontSize: 15 }}
+                                            />
+                                            :
+                                            <Chip sx={{ width: 150, height: 50, cursor: "pointer" }}
+                                                avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
+                                                    src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
+                                                />}
+                                                label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                                style={{ fontSize: 15 }}
+                                            />}
+
+
+                                {/* <Chip sx={{ width: 170, height: 50, cursor: "pointer" }}
+                                    avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
                                         src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                     />}
                                     label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
                                     style={{ fontSize: 15 }}
-                                />
+                                /> */}
                             </Link>
                         </Box>
                         <br />
@@ -166,7 +210,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                             : talkJoinMember.map((data) =>
                                 <UserBox key={data.talkJoinCode}>
                                     {!talkJoinMember
-                                        ? <Box sx={{ display: "flex" }}>
+                                        ? <Box style={{
+                                            position: "absolute",
+                                            left: "50%",
+                                            top: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                        }}>
                                             <CircularProgress sx={{ margin: "auto" }} />
                                         </Box>
                                         : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
@@ -174,7 +223,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         </Link>
                                     }
                                     {!talkJoinMember
-                                        ? <Box sx={{ display: "flex" }}>
+                                        ? <Box style={{
+                                            position: "absolute",
+                                            left: "50%",
+                                            top: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                        }}>
                                             <CircularProgress sx={{ margin: "auto" }} />
                                         </Box>
                                         :
@@ -188,7 +242,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
 
                                 </UserBox>)}
                         {!talkTagInfo
-                            ? <Box sx={{ display: "flex" }}>
+                            ? <Box style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}>
                                 <CircularProgress sx={{ margin: "auto" }} />
                             </Box>
                             : <Box>
@@ -199,10 +258,54 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                         <Box>
                         </Box>
                         <h4 className="talkTxtLine">얘기해요 피드</h4>
-                        <Box></Box>
+                        {feedList.length === 0 ? <Typography>아직 작성된 피드가 없습니다.</Typography>
+                            : feedList.map((feed, index) => (
+                                <>
+                                    <Link to={`/share/${feed.feedCode}`} key={index} style={{ textDecoration: "none", color: "black" }}>
+                                        <Box display="flex" flexDirection="row" alignItems="center" border={1} m={2} borderRadius={2} height={100}>
+                                            <CardMedia
+                                                component="img"
+                                                sx={{ width: 100, height: 100, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+                                                image={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                                            />
+                                            <CardContent>
+                                                <Typography variant="h6" sx={{ fontSize: 16 }}>
+                                                    {feed.feedContent}
+                                                </Typography>
+                                                <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                                                    {talkInfo.feedTag}
+                                                </Typography>
+                                                <Box
+                                                    sx={{
+                                                        mt: 1,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <Avatar
+                                                        alt={talkInfo.talkOpenCode.memberEmail.memberNickname}
+                                                        src={talkInfo.talkOpenCode.memberEmail.memberSaveimg}
+                                                        sx={{ width: 20, height: 20, mr: 1 }}
+                                                    />
+                                                    <Typography variant="subtitle1" mr={1} sx={{ fontSize: 12 }}>
+                                                        {talkInfo.talkOpenCode.memberEmail.memberNickname}
+                                                    </Typography>
+                                                </Box>
+                                            </CardContent>
+                                        </Box>
+                                    </Link>
+
+                                </>
+                            ))
+                        }
                         <Box className="talkTxtLine">
                             {!talkJoinMember
-                                ? <Box sx={{ display: "flex" }}>
+                                ? <Box style={{
+                                    position: "absolute",
+                                    left: "50%",
+                                    top: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}>
                                     <CircularProgress sx={{ margin: "auto" }} />
                                 </Box>
                                 : talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
