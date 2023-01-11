@@ -185,7 +185,7 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                     </Typography>
                     <Typography sx={{mt:2}} variant="h6" component="div"> {/*질문*/}
                         함께해요 명 : {togetherInfo.togetherTitle}<br/>
-                        현재 참가중인 멤버인원수 : {togetherJoinMember.length} / {togetherInfo.togetherMax} <br/>
+                        현재 참가중인 멤버인원수 : {togetherJoinMember.length+1} / {togetherInfo.togetherMax} <br/>
                         모집일자 : {togetherInfo.togetherDate} <br/>
                     </Typography>
                     <hr/>
