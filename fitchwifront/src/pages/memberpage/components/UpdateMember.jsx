@@ -32,6 +32,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
     setMemberToUpdate({ ...member });
   }, [member]);
 
+  console.log(memberToUpdate);
   const {
     memberEmail,
     memberName,
@@ -52,19 +53,13 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
 
   const onUpdate = (e) => {
     e.preventDefault();
-    if (
-      memberToUpdate.memberPhone !== checkedPhone ||
-      originalPhone !== memberToUpdate.memberPhone
-    ) {
+    if (memberToUpdate.memberPhone !== checkedPhone || originalPhone !== memberToUpdate.memberPhone) {
       alert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.");
       return;
     }
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" })
-    );
+    formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
-
+    console.log(memberToUpdate);
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
@@ -313,12 +308,15 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
   };
 
   const [checkedPhone, setCheckedPhone] = useState(member.memberPhone);
-  const [originalPhone, setOritinalPhone] = useState(member.memberPhone);
+  // eslint-disable-next-line no-unused-vars
+  const [originalPhone, setOriginalPhone] = useState(member.memberPhone);
 
   const Certification = () => {
     // console.log(joinForm.memberPhone);
     if (memberToUpdate.memberPhone === "") {
       return alert("연락처를 입력해주세요!");
+    } else if (memberToUpdate.memberPhone === originalPhone) {
+      return alert("기존 연락처와 동일합니다.");
     }
     axios
       .post("/checkPhone", memberToUpdate.memberPhone, {
@@ -366,7 +364,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
           marginTop: 8,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          //alignItems: "center",
         }}
       >
         <Typography component="h1" variant="h5">

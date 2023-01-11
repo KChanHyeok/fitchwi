@@ -18,4 +18,6 @@ public interface TogetherRepository extends CrudRepository<Together, Long> {
   Page<Together> findByTogetherStateLike(String cancel, Pageable pageable);
 
   Page<Together> findByTogetherStateAndTogetherTitleLike(String cancel, String keywordToSearch, Pageable pageable);
+
+  Together findByTogetherOpenedCodeAndTogetherDate(TogetherOpened to, String noday);
 }

@@ -11,4 +11,6 @@ public interface TogetherOpenedRepository extends CrudRepository<TogetherOpened,
   List<TogetherOpened> findAllByMemberEmail(Member member);
 
   List<TogetherOpened> findByFacilitiesCode(Facilities facilities);
+
+
 }

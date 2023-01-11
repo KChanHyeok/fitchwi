@@ -152,6 +152,7 @@ export default function FindMemberInfoModal() {
       .then((result) => {
         //    console.log(result.data);
         alert("비밀번호가 성공적으로 변경됐습니다.");
+        handleClose();
         nav("/login");
       })
       .catch((error) => console.log(error));

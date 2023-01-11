@@ -119,15 +119,17 @@ export default function Facilities() {
           </TableHead>
           <TableBody>
             {load === false ? (
-              <Box
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: "50%",
-                }}
-              >
-                <CircularProgress />
-              </Box>
+              <TableRow>
+                <TableCell
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                  }}
+                >
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
             ) : (
               facilities.map((facilities, index) => (
                 <BasicTableRow key={index}>
@@ -152,9 +154,7 @@ export default function Facilities() {
                       >
                         <Button>수정하기</Button>
                       </Link>
-                      <Button onClick={() => deleteFacilities(facilities.facilitiesCode)}>
-                        삭제하기
-                      </Button>
+                      <Button onClick={() => deleteFacilities(facilities.facilitiesCode)}>삭제하기</Button>
                     </ButtonGroup>
                   </TableCell>
                 </BasicTableRow>

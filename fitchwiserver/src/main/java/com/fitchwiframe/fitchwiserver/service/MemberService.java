@@ -36,8 +36,8 @@ public class MemberService {
   @Autowired private FeedService feedService;
 
   @Autowired private TalkService talkService;
-@Autowired private AdminService adminService;
-@Autowired private TogetherService togetherService;
+  @Autowired private AdminService adminService;
+  @Autowired private TogetherService togetherService;
 
 
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -50,28 +50,28 @@ public class MemberService {
     String result = null;
     String cryptPwd = null;
     if(newMember.getMemberPwd()!=null){
-       cryptPwd = encoder.encode(newMember.getMemberPwd());
+      cryptPwd = encoder.encode(newMember.getMemberPwd());
       newMember.setMemberPwd(cryptPwd);
     }
 
 
     if(newMember.getMemberSaveimg().equals("")){
-    try {
-      if (pic != null) {
-        fileUpload(newMember, pic, session);
-      } else {
-        newMember.setMemberImg("DefaultProfileImage.jpg");
-        newMember.setMemberSaveimg("/images/DefaultProfileImageSystemName.jpg");
-      }
+      try {
+        if (pic != null) {
+          fileUpload(newMember, pic, session);
+        } else {
+          newMember.setMemberImg("DefaultProfileImage.jpg");
+          newMember.setMemberSaveimg("/images/DefaultProfileImageSystemName.jpg");
+        }
 
-      memberRepository.save(newMember);
-      log.info("가입 성공");
-      result = "ok";
-    } catch (Exception e) {
-      e.printStackTrace();
-      log.info("가입 실패");
-      result = "fail";
-    }
+        memberRepository.save(newMember);
+        log.info("가입 성공");
+        result = "ok";
+      } catch (Exception e) {
+        e.printStackTrace();
+        log.info("가입 실패");
+        result = "fail";
+      }
     }else{
       try{
         memberRepository.save(newMember);
@@ -191,7 +191,7 @@ public class MemberService {
     Member findMember = null;
     try {
       findMember = memberRepository.findById(userId).get();
-      findMember.setMemberPwd("");
+      findMember.setMemberPwd(null);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -334,7 +334,7 @@ public class MemberService {
 
       for (Member member : memberList) {
         System.out.println("member = " + member);
-        member.setMemberPwd("");
+        member.setMemberPwd(null);
         member.setMemberBirth("");
         member.setMemberPhone("");
         member.setMemberAddr("");
@@ -405,7 +405,7 @@ public class MemberService {
     }catch (Exception e){
       e.printStackTrace();
     }
-        return result;
+    return result;
   }
 
 
@@ -413,12 +413,12 @@ public class MemberService {
   public Member updateMemberInfo(Member memberToUpdate, MultipartFile pic, HttpSession session) {
     log.info("memberService.updateMemberInfo();");
     Member updatedMember = new Member();
-    System.out.println("memberToUpdate = " + memberToUpdate);
+    System.out.println("memberToUpdate1 = " + memberToUpdate);
     System.out.println("pic = " + pic);
-    System.out.println("updatedMember = " + updatedMember);
+
 
     try {
-
+      System.out.println("memberToUpdate2 = " + memberToUpdate);
       Member dbMember = memberRepository.findById(memberToUpdate.getMemberEmail()).get();
       if(dbMember.getMemberPwd()!=null){
         memberToUpdate.setMemberPwd(dbMember.getMemberPwd());
@@ -434,6 +434,7 @@ public class MemberService {
         deleteFile(memberToUpdate.getMemberSaveimg(), session);
         fileUpload(memberToUpdate, pic, session);
       }
+      System.out.println("memberToUpdate2 = " + memberToUpdate);
       Member savedMember = memberRepository.save(memberToUpdate);
       System.out.println("savedMember = " + savedMember);
       updatedMember.setMemberEmail(savedMember.getMemberEmail());
@@ -500,7 +501,7 @@ public class MemberService {
       String responseBody = response.getBody();
       ObjectMapper objectMapper = new ObjectMapper();
       jsonNode = objectMapper.readTree(responseBody);
-   //   System.out.println("jsonNode = " + jsonNode);
+      //   System.out.println("jsonNode = " + jsonNode);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -630,11 +631,11 @@ public class MemberService {
       e.printStackTrace();
     }
     return memberList;
-}
+  }
   public String checkPhone(String memberPhone) {
     log.info("memberService.checkPhone");
     log.info(memberPhone);
-   // System.out.println( memberPhone);
+    // System.out.println( memberPhone);
     String result = "fail";
     Member byMemberPhone = memberRepository.findByMemberPhone(memberPhone);
     if(byMemberPhone==null){
@@ -661,6 +662,7 @@ public class MemberService {
         result[1] = byMemberPhone.getMemberEmail();
       }
     }
+    System.out.println("result = " + result.toString());
     return result;
   }
 }

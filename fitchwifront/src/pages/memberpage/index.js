@@ -19,6 +19,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
 
   const getMemberInfo = useCallback(() => {
     if (pageOwner != null) {
+      console.log(member);
       axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
         setMember(() => res.data);
       });
@@ -35,10 +36,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
   return (
     <div>
       <Routes>
-        <Route
-          path="/"
-          element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}
-        ></Route>
+        <Route path="/" element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}></Route>
 
         <Route
           path="/updateMember"

@@ -1,5 +1,3 @@
-// import { Typography } from "@mui/material";
-import { Close } from "@mui/icons-material";
 import { Box, Button, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import moment from "moment/moment";
@@ -86,6 +84,14 @@ export default function CalendarApp({ facilitiesCode }) {
           setStartDate("");
           setEndDate("");
           setNoDayToSend([]);
+        } else if (res.data === "togetherExist") {
+          setNodayList([]);
+          alert("해당 날짜에 진행 예정인 '함께해요'가 존재합니다. ");
+          setStartDate("");
+          setEndDate("");
+          setNoDayToSend([]);
+        } else {
+          alert(res.data);
         }
       });
 
