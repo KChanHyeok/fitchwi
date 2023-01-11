@@ -114,12 +114,13 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
               ))
             )}
           </Box>
-          <h3>안내사항</h3>
+          <h3>안내사항</h3><br/>
           <Box component="span">
             모집인원 : {togetherInfo.togetherMax}명 <br />
             모집유형 : {togetherInfo.togetherType} <br />
             1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}원 <br />
-            <br />
+            장소 : {togetherInfo.togetherPosition} <br />
+            방장연락처 : {togetherInfo.togetherOpenedCode.memberEmail.memberPhone}<br/><br/>
             <Stack 
               direction="row"
 
@@ -166,8 +167,6 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                 </Box>
               </LocalizationProvider>
             </Stack>
-            <br />
-            장소 : {togetherInfo.togetherPosition}
           </Box>
             <Box sx={{ mt: 2 }}>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
