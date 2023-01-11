@@ -16,7 +16,5 @@ public interface TalkJoinRepository extends CrudRepository<TalkJoin, Long> {
 
     List<TalkJoin> findAllByMemberEmail(Member member);
 
-    Long countByTalkCode(Talk talk);
-
   Long countByTalkCodeAndTalkJoinStateContains(Talk talk, String joinState);
 }
