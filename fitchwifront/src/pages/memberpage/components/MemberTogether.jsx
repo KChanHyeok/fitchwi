@@ -162,9 +162,14 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
     return togetherList.map((together) => {
       return (
         <Link
-          to={`/together/${together.togetherCode}`}
+          to={together.togetherState === "삭제신청중" ? null : `/together/${together.togetherCode}`}
           key={together.togetherCode}
           style={{ textDecoration: "none" }}
+          onClick={() => {
+            if (together.togetherState === "삭제신청중") {
+              alert("삭제신청 대기중인 함께해요입니다.");
+            }
+          }}
         >
           <Box
             component="div"
@@ -193,7 +198,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
               </Grid>
               <Grid item xs={4} textAlign="right" sx={{ mr: 1 }}>
                 <Chip
-                  label="운영중"
+                  label={`${together.togetherState}`}
                   size="small"
                   sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)", mt: 1 }}
                 />

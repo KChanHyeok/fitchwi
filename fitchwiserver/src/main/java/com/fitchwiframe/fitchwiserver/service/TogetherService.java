@@ -117,7 +117,7 @@ public class TogetherService {
         String result = null;
         try {
 
-            long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherPayment.getTogetherCode());
+            long joinMemberCount = togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(togetherPayment.getTogetherCode(), "가입중");
             if(joinMemberCount+1!=togetherPayment.getTogetherCode().getTogetherMax()) {
                 RestTemplate restTemplate = new RestTemplate();
 
@@ -192,7 +192,7 @@ public class TogetherService {
         try {
             Together together = togetherRepository.findById(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherCode()).get();
             TokenDto tokenDto = Token();
-            long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherJoinPayment.getTogetherJoinCode().getTogetherCode());
+            long joinMemberCount = togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(togetherJoinPayment.getTogetherJoinCode().getTogetherCode(), "가입중");
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date now =new Date();
@@ -305,7 +305,7 @@ public class TogetherService {
         String result = null;
         log.info("insertTogetherFreeInfo()");
 
-        long joinMemberCount = togetherJoinRepository.countByTogetherCode(together);
+        long joinMemberCount = togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(together,"가입중");
         if(joinMemberCount+1!=together.getTogetherMax()) {
             result="인원이 맞지 않습니다.";
             return result;
@@ -339,7 +339,7 @@ public class TogetherService {
                 return result;
             }
 
-            long joinMemberCount = togetherJoinRepository.countByTogetherCode(togetherJoin.getTogetherCode());
+            long joinMemberCount = togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(togetherJoin.getTogetherCode(),"가입중");
             log.info(joinMemberCount+"가입한 인원수");
 
             Together together = togetherRepository.findById(togetherJoin.getTogetherCode().getTogetherCode()).get();
@@ -595,7 +595,7 @@ public class TogetherService {
             if(!(togetherJoinListByMember.isEmpty())){
                 for(TogetherJoin tj : togetherJoinListByMember){
                     Together together = tj.getTogetherCode();
-                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(together, "가입중"));
                 }
             }
             List<Together> togetherListWithMemberCount = new ArrayList<>();
@@ -605,7 +605,7 @@ public class TogetherService {
             if(!(togetherOpenedListByMember.isEmpty())){
                 for(TogetherOpened to : togetherOpenedListByMember){
                     Together together = togetherRepository.findBytogetherOpenedCode(to);
-                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(together));
+                    together.setTogetherMemberCount(togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(together,"가입중"));
                     togetherListWithMemberCount.add(together);
                 }
             }
