@@ -104,7 +104,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                     component={Link}
                     to={"/memberpage"}
                     state={{ memberId: data.memberEmail.memberEmail}}
-                    src={`${data.memberEmail.memberSaveimg}`}
+                    src={data.memberEmail.memberSaveimg}
                     alt={"profil.memberImg"}
                     sx={{ width: 30, height: 30 }} />
                   <Typography fontWeight={500} variant="span">

@@ -75,20 +75,20 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         setInsertFrom(insertObj);
       }
       const togetherJoinSend = (e) => {
-        e.preventDefault();
+        e.preventDefault();        
+
         if(togetherInfo.togetherRecruitStartDate>moment().format("YYYY-MM-DD")){
-            setOpen(false);
             alert("아직 모집 기간이 아닙니다");
             return 
             
         }
         if(togetherInfo.togetherRecruitEndDate<moment().format("YYYY-MM-DD")){
-            setOpen(false);
             alert("이미 지난 기간입니다.")
             return 
         }
 
         if(togetherInfo.togetherPrice===0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0) {
+            setOpen(false);
             insertTogetherFreeJoinInfo();
         }else {
             requestJoinPay()
@@ -138,6 +138,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
     const finalPayment = () => {
         if (togetherInfo.togetherPrice === 0 && togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice === 0) {
+            setOpen(false);
             insertTogetherFreeInfo();
         } else {
             requestLastPay()
@@ -206,10 +207,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     
       const deleteTogetherPayJoinInfo = (e) => {
         // e.preventDefault();
-
+            setOpen(false);
             axios.delete("/deleteTogetherPayJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                setOpen(false);
                 refreshTogetherJoinList();
                 refreshTogetherList();
                 alert(res.data);
@@ -219,9 +219,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
 
       const deleteTogetherFreeJoinInfo = (e) => {
         // e.preventDefault();
+            setOpen(false);
             axios.delete("/deleteTogetherFreeJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                setOpen(false);
                 alert(res.data);
                 window.location.reload();
             }).catch((error)=> console.log(error))
@@ -245,9 +245,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 {togetherJoinState==="대기" ? 
                 <Box sx={style} component="form">
                     <UserBox>
-                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Avatar src={insertForm.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
-                        {sessionStorage.getItem("id")}
+                        {sessionStorage.getItem("nickName")}
                         </Typography>
                     </UserBox>
                     <hr/>
@@ -260,9 +260,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 </Box>:
                 togetherJoinState==="가입중" ? <Box sx={style}>
                 <UserBox>
-                    <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                    <Avatar src={insertForm.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                     <Typography fontWeight={500} variant="span">
-                    {sessionStorage.getItem("id")}
+                    {sessionStorage.getItem("nickName")}
                     </Typography>
                 </UserBox>
                 <hr/>
@@ -276,9 +276,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 togetherPayState==="결제대기중" ? 
                 <Box sx={style}>
                     <UserBox>
-                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Avatar src={insertForm.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
-                        {sessionStorage.getItem("id")}
+                        {sessionStorage.getItem("nickName")}
                         </Typography>
                     </UserBox>
                 <hr/>
@@ -297,9 +297,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                 </Box>:
                 <Box sx={style} component="form">
                     <UserBox>
-                        <Avatar alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                        <Avatar src={insertForm.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
                         <Typography fontWeight={500} variant="span">
-                        {sessionStorage.getItem("id")}
+                        {sessionStorage.getItem("nickName")}
                         </Typography>
                     </UserBox>
                     <hr/>
