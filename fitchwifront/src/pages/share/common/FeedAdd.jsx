@@ -37,6 +37,7 @@ const FeedAdd = () => {
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
+  const [SendSnackbarOpen, setSendSnackbarOpen] = useState(false);
   const [talkJoinList, setTalkJoinList] = useState([]);
   const [talkOpenedList, setTalkOpenedList] = useState([]);
   const [tagForm, setTagForm] = useState([]);
@@ -151,12 +152,8 @@ const FeedAdd = () => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
+          setSendSnackbarOpen(true);
           window.location.reload();
-          // setState(false);
-          // setFileForm("");
-          // setTagForm([]);
-          // setInsertForm({});
-          // refreshFeed();
         } else {
           alert("실패");
         }
@@ -249,13 +246,20 @@ const FeedAdd = () => {
               </Button>
               <Snackbar open={SnackbarOpen} autoHideDuration={6000}>
                 <Alert severity="success" sx={{ width: "100%" }}>
-                  피드 저장 완료!
+                  저장 완료!
                 </Alert>
               </Snackbar>
               {state === false ? (
-                <Button onClick={sendFeed} disabled>
-                  UPLOAD
-                </Button>
+                <>
+                  <Button onClick={sendFeed} disabled>
+                    UPLOAD
+                  </Button>
+                  <Snackbar open={SendSnackbarOpen} autoHideDuration={6000}>
+                    <Alert severity="success" sx={{ width: "100%" }}>
+                      등록 성공!
+                    </Alert>
+                  </Snackbar>
+                </>
               ) : (
                 <Button onClick={sendFeed}>UPLOAD</Button>
               )}

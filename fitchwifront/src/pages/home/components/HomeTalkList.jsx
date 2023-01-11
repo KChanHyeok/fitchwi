@@ -4,19 +4,26 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const HomeTalkList = ({ category, talkList, korCategory }) => {
+const HomeTalkList = ({ category, talkList, korCategory, type }) => {
   const nav = useNavigate();
   const [talkListByCategory, setTalkListCategory] = useState();
 
   useEffect(() => {
     try {
-      setTalkListCategory(talkList.filter((data) => data.talkCategory === korCategory));
+      if (type === "recent") {
+        setTalkListCategory(talkList.filter((data) => data.talkCategory === korCategory));
+      } else {
+        setTalkListCategory(
+          talkList.filter((data) => data.talkCategory === korCategory).sort((a, b) => b.talkMemberCount - a.talkMemberCount)
+        );
+      }
     } catch (e) {}
-  }, [korCategory, talkList]);
+  }, [korCategory, talkList, type]);
 
   if (talkListByCategory !== undefined) {
     talkListByCategory.length = 3;
   }
+
   return (
     <>
       {talkListByCategory === undefined ? (
@@ -24,22 +31,32 @@ const HomeTalkList = ({ category, talkList, korCategory }) => {
       ) : (
         <>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={3}>
-            <Typography variant="h5">💬 추천 얘기해요</Typography>
+            {type === "recent" ? (
+              <Typography variant="h5">💬 최신 얘기해요</Typography>
+            ) : (
+              <Typography variant="h5">🤖 추천 얘기해요</Typography>
+            )}
             <Button onClick={() => nav(`/talk/category/${category}`)}>전체보기</Button>
           </Stack>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between">
             {talkListByCategory.map((item) => (
-              <Box
-                width={300}
-                height={320}
-                borderRadius={1}
-                boxShadow={3}
-                p={1}
-                key={item.talkCode}
-                onClick={() => nav(`/talk/${item.talkCode}`)}
-              >
-                <Box component="img" src={`/images/${item.talkSaveimg}`} height={230} width="100%" />
-                <Typography variant="h6" fontWeight={100} mt={1} color="black">
+              <Box width={300} height={320} borderRadius={1} boxShadow={3} p={1} key={item.talkCode}>
+                <Box
+                  component="img"
+                  src={`/images/${item.talkSaveimg}`}
+                  height={230}
+                  width="100%"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => nav(`/talk/${item.talkCode}`)}
+                />
+                <Typography
+                  variant="h6"
+                  fontWeight={100}
+                  mt={1}
+                  color="black"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => nav(`/talk/${item.talkCode}`)}
+                >
                   {item.talkTitle}
                 </Typography>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">

@@ -95,7 +95,6 @@ const Post = ({
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
       axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => {
-        console.log(res.data);
         setTalkInfo(res.data);
       });
     }
@@ -184,7 +183,7 @@ const Post = ({
     <div>
       {file === undefined && comment === undefined && like === undefined ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
-          <CircularProgress color="inherit" />
+          <CircularProgress />
         </Backdrop>
       ) : (
         <>

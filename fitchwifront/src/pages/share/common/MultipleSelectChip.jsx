@@ -60,7 +60,6 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
         },
       })
       .then((response) => {
-        console.log(response.data);
         if (response.data === "fail") {
           alert("이미 등록되어 있는 태그입니다!");
         }
