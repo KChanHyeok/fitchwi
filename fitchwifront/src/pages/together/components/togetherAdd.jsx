@@ -263,7 +263,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               sx={{
                 width: "100%",
                 maxWidth: 360,
-                maxHeight: 170,
+                maxHeight: 180,
                 mt: 3,
                 border: "1px solid lightgray",
                 borderRadius: 1.2,
@@ -304,7 +304,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             </List>
           </Grid>
           <Grid item xs>
-            <Box component="div" sx={{ mt: 10, height: 200 }}>
+            <Box component="div" sx={{ mt: 10, height: 230 }}>
               {insertForm.facilitiesCode.facilitiesCode === 0 ? (
                 <Typography variant="h6" component="div">
                   시설 이용안함
