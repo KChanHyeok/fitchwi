@@ -240,9 +240,7 @@ public class TogetherService {
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
                 Map<String,String> body = new HashMap<>();
-//                        headers.clear();
                 headers.add("Authorization",tokenDto.getAccess_token());
-//                        body.clear();
                 body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
                 body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
                 body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
@@ -279,12 +277,12 @@ public class TogetherService {
             if(togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoinPayment.getTogetherJoinCode().setTogetherJoinState("가입중");
                 int facilitiesPrice = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherOpenedCode().getFacilitiesCode().getFacilitiesPrice();
-                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice()+ facilitiesPrice;
+                int joinPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherPrice() + facilitiesPrice;
                 int totalPay = togetherJoinPayment.getTogetherJoinCode().getTogetherCode().getTogetherTotalPrice();
 
                 togetherJoinPayment.getTogetherJoinCode().getTogetherCode().setTogetherTotalPrice(joinPay+totalPay);
                 Together jtogether = togetherJoinPayment.getTogetherJoinCode().getTogetherCode();
-                togetherRepository.save(together);
+                togetherRepository.save(jtogether);
             }
 
             togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
@@ -356,6 +354,8 @@ public class TogetherService {
             if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoin.setTogetherJoinState("가입중");
             }
+
+
             togetherJoinRepository.save(togetherJoin);
             result = "가입성공";
         }catch (Exception e) {
@@ -440,7 +440,7 @@ public class TogetherService {
                 HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
                 cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
 
-                int joinpay = joinTogether.getTogetherPrice();
+                int joinpay = joinTogether.getTogetherPrice()+joinTogether.getTogetherOpenedCode().getFacilitiesCode().getFacilitiesPrice();
                 int totalpay = joinTogether.getTogetherTotalPrice();
                 joinTogether.setTogetherTotalPrice(totalpay-joinpay);
                 togetherRepository.save(joinTogether);
@@ -477,6 +477,7 @@ public class TogetherService {
         String result = null;
         log.info("approvalTogetherMemberState()");
         try {
+
             togetherJoin.setTogetherJoinState("가입중");
             int joinPay = togetherJoin.getTogetherCode().getTogetherPrice();
             int totalPay = togetherJoin.getTogetherCode().getTogetherTotalPrice();
@@ -484,6 +485,36 @@ public class TogetherService {
             together.setTogetherTotalPrice(totalPay+joinPay);
             togetherRepository.save(together);
             togetherJoinRepository.save(togetherJoin);
+
+            long joinMemberCount = togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(together,"가입중");
+            log.info("가입중인 사람 수 " +joinMemberCount+1);
+            log.info("가입최대 인원 수" );
+            if(joinMemberCount+1>=together.getTogetherMax()) {
+                result = "수락이 완료 되었습니다 인원이 가득차 대기중인 인원은 자동 환불처리 됩니다.";
+
+                Iterable<TogetherJoin> togetherJoinList = togetherJoinRepository.findByTogetherCodeAndTogetherJoinStateContains(togetherJoin.getTogetherCode(), "대기");
+                for(TogetherJoin data :togetherJoinList ) {
+                    TokenDto tokenDto = Token();
+                    TogetherJoinPayment togetherJoinPayment = togetherJoinPayRepository.findByTogetherJoinCode(data);
+                    try {
+                        RestTemplate restTemplate = new RestTemplate();
+                        HttpHeaders headers = new HttpHeaders();
+                        Map<String,String> body = new HashMap<>();
+                        headers.add("Authorization",tokenDto.getAccess_token());
+                        body.put("imp_uid", togetherJoinPayment.getTogetherJoinImp());
+                        body.put("merchant_uid", togetherJoinPayment.getTogetherJoinPayCode());
+                        body.put("amount",togetherJoinPayment.getTogetherJoinPayPrice()+"");
+
+                        HttpEntity<Map> cancelEntity = new HttpEntity<Map>(body, headers);
+                        cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
+                        togetherJoinPayRepository.delete(togetherJoinPayment);
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    togetherJoinRepository.delete(data);
+                }
+                return result;
+            }
             result="성공";
         }catch (Exception e) {
             result="실패";
