@@ -2,7 +2,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Avatar, Button, Divider, Menu, Modal, styled, Typography } from "@mui/material";
 import { alpha, Box } from "@mui/system";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -218,7 +218,10 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                         togetherJoinMember.map((data)=>(
                             <UserBox key={data.togetherJoinCode}>
                                 <Avatar
-                                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                                    component={Link}
+                                    to={"/memberpage"}
+                                    state={{ memberId: data.memberEmail.memberEmail}}
+                                    src={data.memberEmail.memberSaveimg}
                                     alt={"profil.memberImg"}
                                     sx={{ width: 30, height: 30 }}
                                 />
@@ -250,7 +253,10 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                         togetherAppliedMember.filter(data=>data.togetherJoinState!=="가입중").map((data)=>(
                             <UserBox key={data.togetherJoinCode}>
                                 <Avatar
-                                    src={`/images/${data.memberEmail.memberSaveimg}`}
+                                    component={Link}
+                                    to={"/memberpage"}
+                                    state={{ memberId: data.memberEmail.memberEmail}}
+                                    src={data.memberEmail.memberSaveimg}
                                     alt={"profil.memberImg"}
                                     sx={{ width: 30, height: 30 }}
                                 />
