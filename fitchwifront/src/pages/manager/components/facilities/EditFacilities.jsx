@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -15,7 +14,6 @@ import {
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import CalendarApp from "./CalendarApp";
 export default function EditFacilities() {
   const { facilitiesCode } = useParams();
@@ -67,7 +65,7 @@ export default function EditFacilities() {
   };
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main">
+    <Container component="main" sx={{ height: "100vh", display: "flex", alignItems: "center" }}>
       {load === false ? (
         <Box
           style={{
@@ -83,17 +81,12 @@ export default function EditFacilities() {
           component="form"
           onSubmit={(e) => onSubmit(e)}
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             // pl: ,
           }}
         >
-          {" "}
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <AddBusinessIcon />
-          </Avatar>
           <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
             시설 정보 수정
           </Typography>

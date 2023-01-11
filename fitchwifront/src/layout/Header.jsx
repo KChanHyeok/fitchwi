@@ -31,10 +31,7 @@ const Header = ({ lstate, onLogout }) => {
             <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/about"}>
               소개페이지
             </Link>
-            <Link
-              style={{ textDecoration: "none", marginRight: 50, color: "black" }}
-              to={"/together"}
-            >
+            <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/together"}>
               함께해요
             </Link>
             <Link style={{ textDecoration: "none", marginRight: 50, color: "black" }} to={"/talk"}>
@@ -44,21 +41,21 @@ const Header = ({ lstate, onLogout }) => {
               공유해요
             </Link>
           </Box>
-          <Box mr={4} display="flex" alignItems="flex-end">
+          <Box mr={4} display="flex" alignItems="center">
             <Link to={"/search"} style={{ textDecoration: "none" }}>
               <Search color="error" />
             </Link>
 
             <Link to={flink} style={{ textDecoration: "none" }}>
-              <Button
-                color="primary"
-                variant="text"
-                sx={{ ml: 3 }}
-                size="small"
-                startIcon={logid === "" ? null : <Avatar src={profileImg} />}
-              >
-                {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
-              </Button>
+              {logid !== "" ? (
+                <Button color="primary" variant="text" size="small" sx={{ ml: 3 }}>
+                  <Avatar src={profileImg} sx={{ mr: 1 }} /> {nickName} 님
+                </Button>
+              ) : (
+                <Button color="primary" variant="text" sx={{ ml: 3 }} size="small">
+                  로그인 / 회원가입
+                </Button>
+              )}
             </Link>
           </Box>
         </Container>

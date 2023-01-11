@@ -19,6 +19,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
 
   const getMemberInfo = useCallback(() => {
     if (pageOwner != null) {
+     // console.log(member);
       axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
         setMember(() => res.data);
       });
@@ -26,6 +27,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
       alert("로그인 후 이용 가능합니다.");
       nav("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageOwner, nav]);
 
   useEffect(() => {
@@ -35,10 +37,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
   return (
     <div>
       <Routes>
-        <Route
-          path="/"
-          element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}
-        ></Route>
+        <Route path="/" element={<MemberPage member={member} onLogout={onLogout} lstate={lstate} />}></Route>
 
         <Route
           path="/updateMember"

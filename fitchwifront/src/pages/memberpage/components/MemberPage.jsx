@@ -11,8 +11,6 @@ import {
   Container,
   Divider,
   Grid,
-  ImageList,
-  ImageListItem,
   List,
   ListItem,
   ListItemButton,
@@ -30,6 +28,7 @@ import Report from "../../../components/common/Report";
 // import CheckPwdModal from "./CheckPwdModal";
 import ConfirmDialog from "./ConfirmDialog";
 import FollowMemberListModal from "./FollowMemberListModal";
+import MemberFeed from "./MemberFeed";
 import MemberTalk from "./MemberTalk";
 
 import MemberTogether from "./MemberTogether";
@@ -201,8 +200,75 @@ export default function MemberPage({ member, onLogout, lstate }) {
   //회원 정보 수정
   // const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
+  // const mbtiImageMap = new Map([
+  //   [
+  //     "ISFP",
+  //     "https://see.fontimg.com/api/renderfont4/gv11/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNGUA/cookiemonster.png",
+  //   ],
+  //   [
+  //     "ISTJ",
+  //     "https://see.fontimg.com/api/renderfont4/ow45d/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUSg/broisther.png",
+  //   ],
+  //   [
+  //     "ISFJ",
+  //     "https://see.fontimg.com/api/renderfont4/ZVj3l/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNGSg/queensides-light.png",
+  //   ],
+  //   [
+  //     "INFJ",
+  //     "https://see.fontimg.com/api/renderfont4/rg9Rx/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5GSg/ananda-black-personal-use-regular.png",
+  //   ],
+  //   [
+  //     "INTJ",
+  //     "https://see.fontimg.com/api/renderfont4/PKdwB/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5USg/scholarly-ambition-regular.png",
+  //   ],
+  //   [
+  //     "ISTP",
+  //     "https://see.fontimg.com/api/renderfont4/dBYX/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUUA/grestal-script-demo-regular.png",
+  //   ],
+  //   [
+  //     "INFP",
+  //     "https://see.fontimg.com/api/renderfont4/WyBxO/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5GUA/bananas-italic-personal-use-regular.png",
+  //   ],
+  //   [
+  //     "INTP",
+  //     "https://see.fontimg.com/api/renderfont4/1GLz4/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5UUA/mr-fink.png",
+  //   ],
+  //   [
+  //     "ESTP",
+  //     "https://see.fontimg.com/api/renderfont4/ow45d/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiNGN0YzRjMiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUSg/broisther.png",
+  //   ],
+  //   [
+  //     "ESFP",
+  //     "https://see.fontimg.com/api/renderfont4/6Y1G6/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNGUA/restou.png",
+  //   ],
+  //   [
+  //     "ENFP",
+  //     "https://see.fontimg.com/api/renderfont4/axrEo/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5GUA/staywork-regular.png",
+  //   ],
+  //   [
+  //     "ENTP",
+  //     "https://see.fontimg.com/api/renderfont4/PK2vr/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5UUA/summer-vacation.png",
+  //   ],
+  //   [
+  //     "ESTJ",
+  //     "https://see.fontimg.com/api/renderfont4/JRyXK/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNUSg/beandisplay.png",
+  //   ],
+  //   [
+  //     "ESFJ",
+  //     "https://see.fontimg.com/api/renderfont4/X39x9/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNGSg/kimberly-signature.png",
+  //   ],
+  //   [
+  //     "ENFJ",
+  //     "https://see.fontimg.com/api/renderfont4/8MVEg/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5GSg/pumpkin-type-halloween.png",
+  //   ],
+  //   [
+  //     "ENTJ",
+  //     "https://see.fontimg.com/api/renderfont4/0nA4/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5USg/bunch-blossoms-personal-use.png",
+  //   ],
+  // ]);
+
   return (
-    <Container component="main" maxWidth="xl">
+    <Container component="main" sx={{ height: "100vh", display: "flex" }}>
       {memberSaveimg === undefined ||
       feedList === undefined ||
       followList === undefined ||
@@ -246,10 +312,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 <List>
                   <ListItem disablePadding>
                     <ListItemButton sx={{ justifyContent: "center" }}>
-                      <Link
-                        to="/memberpage/updateMember"
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
+                      <Link to="/memberpage/updateMember" style={{ textDecoration: "none", color: "black" }}>
                         정보수정
                       </Link>
                     </ListItemButton>
@@ -296,7 +359,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
               alignItems: "center",
             }}
           >
-            <Card sx={{ width: "90%" }}>
+            <Card sx={{ width: "100%" }}>
               <CardHeader
                 style={{
                   background: "linear-gradient(190deg,lightgray, white)",
@@ -308,9 +371,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                 title={
                   <Typography sx={{ fontSize: 25 }}>
                     {" "}
-                    {logid === memberEmail
-                      ? `${memberNickname}(${memberName})`
-                      : `${memberNickname}`}
+                    {logid === memberEmail ? `${memberNickname}(${memberName})` : `${memberNickname}`}
                   </Typography>
                 }
                 subheader={
@@ -324,7 +385,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
 
               <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
               <CardContent sx={{ textAlign: "right" }}>
-                <Grid container justifyContent={"space-between"}>
+                <Grid container>
                   <Grid item xs={8}>
                     <div style={{ textAlign: "left" }}>
                       {interestArr &&
@@ -368,50 +429,25 @@ export default function MemberPage({ member, onLogout, lstate }) {
               </CardContent>
             </Card>
             {myMenu === "share" ? (
-              <ImageList
-                sx={{ width: "90%", overflowY: "scroll", height: "480px", mb: 6, mt: 0.5 }}
-                cols={3}
-                rowHeight={164}
-              >
-                {feedList !== undefined ? (
-                  feedList.map((feed, index) => (
-                    <Link to={`/share/${feed.feedCode}`} key={index}>
-                      <ImageListItem style={{ height: "250px" }}>
-                        <img
-                          src={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                          srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                          alt={feed.feedCode}
-                          loading="lazy"
-                          style={{
-                            width: "100%",
-
-                            height: "100%",
-                          }}
-                        />
-                      </ImageListItem>
-                    </Link>
-                  ))
-                ) : (
-                  <Typography>작성한 피드가 없어요</Typography>
-                )}
-              </ImageList>
+              <Box sx={{ mt: 2, width: "100%" }}>
+                <Typography variant="h6" gutterBottom>
+                  공유 해요
+                </Typography>
+                {feedList !== undefined ? <MemberFeed myMenu={myMenu} feedList={feedList} /> : null}
+              </Box>
             ) : myMenu === "talk" ? (
-              <Box width={"100%"} sx={{ margin: "auto", pl: 6 }}>
+              <Box sx={{ mt: 2, width: "100%" }}>
                 {" "}
                 <Typography variant="h6" gutterBottom>
                   얘기해요 활동 현황
                 </Typography>
                 {talkJoinList !== undefined ? (
-                  <MemberTalk
-                    myMenu={myMenu}
-                    talkJoinList={talkJoinList}
-                    talkOpenedList={talkOpenedList}
-                  />
+                  <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} talkOpenedList={talkOpenedList} />
                 ) : null}
               </Box>
             ) : (
               //함께해요
-              <Box width={"100%"} sx={{ margin: "auto", pl: 6 }}>
+              <Box sx={{ mt: 2, width: "100%" }}>
                 <Typography variant="h6" gutterBottom>
                   함께해요 활동 현황
                 </Typography>

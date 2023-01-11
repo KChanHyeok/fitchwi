@@ -35,7 +35,7 @@ export default function Login({ sucLogin }) {
     (e) => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
-        console.log(res.data);
+        //  console.log(res.data);
         switch (res.data.state) {
           case "ok":
             sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
@@ -75,11 +75,11 @@ export default function Login({ sucLogin }) {
     },
     [loginForm, nav, sucLogin]
   );
-  const createMemeber = () => {
-    axios.get("/createMemeber").then((result) => {
-      alert(result.data);
-    });
-  };
+  // const createMemeber = () => {
+  //   axios.get("/createMemeber").then((result) => {
+  //     alert(result.data);
+  //   });
+  // };
   return (
     <>
       <Container maxWidth="xs">
@@ -124,32 +124,30 @@ export default function Login({ sucLogin }) {
               value={memberPwd}
             />
 
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, height: 45 }}>
               로그인
             </Button>
 
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={() => createMemeber()}
-            >
+            {/* <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
               구글로그인
-            </Button>
+            </Button> */}
 
-            <Button fullWidth variant="text" sx={{ mt: 3, mb: 2, height: "45px" }}>
+            <Button fullWidth variant="text" sx={{ mt: 1, mb: 2, height: "45px" }}>
               <KaKaoLogin />
             </Button>
           </Box>
+          <Grid container>
+            <Grid item xs>
+              <FindMemberInfoModal />
+            </Grid>
+
+            <Grid item>
+              <Link to="/join" style={{ textDecoration: "none" }}>
+                <Button>회원 가입</Button>
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
-        <Grid container>
-          <Grid item xs>
-            <FindMemberInfoModal />
-          </Grid>
-          <Grid item>
-            <Link to="/join">회원 가입</Link>
-          </Grid>
-        </Grid>
       </Container>
     </>
   );

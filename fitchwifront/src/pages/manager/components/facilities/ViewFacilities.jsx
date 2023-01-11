@@ -56,7 +56,7 @@ export default function ViewFacilities() {
 
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main">
+    <Container component="main" sx={{ height: "100vh", display: "flex", alignItems: "center" }}>
       {load === false ? (
         <Box
           style={{
@@ -76,10 +76,10 @@ export default function ViewFacilities() {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+          <Typography component="h1" variant="h5" sx={{ mb: 10 }}>
             {facilitiesName}
           </Typography>
-          <Grid container maxWidth="xs" justifyContent="space-between">
+          <Grid container justifyContent="space-between">
             <Grid item xs={6}>
               {" "}
               <List>
