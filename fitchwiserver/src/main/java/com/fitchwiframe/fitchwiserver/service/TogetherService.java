@@ -479,7 +479,7 @@ public class TogetherService {
         try {
 
             togetherJoin.setTogetherJoinState("가입중");
-            int joinPay = togetherJoin.getTogetherCode().getTogetherPrice();
+            int joinPay = togetherJoin.getTogetherCode().getTogetherPrice()+togetherJoin.getTogetherCode().getTogetherOpenedCode().getFacilitiesCode().getFacilitiesPrice();
             int totalPay = togetherJoin.getTogetherCode().getTogetherTotalPrice();
             Together together = togetherJoin.getTogetherCode();
             together.setTogetherTotalPrice(totalPay+joinPay);
