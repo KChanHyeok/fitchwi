@@ -19,7 +19,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
 
   const getMemberInfo = useCallback(() => {
     if (pageOwner != null) {
-      console.log(member);
+     // console.log(member);
       axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
         setMember(() => res.data);
       });
