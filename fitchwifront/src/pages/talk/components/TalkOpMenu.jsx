@@ -76,18 +76,24 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
 
     const nav = useNavigate();
 
+    //버튼 여러번 클릭 막기
+    const [load, setLoad] = useState(false);
+
     //가입회원 관리 모달창
     const [openJoinMemberList, setOpenJoinMemberList] = useState(false);
 
     const joinMemberManagement = () => {
+        refreshTalkJoinList();
         setOpenJoinMemberList(true);
         setAnchorEl(false);
     }
 
     //개설자가 가입한 회원 탈퇴 처리
     const deleteJoinMember = (data) => {
+        setLoad(true);
         axios.put("/deleteJoinMember", data)
             .then((res) => {
+                setLoad(false);
                 alert(res.data);
                 refreshTalkJoinList();
                 setOpenJoinMemberList(false);
@@ -99,6 +105,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
     const [openApplyMember, setOpenApplyMember] = useState(false);
 
     const applyMemberCheck = () => {
+        refreshTalkJoinList();
         setOpenApplyMember(true);
         setAnchorEl(false);
     }
@@ -111,10 +118,12 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                 && data.talkJoinState === "대기")));
     }, [talkJoinList, talkPageCode]);
 
-    //수락
+    //수락(승인)
     const approval = (data) => {
+        setLoad(true);
         axios.put("/approvalTalkMember", data)
             .then((res) => {
+                setLoad(false);
                 alert(res.data);
                 refreshTalkList();
                 refreshTalkJoinList();
@@ -125,8 +134,10 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
 
     //거절
     const refusal = (data) => {
+        setLoad(true);
         axios.put("/refusalTalkMember", data)
             .then((res) => {
+                setLoad(false);
                 alert(res.data);
                 refreshTalkList();
                 refreshTalkJoinList();
@@ -138,9 +149,11 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
     //삭제하기
     const deleteTalk = useCallback(
         () => {
+            setLoad(true);
             axios.delete("/deleteTalk", { data: talkInfo })
                 .then((res) => {
                     if (res.data === "ok") {
+                        setLoad(false);
                         alert("얘기해요 삭제 완료");
                         nav("/talk");
                         refreshTalkList();
@@ -167,143 +180,156 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
 
     return (
         <div>
-            <Button
-                id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
-            >
-                얘기해요 관리
-            </Button>
-            <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={joinMemberManagement} disableRipple>
-                    <ManageAccountsIcon />
-                    가입회원 관리
-                </MenuItem>
-                {talkInfo.talkType === "승인제" &&
-                    <MenuItem onClick={applyMemberCheck} disableRipple>
-                        <FactCheckIcon />
-                        신청회원 확인
-                    </MenuItem>}
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem
-                    onClick={() => nav("/talk/update", { state: { talkInfo, talkTagInfo } })}
-                    disableRipple>
-                    <BuildIcon />
-                    얘기해요 수정
-                </MenuItem>
-                <MenuItem onClick={isDelete} disableRipple>
-                    <DeleteIcon />
-                    얘기해요 삭제
-                </MenuItem>
-            </StyledMenu>
-            <div>
-                <Dialog
-                    open={openJoinMemberList}
-                    onClose={modalClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title" className="memberListBox">
-                        {"얘기해요 참여자 관리"}
-                    </DialogTitle>
-                    <hr />
-                    <DialogContent>
-                        {!talkJoinMember
-                            ? <Box style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                            }}>
-                                <CircularProgress sx={{ margin: "auto" }} />
-                            </Box>
-                            : talkJoinMember.length === 0
-                                ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
-                                : talkJoinMember.map((data) =>
-                                    <UserBox key={data.talkJoinCode}>
-                                        <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                        <Typography fontWeight={500} variant="span">
-                                            <b>{data.memberEmail.memberNickname}님</b>
-                                            <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
-                                        </Typography>
-                                    </UserBox>)}
-                    </DialogContent>
-                </Dialog>
-            </div>
-            <div>
-                <Dialog
-                    open={openApplyMember}
-                    onClose={modalClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title" className="memberListBox">
-                        {"승인 대기 중인 회원"}
-                    </DialogTitle>
-                    <hr />
-                    <DialogContent>
-                        <Typography>회원 / 답변</Typography>
-                        {!waitingMemberList
-                            ? <Box style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                            }}>
-                                <CircularProgress sx={{ margin: "auto" }} />
-                            </Box>
-                            : waitingMemberList.length === 0
-                                ? <Typography>현재 승인 대기 중인 인원이 없습니다.</Typography>
-                                : waitingMemberList.map((data) =>
-                                    <Typography fontWeight={500} variant="span">
-                                        <UserBox key={data.talkJoinCode}>
-                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                            <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            {data.talkJoinAnswer}
-                                            <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
-                                            <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
-                                        </UserBox>
-                                    </Typography>)}
+            {load ?
+                <Box style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}>
+                    <CircularProgress sx={{ margin: "auto" }} />
+                </Box>
+                :
+                <div>
+                    <Button
+                        id="demo-customized-button"
+                        aria-controls={open ? 'demo-customized-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        variant="contained"
+                        disableElevation
+                        onClick={handleClick}
+                        endIcon={<KeyboardArrowDownIcon />}
+                    >
+                        얘기해요 관리
+                    </Button>
+                    <StyledMenu
+                        id="demo-customized-menu"
+                        MenuListProps={{
+                            'aria-labelledby': 'demo-customized-button',
+                        }}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={joinMemberManagement} disableRipple>
+                            <ManageAccountsIcon />
+                            가입회원 관리
+                        </MenuItem>
+                        {talkInfo.talkType === "승인제" &&
+                            <MenuItem onClick={applyMemberCheck} disableRipple>
+                                <FactCheckIcon />
+                                신청회원 확인
+                            </MenuItem>}
+                        <Divider sx={{ my: 0.5 }} />
+                        <MenuItem
+                            onClick={() => nav("/talk/update", { state: { talkInfo, talkTagInfo } })}
+                            disableRipple>
+                            <BuildIcon />
+                            얘기해요 수정
+                        </MenuItem>
+                        <MenuItem onClick={isDelete} disableRipple>
+                            <DeleteIcon />
+                            얘기해요 삭제
+                        </MenuItem>
+                    </StyledMenu>
+                    <div>
+                        <Dialog
+                            open={openJoinMemberList}
+                            onClose={modalClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title" className="memberListBox">
+                                {"얘기해요 참여자 관리"}
+                            </DialogTitle>
+                            <hr />
+                            <DialogContent>
+                                {!talkJoinMember
+                                    ? <Box style={{
+                                        position: "absolute",
+                                        left: "50%",
+                                        top: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                    }}>
+                                        <CircularProgress sx={{ margin: "auto" }} />
+                                    </Box>
+                                    : talkJoinMember.length === 0
+                                        ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
+                                        : talkJoinMember.map((data) =>
+                                            <UserBox key={data.talkJoinCode}>
+                                                <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                <Typography fontWeight={500} variant="span">
+                                                    <b>{data.memberEmail.memberNickname}님</b>
+                                                    <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
+                                                </Typography>
+                                            </UserBox>)}
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+                    <div>
+                        <Dialog
+                            open={openApplyMember}
+                            onClose={modalClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title" className="memberListBox">
+                                {"승인 대기 중인 회원"}
+                            </DialogTitle>
+                            <hr />
+                            <DialogContent>
+                                <Typography>회원 / 답변</Typography>
+                                {!waitingMemberList
+                                    ? <Box style={{
+                                        position: "absolute",
+                                        left: "50%",
+                                        top: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                    }}>
+                                        <CircularProgress sx={{ margin: "auto" }} />
+                                    </Box>
+                                    : waitingMemberList.length === 0
+                                        ? <Typography>현재 승인 대기 중인 인원이 없습니다.</Typography>
+                                        : waitingMemberList.map((data) =>
+                                            <Typography fontWeight={500} variant="span">
+                                                <UserBox key={data.talkJoinCode}>
+                                                    <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                    <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    {data.talkJoinAnswer}
+                                                    <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
+                                                    <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
+                                                </UserBox>
+                                            </Typography>)}
 
-                    </DialogContent>
-                </Dialog>
-            </div>
-            <div>
-                <Dialog
-                    open={openDeleteModal}
-                    onClose={modalClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        {"얘기해요 삭제하기"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            {talkJoinMember.length >= 1
-                                && "현재 가입 중인 회원이 있습니다."}<br />
-                            정말로 삭제하시겠습니까?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={deleteTalk}>삭제</Button>
-                        <Button onClick={modalClose}>취소</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+                    <div>
+                        <Dialog
+                            open={openDeleteModal}
+                            onClose={modalClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                {"얘기해요 삭제하기"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    {talkJoinMember.length >= 1
+                                        && "현재 가입 중인 회원이 있습니다."}<br />
+                                    정말로 삭제하시겠습니까?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={deleteTalk}>삭제</Button>
+                                <Button onClick={modalClose}>취소</Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
+                </div>
+            }
         </div >
 
     );

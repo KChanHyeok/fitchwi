@@ -268,6 +268,12 @@ public class TalkService {
         log.info("talkService.approvalTalkMember()");
         String result = null;
         try {
+            long talkJoinMemberCount = talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(talkJoin.getTalkCode(), "가입중");
+            log.info("가입한 인원수 : " + talkJoinMemberCount);
+            if (talkJoin.getTalkCode().getTalkMax()<=talkJoinMemberCount+1) {
+                result="인원이 가득찼습니다.\n회원을 더 추가하려면 최대인원 설정을 변경해주세요.";
+                return result;
+            }
             talkJoin.setTalkJoinState("가입중");
             talkJoinRepository.save(talkJoin);
             result = "가입 처리 완료";

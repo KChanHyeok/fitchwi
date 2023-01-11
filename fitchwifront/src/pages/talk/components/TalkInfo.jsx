@@ -101,6 +101,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
     console.log(talkInfo)
     return (
         <Stack
+            sx={{ width: 1000, height: 800, margin: "auto" }}
             flex={4} p={2}
             direction="column"
             justifyContent="space-around"

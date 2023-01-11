@@ -37,6 +37,9 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     const [updateTalk, setUpdateTalk] = useState({});
     const [updateTalkTag, setUpdateTalkTag] = useState({});
 
+    //버튼 여러번 클릭 막기
+    const [load, setLoad] = useState(false);
+
     //talkInfo 값
     const { state } = useLocation();
 
@@ -89,7 +92,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     //talk 수정
     const onTalkUpdate = (e) => {
         e.preventDefault();
-
+        setLoad(true);
         formData.append("data", new Blob([JSON.stringify(updateTalk)],
             { type: "application/json" }));
         formData.append("uploadImage", fileForm[0]);
@@ -103,6 +106,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
             .post("/updateTalk", formData, config)
             .then((res) => {
                 if (res.data === "ok") {
+                    setLoad(false);
                     alert("수정 성공");
                     nav(`/talk/${updateTalk.talkCode}`);
                     refreshTalkList();
@@ -117,11 +121,13 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     //talk 태그 수정
     const onTalkTagUpdate = (e) => {
         e.preventDefault();
+        setLoad(true);
         formData.append("data", new Blob([JSON.stringify(updateTalkTag)],
             { type: "application/json" }));
         axios.post("/updateTalkTag", formData)
             .then((res) => {
                 if (res.data === "ok") {
+                    setLoad(false);
                     alert("태그 저장 성공");
                     refreshTalkTagList();
                 } else {
@@ -146,128 +152,139 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     return (
         <>
             <Stack sx={{ width: 800, height: 800, margin: "auto" }} flex={7} p={3}>
-                <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
-                    <Typography variant="h6" textAlign="center">
-                        얘기해요 수정
-                    </Typography>
-                    <UserBox>
-                        <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
-                            sx={{ width: 30, height: 30 }} />
-                        <Typography fontWeight={500} variant="span">
-                            {memberInfo.memberNickname}
+                {load ?
+                    <Box style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}>
+                        <CircularProgress sx={{ margin: "auto" }} />
+                    </Box>
+                    :
+                    <Box bgcolor="white" p={3} sx={{ mb: 5 }}>
+                        <Typography variant="h6" textAlign="center">
+                            얘기해요 수정
                         </Typography>
-                    </UserBox>
-                    <hr />
-                    <form onSubmit={onTalkUpdate}>
-                        <TextField fullWidth
-                            label="얘기해요 모임명(30자 이내)"
-                            name="talkTitle"
-                            value={updateTalk.talkTitle || ""}
-                            sx={{ mt: 3 }}
-                            onChange={onChange}
-                        />
-                        <TextField fullWidth
-                            label="최대 참여인원"
-                            type="number"
-                            name="talkMax"
-                            value={updateTalk.talkMax || ""}
-                            sx={{ mt: 3 }}
-                            onChange={onChange}
-                        />
-                        <FormControl sx={{ mt: 2 }} fullWidth>
-                            <InputLabel>모임 카테고리 선정</InputLabel>
-                            <Select label="모임 카테고리 선정"
-                                name="talkCategory"
-                                value={updateTalk.talkCategory || ""}
-                                onChange={onChange}
-                            >
-                                <MenuItem value="문화·예술">문화·예술</MenuItem>
-                                <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
-                                <MenuItem value="요리·음식">요리·음식</MenuItem>
-                                <MenuItem value="여행">여행</MenuItem>
-                                <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
-                                <MenuItem value="공예·수공예">공예·수공예</MenuItem>
-                                <MenuItem value="게임·오락">게임·오락</MenuItem>
-                                <MenuItem value="기타">기타</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <div>
-                            <FormControl sx={{ mt: 2, minWidth: 130 }}>
-                                <InputLabel className="talkTypeSt">가입유형</InputLabel>
-                                <Select label="가입유형" name="talkType"
-                                    value={updateTalk.talkType || ""}
-                                    onChange={onChange}
-                                >
-                                    <MenuItem value="승인제"
-                                        onClick={approveCheck}>승인제</MenuItem>
-                                    <MenuItem value="선착순"
-                                        onClick={otherCheck}>선착순</MenuItem>
-                                </Select>
-                            </FormControl>
-                            {updateTalk.talkType === "승인제" ?
-                                <TextField
-                                    label="가입질문"
-                                    name="talkInquiry"
-                                    value={updateTalk.talkInquiry || ""}
-                                    sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
-                                    onChange={onChange} />
-                                : <div></div>}
-                        </div>
-                        <Stack>
-                            <Typography variant="h7" sx={{ mt: 3 }}>대표사진을 넣어주세요
-                                <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
-                                    Upload
-                                    <TextField
-                                        label="모임대표사진"
-                                        type="file"
-                                        accept="image/*"
-                                        focused
-                                        sx={{ mt: 3, display: "none" }}
-                                        color="grey"
-                                        onChange={onLoadFile}
-                                    />
-                                </Button>
+                        <UserBox>
+                            <Avatar alt={"profil.memberImg"} src={memberInfo.memberSaveimg}
+                                sx={{ width: 30, height: 30 }} />
+                            <Typography fontWeight={500} variant="span">
+                                {memberInfo.memberNickname}
                             </Typography>
-                            <Box style={imgBoxStyle} className="img_box">
-                                {fileForm === ""
-                                    ? <img style={imgBoxStyle2} src={"/images/" + updateTalk.talkSaveimg} alt={updateTalk.talkImg} />
-                                    : <div />
-                                }
-                            </Box>
-                        </Stack>
-                        <TextField fullWidth
-                            label="모임을 소개해주세요"
-                            name="talkContent"
-                            value={updateTalk.talkContent || ""}
-                            sx={{ mt: 3 }}
-                            onChange={onChange}
-                            multiline />
-                        {!updateTalkTag
-                            ? <Box style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                            }}>
-                                <CircularProgress sx={{ margin: "auto" }} />
-                            </Box>
-                            : <TextField fullWidth
-                                label="애기해요 태그"
-                                name="talkTagContent"
-                                value={updateTalkTag.talkTagContent || ""}
+                        </UserBox>
+                        <hr />
+                        <form onSubmit={onTalkUpdate}>
+                            <TextField fullWidth
+                                label="얘기해요 모임명(30자 이내)"
+                                name="talkTitle"
+                                value={updateTalk.talkTitle || ""}
                                 sx={{ mt: 3 }}
                                 onChange={onChange}
-                            />}
+                            />
+                            <TextField fullWidth
+                                label="최대 참여인원"
+                                type="number"
+                                name="talkMax"
+                                value={updateTalk.talkMax || ""}
+                                sx={{ mt: 3 }}
+                                onChange={onChange}
+                            />
+                            <FormControl sx={{ mt: 2 }} fullWidth>
+                                <InputLabel>모임 카테고리 선정</InputLabel>
+                                <Select label="모임 카테고리 선정"
+                                    name="talkCategory"
+                                    value={updateTalk.talkCategory || ""}
+                                    onChange={onChange}
+                                >
+                                    <MenuItem value="문화·예술">문화·예술</MenuItem>
+                                    <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+                                    <MenuItem value="요리·음식">요리·음식</MenuItem>
+                                    <MenuItem value="여행">여행</MenuItem>
+                                    <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+                                    <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+                                    <MenuItem value="게임·오락">게임·오락</MenuItem>
+                                    <MenuItem value="기타">기타</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <div>
+                                <FormControl sx={{ mt: 2, minWidth: 130 }}>
+                                    <InputLabel className="talkTypeSt">가입유형</InputLabel>
+                                    <Select label="가입유형" name="talkType"
+                                        value={updateTalk.talkType || ""}
+                                        onChange={onChange}
+                                    >
+                                        <MenuItem value="승인제"
+                                            onClick={approveCheck}>승인제</MenuItem>
+                                        <MenuItem value="선착순"
+                                            onClick={otherCheck}>선착순</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                {updateTalk.talkType === "승인제" ?
+                                    <TextField
+                                        label="가입질문"
+                                        name="talkInquiry"
+                                        value={updateTalk.talkInquiry || ""}
+                                        sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
+                                        onChange={onChange} />
+                                    : <div></div>}
+                            </div>
+                            <Stack>
+                                <Typography variant="h7" sx={{ mt: 3 }}>대표사진을 넣어주세요
+                                    <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
+                                        Upload
+                                        <TextField
+                                            label="모임대표사진"
+                                            type="file"
+                                            accept="image/*"
+                                            focused
+                                            sx={{ mt: 3, display: "none" }}
+                                            color="grey"
+                                            onChange={onLoadFile}
+                                        />
+                                    </Button>
+                                </Typography>
+                                <Box style={imgBoxStyle} className="img_box">
+                                    {fileForm === ""
+                                        ? <img style={imgBoxStyle2} src={"/images/" + updateTalk.talkSaveimg} alt={updateTalk.talkImg} />
+                                        : <div />
+                                    }
+                                </Box>
+                            </Stack>
+                            <TextField fullWidth
+                                label="모임을 소개해주세요"
+                                name="talkContent"
+                                value={updateTalk.talkContent || ""}
+                                sx={{ mt: 3 }}
+                                onChange={onChange}
+                                multiline />
+                            {!updateTalkTag
+                                ? <Box style={{
+                                    position: "absolute",
+                                    left: "50%",
+                                    top: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                }}>
+                                    <CircularProgress sx={{ margin: "auto" }} />
+                                </Box>
+                                : <TextField fullWidth
+                                    label="애기해요 태그"
+                                    name="talkTagContent"
+                                    value={updateTalkTag.talkTagContent || ""}
+                                    sx={{ mt: 3 }}
+                                    onChange={onChange}
+                                />}
 
-                        <Typography sx={{ float: "right" }}>
-                            <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
-                            <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
-                            <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>
-                                <Button variant={"contained"} sx={{ mt: 2 }}>취소</Button>
-                            </Link>
-                        </Typography>
-                    </form>
-                </Box>
+                            <Typography sx={{ float: "right" }}>
+                                <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
+                                <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
+                                <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>
+                                    <Button variant={"contained"} sx={{ mt: 2 }}>취소</Button>
+                                </Link>
+                            </Typography>
+                        </form>
+                    </Box>
+                }
             </Stack >
         </>
     );
