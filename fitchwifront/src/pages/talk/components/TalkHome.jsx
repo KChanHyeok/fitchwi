@@ -83,9 +83,13 @@ const TalkHome = ({ talkList, talkJoinList }) => {
               {talkList.sort((a, b) => b.talkCode - a.talkCode).filter((data, index) => index < 4).map(data => (
                 <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
                   key={data.talkCode}
-                  component={Link} to={`/talk/${data.talkCode}`}>
+                  component={Link} to={`/talk/${data.talkCode}`}
+                // onClick="/talk"
+                >
                   <CardActionArea>
+                    {/* <Link to={`/talk/${data.talkCode}`}> */}
                     <CardMedia src={`/images/${data.talkSaveimg}`} component="img" width="200" height="200" alt="talkimg" />
+                    {/* </Link> */}
                     <CardContent>
                       <Typography
                         variant="h6"

@@ -90,7 +90,7 @@ function Home() {
             position: "fixed",
             bottom: 20,
             marginLeft: 7,
-            left: { xs: "calc(50% - 25px)", md: 30 },
+            left: { xs: "calc(50% - 81px)", md: 30 },
           }}
         >
           <Fab color="secondary" aria-label="add">

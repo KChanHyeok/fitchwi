@@ -1,9 +1,17 @@
-.talkSection {
-    margin: 0 9rem;
+@media screen and (max-width:1300px) {
+    .talkSection {
+        margin: 0 9rem;
+    }
 }
 
-.talkDetailBox {
-    margin: 1rem 10rem;
+@media screen and (max-width:800px) {
+    .talkDetailBox {
+        margin: 1rem 10rem;
+    }
+}
+
+.talkSection {
+    margin: 0 4rem;
 }
 
 .talkTxtLine {
@@ -12,15 +20,6 @@
 
 .hrColumn {
     border-left: 4px solid #fd5089;
-}
-
-@media screen and (max-width:1350px) {
-    .talkSection {
-        margin: 0;
-    }
-    .talkMenu {
-        margin-top: 1.5rem;
-    }
 }
 
 .talkMenu {

@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
+import { Avatar, Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/TalkList.scss";
@@ -32,20 +32,36 @@ const TalkList = ({ talkList }) => {
                             sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}>
                             {talkTitle}
                         </Typography>
+                        <Box
+                            sx={{
+                                mt: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                float: "left"
+                            }}
+                        >
+                            <Avatar
+                                alt={talkOpenCode.memberEmail.memberNickname}
+                                src={talkOpenCode.memberEmail.memberSaveimg}
+                                sx={{ width: 30, height: 30, mr: 1 }}
+                            />
+                            <Typography mr={1} sx={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 120 }}>
+                                {talkOpenCode.memberEmail.memberNickname}
+                            </Typography>
+                        </Box>
                         <Chip
                             color="primary"
                             variant="outlined"
                             label={talkCategory}
                             size="small"
-                            sx={{ mt: 1, fontSize: 10 }}
+                            sx={{ mt: 1.5, fontSize: 12, float: "right" }}
                         />
                         <Typography
-                            sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 165, height: 30 }}
+                            sx={{ mt: 7, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 180, height: 30 }}
                         >
                             {talkContent}
                         </Typography>
                         <Typography variant="body" color="text.secondary">
-                            {talkCategory}<br />
                             {talkType}
                             <Typography variant="span" className="talkOpDate">
                                 {talkOpenCode.talkOpenDate}
