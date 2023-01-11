@@ -346,33 +346,33 @@ public class MemberService {
     return memberListForReturn;
   }
 
-  public String createMember() {
-    String result = null;
-    try {
-      for (int i = 0; i <= 50; i++) {
-        Member member = new Member();
-        member.setMemberName("테스트이름" + i);
-        member.setMemberEmail("test" + i + "@test.com");
-        member.setMemberNickname("테스트닉네임" + i);
-        member.setMemberGender("남");
-        member.setMemberInterest("운동∙액티비티 성장∙자기계발");
-        member.setMemberBirth("2022-12-26");
-        String cryptPwd = encoder.encode("0000");
-        member.setMemberPwd(cryptPwd);
-        member.setMemberImg("DefaultProfileImage.jpg");
-        member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
-        member.setMemberMbti("ISFP");
-        member.setMemberAddr("경기도 시흥시");
-        member.setMemberPhone("000-0000-0000");
-        memberRepository.save(member);
-        result = "ok";
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      result = "fail";
-    }
-    return result;
-  }
+//  public String createMember() {
+//    String result = null;
+//    try {
+//      for (int i = 0; i <= 50; i++) {
+//        Member member = new Member();
+//        member.setMemberName("테스트이름" + i);
+//        member.setMemberEmail("test" + i + "@test.com");
+//        member.setMemberNickname("테스트닉네임" + i);
+//        member.setMemberGender("남");
+//        member.setMemberInterest("운동∙액티비티 성장∙자기계발");
+//        member.setMemberBirth("2022-12-26");
+//        String cryptPwd = encoder.encode("0000");
+//        member.setMemberPwd(cryptPwd);
+//        member.setMemberImg("DefaultProfileImage.jpg");
+//        member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
+//        member.setMemberMbti("ISFP");
+//        member.setMemberAddr("경기도 시흥시");
+//        member.setMemberPhone("000-0000-0000");
+//        memberRepository.save(member);
+//        result = "ok";
+//      }
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//      result = "fail";
+//    }
+//    return result;
+//  }
 
   public String checkPwd(Member memberToCheck) {
     log.info("memberService.checkPwd()");
