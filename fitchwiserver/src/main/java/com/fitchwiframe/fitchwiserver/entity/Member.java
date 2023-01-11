@@ -22,8 +22,8 @@ public class Member {
   @Column(nullable = true, length = 100)
   private String memberPwd ;
 
-//  @Column(length = 200)
-//  private String memberIntroduction;
+  @Column(length = 200)
+  private String memberIntroduction;
 
   @Column(length = 20, nullable = false)
   private String memberNickname ;

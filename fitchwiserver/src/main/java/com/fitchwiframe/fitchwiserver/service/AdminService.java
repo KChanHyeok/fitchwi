@@ -233,23 +233,23 @@ public class AdminService {
       }
 
 
-//      for (int i = 1; i <= 45; i++) {
-//        if (i == 43) {
-//          break;
-//        }
-//        Report report1 = new Report();
-//        report1.setMemberEmail(memberRepository.findById("test" + i + "@test.com").get());
-//        report1.setReportCategory("memberpage");
-//        report1.setReportTarget(0L);
-//        reportRepository.save(report1);
-//
-//        ReportDetail reportDetail = new ReportDetail();
-//        reportDetail.setReportCode(report1);
-//        reportDetail.setMemberEmail(memberRepository.findById("test" + (i + 1) + "@test.com").get());
-//        reportDetail.setReportDetailContent("내용" + i);
-//        reportDetail.setReportDetailDate("2023-01-01");
-//        reportDetailRepository.save(reportDetail);
-//      }
+      for (int i = 1; i <= 45; i++) {
+        if (i == 43) {
+          break;
+        }
+        Report report1 = new Report();
+        report1.setMemberEmail(memberRepository.findById("test" + i + "@test.com").get());
+        report1.setReportCategory("memberpage");
+        report1.setReportTarget(0L);
+        reportRepository.save(report1);
+
+        ReportDetail reportDetail = new ReportDetail();
+        reportDetail.setReportCode(report1);
+        reportDetail.setMemberEmail(memberRepository.findById("test" + (i + 1) + "@test.com").get());
+        reportDetail.setReportDetailContent("내용" + i);
+        reportDetail.setReportDetailDate("2023-01-01");
+        reportDetailRepository.save(reportDetail);
+      }
 
 
     } catch (Exception e) {
