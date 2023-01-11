@@ -210,11 +210,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             setOpen(false);
             axios.delete("/deleteTogetherPayJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                refreshTogetherJoinList();
-                refreshTogetherList();
                 alert(res.data);
                 window.location.reload();
-            })
+            }).catch((error)=> console.log(error))
       }
 
       const deleteTogetherFreeJoinInfo = (e) => {

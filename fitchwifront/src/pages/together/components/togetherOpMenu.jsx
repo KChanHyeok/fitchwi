@@ -119,19 +119,19 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
     }
 
     const approval = (data) => {
+        setOpenAppliedMember(false);
         axios.put("/approvalTogetherMemberState", data)
         .then((res)=> {
             alert(res.data)
-            refreshTogetherJoinList();
-            setOpenAppliedMember(false);
+            window.location.reload();
         }).catch((error) => console.log(error))
     }
     const refusal = (data) => {
         axios.put("/refusalTogetherMemberState", data)
         .then((res) => {
             alert(res.data)
-            refreshTogetherJoinList();
             setOpenAppliedMember(false)
+            refreshTogetherJoinList();
         }).catch((error) => console.log(error))
     }
 
@@ -265,6 +265,9 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
                                     ? data.memberEmail.memberEmail
                                     : data.memberEmail.memberNickname}
                                     님
+                                </Typography>
+                                <Typography variant="span">
+                                답변<br/>{data.togetherJoinAnswer}
                                 </Typography>
                                 <Button onClick={()=> approval(data)} sx={{ml:2}}>승인</Button>
                                 <Button onClick={()=> refusal(data)}>거절</Button>

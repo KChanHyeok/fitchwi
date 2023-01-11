@@ -13,5 +13,7 @@ public interface TogetherJoinRepository extends CrudRepository<TogetherJoin, Lon
 
   Long countByTogetherCode(Together together);
 
+  List<TogetherJoin> findByTogetherCodeAndTogetherJoinStateContains(Together together, String wait);
+
   Long countByTogetherCodeAndTogetherJoinStateContains(Together together, String joinState);
 }
