@@ -12,4 +12,6 @@ public interface TogetherJoinRepository extends CrudRepository<TogetherJoin, Lon
     List<TogetherJoin> findAllByMemberEmail(Member member);
 
   Long countByTogetherCode(Together together);
+
+  Long countByTogetherCodeAndTogetherJoinStateContains(Together together, String joinState);
 }

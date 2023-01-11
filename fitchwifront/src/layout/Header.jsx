@@ -14,6 +14,7 @@ const Header = ({ lstate, onLogout }) => {
   const homeLink = logid === "" ? "/" : "/";
   console.log(lstate);
 
+  console.log(logid);
   return (
     <AppBar position="sticky" style={{ boxShadow: "0 1px 1px  lightgray" }}>
       <StyledToolbar>
@@ -54,7 +55,7 @@ const Header = ({ lstate, onLogout }) => {
                 variant="text"
                 sx={{ ml: 3 }}
                 size="small"
-                startIcon={profileImg !== undefined ? <Avatar src={profileImg} /> : null}
+                startIcon={logid === "" ? null : <Avatar src={profileImg} />}
               >
                 {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
               </Button>
