@@ -32,7 +32,7 @@ export default function CalendarApp({ facilitiesCode }) {
       return;
     }
 
-    console.log(noDayToSend);
+    // console.log(noDayToSend);
     let checkArray = noDayList.filter((n) => noDayToSend.indexOf(n) > 0);
     if (checkArray.length !== 0) {
       alert("이미 등록된 날짜를 포함하고 있습니다.");
@@ -63,7 +63,7 @@ export default function CalendarApp({ facilitiesCode }) {
       alert("시작일과 종료일을 모두 선택해주세요.");
       return;
     }
-    console.log(noDayToSend);
+    // console.log(noDayToSend);
     // noDayList.filter((n) => noDayToSend.indexOf(n) < 0);
     let checkArray = noDayToSend.filter((n) => noDayList.indexOf(n) < 0);
     if (checkArray.length !== 0) {
@@ -161,10 +161,10 @@ export default function CalendarApp({ facilitiesCode }) {
 
         <Grid item xs={4}>
           <Box sx={{ mt: 3 }}>
-            <Button onClick={addNoday} variant="outlined" color="info">
+            <Button onClick={addNoday} variant="outlined" size="small" color="info">
               등록
             </Button>
-            <Button onClick={deleteNoday} variant="outlined">
+            <Button onClick={deleteNoday} variant="outlined" size="small">
               삭제
             </Button>
           </Box>

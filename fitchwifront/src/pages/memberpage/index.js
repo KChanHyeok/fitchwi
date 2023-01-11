@@ -27,6 +27,7 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
       alert("로그인 후 이용 가능합니다.");
       nav("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageOwner, nav]);
 
   useEffect(() => {

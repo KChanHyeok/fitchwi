@@ -32,7 +32,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
     setMemberToUpdate({ ...member });
   }, [member]);
 
-  console.log(memberToUpdate);
+  // console.log(memberToUpdate);
   const {
     memberEmail,
     memberName,
@@ -59,7 +59,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
     }
     formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
-    console.log(memberToUpdate);
+    //  console.log(memberToUpdate);
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
@@ -67,7 +67,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
     axios
       .post("/updateMemberInfo", formData, config)
       .then((res) => {
-        console.log(typeof sucLogin);
+        //   console.log(typeof sucLogin);
         if (res.data !== null) {
           sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.memberSaveimg);
           sessionStorage.setItem("id", res.data.memberEmail);

@@ -57,14 +57,10 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   useEffect(() => {
     setMyJoinList(togetherOpenedList);
 
-    const newWatingList = togetherJoinList.filter(
-      (together) => together.togetherJoinState === "대기"
-    );
+    const newWatingList = togetherJoinList.filter((together) => together.togetherJoinState === "대기");
     setWaitingList(newWatingList);
 
-    const newJoiningList = togetherJoinList.filter(
-      (together) => together.togetherJoinState === "가입중"
-    );
+    const newJoiningList = togetherJoinList.filter((together) => together.togetherJoinState === "가입중");
     setJoiningList(newJoiningList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [togetherJoinList]);
@@ -114,7 +110,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
                 <Chip
                   label={together.togetherCode.togetherCategory}
                   size="small"
-                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)" }}
+                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)", ml: 2 }}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -207,7 +203,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
                 <Chip
                   label={together.togetherCategory}
                   size="small"
-                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)" }}
+                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)", ml: 2 }}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -250,7 +246,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
 
   // useMemo(() => printCardList, []);
   return (
-    <Box sx={{ width: "90%" }}>
+    <Box sx={{ width: "100%" }}>
       {togetherJoinList.length || togetherOpenedList.lengh !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

@@ -28,7 +28,7 @@ export default function CheckMangerPwdModal({ setIsManager }) {
     axios
       .post("/managerLogin", manager)
       .then((result) => {
-        console.log(result.data);
+        //  console.log(result.data);
         switch (result.data) {
           case "ok":
             alert("ok");
@@ -59,8 +59,8 @@ export default function CheckMangerPwdModal({ setIsManager }) {
     };
     setManager(managerInfo);
   };
-  console.log(open);
-  console.log(manager);
+  // console.log(open);
+  // console.log(manager);
   return (
     <Dialog open={open} onClose={(e) => handleClose(e)}>
       <DialogTitle>FITCHWI 관리자 인증</DialogTitle>
