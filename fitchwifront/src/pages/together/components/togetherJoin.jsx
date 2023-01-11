@@ -31,7 +31,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         }
     })
     const [open, setOpen] = React.useState(false);
-    const [disabled,setdisabled] = useState(true)
+    const [disabled,setdisabled] = useState(true);
     const handleOpen = () => {
         if(!sessionStorage.getItem("id")) {
             alert("로그인이 필요한 서비스입니다.")
