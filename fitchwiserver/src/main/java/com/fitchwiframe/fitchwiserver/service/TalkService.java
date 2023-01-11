@@ -94,6 +94,9 @@ public class TalkService {
     public Iterable<Talk> getAllTalkList() {
         log.info("talkService.getAllTalkList()");
         Iterable<Talk> talkList = talkRepository.findAllByOrderByTalkOpenCodeDesc();
+        for (Talk t : talkList){
+            t.setTalkMemberCount(talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(t,"가입중"));
+        }
         return talkList;
     }
 
@@ -238,6 +241,9 @@ public class TalkService {
         try {
             log.info("searchTag : " + searchTag);
             talkList = talkRepository.findByTalkTitleLike(searchTag);
+            for (Talk t : talkList){
+                t.setTalkMemberCount(talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(t,"가입중"));
+            }
         } catch (Exception e){
             e.printStackTrace();
         }

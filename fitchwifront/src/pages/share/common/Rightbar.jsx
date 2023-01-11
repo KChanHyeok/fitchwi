@@ -11,14 +11,15 @@ const Rightbar = () => {
   const [member, getMember] = useState();
   const nav = useNavigate();
 
+  const mbti = sessionStorage.getItem("mbti");
   const getMemberList = useCallback(() => {
     axios.get("/getMemberList").then((response) => {
       if (response.data.length > 9) {
         response.data.length = 7;
       }
-      getMember(response.data);
+      getMember(response.data.filter((data) => data.memberMbti === mbti));
     });
-  }, []);
+  }, [mbti]);
 
   useEffect(() => {
     getMemberList();
@@ -48,12 +49,12 @@ const Rightbar = () => {
       ) : (
         <Box flex={2} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
           <Box position="fixed" width={300}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h6" fontWeight={100} mb={1} mt={2}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1, mt: 2 }}>
+              <Typography variant="h6" fontWeight={100}>
                 회원님을 위한 추천
               </Typography>
+              <Typography fontWeight={100}>#{mbti}</Typography>
             </Stack>
-
             <AvatarGroup max={7}>
               {member.map((item) => (
                 <Avatar
@@ -77,7 +78,7 @@ const Rightbar = () => {
                   key={item.tagCode}
                 >
                   <img
-                    src={`https://source.unsplash.com/featured/?tag,${item.tagContent}`}
+                    src={`https://source.unsplash.com/featured/?tag,${item.tagCode}`}
                     alt={item.tagCode}
                     loading="lazy"
                     style={{

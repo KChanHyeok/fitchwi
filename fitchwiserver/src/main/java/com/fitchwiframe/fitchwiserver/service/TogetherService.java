@@ -554,6 +554,9 @@ public class TogetherService {
         try {
             log.info("searchTag : " + searchTag);
             togetherList = togetherRepository.findByTogetherTitleLike(searchTag);
+            for (Together t : togetherList){
+                t.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(t));
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
