@@ -75,16 +75,16 @@ public class AdminService {
     try {
       facilitiesRepository.save(facilities);
 
-      for (int i = 1; i <= 50; i++) {
-        Facilities f = new Facilities();
-        f.setFacilitiesName("시설명" + i);
-        f.setFacilitiesGrade("기본" + i);
-        f.setFacilitiesPhone("101010010");
-        f.setFacilitiesManager("이름" + i);
-        f.setFacilitiesPrice(i + 10000);
-        f.setFacilitiesPosition("위치" + i);
-        facilitiesRepository.save(f);
-      }
+//      for (int i = 1; i <= 50; i++) {
+//        Facilities f = new Facilities();
+//        f.setFacilitiesName("시설명" + i);
+//        f.setFacilitiesGrade("기본" + i);
+//        f.setFacilitiesPhone("101010010");
+//        f.setFacilitiesManager("이름" + i);
+//        f.setFacilitiesPrice(i + 10000);
+//        f.setFacilitiesPosition("위치" + i);
+//        facilitiesRepository.save(f);
+//      }
       result = "ok";
 
     } catch (Exception e) {
@@ -232,24 +232,24 @@ public class AdminService {
         result = "ok";
       }
 
-
-      for (int i = 1; i <= 45; i++) {
-        if (i == 43) {
-          break;
-        }
-        Report report1 = new Report();
-        report1.setMemberEmail(memberRepository.findById("test" + i + "@test.com").get());
-        report1.setReportCategory("memberpage");
-        report1.setReportTarget(0L);
-        reportRepository.save(report1);
-
-        ReportDetail reportDetail = new ReportDetail();
-        reportDetail.setReportCode(report1);
-        reportDetail.setMemberEmail(memberRepository.findById("test" + (i + 1) + "@test.com").get());
-        reportDetail.setReportDetailContent("내용" + i);
-        reportDetail.setReportDetailDate("2023-01-01");
-        reportDetailRepository.save(reportDetail);
-      }
+//
+//      for (int i = 1; i <= 45; i++) {
+//        if (i == 43) {
+//          break;
+//        }
+//        Report report1 = new Report();
+//        report1.setMemberEmail(memberRepository.findById("test" + i + "@test.com").get());
+//        report1.setReportCategory("memberpage");
+//        report1.setReportTarget(0L);
+//        reportRepository.save(report1);
+//
+//        ReportDetail reportDetail = new ReportDetail();
+//        reportDetail.setReportCode(report1);
+//        reportDetail.setMemberEmail(memberRepository.findById("test" + (i + 1) + "@test.com").get());
+//        reportDetail.setReportDetailContent("내용" + i);
+//        reportDetail.setReportDetailDate("2023-01-01");
+//        reportDetailRepository.save(reportDetail);
+//      }
 
 
     } catch (Exception e) {
