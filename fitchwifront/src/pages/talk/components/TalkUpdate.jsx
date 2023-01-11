@@ -37,6 +37,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     const [updateTalk, setUpdateTalk] = useState({});
     const [updateTalkTag, setUpdateTalkTag] = useState({});
 
+    //talkInfo 값
     const { state } = useLocation();
 
     useEffect(() => {

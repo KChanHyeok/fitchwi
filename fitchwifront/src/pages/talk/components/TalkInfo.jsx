@@ -1,19 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useHref, useNavigate, useParams } from "react-router-dom";
 import "../styles/TalkInfo.scss";
 import TalkOpMenu from "../components/TalkOpMenu";
-import { Stack } from "@mui/system";
-import { Avatar, Box, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ImageList, ImageListItem, ImageListItemBar, ListSubheader, Modal, TextField, Typography } from "@mui/material";
+import { css, Stack } from "@mui/system";
+import { Avatar, Box, Button, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ImageList, ImageListItem, ImageListItemBar, ListSubheader, Modal, Slider, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import TalkJoin from "./TalkJoin";
 import Report from "../../../components/common/Report";
 import axios from "axios";
-
-const StyleModal = styled(Modal)({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-});
 
 const UserBox = styled(Box)({
     display: "flex",
@@ -95,8 +89,16 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
 
     console.log(feedList);
 
-    // const nicknameLength = talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length;
+    // const marks =
+    //     [{
 
+    //         value: talkInfo.talkMax * 1,
+    //         label: talkInfo.talkMax * 1,
+
+
+    //     }]
+
+    console.log(talkInfo)
     return (
         <Stack
             flex={4} p={2}
@@ -118,6 +120,20 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                 <Box className="talkSection">
                     <Box className="talkDetailBox">
                         <Box className="talkTxtLine">
+                            <Box className="talkMenu">
+                                {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
+                                    ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} talkTagInfo={talkTagInfo}
+                                        talkJoinList={talkJoinList} talkJoinMember={talkJoinMember}
+                                        refreshTalkTagList={refreshTalkTagList} refreshTalkList={refreshTalkList}
+                                        refreshTalkJoinList={refreshTalkJoinList} />)
+                                    : (
+                                        <Box className="reportBtn">
+                                            <Report type="MenuItem"
+                                                target={talkInfo.talkCode}
+                                                targetMember={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail}
+                                                category="talk" />
+                                        </Box>)}
+                            </Box>
                             {/* <span className="talkSubHeader">mbti 취미&nbsp;</span> */}
                             <Chip
                                 color="primary"
@@ -126,40 +142,49 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                 size="small"
                                 sx={{ fontSize: 13 }}
                             />
-                            <span className="talkSubHeader">남은 자리 {1 + talkJoinMember.length}/{talkInfo.talkMax}&nbsp;</span>
-                            <span className="talkSubHeader">유형 - {talkInfo.talkType}</span>
-                            <Box className="talkMenu">
-                                {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
-                                    ? (<TalkOpMenu talkPageCode={talkPageCode} talkInfo={talkInfo} talkTagInfo={talkTagInfo}
-                                        talkJoinList={talkJoinList} talkJoinMember={talkJoinMember}
-                                        refreshTalkTagList={refreshTalkTagList} refreshTalkList={refreshTalkList}
-                                        refreshTalkJoinList={refreshTalkJoinList} />)
-                                    : (<Report type="MenuItem"
-                                        target={talkInfo.talkCode}
-                                        targetMember={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail}
-                                        category="talk" />)}
+                            <Box>
+                                <Typography variant="span" className="hrColumn">&nbsp;남은 자리 {1 + talkJoinMember.length}/{talkInfo.talkMax}&nbsp;&nbsp;&nbsp;&nbsp;</Typography>
+                                <Typography variant="span" className="hrColumn">&nbsp;유형 - {talkInfo.talkType}</Typography>
                             </Box>
+                            {/* {talkJoinMember.length === null ? <></>
+                                : <Slider
+                                    aria-label="Always visible"
+                                    defaultValue={1 + talkJoinMember.length}
+                                    min={1}
+                                    // getAriaValueText={talkInfo.talkMax}
+                                    max={talkInfo.talkMax}
+                                    step={1}
+                                    size="small"
+                                    marks={marks}
+                                    valueLabelDisplay="on"
+                                    disabled
+                                />} */}
                         </Box>
-                        <h1 className="talkTitle talkTxtLine">{talkInfo.talkTitle}</h1>
-                        <Box sx={{ maxWidth: 900 }}>
+                        <Typography variant="h4" mt={2} fontWeight="bold">{talkInfo.talkTitle}</Typography>
+                        <Box sx={{ mb: 10, maxWidth: 900 }}>
                             {talkInfo.talkSaveimg && (<Box
                                 component="img"
-                                sx={{ maxWidth: 800, maxHeight: 400, textAlign: "center" }}
+                                sx={{ mt: 2, maxWidth: 800, maxHeight: 400, textAlign: "center" }}
                                 src={`/images/${talkInfo.talkSaveimg}`}
                                 alt="talkimg"
                             ></Box>)}
                         </Box>
-                        <h3 className="talkTxtLine">얘기해요 소개</h3>
-                        <Typography>
+                        <Box style={{ backgroundColor: "#fd5089", height: 50 }} id="talkToInfo" >
+                            <Typography variant="span"><a href="#talkToInfo" className="subTopBar">얘기해요 소개</a></Typography>
+                            <Typography variant="span"><a href="#toJoinMember" className="subTopBar">회원</a></Typography>
+                            <Typography variant="span"><a href="#toTalkFeed" className="subTopBar">얘기해요 피드</a></Typography>
+                        </Box>
+                        <Typography variant="h6" mt={4} mb={1} fontWeight="bold" id="toJoinMember" className="hrColumn">&nbsp;얘기해요 소개</Typography>
+                        <Typography mb={10} ml={2} mr={2}>
                             {talkInfo.talkContent}
                         </Typography>
                         <Box>
-                            <h4 className="talkTxtLine">방장<br /></h4>
+                            <Typography variant="h6" mb={1} fontWeight="bold" className="hrColumn">&nbsp;방장</Typography>
                             <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
                                 style={{ textDecoration: "none", color: "black", }}>
                                 {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 15
                                     ?
-                                    <Chip sx={{ width: 320, height: 50, cursor: "pointer" }}
+                                    <Chip sx={{ ml: 1, width: 320, height: 50, cursor: "pointer" }}
                                         avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
                                             src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                         />}
@@ -192,19 +217,14 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                 label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
                                                 style={{ fontSize: 15 }}
                                             />}
-
-
-                                {/* <Chip sx={{ width: 170, height: 50, cursor: "pointer" }}
-                                    avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
-                                        src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
-                                    />}
-                                    label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
-                                    style={{ fontSize: 15 }}
-                                /> */}
                             </Link>
                         </Box>
                         <br />
-                        <h4><b>참여중인 회원</b></h4><br />
+                        <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10}>
+                            <Typography variant="h6" mb={1} fontWeight="bold" className="hrColumn">&nbsp;참여중인 회원</Typography>
+                            {talkJoinMember.length < 5 ? <></>
+                                : <Button>전체보기</Button>}
+                        </Stack>
                         {talkJoinMember.length === 0
                             ? <Box component="span">현재 참여중인 멤버가 없습니다</Box>
                             : talkJoinMember.map((data) =>
@@ -219,7 +239,8 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                             <CircularProgress sx={{ margin: "auto" }} />
                                         </Box>
                                         : <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
-                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"}
+                                                sx={{ ml: 1, width: 40, height: 40 }} />
                                         </Link>
                                     }
                                     {!talkJoinMember
@@ -251,19 +272,26 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                 <CircularProgress sx={{ margin: "auto" }} />
                             </Box>
                             : <Box>
-                                <h4 className="talkTxtLine">태그</h4>
-                                {talkTagInfo.talkTagContent}
+                                <Typography variant="h6" mb={1} fontWeight="bold" mt={10} id="toTalkFeed" className="hrColumn">&nbsp;태그</Typography>
+                                <Typography mb={10} ml={2} mr={2}>
+                                    {talkTagInfo.talkTagContent}
+                                </Typography>
                             </Box>}
-
                         <Box>
                         </Box>
-                        <h4>얘기해요 피드</h4>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={1}>
+                            <Typography variant="h6" fontWeight="bold" className="hrColumn">&nbsp;얘기해요 피드</Typography>
+                            {feedList.length < 5 ? <></>
+                                : <Button onClick={() => nav(`/talk/feed/${talkPageCode}`, { state: talkInfo })}>전체보기</Button>}
+                        </Stack>
                         {feedList.length === 0 ? <Typography>아직 작성된 피드가 없습니다.</Typography>
                             : feedList.sort((a, b) => b.feedCode - a.feedCode).filter((data, index) => index < 4).map((feed, index) => (
                                 <>
-                                    <Link to={`/share/${feed.feedCode}`} key={index} style={{ textDecoration: "none", color: "black", float: "left" }}>
-                                        <Box flexDirection="column" alignItems="center" boxShadow={2} ml={1.5} borderRadius={2} width={200}>
-                                            <CardActionArea>
+                                    <Link to={`/share/${feed.feedCode}`} key={index}
+                                        style={{ textDecoration: "none", color: "black", float: "left" }}>
+                                        <Box flexDirection="column" alignItems="center"
+                                            boxShadow={2} mt={2} ml={1.5} borderRadius={2} width={200}>
+                                            <CardActionArea >
                                                 <CardMedia
                                                     component="img"
                                                     sx={{
@@ -274,10 +302,26 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                     image={`/images/${feed.ffList[0].feedFileSaveimg}`}
                                                 />
                                                 <CardContent>
-                                                    <Typography variant="h6"
-                                                        sx={{ fontSize: 16, fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}>
-                                                        {feed.feedContent}
-                                                    </Typography>
+                                                    {feed.feedContent.length > 8
+                                                        ? <Typography variant="h6">{feed.feedContent.substr(0, 8)}...
+                                                            <Chip
+                                                                color="primary"
+                                                                variant="outlined"
+                                                                label={feed.feedCategory}
+                                                                size="small"
+                                                                sx={{ mt: 0.5, float: "right", fontSize: 7, fontWeight: "normal" }}
+                                                            />
+                                                        </Typography>
+                                                        : <Typography variant="h6">{feed.feedContent}
+                                                            <Chip
+                                                                color="primary"
+                                                                variant="outlined"
+                                                                label={feed.feedCategory}
+                                                                size="small"
+                                                                sx={{ mt: 0.5, float: "right", fontSize: 7, fontWeight: "normal" }}
+                                                            />
+                                                        </Typography>
+                                                    }
                                                     <Box
                                                         sx={{
                                                             mt: 1,
@@ -312,10 +356,10 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                     <CircularProgress sx={{ margin: "auto" }} />
                                 </Box>
                                 : talkList.filter((data) => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberEmail === sessionStorage.getItem("id")
-                                    ? (<Button className="talkSticky" onClick={isDelete}>삭제하기</Button>)
+                                    ? (<Button onClick={isDelete} className="talkSticky">삭제하기</Button>)
                                     : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                         && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                                        ? <TalkJoin className="talkSticky" memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
+                                        ? <TalkJoin memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
                                             talkJoinMember={talkJoinMember}>참여하기</TalkJoin>
                                         : (<TalkJoin memberInfo={memberInfo} talkInfo={talkInfo}
                                             talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
@@ -348,7 +392,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                     </Box>
                 </Box>
             }
-
         </Stack >
     )
 

@@ -10,6 +10,10 @@
     line-height: 3rem;
 }
 
+.hrColumn {
+    border-left: 4px solid #fd5089;
+}
+
 @media screen and (max-width:1350px) {
     .talkSection {
         margin: 0;
@@ -19,26 +23,9 @@
     }
 }
 
-@media screen and (max-width:915px) {
-    .talkSubHeader {
-        display: block;
-        margin-bottom: 5px;
-        text-align: center;
-    }
-}
-
-@media screen and (max-width:805px) {
-}
-
 .talkMenu {
     float: right;
 }
-
-// @media screen and (max-width:400px) {
-//     .talkDetailBox {
-//         display: none;
-//     }
-// }
 
 .modalCloseBtn {
     float: right;
@@ -62,8 +49,18 @@
 
 .reportBtn {
     background-color: orange !important;
+    color: white;
+    margin: 0.5rem;
+    border-radius: 5px;
 }
 
 .reportBtn:hover {
     background-color:  rgb(217, 141, 0) !important;
+}
+
+.subTopBar {
+    text-decoration: none;
+    color: white;
+    margin: 6.5rem;
+    line-height: 50px;
 }

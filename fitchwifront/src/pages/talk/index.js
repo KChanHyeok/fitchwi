@@ -15,6 +15,7 @@ import Footer from "../../layout/Footer";
 
 import TalkNew from "./components/TalkNew";
 import TalkCategoryList from "./components/TalkCategoryList";
+import TalkFeedList from "./components/TalkFeedList";
 
 
 function Home() {
@@ -99,7 +100,7 @@ function Home() {
       )}
       <Stack>
         <Routes>
-          <Route path="/*" element={<TalkHome talkList={talkList} />} />
+          <Route path="/*" element={<TalkHome talkList={talkList} talkJoinList={talkJoinList} />} />
           <Route path="/new" element={<TalkNew talkList={talkList} />} />
           <Route path="/category/:talkCategoryText" element={<TalkCategoryList talkList={talkList} />} />
           <Route
@@ -116,6 +117,7 @@ function Home() {
               />
             }
           />
+          <Route path="/feed/:talkPageCode" element={<TalkFeedList />} />
           <Route path="opened" element={<TalkOpened memberEmail={id} memberInfo={profil} refreshTalkTagList={getAllTalkTagList} refreshTalkList={getAllTalkList} />} />
           <Route
             path="update"

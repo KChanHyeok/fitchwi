@@ -7,7 +7,7 @@ const TalkNew = ({ talkList }) => {
     return (
         <Container fixed>
             <Box sx={{ ml: 5 }} flex={4} p={2}>
-                <h1 style={{ marginTop: 5, color: "grey" }}>새로 열린 얘기해요</h1>
+                <h2 style={{ marginTop: 5, color: "grey" }}>새로 열린 얘기해요</h2>
                 <br />
                 {talkList.length === 0 ? <Typography textAlign="center"
                     height={100} lineHeight={40}>현재 진행중인 얘기해요 없음
