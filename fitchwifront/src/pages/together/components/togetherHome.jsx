@@ -132,7 +132,7 @@ const TogetherHome = ({togetherList}) => {
           <Box height={300} mt={6} width={1088} component="img" src="/images/TogetherPost1.png"></Box>
         </Link>
 
-        {/* 3번 카테고리 */}
+        {/* 3번 카테고리
         <Box height={300} mt={6}>
           <Typography variant="h6">가장인기 있는 카테고리</Typography>
           <Typography > #당일번개 #솔로환영 #볼링내기 #맛집투어 #인스타감성카페투어</Typography>
@@ -177,7 +177,7 @@ const TogetherHome = ({togetherList}) => {
         </Box>
 
         {/* 4번 카테고리 */}
-        <Box height={300} mt={6} mb={6}>
+        {/* <Box height={300} mt={6} mb={6}>
           <Typography variant="h6">혼자 있는 것을 힘들어하는 당신을 위한</Typography>
           <Typography> #당일번개 #솔로환영 #볼링내기 #맛집투어 #인스타감성카페투어</Typography>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
@@ -218,7 +218,7 @@ const TogetherHome = ({togetherList}) => {
               </CardActionArea>
             </Card>
           </Stack>
-        </Box>
+        </Box>  */}
       </Box>
     </Container>
   );
