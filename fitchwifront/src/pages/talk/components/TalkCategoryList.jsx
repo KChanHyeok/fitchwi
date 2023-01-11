@@ -23,7 +23,7 @@ const TalkCategoryList = ({ talkList }) => {
     return (
         <Container fixed>
             <Box sx={{ ml: 5 }} flex={4} p={2}>
-                <h1 style={{ marginTop: 5, color: "grey" }}>카테고리 {">"} {categorys[talkCategoryText]}</h1>
+                <h2 style={{ marginTop: 5, color: "grey" }}>카테고리 {">"} {categorys[talkCategoryText]}</h2>
                 <br />
                 {talkList.filter((data) => (data.talkCategory === categorys[talkCategoryText])).length === 0 ? (
                     <Typography textAlign="center" height={100} lineHeight={35}>

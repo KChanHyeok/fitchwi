@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/TalkList.scss";
@@ -28,9 +28,21 @@ const TalkList = ({ talkList }) => {
                         src={`/images/${talkSaveimg}`}
                         alt="talkimg" />
                     <CardContent>
-                        <Typography gutterBottom variant="h5" component="div"
+                        <Typography gutterBottom variant="h5" component="div" fontWeight="bold"
                             sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}>
                             {talkTitle}
+                        </Typography>
+                        <Chip
+                            color="primary"
+                            variant="outlined"
+                            label={talkCategory}
+                            size="small"
+                            sx={{ mt: 1, fontSize: 10 }}
+                        />
+                        <Typography
+                            sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 165, height: 30 }}
+                        >
+                            {talkContent}
                         </Typography>
                         <Typography variant="body" color="text.secondary">
                             {talkCategory}<br />

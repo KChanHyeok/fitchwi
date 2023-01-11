@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-// import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Avatar, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
 
 const UserBox = styled(Box)({
