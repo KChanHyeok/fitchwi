@@ -4,18 +4,22 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const HomeTogetherList = ({ category, togetherList, korCategory }) => {
+const HomeTogetherList = ({ category, togetherList, korCategory, type }) => {
+  console.log(togetherList);
   const [togetherListByCategory, setTogetherListCategory] = useState();
   const nav = useNavigate();
 
   useEffect(() => {
     try {
-      setTogetherListCategory(togetherList.filter((data) => data.togetherCategory === korCategory));
+      if (type === "recent") {
+        setTogetherListCategory(togetherList.filter((data) => data.togetherCategory === korCategory));
+      } else {
+        setTogetherListCategory(togetherList.filter((data) => data.togetherCategory === korCategory));
+      }
     } catch (e) {}
-  }, [korCategory, togetherList]);
+  }, [korCategory, togetherList, type]);
 
   if (togetherListByCategory !== undefined) {
-    console.log(togetherListByCategory);
     togetherListByCategory.length = 4;
   }
 
@@ -26,7 +30,11 @@ const HomeTogetherList = ({ category, togetherList, korCategory }) => {
       ) : (
         <>
           <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={10}>
-            <Typography variant="h5">👾 추천 함께해요</Typography>
+            {type === "recent" ? (
+              <Typography variant="h5">👾 최신 함께해요</Typography>
+            ) : (
+              <Typography variant="h5">🤡 추천 함께해요</Typography>
+            )}
             <Button onClick={() => nav(`/together/category/${category}`)}>전체보기</Button>
           </Stack>
           <Stack direction="row" spacing={3} alignItems="flex-start" justifyContent="space-between" mt={1}>

@@ -21,7 +21,6 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { People, LocationOn, SportsKabaddi, Groups, PermContactCalendar, AssignmentTurnedIn, DateRange, Search } from "@mui/icons-material";
-import moment from "moment";
 import styled from "@emotion/styled";
 
 const StyledAppbar = styled(AppBar)({
@@ -39,17 +38,6 @@ const SearchResult = () => {
   const [feedList, setFeedList] = useState([]);
   const [talkList, setTalkList] = useState([]);
   const [type, setType] = useState(1);
-
-  function getToday(time) {
-    var date = new Date(time);
-    var year = date.getFullYear();
-    var month = ("0" + (1 + date.getMonth())).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
-
-    return year + month + day;
-  }
-
-  let nowTime = (time) => moment(getToday(Number(time))).fromNow();
 
   const searchResult = useCallback(() => {
     axios
@@ -94,6 +82,8 @@ const SearchResult = () => {
     [newSearchText, nav]
   );
 
+  console.log(talkList);
+  console.log(togetherList);
   return (
     <>
       <StyledAppbar position="sticky">
@@ -175,7 +165,7 @@ const SearchResult = () => {
                               </Typography>
                               <People />
                               <Typography variant="subtitle1" ml={1}>
-                                1/{item.togetherMax}
+                                {item.togetherMemberCount}/{item.togetherMax}명
                               </Typography>
                             </Box>
                           </CardContent>
@@ -236,15 +226,15 @@ const SearchResult = () => {
                               }}
                               variant="body2"
                             >
-                              {item.talkMax}명
+                              {item.talkMemberCount + 1}/{item.talkMax}명
                             </Typography>
                             <AssignmentTurnedIn />
                             <Typography color="textSecondary" variant="caption" mr={1}>
                               {item.talkType}
                             </Typography>
                             <DateRange />
-                            <Typography color="textSecondary" variant="caption">
-                              {nowTime(item.talkOpenCode.talkOpenDate)}
+                            <Typography color="textSecondary" variant="body1" ml={1}>
+                              {item.talkOpenCode.talkOpenDate}
                             </Typography>
                           </Box>
                         </CardContent>

@@ -79,10 +79,15 @@ const Home = () => {
               📕 카테고리
             </Typography>
             <HomeCategory setCategory={setCategory} setKorCategory={setKorCategory} />
-            <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} />
-            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} />
-            <Box border={1} p={2} minHeight={200} mt={10} mb={10}>
-              <Typography>내 지역주변의 함께해요</Typography>
+            <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"recent"} />
+            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"recent"} />
+            <Box height={300} mt={6} component="img" src="/images/TalkPost1.png"></Box>
+            <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"popular"} />
+            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"popular"} />
+            <Typography variant="h6" mt={4}>
+              🏆 이 달의 회원
+            </Typography>
+            <Box border={1} p={2} mt={2} mb={10}>
               <Stack direction="row" spacing={1} justifyContent="space-between">
                 <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
                 <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>

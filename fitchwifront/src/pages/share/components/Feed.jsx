@@ -57,7 +57,7 @@ const Feed = ({ memberInfo }) => {
 
   useEffect(() => {
     //옵저버 생성
-    const observer = new IntersectionObserver(obsHandler, { threshold: 1 });
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
     if (obsRef.current) observer.observe(obsRef.current);
     return () => {
       observer.disconnect();
