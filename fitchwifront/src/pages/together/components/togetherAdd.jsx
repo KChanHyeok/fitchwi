@@ -353,7 +353,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         <Stack direction="row" justifyContent="space-around" alignItems="center" spacing={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box>
-              <TextField label="모이는 일자" value={insertForm.togetherDate} focused fullWidth color="grey" required />
+              <TextField label="모이는 일자" sx={{ mt:3 }} value={insertForm.togetherDate} focused fullWidth color="grey" required />
               <StaticDatePicker
                 displayStaticWrapperAs="desktop"
                 label="모이는 일자"
