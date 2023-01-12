@@ -149,5 +149,4 @@ public class TalkController {
         log.info("talkController.getFeedListByTalk()");
         return talkService.getFeedListByTalk(feedClassificationcode);
     }
-
 }
