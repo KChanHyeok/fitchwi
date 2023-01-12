@@ -19,7 +19,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ pt: 2, height: "300px" }}>
+        <Box sx={{ pt: 2, height: "300px", textAlign: "center" }}>
           <div>{children}</div>
         </Box>
       )}
@@ -62,38 +62,36 @@ export default function MemberFeed({ myMenu, feedList }) {
         cols={3}
         rowHeight={164}
       >
-        {feedList !== undefined ? (
-          feedList.map((feed, index) => (
-            <Link to={`/share/${feed.feedCode}`} key={index}>
-              <ImageListItem style={{ height: "250px" }}>
-                <img
-                  src={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                  srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
-                  alt={feed.feedCode}
-                  loading="lazy"
-                  style={{
-                    width: "100%",
+        {feedList !== undefined
+          ? feedList.map((feed, index) => (
+              <Link to={`/share/${feed.feedCode}`} key={index}>
+                <ImageListItem style={{ height: "250px" }}>
+                  <img
+                    src={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                    srcSet={`/images/${feed.ffList[0].feedFileSaveimg}`}
+                    alt={feed.feedCode}
+                    loading="lazy"
+                    style={{
+                      width: "100%",
 
-                    height: "100%",
-                  }}
-                />
-              </ImageListItem>
-            </Link>
-          ))
-        ) : (
-          <Typography>작성한 피드가 없어요</Typography>
-        )}
+                      height: "100%",
+                    }}
+                  />
+                </ImageListItem>
+              </Link>
+            ))
+          : null}
       </ImageList>
     );
   };
 
   return (
     <Box sx={{ width: "90 %" }}>
-      {memberFeedList.length || memberFeedList.length !== 0 ? (
+      {memberFeedList.length !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="내 피드" {...a11yProps(0)} />
+              <Tab label={`피드(${memberFeedList.length})`} {...a11yProps(0)} />
             </Tabs>
           </Box>
 
@@ -106,10 +104,19 @@ export default function MemberFeed({ myMenu, feedList }) {
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="내 피드" {...a11yProps(0)} />
+              <Tab label="피드" {...a11yProps(0)} />
             </Tabs>
           </Box>
-          <TabPanel value={value} index={0}></TabPanel>
+          <TabPanel value={value} index={0}>
+            <Typography sx={{ mt: 3 }}>작성한 피드가 없습니다.</Typography>
+            <br />
+            <Typography>
+              <Link to="/share" style={{ color: "#ff0456" }}>
+                '공유해요'
+              </Link>
+              에서 당신의 취미를 공유해보세요!
+            </Typography>
+          </TabPanel>
         </div>
       )}
     </Box>

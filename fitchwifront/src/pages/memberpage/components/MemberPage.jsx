@@ -137,7 +137,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const onFollow = useCallback(
     (isFollow) => {
       if (sessionStorage.getItem("id") == null) {
-        swAlert("로그인 후 가능합니다.", "info");
+        swAlert("로그인이 필요한 서비스입니다..", "info");
         return;
       }
       if (isFollow === false) {
@@ -436,7 +436,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                 <Typography variant="h6" gutterBottom>
                   공유 해요
                 </Typography>
-                {feedList !== undefined ? <MemberFeed myMenu={myMenu} feedList={feedList} /> : null}
+                {feedList !== undefined ? <MemberFeed feedList={feedList} /> : null}
               </Box>
             ) : myMenu === "talk" ? (
               <Box sx={{ mt: 2, width: "100%" }}>
@@ -445,7 +445,12 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   얘기해요
                 </Typography>
                 {talkJoinList !== undefined ? (
-                  <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} talkOpenedList={talkOpenedList} />
+                  <MemberTalk
+                    talkJoinList={talkJoinList}
+                    talkOpenedList={talkOpenedList}
+                    logid={logid}
+                    memberEmail={memberEmail}
+                  />
                 ) : null}
               </Box>
             ) : (
@@ -456,7 +461,8 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                 </Typography>
                 {togetherJoinList !== undefined ? (
                   <MemberTogether
-                    myMenu={myMenu}
+                    logid={logid}
+                    memberEmail={memberEmail}
                     togetherJoinList={togetherJoinList}
                     togetherOpenedList={togetherOpenedList}
                     swAlert={swAlert}
