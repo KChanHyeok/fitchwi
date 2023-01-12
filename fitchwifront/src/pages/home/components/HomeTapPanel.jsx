@@ -4,7 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
+import { Grid, ImageListItem, ImageListItemBar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -22,53 +22,52 @@ function TabPanel(props) {
               {children} 취미
             </Typography>
           </Box>
-          <ImageList sx={{ width: "100%", height: 200 }} cols={3} gap={10}>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ ml: { xs: 2, sm: 0 } }}>
-              <img
-                src={`https://source.unsplash.com/featured/?${source[0]}`}
-                alt={"index"}
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                }}
-                onClick={() => nav(`/search/${kor[0]}`)}
-              />
-              <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2 }} />
-            </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ display: { xs: "none", sm: "block" } }}>
-              <img
-                src={`https://source.unsplash.com/featured/?${source[1]}`}
-                alt={"index"}
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                }}
-                onClick={() => nav(`/search/${kor[1]}`)}
-              />
-              <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2 }} />
-            </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ display: { xs: "none", sm: "block" } }}>
-              <img
-                src={`https://source.unsplash.com/featured/?${source[2]}`}
-                alt={"index"}
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 10,
-                  cursor: "pointer",
-                }}
-                onClick={() => nav(`/search/${kor[2]}`)}
-              />
-              <ImageListItemBar title={kor[2]} sx={{ textAlign: "center", borderRadius: 2 }} />
-            </ImageListItem>
-          </ImageList>
+          {/* <ImageList sx={{ width: "100%", height: 200 }}> */}
+          <Grid container spacing={2} display="flex" flexWrap="nowrap">
+            <Grid item xs={4}>
+              <ImageListItem>
+                <img
+                  src={`https://source.unsplash.com/random/280x170/?${source[0]}`}
+                  alt={"index"}
+                  style={{
+                    borderRadius: 10,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => nav(`/search/${kor[0]}`)}
+                />
+                <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2 }} />
+              </ImageListItem>
+            </Grid>
+            <Grid item xs={4}>
+              <ImageListItem>
+                <img
+                  src={`https://source.unsplash.com/random/280x170/?${source[1]}`}
+                  alt={"index"}
+                  style={{
+                    borderRadius: 10,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => nav(`/search/${kor[1]}`)}
+                />
+                <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2 }} />
+              </ImageListItem>
+            </Grid>
+            <Grid item xs={4}>
+              <ImageListItem>
+                <img
+                  src={`https://source.unsplash.com/random/280x170/?${source[2]}`}
+                  alt={"index"}
+                  style={{
+                    borderRadius: 10,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => nav(`/search/${kor[2]}`)}
+                />
+                <ImageListItemBar title={kor[2]} sx={{ textAlign: "center", borderRadius: 2 }} />
+              </ImageListItem>
+            </Grid>
+          </Grid>
+          {/* </ImageList> */}
         </Box>
       )}
     </div>
@@ -128,7 +127,7 @@ export default function HomeTapPanel() {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider", display: { xs: "none", sm: "block" } }}
+        sx={{ borderRight: 1, borderColor: "divider" }}
       >
         <Tab label="#INFP" {...a11yProps(0)} />
         <Tab label="#INFJ" {...a11yProps(1)} />

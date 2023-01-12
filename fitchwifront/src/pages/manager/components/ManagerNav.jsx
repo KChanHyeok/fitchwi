@@ -79,11 +79,7 @@ function ManagerNav(props) {
             <MenuIcon />
           </IconButton>
 
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" }, color: "white" }}
-          >
+          <Typography variant="h5" component="div" sx={{ display: { xs: "none", sm: "block" }, color: "white" }}>
             FITCHWI&nbsp;<sub style={{ fontSize: "14px" }}>Manager</sub>
           </Typography>
           <Box
@@ -99,10 +95,7 @@ function ManagerNav(props) {
               <Link to="/manager/report" style={{ textDecoration: "none", color: "white" }}>
                 신고관리
               </Link>
-              <Link
-                to="/manager/togetherManagement"
-                style={{ textDecoration: "none", color: "white" }}
-              >
+              <Link to="/manager/togetherManagement" style={{ textDecoration: "none", color: "white" }}>
                 함께해요 취소 관리
               </Link>
             </Box>
