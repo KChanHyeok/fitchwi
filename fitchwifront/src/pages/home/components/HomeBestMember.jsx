@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Grid, styled, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useCallback } from "react";
 import { useEffect } from "react";
@@ -14,6 +14,7 @@ const HomeBestMember = () => {
         if (acc.findIndex(({ memberEmail }) => memberEmail === current.memberEmail) === -1) {
           acc.push(current);
         }
+        console.log(acc);
         setMember(acc);
         return acc;
       }, []);
@@ -27,68 +28,78 @@ const HomeBestMember = () => {
   if (member !== undefined) {
     member.length = 4;
   }
-  console.log(member);
+
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      backgroundColor: "#ff597b",
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    },
+  }));
+
+  const StyledBadge2 = styled(Badge)(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      backgroundColor: "#44b700",
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    },
+  }));
 
   return (
-    <Box border={1} p={2} mt={2} mb={10}>
-      <Stack direction="row" spacing={1} justifyContent="space-between">
+    <Box p={2} mt={2} mb={10}>
+      <Grid container spacing={2}>
         {!member ? (
           <></>
         ) : (
           <>
             {member.map((data, index) =>
               index === 0 ? (
-                <Box display="flex" flexDirection="column" alignItems="center" key={data.memberEmail} sx={{ ml: { xs: 10, sm: 0 } }}>
+                <Grid item xs={3} sm={6} md={6} lg={3} key={data.memberEmail} display="flex" flexDirection="column" alignItems="center">
                   <Link to="/memberpage" state={{ memberId: data.memberEmail }}>
-                    <Box
-                      component="img"
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                      badgeContent="🥇"
+                      sx={{ display: { xs: "block", sm: "none" } }}
+                    >
+                      <Avatar src={data.memberSaveimg} sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3 }} />
+                    </StyledBadge>
+                    <Avatar
                       src={data.memberSaveimg}
-                      sx={{ textAlign: "center" }}
-                      width={200}
-                      height={200}
-                      borderRadius={50}
-                      boxShadow={3}
+                      sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3, display: { xs: "none", sm: "block" } }}
                     />
                   </Link>
-                  <Typography fontSize={20} fontWeight={100} mt={2}>
+                  <Typography fontSize={20} fontWeight={100} mt={2} sx={{ display: { xs: "none", sm: "block" } }}>
                     🥇 {data.memberNickname}님
                   </Typography>
-                  <Typography fontSize={14} fontWeight={100}>
+                  <Typography fontSize={14} fontWeight={100} sx={{ display: { xs: "none", sm: "block" } }}>
                     작성한 피드 : {data.memberFeedCount}개
                   </Typography>
-                </Box>
+                </Grid>
               ) : (
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  key={data.memberEmail}
-                  sx={{ display: { xs: "flex", sm: "block" } }}
-                >
-                  <Link to="/memberpage" state={{ memberId: data.memberEmail }}>
-                    <Box
-                      component="img"
-                      src={data.memberSaveimg}
-                      sx={{ textAlign: "center" }}
-                      width={200}
-                      height={200}
-                      borderRadius={50}
-                      boxShadow={3}
-                    />
-                  </Link>
-
-                  <Typography fontSize={20} fontWeight={100} mt={2}>
+                <Grid item xs={3} sm={6} md={6} lg={3} key={data.memberEmail} display="flex" flexDirection="column" alignItems="center">
+                  <StyledBadge2
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                    badgeContent="🏅"
+                    sx={{ display: { xs: "block", sm: "none" } }}
+                  >
+                    <Avatar src={data.memberSaveimg} sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3 }} />
+                  </StyledBadge2>
+                  <Avatar
+                    src={data.memberSaveimg}
+                    sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3, display: { xs: "none", sm: "block" } }}
+                  />
+                  <Typography fontSize={20} fontWeight={100} mt={2} sx={{ display: { xs: "none", sm: "block" } }}>
                     🏅 {data.memberNickname}님
                   </Typography>
-                  <Typography fontSize={14} fontWeight={100}>
+                  <Typography fontSize={14} fontWeight={100} sx={{ display: { xs: "none", sm: "block" } }}>
                     작성한 피드 : {data.memberFeedCount}개
                   </Typography>
-                </Box>
+                </Grid>
               )
             )}
           </>
         )}
-      </Stack>
+      </Grid>
     </Box>
   );
 };
