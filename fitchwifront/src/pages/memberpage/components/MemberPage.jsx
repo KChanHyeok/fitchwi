@@ -94,7 +94,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
     memberName,
     memberInterest,
     memberSaveimg,
-    memberMbti,
+    // memberMbti,
     memberNickname,
     // memberAddr,
     // memberGender,
@@ -200,72 +200,24 @@ export default function MemberPage({ member, onLogout, lstate }) {
   //회원 정보 수정
   // const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
-  // const mbtiImageMap = new Map([
-  //   [
-  //     "ISFP",
-  //     "https://see.fontimg.com/api/renderfont4/gv11/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNGUA/cookiemonster.png",
-  //   ],
-  //   [
-  //     "ISTJ",
-  //     "https://see.fontimg.com/api/renderfont4/ow45d/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUSg/broisther.png",
-  //   ],
-  //   [
-  //     "ISFJ",
-  //     "https://see.fontimg.com/api/renderfont4/ZVj3l/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNGSg/queensides-light.png",
-  //   ],
-  //   [
-  //     "INFJ",
-  //     "https://see.fontimg.com/api/renderfont4/rg9Rx/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5GSg/ananda-black-personal-use-regular.png",
-  //   ],
-  //   [
-  //     "INTJ",
-  //     "https://see.fontimg.com/api/renderfont4/PKdwB/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5USg/scholarly-ambition-regular.png",
-  //   ],
-  //   [
-  //     "ISTP",
-  //     "https://see.fontimg.com/api/renderfont4/dBYX/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUUA/grestal-script-demo-regular.png",
-  //   ],
-  //   [
-  //     "INFP",
-  //     "https://see.fontimg.com/api/renderfont4/WyBxO/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5GUA/bananas-italic-personal-use-regular.png",
-  //   ],
-  //   [
-  //     "INTP",
-  //     "https://see.fontimg.com/api/renderfont4/1GLz4/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SU5UUA/mr-fink.png",
-  //   ],
-  //   [
-  //     "ESTP",
-  //     "https://see.fontimg.com/api/renderfont4/ow45d/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiNGN0YzRjMiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/SVNUSg/broisther.png",
-  //   ],
-  //   [
-  //     "ESFP",
-  //     "https://see.fontimg.com/api/renderfont4/6Y1G6/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNGUA/restou.png",
-  //   ],
-  //   [
-  //     "ENFP",
-  //     "https://see.fontimg.com/api/renderfont4/axrEo/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5GUA/staywork-regular.png",
-  //   ],
-  //   [
-  //     "ENTP",
-  //     "https://see.fontimg.com/api/renderfont4/PK2vr/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5UUA/summer-vacation.png",
-  //   ],
-  //   [
-  //     "ESTJ",
-  //     "https://see.fontimg.com/api/renderfont4/JRyXK/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNUSg/beandisplay.png",
-  //   ],
-  //   [
-  //     "ESFJ",
-  //     "https://see.fontimg.com/api/renderfont4/X39x9/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RVNGSg/kimberly-signature.png",
-  //   ],
-  //   [
-  //     "ENFJ",
-  //     "https://see.fontimg.com/api/renderfont4/8MVEg/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5GSg/pumpkin-type-halloween.png",
-  //   ],
-  //   [
-  //     "ENTJ",
-  //     "https://see.fontimg.com/api/renderfont4/0nA4/eyJyIjoiZnMiLCJoIjoxMDQsInciOjEwMDAsImZzIjoxMDQsImZnYyI6IiMwRTBFMEUiLCJiZ2MiOiIjRkZGRkZGIiwidCI6MX0/RU5USg/bunch-blossoms-personal-use.png",
-  //   ],
-  // ]);
+  const mbtiImageMap = new Map([
+    ["ISFP", ""],
+    ["ISTJ", ""],
+    ["ISFJ", ""],
+    ["INFJ", ""],
+    ["INTJ", ""],
+    ["ISTP", ""],
+    ["INFP", ""],
+    ["INTP", ""],
+    ["ESTP", ""],
+    ["ESFP", ""],
+    ["ENFP", ""],
+    ["ENTP", ""],
+    ["ESTJ", ""],
+    ["ESFJ", ""],
+    ["ENFJ", ""],
+    ["ENTJ", ""],
+  ]);
 
   return (
     <Container component="main" sx={{ height: "100vh", display: "flex" }}>
@@ -284,7 +236,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container justifyContent="center" flexWrap="nowrap" sx={{ minWidth: 650 }}>
+        <Grid container justifyContent="center" flexWrap="nowrap">
           <Grid item xs={2} sx={{ mt: 15 }}>
             <List>
               <ListItem disablePadding>
@@ -360,30 +312,67 @@ export default function MemberPage({ member, onLogout, lstate }) {
             }}
           >
             <Card sx={{ width: "100%" }}>
-              <CardHeader
+              <Box
                 style={{
-                  background: "linear-gradient(190deg,lightgray, white)",
+                  background: "#ff0456",
                 }}
-                avatar={
-                  // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                  <Avatar src={memberSaveimg} sx={{ width: 100, height: 100 }} />
-                }
-                title={
-                  <Typography sx={{ fontSize: 25 }}>
-                    {" "}
-                    {logid === memberEmail ? `${memberNickname}(${memberName})` : `${memberNickname}`}
-                  </Typography>
-                }
-                subheader={
-                  logid === memberEmail ? (
-                    memberEmail
-                  ) : (
-                    <Report targetMember={member.memberEmail} category="memberpage" target="0" />
-                  )
-                }
-              />
+              >
+                <CardHeader
+                  style={{
+                    backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "100px",
+                    backgroundPosition: "right 2% bottom 10%",
+                  }}
+                  avatar={
+                    // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
+                    <Avatar
+                      src={memberSaveimg}
+                      sx={{ width: 100, height: 100, boxShadow: "0 0 3px  2px  #ffffff" }}
+                    />
+                  }
+                  title={
+                    <Typography sx={{ fontSize: 25 }}>
+                      {logid === memberEmail ? (
+                        <Typography
+                          variant="h5"
+                          style={{
+                            color: "#ffffff",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {memberNickname}({memberName})
+                        </Typography>
+                      ) : (
+                        <Typography
+                          variant="h5"
+                          style={{
+                            display: "inline-block",
+                            color: "#ffffff",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {" "}
+                          {memberNickname}
+                        </Typography>
+                      )}
+                    </Typography>
+                  }
+                  subheader={
+                    logid === memberEmail ? (
+                      <Typography sx={{ color: "#ffffffd6", ml: 1 }}>{memberEmail}</Typography>
+                    ) : (
+                      <Report
+                        targetMember={member.memberEmail}
+                        category="memberpage"
+                        target="0"
+                        type="mypage"
+                      />
+                    )
+                  }
+                />
+              </Box>
 
-              <Divider sx={{ fontSize: 20, fontWeight: 5 }}>{memberMbti}</Divider>
               <CardContent sx={{ textAlign: "right" }}>
                 <Grid container>
                   <Grid item xs={8}>
@@ -396,7 +385,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                             key={index}
                             label={interest}
                             style={{
-                              fontSize: 10,
+                              fontSize: 13,
                               marginLeft: 5,
                               marginBottom: 5,
                               boxShadow: "0 3px 5px  lightgray",
@@ -439,7 +428,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
               <Box sx={{ mt: 2, width: "100%" }}>
                 {" "}
                 <Typography variant="h6" gutterBottom>
-                  얘기해요 활동 현황
+                  얘기해요
                 </Typography>
                 {talkJoinList !== undefined ? (
                   <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} talkOpenedList={talkOpenedList} />
@@ -449,7 +438,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
               //함께해요
               <Box sx={{ mt: 2, width: "100%" }}>
                 <Typography variant="h6" gutterBottom>
-                  함께해요 활동 현황
+                  함께해요
                 </Typography>
                 {togetherJoinList !== undefined ? (
                   <MemberTogether

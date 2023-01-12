@@ -11,6 +11,7 @@ import { Box } from "@mui/material";
 import moment from "moment/moment";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 //category : 함께해요-together / 얘기해요 - talk / 공유해요 - share / 회원 - memberpage / 댓글-comment
 //target : togerther / talk / feed /각 키값  //  회원신고는 target="0"
 //type : MenuItem으로 쓸거면 prop으로 MenuItem 전달 / 기본값은 버튼
@@ -38,9 +39,19 @@ export default function Report({ targetMember, target, category, type }) {
 
   const [isReported, setIsReported] = useState(false);
 
+  const okAlert = (titleText, alertText) => {
+    Swal.fire({
+      title: titleText,
+      text: alertText,
+      icon: "success",
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    });
+  };
+
   const handleClickOpen = () => {
     if (reportDetail[0].memberEmail.memberEmail == null) {
-      alert("로그인 후 이용 가능합니다.");
+      okAlert("신고하기", "로그인 후 이용 가능합니다.");
       nav("/login");
       return;
     }
@@ -104,6 +115,10 @@ export default function Report({ targetMember, target, category, type }) {
     <>
       {type === "MenuItem" ? (
         <MenuItem onClick={handleClickOpen}>신고하기</MenuItem>
+      ) : type === "mypage" ? (
+        <Button onClick={handleClickOpen} size="small" sx={{ color: "#fff" }}>
+          신고하기
+        </Button>
       ) : (
         <Button onClick={handleClickOpen}>신고하기</Button>
       )}
@@ -147,8 +162,8 @@ export default function Report({ targetMember, target, category, type }) {
                 이미 신고한 대상입니다.
               </DialogContentText>
               <DialogContentText color="black" mt={2}>
-                회원님의 소중한 의견을 주셔서 감사합니다. 빠른 시일 내, 신고내역을 검토한 뒤 적절한
-                조치를 취하도록 하겠습니다.
+                회원님의 소중한 의견을 주셔서 감사합니다. 빠른 시일 내, 신고내역을 검토한 뒤 적절한 조치를
+                취하도록 하겠습니다.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
