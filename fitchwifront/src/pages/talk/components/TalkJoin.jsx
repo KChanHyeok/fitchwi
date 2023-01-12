@@ -79,6 +79,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                     setLoad(false);
                     alert("신청 취소 완료");
                 } else {
+                    setLoad(false);
                     alert(res.data);
                 }
                 setOpenModal(false);

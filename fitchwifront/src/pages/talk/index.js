@@ -100,7 +100,7 @@ function Home() {
       )}
       <Stack>
         <Routes>
-          <Route path="/*" element={<TalkHome talkList={talkList} />} />
+          <Route path="/*" element={<TalkHome talkList={talkList} refreshTalkList={getAllTalkList} />} />
           <Route path="/new" element={<TalkNew talkList={talkList} />} />
           <Route path="/category/:talkCategoryText" element={<TalkCategoryList talkList={talkList} />} />
           <Route
