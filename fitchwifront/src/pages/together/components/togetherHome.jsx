@@ -1,5 +1,6 @@
+import styled from "@emotion/styled";
 import { Category } from "@mui/icons-material";
-import { Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Container, Stack, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Container, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { useState } from "react";
@@ -27,16 +28,17 @@ const TogetherHome = ({togetherList}) => {
     return mode;
   }
 
+
   return (
-    <Container fixed>
-      <Box height={300} ml={4} mr={4}>
-        <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%"}}>
-          <Box height={300} width={1088} component="img" src="/images/TogetherBanner1.png" sx={{ cursor: "pointer" }}></Box>
-          <Box height={300} width={1088} component="img" src="/images/TogetherBanner2.png" sx={{ cursor: "pointer" }}></Box>
-          <Box height={300} width={1088} component="img" src="/images/TogetherBanner3.png" sx={{ cursor: "pointer" }}></Box>
+    <>
+      <Box width="100%">
+        <Carousel next={() => {}} prev={() => {}} animation="slide" duration={900} sx={{ height: "100%"}} indicators={false}>
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" maxHeight={350} component="img" src="/images/TogetherBanner1.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" maxHeight={350} component="img" src="/images/TogetherBanner2.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" maxHeight={350} component="img" src="/images/TogetherBanner3.png" sx={{ cursor: "pointer" }}></Box>
         </Carousel>
       </Box>
-      <Box flex={4} p={4}>
+      <Box flex={4} p={2}>
         {/* 광고 또는 함께해요 홍보 영역 */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" mt={4}>
           <Typography variant="h6">함께해요 메인페이지</Typography>
@@ -78,6 +80,7 @@ const TogetherHome = ({togetherList}) => {
                     >
                       {data.togetherContent}
                     </Typography>
+                    <hr/>
                 </CardContent>
               </CardActionArea>
             </Card>
@@ -119,6 +122,7 @@ const TogetherHome = ({togetherList}) => {
                     >
                       {data.togetherContent}
                     </Typography>
+                    <hr/>
                 </CardContent>
                 </CardActionArea>
               </Card>
@@ -129,7 +133,7 @@ const TogetherHome = ({togetherList}) => {
         </Box>
 
         <Link>
-          <Box height={300} mt={6} width={1088} component="img" src="/images/TogetherPost1.png"></Box>
+          <Box mt={6} width="100%" height="100%" minHeight={200}  maxWidth={1500} component="img" src="/images/TogetherPost1.png"></Box>
         </Link>
 
         {/* 3번 카테고리
@@ -220,7 +224,7 @@ const TogetherHome = ({togetherList}) => {
           </Stack>
         </Box>  */}
       </Box>
-    </Container>
+    </>
   );
 };
 

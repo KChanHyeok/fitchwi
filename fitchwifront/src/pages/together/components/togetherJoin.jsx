@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
+import Swal from "sweetalert2";
 
 const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, togetherJoinState, togetherPayState, togetherJoinMember, refreshTogetherList}) => {
     const IMP = window.IMP; // 생략 가능
@@ -78,12 +79,12 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         e.preventDefault();        
 
         if(togetherInfo.togetherRecruitStartDate>moment().format("YYYY-MM-DD")){
-            alert("아직 모집 기간이 아닙니다");
+            swAlert("아직 모집 기간이 아닙니다","warning");
             return 
             
         }
         if(togetherInfo.togetherRecruitEndDate<moment().format("YYYY-MM-DD")){
-            alert("이미 지난 기간입니다.")
+            swAlert("이미 지난 기간입니다.","warning")
             return 
         }
 
@@ -120,18 +121,18 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             
             axios.post("/insertTogetherPayJoinInfo", insertPayForm)
               .then((res) => {
-                if(res.data==="성공"){
+                if(res.data==="가입 성공" || res.data==="가입신청 성공"){
                     setOpen(false);
-                    alert(res.data);
+                    swAlert(res.data,"success");
                     refreshTogetherJoinList();
                 }else {
-                    alert(res.data);
+                    swAlert(res.data, "warning");
                     window.location.reload();
                 }
               })
               .catch((Error) => console.log(Error))
           } else {
-            alert("결제실패")
+            swAlert("결제실패","warning")
           }
         });
     }
@@ -171,12 +172,12 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             axios.post("/insertTogetherPay", insertPayForm)
               .then((res) => {
                   setOpen(false);
-                  alert(res.data);
+                  swAlert(res.data,"success");
                   refreshTogetherList();
               })
               .catch((Error) => console.log(Error))
           } else {
-            alert("결제실패")
+            swAlert("결제실패","warning");
           }
         });
     }
@@ -184,20 +185,20 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         axios.post("/insertTogetherFreeInfo", insertForm.togetherCode)
             .then((res) => {
                 setOpen(false);
-                alert(res.data);
+                swAlert(res.data,"success");
                 refreshTogetherList();
         })
     }
 
     const insertTogetherFreeJoinInfo = () => {
         if(!sessionStorage.getItem("id")) {
-            alert("로그인이 필요한 서비스입니다.")
+            swAlert("로그인이 필요한 서비스입니다.","warning")
             nav("/login");
         }
         axios.post("/insertTogetherFreeJoinInfo", insertForm)
               .then((res) => {
                   setOpen(false);
-                  alert(res.data);
+                  swAlert(res.data,"success");
                   refreshTogetherJoinList();
                   refreshTogetherList();
               })
@@ -210,7 +211,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             setOpen(false);
             axios.delete("/deleteTogetherPayJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                alert(res.data);
+                swAlert(res.data,"success");
                 window.location.reload();
             }).catch((error)=> console.log(error))
       }
@@ -220,10 +221,21 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             setOpen(false);
             axios.delete("/deleteTogetherFreeJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                alert(res.data);
-                window.location.reload();
+                swAlert(res.data,"success");
+                refreshTogetherJoinList();
+                refreshTogetherList();
             }).catch((error)=> console.log(error))
       }
+
+      const swAlert = (contentText, icon ) => {
+        Swal.fire({
+          title: "알림",
+          text: contentText,
+          icon: icon,
+          confirmButtonText: "확인",
+          confirmButtonColor: "#ff0456",
+        });
+      };
 
     return (
         <>

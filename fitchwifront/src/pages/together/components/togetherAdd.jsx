@@ -18,6 +18,7 @@ import FaceRoundedIcon from "@mui/icons-material/FaceRounded";
 import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatisfiedAltRounded";
 import CircularProgress from '@mui/material/CircularProgress';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
+import Swal from "sweetalert2";
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -38,7 +39,7 @@ const facilities = {
   facilitiesPrice: 0,
 };
 
-const TogetherAdd = ({ data, refreshTogetherList }) => {
+const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
   const nav = useNavigate();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const formDate = new FormData();
@@ -139,7 +140,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
       .post("/addTogether", formDate, config)
       .then((res) => {
         setLoad(false)
-        alert(res.data);
+        swAlert(res.data,"success");
         nav("/together");
         refreshTogetherList();
       })
@@ -234,6 +235,16 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     })
   }
 
+  const swAlert = (contentText, icon ) => {
+    Swal.fire({
+      title: "알림",
+      text: contentText,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    });
+  };
+
 
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -265,7 +276,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           name="togetherTitle"
           required
         />
-        <TextField fullWidth label="최대참여인원" sx={{ mt: 3 }} type="number" onChange={handleChange} name="togetherMax" required />
+        <TextField fullWidth label="최대참여인원" sx={{ mt: 3 }} type="number" minRows={2} onChange={handleChange} name="togetherMax" required />
         <FormControl sx={{ mt: 2 }} fullWidth>
           <InputLabel>모임카테고리선정</InputLabel>
           <Select
@@ -314,14 +325,14 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                       facilitiesCode: facilities,
                       togetherPosition: facilities.facilitiesPosition,
                     });
-                    getNodayList(data.facilitiesCode);
+                    getNodayList(facilitieList.facilitiesCode);
                   }}
                 >
                   <ListItemText inset primary="이용안함" />
                 </ListItemButton>
               </ListItem>
 
-              {data.filter(data=>data.facilitiesCode!==0).map(data=>(
+              {facilitieList.filter(data=>data.facilitiesCode!==0).map(data=>(
                 <ListItem disablePadding key={data.facilitiesCode}>
                 <ListItemButton onClick={()=> {
                   setInsertForm({
@@ -516,7 +527,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
               <input
                 label="모임대표사진"
                 type="file"
-                focused
                 hidden
                 sx={{ mt: 3 }}
                 color="grey"

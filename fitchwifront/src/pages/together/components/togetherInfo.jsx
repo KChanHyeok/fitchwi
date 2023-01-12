@@ -6,6 +6,7 @@ import TogetherJoin from "./togetherJoin";
 import TogetherOpMenu from "./togetherOpMenu";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList }) => {
   let { togetherPageCode } = useParams();
   const [togetherInfo, setTogetherInfo] = useState(null);
