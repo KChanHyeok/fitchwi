@@ -30,14 +30,13 @@ const StyleModal = styled(Modal)({
   justifyContent: "center",
 });
 
-const FeedAdd = () => {
+const FeedAdd = ({ refreshFeed }) => {
   let formdata = new FormData();
   const nav = useNavigate();
   const [state, setState] = useState(false);
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
   const [SnackbarOpen, setSnackbarOpen] = useState(false);
-  const [SendSnackbarOpen, setSendSnackbarOpen] = useState(false);
   const [talkJoinList, setTalkJoinList] = useState([]);
   const [talkOpenedList, setTalkOpenedList] = useState([]);
   const [tagForm, setTagForm] = useState([]);
@@ -152,7 +151,7 @@ const FeedAdd = () => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
-          setSendSnackbarOpen(true);
+          alert("동록 성공");
           window.location.reload();
         } else {
           alert("실패");
@@ -254,11 +253,6 @@ const FeedAdd = () => {
                   <Button onClick={sendFeed} disabled>
                     UPLOAD
                   </Button>
-                  <Snackbar open={SendSnackbarOpen} autoHideDuration={6000}>
-                    <Alert severity="success" sx={{ width: "100%" }}>
-                      등록 성공!
-                    </Alert>
-                  </Snackbar>
                 </>
               ) : (
                 <Button onClick={sendFeed}>UPLOAD</Button>

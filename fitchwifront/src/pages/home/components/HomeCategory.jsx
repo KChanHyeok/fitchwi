@@ -22,9 +22,10 @@ export default function HomeCategory({ setCategory, setKorCategory }) {
               width: "100%",
               height: "100%",
               borderRadius: 10,
+              cursor: "pointer",
             }}
           />
-          <ImageListItemBar title={item.title} sx={{ textAlign: "center", borderRadius: 2 }} />
+          <ImageListItemBar title={item.title} sx={{ textAlign: "center", borderRadius: 2, cursor: "pointer" }} />
         </ImageListItem>
       ))}
     </ImageList>

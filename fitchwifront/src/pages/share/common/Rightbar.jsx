@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Box, ImageList, ImageListItem, ImageListItemBar, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, CircularProgress, ImageList, ImageListItem, ImageListItemBar, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import axios from "axios";
 import React from "react";
@@ -12,6 +12,7 @@ const Rightbar = () => {
   const nav = useNavigate();
 
   const mbti = sessionStorage.getItem("mbti");
+  console.log(mbti);
   const getMemberList = useCallback(() => {
     axios.get("/getMemberList").then((response) => {
       if (response.data.length > 9) {
@@ -45,15 +46,25 @@ const Rightbar = () => {
   return (
     <>
       {!member ? (
-        <Box>로딩중</Box>
+        <Box>
+          <CircularProgress />
+        </Box>
       ) : (
         <Box flex={2} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
           <Box position="fixed" width={300}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1, mt: 2 }}>
-              <Typography variant="h6" fontWeight={100}>
-                회원님을 위한 추천
-              </Typography>
-              <Typography fontWeight={100}>#{mbti}</Typography>
+              {mbti !== null ? (
+                <>
+                  <Typography variant="h6" fontWeight={100}>
+                    회원님을 위한 추천
+                  </Typography>
+                  <Typography fontWeight={100}>#{mbti}</Typography>
+                </>
+              ) : (
+                <Typography variant="h6" fontWeight={100}>
+                  로그인이 필요한 서비스입니다.
+                </Typography>
+              )}
             </Stack>
             <AvatarGroup max={7}>
               {member.map((item) => (

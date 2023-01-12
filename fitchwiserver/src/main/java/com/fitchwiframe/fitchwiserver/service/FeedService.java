@@ -438,4 +438,26 @@ public class FeedService {
 
 
     }
+
+    public List<Member> getFeedListOrderByMember() {
+        log.info("feedService.getFeedListOrderByMember()");
+        List<Feed> feedList = null;
+        List<Member> members = new ArrayList<>();
+        try {
+            feedList = feedRepository.findDistinctByOrderByMemberEmail();
+            System.out.println("feedList = " + feedList);
+            for (Feed m : feedList){
+                System.out.println("m = " + m);
+                Member member = m.getMemberEmail();
+                System.out.println("카운트 시작");
+                Long count = feedRepository.countByMemberEmail(member);
+                System.out.println("카운트 = " + count);
+                member.setMemberFeedCount(count);
+                members.add(member);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return members;
+    }
 }

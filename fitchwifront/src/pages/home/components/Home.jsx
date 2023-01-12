@@ -1,10 +1,11 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import { useNavigate } from "react-router-dom";
+import HomeBestMember from "./HomeBestMember";
 import HomeCategory from "./HomeCategory";
 import HomeTalkList from "./HomeTalkList";
 import HomeTapPanel from "./HomeTapPanel";
@@ -76,26 +77,18 @@ const Home = () => {
           <Box ml={4} mr={4}>
             <HomeTapPanel />
             <Typography variant="h6" mb={1}>
-              📕 카테고리
+              📕 카테고리 ❯ {korCategory}
             </Typography>
             <HomeCategory setCategory={setCategory} setKorCategory={setKorCategory} />
             <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"recent"} />
             <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"recent"} />
-            <Box height={300} mt={6} component="img" src="/images/TalkPost1.png"></Box>
+            <Box height={300} mt={6} component="img" src="/images/TalkPost1.png" sx={{ display: { xs: "none", sm: "block" } }} />
             <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"popular"} />
             <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"popular"} />
             <Typography variant="h6" mt={4}>
               🏆 이 달의 회원
             </Typography>
-            <Box border={1} p={2} mt={2} mb={10}>
-              <Stack direction="row" spacing={1} justifyContent="space-between">
-                <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
-                <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
-                <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
-                <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
-                <Box sx={{ textAlign: "center" }} border={1} p={4} width={100} height={100}></Box>
-              </Stack>
-            </Box>
+            <HomeBestMember />
           </Box>
         </Box>
       </Container>

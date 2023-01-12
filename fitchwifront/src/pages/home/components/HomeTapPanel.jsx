@@ -18,12 +18,12 @@ function TabPanel(props) {
       {value === index && (
         <Box sx={{ p: 3 }} display="flex" flexDirection="column" alignItems="center" width="100%">
           <Box mb={3}>
-            <Typography variant="h6" fontWeight={100}>
+            <Typography variant="h6" fontWeight={100} sx={{ fontSize: { xs: 15, sm: 20 }, mr: { xs: 4 } }}>
               {children} 취미
             </Typography>
           </Box>
           <ImageList sx={{ width: "100%", height: 200 }} cols={3} gap={10}>
-            <ImageListItem style={{ height: "170px", width: "300px" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ ml: { xs: 2, sm: 0 } }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[0]}`}
                 alt={"index"}
@@ -32,12 +32,13 @@ function TabPanel(props) {
                   width: "100%",
                   height: "100%",
                   borderRadius: 10,
+                  cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[0]}`)}
               />
               <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ display: { xs: "none", sm: "block" } }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[1]}`}
                 alt={"index"}
@@ -46,12 +47,13 @@ function TabPanel(props) {
                   width: "100%",
                   height: "100%",
                   borderRadius: 10,
+                  cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[1]}`)}
               />
               <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
-            <ImageListItem style={{ height: "170px", width: "300px" }}>
+            <ImageListItem style={{ height: "170px", width: "300px" }} sx={{ display: { xs: "none", sm: "block" } }}>
               <img
                 src={`https://source.unsplash.com/featured/?${source[2]}`}
                 alt={"index"}
@@ -60,6 +62,7 @@ function TabPanel(props) {
                   width: "100%",
                   height: "100%",
                   borderRadius: 10,
+                  cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[2]}`)}
               />
@@ -125,7 +128,7 @@ export default function HomeTapPanel() {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider" }}
+        sx={{ borderRight: 1, borderColor: "divider", display: { xs: "none", sm: "block" } }}
       >
         <Tab label="#INFP" {...a11yProps(0)} />
         <Tab label="#INFJ" {...a11yProps(1)} />

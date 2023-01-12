@@ -119,4 +119,10 @@ public class FeedController {
         return feedService.getFeedInfo(feedCode);
     }
 
+    @GetMapping("/getFeedListOrderByMember")
+    private List<Member> getFeedListOrderByMember(){
+        log.info("getFeedListOrderByMember()");
+        return feedService.getFeedListOrderByMember();
+    }
+
 }
