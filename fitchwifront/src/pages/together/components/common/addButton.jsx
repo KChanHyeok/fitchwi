@@ -5,10 +5,21 @@ import {
   } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
   
 const AddButton = () => {
   const location = useLocation()
+
+  const swAlert = (contentText, icon ) => {
+    Swal.fire({
+      title: "알림",
+      text: contentText,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    });
+  };
   
   return (
     <>
@@ -20,7 +31,7 @@ const AddButton = () => {
         left: { xs: "calc(50% - 25px)", md: 30 },
       }}
       >
-        {!sessionStorage.getItem("id") ? <Fab color="secondary" aria-label="add" component={Link} to="/login" onClick={()=>alert("로그인이 필요한 서비스입니다.")}>
+        {!sessionStorage.getItem("id") ? <Fab color="secondary" aria-label="add" component={Link} to="/login" onClick={()=>swAlert("로그인 후 이용가능합니다.","warning")}>
           <AddIcon />
         </Fab> : <Fab color="secondary" aria-label="add" component={Link} to="/together/add">
           <AddIcon />

@@ -70,7 +70,7 @@ const Together = () => {
             />
           }
         />
-        <Route path="add" element={<TogetherAdd data={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
+        <Route path="add" element={<TogetherAdd facilitieList={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
       </Routes>
     </Box>
   );

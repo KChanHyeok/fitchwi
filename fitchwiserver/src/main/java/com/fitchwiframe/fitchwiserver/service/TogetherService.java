@@ -75,11 +75,11 @@ public class TogetherService {
         togetherRepository.save(together);
         togetherTagRepository.save(togetherTag);
         nodayRepository.save(noday);
-        result = "성공";
+        result = "개설완료";
 
         }catch (Exception e) {
             e.printStackTrace();
-            result = "실패";
+            result = "개설실패";
         }
         return result;
     }
@@ -113,6 +113,7 @@ public class TogetherService {
         log.info(togetherList+"");
         return togetherList;
     }
+
     public String insertTogetherPay(TogetherPayment togetherPayment) {
         String result = null;
         try {
@@ -154,7 +155,7 @@ public class TogetherService {
                 }catch (Exception e) {
 
                 }
-                    result = "인원수가 맞지 않습니다.";
+                    result = "최종결제 실패 인원수가 맞지 않습니다.";
                     return result;
             }
             togetherPayment.getTogetherCode().setTogetherState("결제완료");
@@ -283,6 +284,13 @@ public class TogetherService {
                 togetherJoinPayment.getTogetherJoinCode().getTogetherCode().setTogetherTotalPrice(joinPay+totalPay);
                 Together jtogether = togetherJoinPayment.getTogetherJoinCode().getTogetherCode();
                 togetherRepository.save(jtogether);
+                togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
+
+                togetherJoinPayment.setTogetherJoinCode(togetherJoinRepository.findById(togetherJoinPayment.getTogetherJoinCode().getTogetherJoinCode()).get());
+                togetherJoinPayment.setTogetherJoinPayStatus("결제완료");
+                togetherJoinPayRepository.save(togetherJoinPayment);
+                result="가입 성공";
+                return result;
             }
 
             togetherJoinRepository.save(togetherJoinPayment.getTogetherJoinCode());
@@ -291,12 +299,11 @@ public class TogetherService {
             togetherJoinPayment.setTogetherJoinPayStatus("결제완료");
             togetherJoinPayRepository.save(togetherJoinPayment);
 
-            result="성공";
+            result="가입신청 성공";
         }catch (Exception e) {
             e.printStackTrace();
-            result="실패";
+            result="가입 실패";
         }
-
         return result;
     }
     public String insertTogetherFreeInfo(Together together) {
@@ -353,11 +360,12 @@ public class TogetherService {
         try {
             if(togetherJoin.getTogetherCode().getTogetherType().equals("선착순")) {
                 togetherJoin.setTogetherJoinState("가입중");
+                togetherJoinRepository.save(togetherJoin);
+                result="가입성공";
+                return result;
             }
-
-
             togetherJoinRepository.save(togetherJoin);
-            result = "가입성공";
+            result = "가입신청 성공";
         }catch (Exception e) {
             result = "가입실패";
         }
@@ -383,7 +391,7 @@ public class TogetherService {
             TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
 
             togetherJoinRepository.delete(joinTogetherMember);
-            result = "취소성공";
+            result = "취소 성공";
         }catch (Exception e) {
             result = "취소 실패";
             e.printStackTrace();
@@ -467,9 +475,9 @@ public class TogetherService {
         try{
             together.setTogetherState("삭제신청중");
             togetherRepository.save(together);
-            result="성공";
+            result="삭제신청이 완료되었습니다.";
         }catch (Exception e) {
-            result="실패";
+            result="삭제신청이 실패되었습니다.";
         }
         return result;
     }
@@ -515,9 +523,9 @@ public class TogetherService {
                 }
                 return result;
             }
-            result="성공";
+            result="수락이 완료 되엇습니다.";
         }catch (Exception e) {
-            result="실패";
+            result="수라이 실패 되었습니다.";
         }
         return result;
     }
@@ -529,7 +537,7 @@ public class TogetherService {
         if(togetherJoinPayment==null){
             togetherJoin.setTogetherJoinState("거절");
             togetherJoinRepository.save(togetherJoin);
-            result="그냥거절";
+            result="거절하였습니다.";
             return result;
         }
         RestTemplate restTemplate = new RestTemplate();
@@ -568,7 +576,7 @@ public class TogetherService {
             }
             togetherJoin.setTogetherJoinState("거절");
             togetherJoinRepository.save(togetherJoin);
-            result ="성공";
+            result ="거절하였습니다.(신청했던 돈은 자동 환불됩니다.)";
         }catch (Exception e) {
             result ="실패";
             e.printStackTrace();
