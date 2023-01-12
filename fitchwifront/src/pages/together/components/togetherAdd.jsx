@@ -1,4 +1,4 @@
-import { Avatar, Box, FormControl, InputLabel, MenuItem, Button, Select, styled, TextField, Typography, Stack, Grid, Paper, Chip } from "@mui/material";
+import { Avatar, Box, FormControl, InputLabel, MenuItem, Button, Select, styled, TextField, Typography, Stack, Grid, Paper, Chip, InputAdornment } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -100,12 +100,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     }
     return () => preview();
   });
-
-  const addTag = useCallback(
-    () => {
-
-    },[])
-
 
   const getNodayList = useCallback(
     (facilitiesCode) => {
@@ -211,21 +205,34 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
 
   // 태그 추가
 
-  // const ListItem = styled('li')(({ theme }) => ({
-  // margin: theme.spacing(0.5),
-  // }));
+  const ListItem = styled('li')(({ theme }) => ({
+  margin: theme.spacing(0.5),
+  }));
+  const [chipData, setChipData] = React.useState([]);
+  const [count, setCount] = useState(0);
+  const addTag = useCallback(
+    (e) => {
+      setCount(count+1);
+      const chipObj = {
+        key : count,
+        label : insertForm.togetherTagContent
+      }
+      setChipData(chipData.concat(chipObj))
+      setInsertForm({...insertForm,
+        togetherTagContent:""
+      })
+    },[chipData, count, insertForm])
 
-  // const [chipData, setChipData] = React.useState([
-  //   { key: 0, label: 'Angular' },
-  //   { key: 1, label: 'jQuery' },
-  //   { key: 2, label: 'Polymer' },
-  //   { key: 3, label: 'React' },
-  //   { key: 4, label: 'Vue.js' },
-  // ]);
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  };
 
-  // const handleDelete = (chipToDelete) => () => {
-  //   setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  // };
+  const saveClick = () => {
+    setInsertForm({
+      ...insertForm,
+      togetherTagContent:chipData.map(data=>data.label).join(" ")
+    })
+  }
 
 
   return (
@@ -541,30 +548,17 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             label="태그"
             name="togetherTagContent"
             onChange={handleChange}
-            required
             value={insertForm.togetherTagContent}
-            />
-          <Button variant={"contained"} onClick={addTag}>추가</Button>
-            {/* <Paper
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              listStyle: 'none',
-              p: 0.5,
-              m: 0,
-            }}
-            component="ul"
-          >
-            {chipData.map((data) => {
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" >
+                  {chipData.map((data) => {
               let icon;
-
               if (data.label === 'React') {
                 icon = <TagFacesIcon />;
               }
-
               return (
-                <ListItem key={data.key}>
+                <ListItem key={data.key} style={{listStyle:"none"}}>
                   <Chip
                     icon={icon}
                     label={data.label}
@@ -573,9 +567,13 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
                 </ListItem>
               );
             })}
-          </Paper> */}
+                </InputAdornment>
+              ),
+            }}
+            />
+          <Button variant={"contained"} onClick={addTag}>추가</Button>
         </Stack>
-        <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
+        <Button type="submit" onClick={saveClick} variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
           개설하기
         </Button>
         <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb: 4 }}>

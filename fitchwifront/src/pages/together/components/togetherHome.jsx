@@ -57,7 +57,7 @@ const TogetherHome = ({togetherList}) => {
             lineHeight="20"
             >
           <CircularProgress/>
-        </Box>): togetherList.sort((a,b) => b.togetherCode - a.togetherCode).filter((data, index) => index < 4 && data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").map(data => (
+        </Box>): togetherList.sort((a,b) => b.togetherCode - a.togetherCode).filter((data, index) =>data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").filter((data, index)=>index<4).map(data => (
               <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine:"none" }} key={data.togetherCode} component={Link} to={`/together/${data.togetherCode}`}>
               <CardActionArea>
                 <CardMedia src={`/images/${data.togetherSaveimg}`} component="img" width="200" height="150" alt="talkimg" />
@@ -98,7 +98,7 @@ const TogetherHome = ({togetherList}) => {
             >
              <CircularProgress/>
             </Box>)
-            : togetherList.filter(data=>(getMode(togetherList.map(data=>(data.togetherCategory)))===data.togetherCategory)).filter((data, index) => index < 4 && data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").map(data => (
+            : togetherList.filter(data=>(getMode(togetherList.map(data=>(data.togetherCategory)))===data.togetherCategory) && data.togetherState!=="삭제신청중" && data.togetherState!=="결제완료").filter((data, index) => index < 4).map(data => (
               <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine:"none" }} key={data.togetherCode} component={Link} to={`/together/${data.togetherCode}`}>
                 <CardActionArea>
                   <CardMedia src={`/images/${data.togetherSaveimg}`} component="img" width="200" height="150" alt="talkimg" />
