@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Avatar, Button, CircularProgress, DialogActions, Modal, TextField, Typography } from "@mui/material";
+import { Avatar, Button, CircularProgress, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJoinList, talkJoinMember }) => {
+const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJoinList }) => {
 
 
     const nav = useNavigate();
