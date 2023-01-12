@@ -346,7 +346,7 @@ public class MemberService {
     return memberListForReturn;
   }
 
-  public String createMember() {
+  /*public String createMember() {
     String result = null;
     try {
       for (int i = 0; i <= 50; i++) {
@@ -372,7 +372,7 @@ public class MemberService {
       result = "fail";
     }
     return result;
-  }
+  }*/
 
   public String checkPwd(Member memberToCheck) {
     log.info("memberService.checkPwd()");
