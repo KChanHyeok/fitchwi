@@ -94,11 +94,23 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
               setCorrectPwd(null);
               setPwd("");
               setCurrentPwd("");
+            } else if (result.data === "same") {
+              swAlert("기존 비밀번호와 동일합니다.", "info");
+              handleClose(true);
+              setCheckPwd("");
+              setCorrectPwd(null);
+              setPwd("");
+              setCurrentPwd("");
             }
           });
         } else {
           console.log(result.data);
           swAlert("기존 비밀번호를 다시한번 확인하세요.", "warning");
+          handleClose(true);
+          setCheckPwd("");
+          setCorrectPwd(null);
+          setPwd("");
+          setCurrentPwd("");
         }
       })
       .catch((error) => console.log(error));

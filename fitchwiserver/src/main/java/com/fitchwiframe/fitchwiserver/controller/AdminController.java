@@ -23,18 +23,12 @@ public class AdminController {
     return adminService.getAllFacilitiesList();
   }
   @GetMapping("/getFacilitiesList")
-  public Map<String, Object> getFacilitiesList(@RequestParam Integer pageNum, @RequestParam String facilitiesName) {
+  public Map<String, Object> getFacilitiesList(@RequestParam Integer pageNum, @RequestParam String keyword) {
     log.info("adminController.getFacilitiesList() pageNum = " + pageNum);
     System.out.println("pageNum = " + pageNum);
-    System.out.println("facilitiesName = " + facilitiesName);
-    return adminService.getFacilitiesList(pageNum,facilitiesName);
+    System.out.println("keyword = " + keyword);
+    return adminService.getFacilitiesList(pageNum,keyword);
   }
-
-//  @GetMapping("/searchFacilitiesName")
-//  public Map<String, Object> searchFacilitiesName(@RequestParam String facilitiesName, @RequestParam Integer pageNum){
-//    log.info("adminController.searchFacilitiesName() pageNum = " + pageNum);
-//    return adminService.searchFacilitiesName(facilitiesName,pageNum);
-//  }
 
 
   @PostMapping("/insertFacilities")

@@ -1,19 +1,19 @@
 import { Box, FormControl, IconButton, Input, InputAdornment, InputLabel } from "@mui/material";
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-export default function FacilitiesSearch({ facilitiesName, setFacilitiesName, loadFacilities }) {
+export default function FacilitiesSearch({ keyword, setKeyword, loadFacilities }) {
   const onSearchFacilities = (e) => {
     e.preventDefault();
 
-    loadFacilities(1, facilitiesName);
+    loadFacilities(1, keyword);
 
-    // console.log("search" + facilitiesName);
+    // console.log("search" + keyword);
   };
   const onChangeToSearch = (e) => {
-    setFacilitiesName(e.target.value);
+    setKeyword(e.target.value);
   };
   // console.log("insearchComp");
-  // console.log(facilitiesName);
+  // console.log(keyword);
   return (
     <Box component="form" onSubmit={(e) => onSearchFacilities(e)}>
       <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
@@ -21,7 +21,7 @@ export default function FacilitiesSearch({ facilitiesName, setFacilitiesName, lo
         <Input
           id="standard-adornment-password"
           type="text"
-          value={facilitiesName}
+          value={keyword}
           onChange={(e) => onChangeToSearch(e)}
           endAdornment={
             <InputAdornment position="end">

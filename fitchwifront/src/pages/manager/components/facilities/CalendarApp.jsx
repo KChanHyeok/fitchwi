@@ -91,7 +91,7 @@ export default function CalendarApp({ facilitiesCode, swAlert }) {
           setEndDate("");
           setNoDayToSend([]);
         } else {
-          alert(res.data);
+          swAlert("해당 이용 불가 일정을 삭제하는 데 실패했습니다.");
         }
       });
 

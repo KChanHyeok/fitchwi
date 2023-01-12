@@ -109,7 +109,7 @@ export default function ReportManagement({ swAlert }) {
               //     console.log(feed.data);
               axios
                 .delete("/deleteFeed", { data: feed.data })
-                .then((result) => updateReportState(reportCode, "신고대상삭제"))
+                .then((result) => updateReportState(reportCode, "신고 대상 삭제"))
                 .catch((error) => console.log(error));
             })
             .catch((error) => console.log(error));
@@ -128,7 +128,7 @@ export default function ReportManagement({ swAlert }) {
                 .delete("/deleteTalk", { data: talk.data })
                 .then((result) => {
                   updateReportState(reportCode, "신고 대상 삭제");
-                  swAlert("해당 '얘기해요'를 성공적으로 삭제했습니다.");
+                  //swAlert("해당 '얘기해요'를 성공적으로 삭제했습니다.");
                 })
                 .catch((error) => {
                   // console.log(error);
@@ -148,7 +148,9 @@ export default function ReportManagement({ swAlert }) {
   const updateReportState = (reportCode, reportTreatment) => {
     // console.log(reportCode);
     axios.put(`/updateReportState/${reportCode}/${reportTreatment}`).then((result) => {
-      if (result.data === "fail") {
+      if (result.data === "ok") {
+        swAlert("신고 대상에 대한 처분이 성공적으로 저장됐습니다.");
+      } else {
         swAlert("신고 내역 상태변경에 실패했습니다.", "info");
       }
 

@@ -21,32 +21,41 @@ import { Link } from "react-router-dom";
 import FacilitiesSearch from "./FacilitiesSearch";
 export default function Facilities({ swAlert }) {
   const [facilities, setFacilities] = useState([]);
-  const [facilitiesName, setFacilitiesName] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [pageNum, setPageNum] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
   let pageNumInSessionStg = sessionStorage.getItem("pageNum");
+  let keywordInSessionStg = sessionStorage.getItem("keyword");
+
   const [load, setLoad] = useState(false);
-  const loadFacilities = (pageNumInSessionStg, facilitiesName) => {
+
+  const loadFacilities = (pageNumInSessionStg, keywordInSessionStg) => {
     setLoad(false);
-    // console.log("로드");
+    // console.log(keywordInSessionStg);
     axios
       .get("/getFacilitiesList", {
-        params: { pageNum: pageNumInSessionStg, facilitiesName: facilitiesName },
+        params: { pageNum: pageNumInSessionStg, keyword: keywordInSessionStg },
       })
       .then((result) => {
-        const { facilitiesList, totalPage, pageNum } = result.data;
+        console.log(result.data);
+        const { facilitiesList, totalPage, pageNum, keyword } = result.data;
         setTotalPage(totalPage);
         setPageNum(pageNum);
+        setKeyword(keyword);
         setFacilities(facilitiesList);
         setLoad(true);
         sessionStorage.setItem("pageNum", pageNum);
+        sessionStorage.setItem("keyword", keyword);
       });
   };
 
   useEffect(() => {
     pageNumInSessionStg !== null
-      ? loadFacilities(pageNumInSessionStg, facilitiesName)
-      : loadFacilities(1, facilitiesName);
+      ? keywordInSessionStg !== null
+        ? loadFacilities(pageNumInSessionStg, keywordInSessionStg)
+        : loadFacilities(pageNumInSessionStg, "")
+      : loadFacilities(pageNum, keyword);
     console.log("axios");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -55,7 +64,7 @@ export default function Facilities({ swAlert }) {
     // console.log("pagenum handle");
     // console.log("value =  " + value);
     // console.log("facilitiesname = " + facilitiesName);
-    loadFacilities(value, facilitiesName);
+    loadFacilities(value, keyword);
   };
 
   const BasicTableRow = styled(TableRow)({
@@ -68,10 +77,10 @@ export default function Facilities({ swAlert }) {
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       if (result.data === "togetherExist") {
         swAlert("해당 시설에서 진행 예정인<br/> 함께해요가 존재하여<br/> 삭제가 불가능합니다.", "warning");
-        loadFacilities(pageNum, facilitiesName);
+        loadFacilities(pageNum, keyword);
       } else if (result.data === "ok") {
         swAlert("해당 시설의 정보가 정상적으로 삭제됐습니다.");
-        loadFacilities(pageNum, facilitiesName);
+        loadFacilities(pageNum, keyword);
       } else {
         swAlert(
           "해당 시설의 정보 삭제가 <br/> 정상적으로 완료되지 않았습니다.<br/>잠시 후 다시 시도해주세요.",
@@ -94,8 +103,8 @@ export default function Facilities({ swAlert }) {
         </Link>
       </Box>
       <FacilitiesSearch
-        facilitiesName={facilitiesName}
-        setFacilitiesName={setFacilitiesName}
+        keyword={keyword}
+        setKeyword={setKeyword}
         pageNum={pageNum}
         loadFacilities={loadFacilities}
       />

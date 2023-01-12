@@ -203,22 +203,22 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   // const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
   const mbtiImageMap = new Map([
-    ["ISFP", ""],
-    ["ISTJ", ""],
-    ["ISFJ", ""],
-    ["INFJ", ""],
-    ["INTJ", ""],
-    ["ISTP", ""],
-    ["INFP", ""],
-    ["INTP", ""],
-    ["ESTP", ""],
-    ["ESFP", ""],
-    ["ENFP", ""],
-    ["ENTP", ""],
-    ["ESTJ", ""],
-    ["ESFJ", ""],
-    ["ENFJ", ""],
-    ["ENTJ", ""],
+    ["ISFP", "/images/mbti/ISFP.png"],
+    ["ISTJ", "/images/mbti/ISTJ.png"],
+    ["ISFJ", "/images/mbti/ISFJ.png"],
+    ["INFJ", "/images/mbti/INFJ.png"],
+    ["INTJ", "/images/mbti/INTJ.png"],
+    ["ISTP", "/images/mbti/ISTP.png"],
+    ["INFP", "/images/mbti/INFP.png"],
+    ["INTP", "/images/mbti/INTP.png"],
+    ["ESTP", "/images/mbti/ESTP.png"],
+    ["ESFP", "/images/mbti/ESFP.png"],
+    ["ENFP", "/images/mbti/ENFP.png"],
+    ["ENTP", "/images/mbti/ENTP.png"],
+    ["ESTJ", "/images/mbti/ESTJ.png"],
+    ["ESFJ", "/images/mbti/ESFJ.png"],
+    ["ENFJ", "/images/mbti/ENFJ.png"],
+    ["ENTJ", "/images/mbti/ENTJ.png"],
   ]);
 
   return (
@@ -323,7 +323,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   style={{
                     backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "100px",
+                    backgroundSize: "180px",
                     backgroundPosition: "right 2% bottom 10%",
                   }}
                   avatar={
@@ -336,15 +336,27 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   title={
                     <Typography sx={{ fontSize: 25 }}>
                       {logid === memberEmail ? (
-                        <Typography
-                          variant="h5"
-                          style={{
-                            color: "#ffffff",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {memberNickname}({memberName})
-                        </Typography>
+                        <div>
+                          <Typography
+                            variant="h5"
+                            style={{
+                              color: "#ffffff",
+                              fontWeight: "600",
+                              display: "inline-block",
+                            }}
+                          >
+                            {memberNickname}
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            style={{
+                              color: "#ffffff",
+                              display: "inline-block",
+                            }}
+                          >
+                            ({memberName})
+                          </Typography>
+                        </div>
                       ) : (
                         <Typography
                           variant="h5"

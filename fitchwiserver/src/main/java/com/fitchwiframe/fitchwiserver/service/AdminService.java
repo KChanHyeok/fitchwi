@@ -38,7 +38,7 @@ public class AdminService {
   }
 
 
-  public Map<String, Object> getFacilitiesList(Integer pageNum, String facilitiesName) {
+  public Map<String, Object> getFacilitiesList(Integer pageNum, String keyword) {
     log.info("getFacilitiesList()");
     if (pageNum == null) {
       pageNum = 1;
@@ -49,10 +49,10 @@ public class AdminService {
 
     Page<Facilities> result = null;
 
-    if (facilitiesName.equals("")) {
+    if (keyword.equals("")) {
       result = facilitiesRepository.findAll(pageable);
     } else {
-      String keywordToSearch = "%" + facilitiesName + "%";
+      String keywordToSearch = "%" + keyword + "%";
       result = facilitiesRepository.findByFacilitiesNameLike(keywordToSearch, pageable);
     }
 
@@ -63,7 +63,7 @@ public class AdminService {
     mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
     mapToReturn.put("facilitiesList", facilitiesList);
-
+    mapToReturn.put("keyword",keyword);
     return mapToReturn;
   }
 
@@ -73,7 +73,20 @@ public class AdminService {
     log.info("adminService.insertfacilities()");
     String result = "fail";
     try {
+
       facilitiesRepository.save(facilities);
+
+//      for(int i=0; i<=50; i++){
+//        Facilities f = new Facilities();
+//        f.setFacilitiesName("asdf"+i+i);
+//        f.setFacilitiesPrice(3);
+//        f.setFacilitiesPosition("asdf");
+//        f.setFacilitiesManager("asdf");
+//        f.setFacilitiesPhone("11");
+//        f.setFacilitiesGrade("asdf");
+//        facilitiesRepository.save(f);
+//
+//      }
 
 
       result = "ok";

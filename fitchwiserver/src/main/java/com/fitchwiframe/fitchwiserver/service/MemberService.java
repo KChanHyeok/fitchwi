@@ -397,6 +397,11 @@ public class MemberService {
     String result = "fail";
     try {
       Member dbMember = memberRepository.findById(memberToChangePwd.getMemberEmail()).get();
+      if (encoder.matches(memberToChangePwd.getMemberPwd(), dbMember.getMemberPwd())) {
+        result="same";
+
+       return result;
+      }
       String cryptPwd = encoder.encode(memberToChangePwd.getMemberPwd());
 
       dbMember.setMemberPwd(cryptPwd);
