@@ -54,7 +54,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   const onUpdate = (e) => {
     e.preventDefault();
     if (memberToUpdate.memberPhone !== checkedPhone || originalPhone !== memberToUpdate.memberPhone) {
-      swAlert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.", "warning");
+      swAlert("연락처를 변경하셨습니다. <br/>본인인증을 먼저 해주세요.", "warning");
       return;
     }
     formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));

@@ -15,7 +15,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import CalendarApp from "./CalendarApp";
-export default function EditFacilities({}) {
+export default function EditFacilities({ swAlert }) {
   const { facilitiesCode } = useParams();
   const loadFacilities = useCallback(() => {
     setLoad(false);
@@ -57,9 +57,9 @@ export default function EditFacilities({}) {
 
     axios.put(`/updateFacilities/${facilitiesCode}`, newFacilities).then((res) => {
       if (res === "ok") {
-        alert(res.data);
+        swAlert("해당 시설의 수정된 정보가 <br/> 성공적으로 저장됐습니다.");
       } else {
-        alert(res.data);
+        swAlert("수정된 정보를 저장하는데 실패했습니다.");
       }
     });
   };
@@ -165,7 +165,7 @@ export default function EditFacilities({}) {
               <Typography variant="p">*이용 불가능 일 설정</Typography>
 
               {/* 캘린더 */}
-              <CalendarApp facilitiesCode={facilitiesCode} />
+              <CalendarApp facilitiesCode={facilitiesCode} swAlert={swAlert} />
             </Grid>
           </Grid>
           <Grid container spacing={1} justifyContent="space-around">

@@ -17,6 +17,7 @@ import ChannelService from "./components/common/ChannelService";
 import KaKaoLoginRedirect from "./pages/login/components/KaKaoLoginRedirect";
 import axios from "axios";
 import ManagerNav from "./pages/manager/components/ManagerNav";
+import Swal from "sweetalert2";
 
 function App() {
   const nav = useNavigate();
@@ -65,12 +66,20 @@ function App() {
     setLstate(newState);
   }, []);
 
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
+
   //로그아웃함수
   const onLogout = () => {
-    axios
-      .post("/logout", { data: { id: lstate.logid } })
-      .then((result) => console.log(result.data));
-    alert("로그아웃");
+    axios.post("/logout", { data: { id: lstate.logid } }).then((result) => console.log(result.data));
+    swAlert("로그아웃이 완료됐습니다.");
     // const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
     // const REDIRECT_URI = "http://localhost:3000/";
     // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
@@ -113,10 +122,7 @@ function App() {
           path="/manager/*"
           element={<Manager isManager={isManager} setIsManager={setIsManager} />}
         ></Route>
-        <Route
-          path="/login/kakao/callback"
-          element={<KaKaoLoginRedirect sucLogin={sucLogin} />}
-        ></Route>
+        <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect sucLogin={sucLogin} />}></Route>
       </Routes>
     </>
   );

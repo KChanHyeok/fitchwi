@@ -163,7 +163,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
           style={{ textDecoration: "none" }}
           onClick={() => {
             if (together.togetherState === "삭제신청중") {
-              swAlert("삭제 처리를 위해 대기중인 함께해요입니다..", "info");
+              swAlert("삭제 신청이 완료된 함께해요입니다.", "info");
             }
           }}
         >

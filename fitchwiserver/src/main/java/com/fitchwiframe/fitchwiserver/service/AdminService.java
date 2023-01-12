@@ -395,7 +395,7 @@ public class AdminService {
     log.info("adminService.updateReportState()");
     try {
       Report report = reportRepository.findById(reportCode).get();
-      if (reportTreatment.equals("신고대상삭제")) {
+      if (reportTreatment.equals("신고 대상 삭제")) {
         report.setReportState(reportTreatment);
       } else {
         report.setReportState(reportTreatment + "까지 이용 제한");

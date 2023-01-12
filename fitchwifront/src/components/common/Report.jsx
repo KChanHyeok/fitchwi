@@ -38,14 +38,14 @@ export default function Report({ targetMember, target, category, type }) {
   });
 
   const [isReported, setIsReported] = useState(false);
-  const swAlert = (contentText, icon = "success") => {
+  const swAlert = (html, icon = "success", func) => {
     Swal.fire({
       title: "알림",
-      text: contentText,
+      html: html,
       icon: icon,
       confirmButtonText: "확인",
       confirmButtonColor: "#ff0456",
-    });
+    }).then(func);
   };
   const handleClickOpen = () => {
     if (reportDetail[0].memberEmail.memberEmail == null) {
@@ -82,9 +82,11 @@ export default function Report({ targetMember, target, category, type }) {
     console.log(reportForm);
     axios.post("/report", reportForm).then((result) => {
       if (result.data === "ok") {
-        swAlert("신고 접수가 완료됐습니다. 소중한 의견 감사드리며, 더욱 건강한 FITCHWI가 되도록 하겠습니다.");
+        swAlert(
+          "신고 접수가 완료됐습니다. <br/>소중한 의견 감사드리며,  <br/>더욱 건강한 FITCHWI가 되도록 노력하겠습니다."
+        );
       } else {
-        swAlert("신고 접수가 정상적으로 처리되지 않았습니다. 잠시 후 다시 시도해주세요.");
+        swAlert("신고 접수가 정상적으로 처리되지 않았습니다. <br/>잠시 후 다시 시도해주세요.", "warning");
       }
     });
 

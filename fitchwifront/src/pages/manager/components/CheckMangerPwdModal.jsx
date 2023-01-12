@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-export default function CheckMangerPwdModal({ setIsManager }) {
+export default function CheckMangerPwdModal({ setIsManager, swAlert }) {
   const [open, setOpen] = useState(true);
   const nav = useNavigate();
 
@@ -31,17 +31,17 @@ export default function CheckMangerPwdModal({ setIsManager }) {
         //  console.log(result.data);
         switch (result.data) {
           case "ok":
-            alert("ok");
+            swAlert("관리자 확인이 완료됐습니다.");
             setIsManager(true);
             break;
           case "wrong pwd":
-            alert("비밀번호가 다름");
+            swAlert("비밀번호 확인 후 다시 시도해주세요.");
             break;
           case "no data":
-            alert("등록되지 않은 계정");
+            swAlert("등록되지 않은 계정입니다.");
             break;
           case "fail":
-            alert("오류발생");
+            swAlert("로그인 과정에 문제가 발생했습니다.");
             break;
           default:
             break;

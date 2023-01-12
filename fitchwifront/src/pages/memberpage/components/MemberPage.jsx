@@ -159,6 +159,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [logid, memberEmail, memberNickname]
   );
   //console.log(isFollow);
@@ -184,11 +185,12 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           } else if (res.data === "togetherExist") {
             swAlert("진행 예정인 함께해요가 있습니다. <br/>함께해요를 먼저 탈퇴해주세요.", "info");
           } else {
-            swAlert("탈퇴처리에 문제발생", "info");
+            swAlert("탈퇴처리에 문제가 발생했습니다. <br/> 잠시후 다시 시도해주세요.", "info");
           }
         })
         .catch((error) => console.log(error));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [nav, onLogout]
   );
 

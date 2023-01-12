@@ -26,7 +26,7 @@ export default function ManagerIndex({ setIsManager, isManager }) {
   return (
     <Box>
       {isManager === false ? (
-        <CheckMangerPwdModal setIsManager={setIsManager} />
+        <CheckMangerPwdModal setIsManager={setIsManager} swAlert={swAlert} />
       ) : (
         <div>
           <Routes>

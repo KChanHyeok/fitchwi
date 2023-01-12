@@ -55,7 +55,11 @@ export default function Login({ sucLogin, swAlert }) {
             swAlert("아이디와 일치하는 회원정보가 없습니다.", "warning");
             break;
           case "reported":
-            swAlert("신고누적으로, " + res.data.memberRestriction + "부터 이용 가능합니다.", "warning");
+            swAlert(
+              "누적된 신고에 의해, <br/> FITCHWI 이용이 불가합니다.<br/> 제한 해지일 :" +
+                res.data.memberRestriction,
+              "warning"
+            );
             nav("/", { replace: true });
             break;
           case "released":
@@ -73,6 +77,7 @@ export default function Login({ sucLogin, swAlert }) {
         }
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [loginForm, nav, sucLogin]
   );
   const createMemeber = () => {

@@ -19,7 +19,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FacilitiesSearch from "./FacilitiesSearch";
-export default function Facilities() {
+export default function Facilities({ swAlert }) {
   const [facilities, setFacilities] = useState([]);
   const [facilitiesName, setFacilitiesName] = useState("");
   const [pageNum, setPageNum] = useState(1);
@@ -67,13 +67,16 @@ export default function Facilities() {
     console.log(facilitiesCode);
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       if (result.data === "togetherExist") {
-        alert("해당 시설에서 진행 예정인 함께해요가 존재하여 삭제가 불가능합니다.");
+        swAlert("해당 시설에서 진행 예정인<br/> 함께해요가 존재하여<br/> 삭제가 불가능합니다.", "warning");
         loadFacilities(pageNum, facilitiesName);
       } else if (result.data === "ok") {
-        alert("삭제됐습니다.");
+        swAlert("해당 시설의 정보가 정상적으로 삭제됐습니다.");
         loadFacilities(pageNum, facilitiesName);
       } else {
-        alert("문제발셍");
+        swAlert(
+          "해당 시설의 정보 삭제가 <br/> 정상적으로 완료되지 않았습니다.<br/>잠시 후 다시 시도해주세요.",
+          "warning"
+        );
       }
     });
   };

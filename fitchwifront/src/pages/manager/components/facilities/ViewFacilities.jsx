@@ -21,7 +21,7 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import PlaceIcon from "@mui/icons-material/Place";
 import CalendarApp from "./CalendarApp";
-export default function ViewFacilities() {
+export default function ViewFacilities({ swAlert }) {
   const { facilitiesCode } = useParams();
 
   const [facilities, setFacilities] = useState({
@@ -132,7 +132,7 @@ export default function ViewFacilities() {
             </Grid>
 
             <Grid item xs={6}>
-              <CalendarApp facilitiesCode={facilitiesCode} />
+              <CalendarApp facilitiesCode={facilitiesCode} swAlert={swAlert} />
             </Grid>
           </Grid>
 

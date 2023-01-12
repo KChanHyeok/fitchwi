@@ -10,6 +10,7 @@ import Mbti from "./components/Mbti";
 import UserInfo from "./components/UserInfo";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const JoinIndex = () => {
   let formData = new FormData();
@@ -94,6 +95,16 @@ const JoinIndex = () => {
       .catch((error) => console.log(error));
   };
 
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
+
   return (
     <Box
       display="flex"
@@ -109,19 +120,10 @@ const JoinIndex = () => {
 
         <Route path="/userimg" element={<UserImg setFileForm={setFileForm} />}></Route>
         <Route path="/name" element={<Name onChange={onChange} joinForm={joinForm} />}></Route>
-        <Route
-          path="/gender"
-          element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}
-        ></Route>
+        <Route path="/gender" element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
         <Route path="/birth" element={<Birth onChange={onChange} joinForm={joinForm} />}></Route>
-        <Route
-          path="/interest"
-          element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}
-        ></Route>
-        <Route
-          path="/mbti"
-          element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}
-        ></Route>
+        <Route path="/interest" element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
+        <Route path="/mbti" element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
         <Route
           path="/userinfo"
           element={
@@ -130,6 +132,7 @@ const JoinIndex = () => {
               onChange={onChange}
               setJoinForm={setJoinForm}
               isKakao={isKakao}
+              swAlert={swAlert}
             />
           }
         ></Route>
