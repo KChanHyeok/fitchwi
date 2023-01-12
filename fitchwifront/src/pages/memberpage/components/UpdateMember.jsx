@@ -53,8 +53,8 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
 
   const onUpdate = (e) => {
     e.preventDefault();
-    if (memberToUpdate.memberPhone !== checkedPhone || originalPhone !== memberToUpdate.memberPhone) {
-      swAlert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.", "warning");
+    if (memberToUpdate.memberPhone !== checkedPhone && member.memberPhone !== memberToUpdate.memberPhone) {
+      swAlert("연락처를 변경하셨습니다. <br/>본인인증을 먼저 해주세요.", "warning");
       return;
     }
     formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
@@ -307,14 +307,12 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   };
   console.log(memberPhone);
   const [checkedPhone, setCheckedPhone] = useState(member.memberPhone);
-  // eslint-disable-next-line no-unused-vars
-  const [originalPhone, setOriginalPhone] = useState(member.memberPhone);
 
   const Certification = () => {
     // console.log(joinForm.memberPhone);
     if (memberToUpdate.memberPhone === "") {
       return swAlert("연락처를 입력해주세요!", "warning");
-    } else if (memberToUpdate.memberPhone === originalPhone) {
+    } else if (memberToUpdate.memberPhone === member.memberPhone) {
       return swAlert("기존 연락처와 동일합니다.", "warning");
     }
     axios
@@ -357,6 +355,10 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
         }
       });
   };
+  //회원 정보 수정
+  console.log(member.memberPhone);
+  console.log(memberToUpdate.memberPhone);
+  console.log(checkedPhone);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -365,7 +367,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
           marginTop: 8,
           display: "flex",
           flexDirection: "column",
-          //alignItems: "center",
+          alignItems: "center",
         }}
       >
         <Typography component="h1" variant="h5">

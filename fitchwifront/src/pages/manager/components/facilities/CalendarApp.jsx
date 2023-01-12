@@ -4,7 +4,7 @@ import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "./CalendarApp.scss";
-export default function CalendarApp({ facilitiesCode }) {
+export default function CalendarApp({ facilitiesCode, swAlert }) {
   // const [value, onChange] = useState(new Date());
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -28,14 +28,14 @@ export default function CalendarApp({ facilitiesCode }) {
 
   const addNoday = () => {
     if (startDate === "" || endDate === "") {
-      alert("시작일과 종료일을 모두 선택해주세요.");
+      swAlert("시작일과 종료일을 모두 선택해주세요.", "warning");
       return;
     }
 
     // console.log(noDayToSend);
     let checkArray = noDayList.filter((n) => noDayToSend.indexOf(n) > 0);
     if (checkArray.length !== 0) {
-      alert("이미 등록된 날짜를 포함하고 있습니다.");
+      swAlert("이미 등록된 날짜를 포함하고 있습니다.", "warning");
       setStartDate("");
       setEndDate("");
       setNoDayToSend([]);
@@ -48,7 +48,7 @@ export default function CalendarApp({ facilitiesCode }) {
       .then((res) => {
         if (res.data === "ok") {
           setNodayList([]);
-          alert("등록 완료.");
+          swAlert("이용 불가능일 성공적으로 저장됐습니다.");
           setStartDate("");
           setEndDate("");
           setNoDayToSend([]);
@@ -60,14 +60,14 @@ export default function CalendarApp({ facilitiesCode }) {
 
   const deleteNoday = () => {
     if (startDate === "" || endDate === "") {
-      alert("시작일과 종료일을 모두 선택해주세요.");
+      swAlert("시작일과 종료일을 모두 선택해주세요.", "warning");
       return;
     }
     // console.log(noDayToSend);
     // noDayList.filter((n) => noDayToSend.indexOf(n) < 0);
     let checkArray = noDayToSend.filter((n) => noDayList.indexOf(n) < 0);
     if (checkArray.length !== 0) {
-      alert("이용 가능한 날짜를 포함하고 있습니다.");
+      swAlert("이용 가능한 날짜를 포함하고 있습니다.", "warning");
       setStartDate("");
       setEndDate("");
       setNoDayToSend([]);
@@ -80,18 +80,18 @@ export default function CalendarApp({ facilitiesCode }) {
       .then((res) => {
         if (res.data === "ok") {
           setNodayList([]);
-          alert("삭제 완료.");
+          swAlert("해당 이용 불가 일정이<br/>성공적으로 삭제됐습니다.");
           setStartDate("");
           setEndDate("");
           setNoDayToSend([]);
         } else if (res.data === "togetherExist") {
           setNodayList([]);
-          alert("해당 날짜에 진행 예정인 '함께해요'가 존재합니다. ");
+          swAlert("해당 날짜에 진행 예정인 '함께해요'가 존재하여<br/> 삭제가 불가합니다.", "warning");
           setStartDate("");
           setEndDate("");
           setNoDayToSend([]);
         } else {
-          alert(res.data);
+          swAlert("해당 이용 불가 일정을 삭제하는 데 실패했습니다.");
         }
       });
 

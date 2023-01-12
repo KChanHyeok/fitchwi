@@ -29,7 +29,7 @@ import moment from "moment/moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function ReportManagement() {
+export default function ReportManagement({ swAlert }) {
   const [reportList, setReportList] = useState([]);
 
   const [pageNum, setPageNum] = useState(1);
@@ -65,7 +65,7 @@ export default function ReportManagement() {
 
   const onRistrict = (period, memberEmail, reportCode) => {
     if (period === undefined) {
-      alert("이용 제한일을 먼저 선택해주세요.");
+      swAlert("이용 제한일을 먼저 선택해주세요.", "warning");
       return;
     }
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
@@ -86,7 +86,12 @@ export default function ReportManagement() {
   const deleteReport = useCallback((reportCode) => {
     // console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
-      alert(result.data);
+      if (result.data === "ok") {
+        swAlert("신고 내역을 성공적으로 삭제했습니다.");
+      } else {
+        swAlert("신고 내역을 삭제하는 데 실패했습니다.", "info");
+      }
+
       getReports(pageNum);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +109,7 @@ export default function ReportManagement() {
               //     console.log(feed.data);
               axios
                 .delete("/deleteFeed", { data: feed.data })
-                .then((result) => updateReportState(reportCode, "신고대상삭제"))
+                .then((result) => updateReportState(reportCode, "신고 대상 삭제"))
                 .catch((error) => console.log(error));
             })
             .catch((error) => console.log(error));
@@ -123,11 +128,11 @@ export default function ReportManagement() {
                 .delete("/deleteTalk", { data: talk.data })
                 .then((result) => {
                   updateReportState(reportCode, "신고 대상 삭제");
-                  alert("해당 '얘기해요'를 삭제했습니다.");
+                  //swAlert("해당 '얘기해요'를 성공적으로 삭제했습니다.");
                 })
                 .catch((error) => {
                   // console.log(error);
-                  alert("해당 얘기해요를 삭제할 수 없습니다.");
+                  swAlert("해당 얘기해요를 삭제하는 데 실패했습니다.", "warning");
                 });
             })
             .catch((error) => console.log(error));
@@ -143,7 +148,12 @@ export default function ReportManagement() {
   const updateReportState = (reportCode, reportTreatment) => {
     // console.log(reportCode);
     axios.put(`/updateReportState/${reportCode}/${reportTreatment}`).then((result) => {
-      alert(result.data);
+      if (result.data === "ok") {
+        swAlert("신고 대상에 대한 처분이 성공적으로 저장됐습니다.");
+      } else {
+        swAlert("신고 내역 상태변경에 실패했습니다.", "info");
+      }
+
       getReports(pageNum);
     });
   };
@@ -229,7 +239,7 @@ export default function ReportManagement() {
                           <Typography>{report.reportCategory}</Typography>
                         </Link>
                       ) : (
-                        <Typography onClick={() => alert("삭제된 게시글입니다.")}>
+                        <Typography onClick={() => swAlert("삭제된 게시글입니다.", "info")}>
                           {report.reportCategory}
                         </Typography>
                       )}

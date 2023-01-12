@@ -41,9 +41,14 @@ function a11yProps(index) {
   };
 }
 
-export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
+export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList, logid, memberEmail }) {
   const [value, setValue] = useState(0);
-
+  const [isMine, setIsMine] = useState(false);
+  useEffect(() => {
+    if (logid === memberEmail) {
+      setIsMine(true);
+    }
+  }, [logid, memberEmail]);
   //console.log(talkOpenedList);
 
   const handleChange = (event, newValue) => {
@@ -65,9 +70,31 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [talkJoinList]);
 
-  const printJoin = (talkList) => {
+  const printJoin = (talkList, isWait) => {
     // console.log("가입");
     // console.log(talkList);
+
+    if (talkList.length === 0) {
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Typography sx={{ mt: 3 }}>
+            {isWait === true ? "승인 대기 중인" : "가입한"} '얘기해요'가 없습니다.
+          </Typography>
+          <br />
+          {isMine && (
+            <Typography>
+              같은 취미를 가진 사람들과 얘기를 나누고 싶다면? <br />
+              '얘기해요'에 가입해보세요!
+            </Typography>
+          )}
+          <br />
+          <Link to="/talk" style={{ color: "#ff0456" }}>
+            '얘기해요' 둘러보기
+          </Link>
+        </div>
+      );
+    }
+
     return talkList.map((talk) => {
       return (
         <Link to={`/talk/${talk.talkCode.talkCode}`} key={talk.talkCode} style={{ textDecoration: "none" }}>
@@ -132,6 +159,24 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
   const printOpen = (talkList) => {
     // console.log("운영");
     //  console.log(talkList);
+    if (talkList.length === 0) {
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Typography sx={{ mt: 3 }}>운영 중인 '얘기해요'가 없습니다.</Typography>
+          <br />
+          {isMine && (
+            <div>
+              <Typography>원하는 주제로 '얘기해요'를 개설해보세요!</Typography>
+              <br />
+            </div>
+          )}
+          <br />
+          <Link to="/talk/opened" style={{ color: "#ff0456" }}>
+            '얘기해요' 개설하러 가기
+          </Link>
+        </div>
+      );
+    }
     return talkList.map((talk) => {
       return (
         <Link to={`/talk/${talk.talkCode}`} key={talk.talkCode} style={{ textDecoration: "none" }}>
@@ -197,19 +242,19 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
   // useMemo(() => printCardList, []);
   return (
     <Box sx={{ width: "100%" }}>
-      {talkJoinList.length || talkOpenedList.length !== 0 ? (
+      {talkJoinList !== undefined || talkOpenedList.length !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="가입중" {...a11yProps(0)} />
               <Tab label="운영중" {...a11yProps(1)} />
-              <Tab label="승인 대기중" {...a11yProps(2)} />
+              {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
 
           <TabPanel value={value} index={0}>
             {/* 가입중 */}
-            {printJoin(joiningList)}
+            {printJoin(joiningList, false)}
           </TabPanel>
           <TabPanel value={value} index={1}>
             {/* 운영중 */}
@@ -217,7 +262,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
           </TabPanel>
           <TabPanel value={value} index={2}>
             {/* 승인대기중 */}
-            {printJoin(waitingList)}
+            {printJoin(waitingList, true)}
           </TabPanel>
         </div>
       ) : (
@@ -226,7 +271,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="가입중" {...a11yProps(0)} />
               <Tab label="운영중" {...a11yProps(1)} />
-              <Tab label="승인 대기중" {...a11yProps(2)} />
+              {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}></TabPanel>

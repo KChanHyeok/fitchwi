@@ -41,8 +41,22 @@ function a11yProps(index) {
   };
 }
 
-export default function Membertogether({ myMenu, togetherJoinList, togetherOpenedList, swAlert }) {
+export default function Membertogether({
+  togetherJoinList,
+  togetherOpenedList,
+  swAlert,
+  logid,
+  memberEmail,
+}) {
   const [value, setValue] = useState(0);
+
+  const [isMine, setIsMine] = useState(false);
+  useEffect(() => {
+    if (logid === memberEmail) {
+      setIsMine(true);
+    }
+  }, [logid, memberEmail]);
+  //console.log(talkOpenedList);
 
   //  console.log(togetherOpenedList);
 
@@ -65,9 +79,32 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [togetherJoinList]);
 
-  const printJoin = (togetherList) => {
+  const printJoin = (togetherList, isWait) => {
     //  console.log("가입");
     // console.log(togetherList);
+
+    if (togetherList.length === 0) {
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Typography sx={{ mt: 3 }}>
+            {isWait === true ? "승인 대기 중인" : "가입한"} '함께해요'가 없습니다.
+          </Typography>
+          <br />
+          {isMine && (
+            <Typography>
+              새로운 사람들과 함께하는 취미생활!
+              <br />
+              '함께해요'에 가입해보세요.
+            </Typography>
+          )}
+          <br />
+          <Link to="/together" style={{ color: "#ff0456" }}>
+            '함께해요' 둘러보기
+          </Link>
+        </div>
+      );
+    }
+
     return togetherList.map((together) => {
       return (
         <Link
@@ -155,6 +192,24 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   const printOpen = (togetherList) => {
     //  console.log("운영");
     // console.log(togetherList);
+    if (togetherList.length === 0) {
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Typography sx={{ mt: 3 }}>운영 중인 '함께해요'가 없습니다.</Typography>
+          <br />
+          {isMine && (
+            <div>
+              <Typography>같은 취미라도 함께하면 더 즐겁죠!</Typography>
+              <Typography> '함께해요'에서 함께해요!</Typography>
+            </div>
+          )}
+          <br />
+          <Link to="/together/add" style={{ color: "#ff0456" }}>
+            '함께해요' 개설하러 가기
+          </Link>
+        </div>
+      );
+    }
     return togetherList.map((together) => {
       return (
         <Link
@@ -163,7 +218,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
           style={{ textDecoration: "none" }}
           onClick={() => {
             if (together.togetherState === "삭제신청중") {
-              swAlert("삭제 처리를 위해 대기중인 함께해요입니다..", "info");
+              swAlert("삭제 신청이 완료된 함께해요입니다.", "info");
             }
           }}
         >
@@ -247,19 +302,19 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
   // useMemo(() => printCardList, []);
   return (
     <Box sx={{ width: "100%" }}>
-      {togetherJoinList.length || togetherOpenedList.lengh !== 0 ? (
+      {togetherJoinList !== undefined || togetherOpenedList.lengh !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="가입중" {...a11yProps(0)} />
               <Tab label="운영중" {...a11yProps(1)} />
-              <Tab label="승인 대기중" {...a11yProps(2)} />
+              {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
 
           <TabPanel value={value} index={0}>
             {/* 가입중 */}
-            {printJoin(joiningList)}
+            {printJoin(joiningList, false)}
           </TabPanel>
           <TabPanel value={value} index={1}>
             {/* 운영중 */}
@@ -267,7 +322,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
           </TabPanel>
           <TabPanel value={value} index={2}>
             {/* 승인대기중 */}
-            {printJoin(waitingList)}
+            {printJoin(waitingList, true)}
           </TabPanel>
         </div>
       ) : (
@@ -276,7 +331,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab label="가입중" {...a11yProps(0)} />
               <Tab label="운영중" {...a11yProps(1)} />
-              <Tab label="승인 대기중" {...a11yProps(2)} />
+              {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}></TabPanel>

@@ -4,7 +4,7 @@ import { Alert, Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import Postcode from "./Postcode";
 
-export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
+export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swAlert }) {
   const [msg, setMsg] = useState("");
 
   const [pwd, setPwd] = useState("");
@@ -37,7 +37,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
 
   useEffect(() => {
     if (checkPwd === "" && pwd !== "") {
-      setMsg("비밀번호 확인을 진행해주세요.");
+      setMsg("비밀번호 확인을 진행해주세요.", "warning");
     } else if (checkPwd === pwd && pwd !== "") {
       setCorrectPwd(true);
       setMsg("비밀번호 확인이 완료됐습니다.");
@@ -48,7 +48,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
       setJoinForm(joinObj);
     } else if (checkPwd !== pwd) {
       setCorrectPwd(false);
-      setMsg("입력하신 두 비밀번호가 서로 다릅니다.");
+      setMsg("입력하신 두 비밀번호가 서로 다릅니다.", "warning");
       const joinObj = {
         ...joinForm,
         memberPwd: "",
@@ -61,20 +61,18 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
   const onCheckId = (e) => {
     e.preventDefault();
     if (joinForm.memberEmail === "") {
-      alert("사용하실 Email을 입력해주세요.");
+      swAlert("사용하실 Email을 입력해주세요.", "warning");
       return;
     }
-    axios
-      .get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } })
-      .then((res) => {
-        if (res.data === "ok") {
-          setCheckedId(joinForm.memberEmail);
-          alert("사용 가능한 Email 입니다.");
-        } else {
-          setCheckedId("");
-          alert("사용할 수 없는 Email 입니다.");
-        }
-      });
+    axios.get("/checkduplicatesmemberId", { params: { userId: joinForm.memberEmail } }).then((res) => {
+      if (res.data === "ok") {
+        setCheckedId(joinForm.memberEmail);
+        swAlert("사용 가능한 Email 입니다.");
+      } else {
+        setCheckedId("");
+        swAlert("사용할 수 없는 Email 입니다.", "warning");
+      }
+    });
     //console.log(typeof joinForm.memberEmail);
   };
 
@@ -92,14 +90,14 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
   const Certification = () => {
     // console.log(joinForm.memberPhone);
     if (joinForm.memberPhone === "") {
-      return alert("연락처를 입력해주세요!");
+      return swAlert("연락처를 입력해주세요.", "warning");
     }
     axios
       .post("/checkPhone", joinForm.memberPhone, { headers: { "Content-Type": "test/plain" } })
       .then((result) => {
         //     console.log(result.data);
         if (result.data === "fail") {
-          alert("이미 등록된 전화번호입니다.");
+          swAlert("이미 등록된 전화번호입니다.", "warning");
         } else {
           const { IMP } = window;
           // IMP.init("imp51345423");
@@ -125,11 +123,11 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao }) {
             if (success) {
               setCheckedPhone(joinForm.memberPhone);
               //    setDisabled(false);
-              alert("본인인증 성공");
+              swAlert("본인인증이 완료됐습니다.");
               //   console.log(response);
               //  console.log(merchant_uid);
             } else {
-              alert(`본인인증 실패: ${error_msg}`);
+              swAlert(`본인인증에 실패했습니다.<br/>: ${error_msg}`, "warning");
             }
           }
         }

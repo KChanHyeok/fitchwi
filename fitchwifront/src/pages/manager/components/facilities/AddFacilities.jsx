@@ -45,7 +45,7 @@ export default function AddFacilities({ swAlert }) {
     e.preventDefault();
     axios.post("/insertFacilities", facilities).then((res) => {
       if (res.data === "ok") {
-        swAlert("시설 등록에 성공했습니다.");
+        swAlert("입력하신 시설 정보가 <br/> 성공적으로 저장됐습니다.");
         nav("/manager/facilities/");
       } else {
         swAlert("시설 등록에 실패했습니다.", "warning");

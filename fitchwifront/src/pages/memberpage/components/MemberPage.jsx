@@ -137,7 +137,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const onFollow = useCallback(
     (isFollow) => {
       if (sessionStorage.getItem("id") == null) {
-        swAlert("로그인 후 가능합니다.", "info");
+        swAlert("로그인이 필요한 서비스입니다..", "info");
         return;
       }
       if (isFollow === false) {
@@ -159,6 +159,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [logid, memberEmail, memberNickname]
   );
   //console.log(isFollow);
@@ -184,11 +185,12 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           } else if (res.data === "togetherExist") {
             swAlert("진행 예정인 함께해요가 있습니다. <br/>함께해요를 먼저 탈퇴해주세요.", "info");
           } else {
-            swAlert("탈퇴처리에 문제발생", "info");
+            swAlert("탈퇴처리에 문제가 발생했습니다. <br/> 잠시후 다시 시도해주세요.", "info");
           }
         })
         .catch((error) => console.log(error));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [nav, onLogout]
   );
 
@@ -201,22 +203,22 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   // const [openCheckPwd, setOpenCheckPwd] = React.useState(false);
 
   const mbtiImageMap = new Map([
-    ["ISFP", ""],
-    ["ISTJ", ""],
-    ["ISFJ", ""],
-    ["INFJ", ""],
-    ["INTJ", ""],
-    ["ISTP", ""],
-    ["INFP", ""],
-    ["INTP", ""],
-    ["ESTP", ""],
-    ["ESFP", ""],
-    ["ENFP", ""],
-    ["ENTP", ""],
-    ["ESTJ", ""],
-    ["ESFJ", ""],
-    ["ENFJ", ""],
-    ["ENTJ", ""],
+    ["ISFP", "/images/mbti/ISFP.png"],
+    ["ISTJ", "/images/mbti/ISTJ.png"],
+    ["ISFJ", "/images/mbti/ISFJ.png"],
+    ["INFJ", "/images/mbti/INFJ.png"],
+    ["INTJ", "/images/mbti/INTJ.png"],
+    ["ISTP", "/images/mbti/ISTP.png"],
+    ["INFP", "/images/mbti/INFP.png"],
+    ["INTP", "/images/mbti/INTP.png"],
+    ["ESTP", "/images/mbti/ESTP.png"],
+    ["ESFP", "/images/mbti/ESFP.png"],
+    ["ENFP", "/images/mbti/ENFP.png"],
+    ["ENTP", "/images/mbti/ENTP.png"],
+    ["ESTJ", "/images/mbti/ESTJ.png"],
+    ["ESFJ", "/images/mbti/ESFJ.png"],
+    ["ENFJ", "/images/mbti/ENFJ.png"],
+    ["ENTJ", "/images/mbti/ENTJ.png"],
   ]);
 
   return (
@@ -321,28 +323,37 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   style={{
                     backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "100px",
+                    backgroundSize: "180px",
                     backgroundPosition: "right 2% bottom 10%",
                   }}
                   avatar={
                     // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                    <Avatar
-                      src={memberSaveimg}
-                      sx={{ width: 100, height: 100, boxShadow: "0 0 3px  2px  #ffffff" }}
-                    />
+                    <Avatar src={memberSaveimg} sx={{ width: 100, height: 100, backgroundColor: "white" }} />
                   }
                   title={
                     <Typography sx={{ fontSize: 25 }}>
                       {logid === memberEmail ? (
-                        <Typography
-                          variant="h5"
-                          style={{
-                            color: "#ffffff",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {memberNickname}({memberName})
-                        </Typography>
+                        <div>
+                          <Typography
+                            variant="h5"
+                            style={{
+                              color: "#ffffff",
+                              fontWeight: "600",
+                              display: "inline-block",
+                            }}
+                          >
+                            {memberNickname}
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            style={{
+                              color: "#ffffff",
+                              display: "inline-block",
+                            }}
+                          >
+                            ({memberName})
+                          </Typography>
+                        </div>
                       ) : (
                         <Typography
                           variant="h5"
@@ -422,7 +433,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                 <Typography variant="h6" gutterBottom>
                   공유 해요
                 </Typography>
-                {feedList !== undefined ? <MemberFeed myMenu={myMenu} feedList={feedList} /> : null}
+                {feedList !== undefined ? <MemberFeed feedList={feedList} /> : null}
               </Box>
             ) : myMenu === "talk" ? (
               <Box sx={{ mt: 2, width: "100%" }}>
@@ -431,7 +442,12 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   얘기해요
                 </Typography>
                 {talkJoinList !== undefined ? (
-                  <MemberTalk myMenu={myMenu} talkJoinList={talkJoinList} talkOpenedList={talkOpenedList} />
+                  <MemberTalk
+                    talkJoinList={talkJoinList}
+                    talkOpenedList={talkOpenedList}
+                    logid={logid}
+                    memberEmail={memberEmail}
+                  />
                 ) : null}
               </Box>
             ) : (
@@ -442,7 +458,8 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                 </Typography>
                 {togetherJoinList !== undefined ? (
                   <MemberTogether
-                    myMenu={myMenu}
+                    logid={logid}
+                    memberEmail={memberEmail}
                     togetherJoinList={togetherJoinList}
                     togetherOpenedList={togetherOpenedList}
                     swAlert={swAlert}

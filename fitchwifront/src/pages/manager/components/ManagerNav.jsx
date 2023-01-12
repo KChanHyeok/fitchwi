@@ -25,35 +25,35 @@ function ManagerNav(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const removeSessionItem = () => {
+    sessionStorage.removeItem("pageNum");
+    sessionStorage.removeItem("keyword");
+  };
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6">
         FITCHWI&nbsp;<sub style={{ fontSize: "14px" }}>Manager</sub>
       </Typography>
       <Divider />
-      <List
-        style={{ textDecoration: "none", textAlign: "center" }}
-        onClick={() => {
-          sessionStorage.removeItem("pageNum");
-        }}
-      >
+      <List style={{ textDecoration: "none", textAlign: "center" }}>
         <ListItem sx={{ justifyContent: "space-around" }}>
           <Link to="/manager/facilities" style={{ textDecoration: "none", color: "black" }}>
-            <ListItemButton>
+            <ListItemButton onClick={() => removeSessionItem()}>
               <ListItemText primary="시설관리" />
             </ListItemButton>
           </Link>
         </ListItem>
         <ListItem sx={{ justifyContent: "space-around" }}>
           <Link to="/manager/report" style={{ textDecoration: "none", color: "black" }}>
-            <ListItemButton sx={{ textAlign: "center" }}>
+            <ListItemButton sx={{ textAlign: "center" }} onClick={() => removeSessionItem()}>
               <ListItemText primary="신고관리" />
             </ListItemButton>
           </Link>
         </ListItem>
         <ListItem sx={{ justifyContent: "space-around" }}>
           <Link to="/manager/togetherManagement" style={{ textDecoration: "none", color: "black" }}>
-            <ListItemButton sx={{ textAlign: "center" }}>
+            <ListItemButton sx={{ textAlign: "center" }} onClick={() => removeSessionItem()}>
               <ListItemText primary="  함께해요 취소 관리" />
             </ListItemButton>
           </Link>
@@ -79,7 +79,11 @@ function ManagerNav(props) {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h5" component="div" sx={{ display: { xs: "none", sm: "block" }, color: "white" }}>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ display: { xs: "none", sm: "block" }, color: "white" }}
+          >
             FITCHWI&nbsp;<sub style={{ fontSize: "14px" }}>Manager</sub>
           </Typography>
           <Box
@@ -90,13 +94,13 @@ function ManagerNav(props) {
           >
             <Box style={{ display: "flex", justifyContent: "space-evenly" }}>
               <Link to="/manager/facilities" style={{ textDecoration: "none", color: "white" }}>
-                시설관리
+                <Typography onClick={() => removeSessionItem()}>시설관리</Typography>
               </Link>
               <Link to="/manager/report" style={{ textDecoration: "none", color: "white" }}>
-                신고관리
+                <Typography onClick={() => removeSessionItem()}> 신고관리 </Typography>
               </Link>
               <Link to="/manager/togetherManagement" style={{ textDecoration: "none", color: "white" }}>
-                함께해요 취소 관리
+                <Typography onClick={() => removeSessionItem()}> 함께해요 취소 관리 </Typography>
               </Link>
             </Box>
           </Box>
