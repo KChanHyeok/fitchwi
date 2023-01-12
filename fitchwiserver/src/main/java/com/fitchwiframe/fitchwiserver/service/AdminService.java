@@ -75,16 +75,7 @@ public class AdminService {
     try {
       facilitiesRepository.save(facilities);
 
-//      for (int i = 1; i <= 50; i++) {
-//        Facilities f = new Facilities();
-//        f.setFacilitiesName("시설명" + i);
-//        f.setFacilitiesGrade("기본" + i);
-//        f.setFacilitiesPhone("101010010");
-//        f.setFacilitiesManager("이름" + i);
-//        f.setFacilitiesPrice(i + 10000);
-//        f.setFacilitiesPosition("위치" + i);
-//        facilitiesRepository.save(f);
-//      }
+
       result = "ok";
 
     } catch (Exception e) {
@@ -183,13 +174,34 @@ public class AdminService {
     }
     return result;
   }
-
+@Autowired TogetherRepository togetherRepository;
   //이용불가일 삭제
   public String deleteNodayList(List<String> noDayToSend, Long facilitiesCode) {
     log.info("adminService.deleteNodayList()");
     String result = "fail";
     try {
       Facilities facilities = facilitiesRepository.findById(facilitiesCode).get();
+
+
+      for(String noday : noDayToSend){
+        System.out.println("noday = " + noday);
+
+        List<TogetherOpened> togetherOpenedList =  togetherOpenedRepository.findByFacilitiesCode(facilities);
+
+        for( TogetherOpened to : togetherOpenedList){
+          Together together = togetherRepository.findByTogetherOpenedCodeAndTogetherDate(to, noday);
+          if(together!=null){
+            result="togetherExist";
+            return result;
+          }
+
+        }
+      }
+
+
+
+
+
       List<Noday> allByFacilitiesCode = nodayRepository.findAllByFacilitiesCode(facilities);
       for (String date : noDayToSend) {
         for (Noday noday : allByFacilitiesCode) {
@@ -327,10 +339,10 @@ public class AdminService {
 
 
       for (Report report : reportList) {
-        report.getMemberEmail().setMemberPwd("");
+        report.getMemberEmail().setMemberPwd(null);
         List<ReportDetail> reportDetailList = reportDetailRepository.findAllByReportCodeOrderByReportDetailDateDesc(report);
         for (ReportDetail reportDetail : reportDetailList) {
-          reportDetail.getMemberEmail().setMemberPwd("");
+          reportDetail.getMemberEmail().setMemberPwd(null);
         }
         report.setReportDetailList(reportDetailList);
 

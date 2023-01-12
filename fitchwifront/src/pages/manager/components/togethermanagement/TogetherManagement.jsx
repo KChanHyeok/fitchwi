@@ -42,14 +42,14 @@ export default function TogeterManagement() {
   }, []);
 
   const getTogetherCancelRequestList = (pageNumInSessionStg, togetherTitle) => {
-    console.log("report");
+    // console.log("report");
     setLoad(false);
     axios
       .get("/getTogetherCancelRequestList", {
         params: { pageNum: pageNumInSessionStg, togetherTitle: togetherTitle },
       })
       .then((result) => {
-        console.log(result.data);
+        //  console.log(result.data);
         const { togetherList, totalPage, pageNum } = result.data;
 
         //  console.log(result.data);
@@ -144,9 +144,7 @@ export default function TogeterManagement() {
                         to="/memberpage"
                         state={{ memberId: together.togetherOpenedCode.memberEmail.memberEmail }}
                       >
-                        <Typography>
-                          {together.togetherOpenedCode.memberEmail.memberEmail}
-                        </Typography>
+                        <Typography>{together.togetherOpenedCode.memberEmail.memberEmail}</Typography>
                       </Link>
                     </Grid>
                     <Grid item xs={2}>
@@ -161,9 +159,7 @@ export default function TogeterManagement() {
                 <AccordionDetails>
                   <TableContainer component="main">
                     <Table aria-label="simple table">
-                      <TableHead
-                        style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
-                      >
+                      <TableHead style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}>
                         <TableRow>
                           <CenterTableCell>개설일</CenterTableCell>
                           <CenterTableCell>모집시작일</CenterTableCell>
@@ -173,13 +169,8 @@ export default function TogeterManagement() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        <TableRow
-                          key={together.reportDetailCode}
-                          sx={{ backgroundColor: "#f2f2f2" }}
-                        >
-                          <CenterTableCell>
-                            {together.togetherOpenedCode.togetherOpenedDate}
-                          </CenterTableCell>
+                        <TableRow key={together.reportDetailCode} sx={{ backgroundColor: "#f2f2f2" }}>
+                          <CenterTableCell>{together.togetherOpenedCode.togetherOpenedDate}</CenterTableCell>
                           <CenterTableCell>{together.togetherRecruitStartDate}</CenterTableCell>
                           <CenterTableCell>{together.togetherRecruitEndDate}</CenterTableCell>
                           <CenterTableCell>{together.togetherPrice}</CenterTableCell>

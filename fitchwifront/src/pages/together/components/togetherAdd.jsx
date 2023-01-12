@@ -1,4 +1,4 @@
-import { Avatar, Box, FormControl, InputLabel, MenuItem, Button, Select, styled, TextField, Typography, Stack, Grid } from "@mui/material";
+import { Avatar, Box, FormControl, InputLabel, MenuItem, Button, Select, styled, TextField, Typography, Stack, Grid, Paper, Chip } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -17,6 +17,7 @@ import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
 import FaceRoundedIcon from "@mui/icons-material/FaceRounded";
 import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatisfiedAltRounded";
 import CircularProgress from '@mui/material/CircularProgress';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
 
 const nowdate = moment().format("YYYY-MM-DD");
 
@@ -67,7 +68,15 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     togetherInquiry: "", // 함께해요 가입 질문
     togetherPrice: 0, // 함께해요장이 지정한 1인 참여금액
     togetherTagContent: "", //태그 내용
-  });
+  }); 
+
+  const imgBoxStyle = {
+    marginTop: "20px",
+    width: "300px",
+    height: "200px",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  };
 
   const getMemberInfo = useCallback(
     (id) => {
@@ -91,6 +100,11 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     }
     return () => preview();
   });
+
+  const addTag = useCallback(
+    () => {
+
+    },[])
 
 
   const getNodayList = useCallback(
@@ -151,13 +165,7 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     [insertForm]
   );
 
-  const imgBoxStyle = {
-    marginTop: "20px",
-    width: "300px",
-    height: "200px",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-  };
+  
 
 
   const disableDates = (date) => {
@@ -198,6 +206,26 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
   const handleClick = () => {
     open({ onComplete: handleComplete });
   };
+
+
+
+  // 태그 추가
+
+  // const ListItem = styled('li')(({ theme }) => ({
+  // margin: theme.spacing(0.5),
+  // }));
+
+  // const [chipData, setChipData] = React.useState([
+  //   { key: 0, label: 'Angular' },
+  //   { key: 1, label: 'jQuery' },
+  //   { key: 2, label: 'Polymer' },
+  //   { key: 3, label: 'React' },
+  //   { key: 4, label: 'Vue.js' },
+  // ]);
+
+  // const handleDelete = (chipToDelete) => () => {
+  //   setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  // };
 
 
   return (
@@ -461,7 +489,17 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
             <MenuItem value="선착순">선착순</MenuItem>
             <MenuItem value="승인제">승인제</MenuItem>
           </Select>
-        </FormControl>
+          </FormControl>
+          
+        {insertForm.togetherType==="선착순" ? null:<TextField
+          fullWidth
+          label="유저 신청시 질문내용 작성(승인제)"
+          sx={{ mt: 3 }}
+          name="togetherInquiry"
+          value={insertForm.togetherInquiry}
+          onChange={handleChange}
+          id="fullWidth"
+          />}
         <Stack>
           <Box style={imgBoxStyle} className="img_box"></Box>
           <Typography variant="h7" sx={{ mt: 3 }}>
@@ -484,15 +522,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
         </Stack>
         <TextField
           fullWidth
-          label="유저 신청시 질문내용 작성(승인제)"
-          sx={{ mt: 3 }}
-          name="togetherInquiry"
-          value={insertForm.togetherInquiry}
-          onChange={handleChange}
-          id="fullWidth"
-        />
-        <TextField
-          fullWidth
           label="모임 소개 말"
           sx={{ mt: 3 }}
           value={insertForm.togetherContent}
@@ -502,15 +531,50 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
           onChange={handleChange}
           required
         />
-        <TextField
-          fullWidth
-          label="태그"
-          sx={{ mt: 3 }}
-          name="togetherTagContent"
-          onChange={handleChange}
-          required
-          value={insertForm.togetherTagContent}
-        />
+          <Stack
+            direction="row"
+            sx={{ mt: 3, height: 55 }}
+            spacing={3}
+          >
+          <TextField
+            fullWidth
+            label="태그"
+            name="togetherTagContent"
+            onChange={handleChange}
+            required
+            value={insertForm.togetherTagContent}
+            />
+          <Button variant={"contained"} onClick={addTag}>추가</Button>
+            {/* <Paper
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              listStyle: 'none',
+              p: 0.5,
+              m: 0,
+            }}
+            component="ul"
+          >
+            {chipData.map((data) => {
+              let icon;
+
+              if (data.label === 'React') {
+                icon = <TagFacesIcon />;
+              }
+
+              return (
+                <ListItem key={data.key}>
+                  <Chip
+                    icon={icon}
+                    label={data.label}
+                    onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                  />
+                </ListItem>
+              );
+            })}
+          </Paper> */}
+        </Stack>
         <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
           개설하기
         </Button>

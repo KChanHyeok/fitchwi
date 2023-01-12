@@ -38,8 +38,10 @@ const Header = ({ lstate, onLogout }) => {
             <Link style={{ textDecoration: "none", color: "black" }} to={"/about"}>
               <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}>소개페이지</Typography>
             </Link>
+
             <Link style={{ textDecoration: "none", color: "black" }} to={"/together"}>
               <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 } }}>함께해요</Typography>
+
             </Link>
             <Link style={{ textDecoration: "none", color: "black" }} to={"/talk"}>
               <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 } }}>얘기해요</Typography>
@@ -48,6 +50,7 @@ const Header = ({ lstate, onLogout }) => {
               <Typography sx={{ display: { xs: "none", sm: "block" } }}>공유해요</Typography>
             </Link>
           </Box>
+
           <Box>
             <SearchBar>
               <InputBase placeholder="검색" sx={{ color: "white", display: { xs: "block", sm: "none" } }} />
@@ -65,6 +68,7 @@ const Header = ({ lstate, onLogout }) => {
                 {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
               </Button>
             </Box>
+
           </Box>
         </Container>
       </StyledToolbar>

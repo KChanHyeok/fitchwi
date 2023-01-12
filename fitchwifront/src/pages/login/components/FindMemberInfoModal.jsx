@@ -39,7 +39,7 @@ export default function FindMemberInfoModal() {
   const handlePhone = (e) => {
     setMemberPhone(e.target.value);
   };
-  console.log(memberPhone);
+  // console.log(memberPhone);
 
   //휴대전화 인증 -> ok -> 아이디 알려주기 + 카카오인지 일반회원인지도 알려줘야함
   //카카오회원 -> 로그인화면에서 카카오로그인을 이용해주세요
@@ -74,14 +74,14 @@ export default function FindMemberInfoModal() {
     function callback(response) {
       // eslint-disable-next-line no-unused-vars
       const { success, merchant_uid, error_msg } = response;
-      console.log(response);
+      // console.log(response);
       if (success) {
         setCheckPhone(true);
         //    setDisabled(false);
         // alert("본인인증 성공");
 
         axios.get("/getMemberByPhone", { params: { memberPhone: memberPhone } }).then((result) => {
-          console.log(result.data);
+          //  console.log(result.data);
           if (result.data[0] === "no data") {
             // alert("등록되지 않은 전화번호입니다. 회원가입을 먼저 진행해주세요");
             //  setOpen(false);
@@ -152,6 +152,7 @@ export default function FindMemberInfoModal() {
       .then((result) => {
         //    console.log(result.data);
         alert("비밀번호가 성공적으로 변경됐습니다.");
+        handleClose();
         nav("/login");
       })
       .catch((error) => console.log(error));

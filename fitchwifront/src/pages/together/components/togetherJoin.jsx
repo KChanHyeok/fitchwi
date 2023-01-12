@@ -228,9 +228,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     return (
         <>
             { togetherJoinState==="대기" ? <Button onClick={handleOpen} sx={{width:"100%", mb:3}} variant={"contained"} >신청취소</Button>:
-            togetherJoinState==="거절" ? <Button variant={"contained"} sx={{width:"100%", mb:3}} disabled>신청이 거절되었습니다</Button>:
+            togetherJoinState==="거절" ? <Button variant={"contained"} sx={{width:"100%", mb:3}} disabled>신청이 거절되었습니다.</Button>:
             togetherJoinState==="가입중" ? <Button onClick={handleOpen} sx={{width:"100%", mb:3}} variant={"contained"} >참여취소하기</Button>:
-            togetherPayState==="결제완료" ? <Button variant={"contained"} sx={{width:"100%", mb:3}} disabled>결제가 완료되었습니다</Button>:
+            togetherPayState === "결제완료" ? <Button variant={"contained"} sx={{ width: "100%", mb: 3 }} disabled>결제가 완료되었습니다.</Button> :
+            togetherPayState ==="삭제신청중" ? <Button variant={"contained"} sx={{ width: "100%", mb: 3 }} disabled>삭제 대기중입니다.</Button> :
             <Button onClick={handleOpen} variant={"contained"} sx={{width:"100%", mb:3}} >{children}</Button>
             }
             <Modal

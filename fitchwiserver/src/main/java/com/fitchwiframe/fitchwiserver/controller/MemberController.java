@@ -87,11 +87,13 @@ public class MemberController {
     return followMap;
   }
 
-  @GetMapping("/createMemeber")
-  private String createMembers(){
-    log.info("memberController.createMembers");
-    return memberService.createMember();
-  }
+
+  //  @GetMapping("/createMemeber")
+//  private String createMembers(){
+//    log.info("memberController.createMembers");
+//
+//    return memberService.createMember();
+//  }
 
   @PostMapping("/checkPwd")
   private String checkPwd(@RequestBody Member memberToCheck){

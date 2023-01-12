@@ -70,11 +70,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
     // console.log(talkList);
     return talkList.map((talk) => {
       return (
-        <Link
-          to={`/talk/${talk.talkCode.talkCode}`}
-          key={talk.talkCode}
-          style={{ textDecoration: "none" }}
-        >
+        <Link to={`/talk/${talk.talkCode.talkCode}`} key={talk.talkCode} style={{ textDecoration: "none" }}>
           <Box
             component="div"
             style={{
@@ -110,7 +106,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
                 <Chip
                   label={talk.talkCode.talkCategory}
                   size="small"
-                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)" }}
+                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)", ml: 2 }}
                 />
               </Grid>
               <Grid item xs={4} textAlign="left" sx={{ mt: 1, ml: 1 }}>
@@ -175,7 +171,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
                 <Chip
                   label={talk.talkCategory}
                   size="small"
-                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)" }}
+                  sx={{ color: "white", background: "rgba(255, 255, 255, 0.2)", ml: 2 }}
                 />
               </Grid>
               <Grid item xs={4} textAlign="left" sx={{ mt: 1, ml: 1 }}>
@@ -200,7 +196,7 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList }) {
 
   // useMemo(() => printCardList, []);
   return (
-    <Box sx={{ width: "90%" }}>
+    <Box sx={{ width: "100%" }}>
       {talkJoinList.length || talkOpenedList.length !== 0 ? (
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
