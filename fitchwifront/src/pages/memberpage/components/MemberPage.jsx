@@ -33,7 +33,7 @@ import MemberTalk from "./MemberTalk";
 
 import MemberTogether from "./MemberTogether";
 
-export default function MemberPage({ member, onLogout, lstate }) {
+export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   //페이지 기본 데이터
   const nav = useNavigate();
   const [feedList, setFeedList] = useState([]);
@@ -137,14 +137,14 @@ export default function MemberPage({ member, onLogout, lstate }) {
   const onFollow = useCallback(
     (isFollow) => {
       if (sessionStorage.getItem("id") == null) {
-        alert("로그인 후 가능합니다.");
+        swAlert("로그인 후 가능합니다.", "info");
         return;
       }
       if (isFollow === false) {
         // console.log(pageOwner.memberEmail);
         axios.get("/follow", { params: { loginId: logid, pageOwner: memberEmail } }).then((res) => {
           // console.log(res.data);
-          alert(`${memberNickname}님을 팔로우했습니다.`);
+          swAlert(`${memberNickname}님을 팔로우했습니다.`);
           setIsFollow(true);
         });
       } else {
@@ -154,7 +154,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
           })
           .then((res) => {
             //  console.log(res.data);
-            alert(`${memberNickname}님 팔로우를 취소했습니다.`);
+            swAlert(`${memberNickname}님 팔로우를 취소했습니다.`);
             setIsFollow(false);
           });
       }
@@ -178,13 +178,13 @@ export default function MemberPage({ member, onLogout, lstate }) {
           if (res.data === "ok") {
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("nickName");
-            alert("탈퇴 처리가 완료됐습니다.");
+            swAlert("탈퇴 처리가 완료됐습니다.");
             onLogout();
             nav("/");
           } else if (res.data === "togetherExist") {
-            alert("함께해요를 먼저 탈퇴해주세요");
+            swAlert("진행 예정인 함께해요가 있습니다. <br/>함께해요를 먼저 탈퇴해주세요.", "info");
           } else {
-            alert("탈퇴처리에 문제발생");
+            swAlert("탈퇴처리에 문제발생", "info");
           }
         })
         .catch((error) => console.log(error));
@@ -445,6 +445,7 @@ export default function MemberPage({ member, onLogout, lstate }) {
                     myMenu={myMenu}
                     togetherJoinList={togetherJoinList}
                     togetherOpenedList={togetherOpenedList}
+                    swAlert={swAlert}
                   />
                 ) : null}
               </Box>

@@ -15,7 +15,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import CalendarApp from "./CalendarApp";
-export default function EditFacilities() {
+export default function EditFacilities({}) {
   const { facilitiesCode } = useParams();
   const loadFacilities = useCallback(() => {
     setLoad(false);

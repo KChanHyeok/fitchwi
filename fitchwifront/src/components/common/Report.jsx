@@ -38,20 +38,19 @@ export default function Report({ targetMember, target, category, type }) {
   });
 
   const [isReported, setIsReported] = useState(false);
-
-  const okAlert = (titleText, alertText) => {
+  const swAlert = (contentText, icon = "success") => {
     Swal.fire({
-      title: titleText,
-      text: alertText,
-      icon: "success",
+      title: "알림",
+      text: contentText,
+      icon: icon,
       confirmButtonText: "확인",
       confirmButtonColor: "#ff0456",
     });
   };
-
   const handleClickOpen = () => {
     if (reportDetail[0].memberEmail.memberEmail == null) {
-      okAlert("신고하기", "로그인 후 이용 가능합니다.");
+      swAlert("로그인 후 이용 가능합니다.", "warning");
+
       nav("/login");
       return;
     }
@@ -71,7 +70,7 @@ export default function Report({ targetMember, target, category, type }) {
         } else if (res.data === "ok") {
           setOpen(true);
         } else {
-          alert("서버 문제 발생");
+          swAlert("서버 문제 발생", "warning");
         }
       });
   };
@@ -82,12 +81,14 @@ export default function Report({ targetMember, target, category, type }) {
     e.preventDefault();
     console.log(reportForm);
     axios.post("/report", reportForm).then((result) => {
-      alert(result.data);
+      if (result.data === "ok") {
+        swAlert("신고 접수가 완료됐습니다. 소중한 의견 감사드리며, 더욱 건강한 FITCHWI가 되도록 하겠습니다.");
+      } else {
+        swAlert("신고 접수가 정상적으로 처리되지 않았습니다. 잠시 후 다시 시도해주세요.");
+      }
     });
 
     setOpen(false);
-    console.log(reportForm);
-    // alert("신고가 접수되었습니다.");
   };
   console.log(reportDetail[0]);
   const handleInput = useCallback(
