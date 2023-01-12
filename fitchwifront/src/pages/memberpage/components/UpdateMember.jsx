@@ -25,7 +25,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Postcode from "../../join/components/Postcode";
 import ChangePwdModal from "./ChangePwdModal";
-export default function UpdateMember({ member, lstate, sucLogin }) {
+export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   const [memberToUpdate, setMemberToUpdate] = useState({});
   const [openChangePwd, setOpenChangePwd] = React.useState(false);
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
   const onUpdate = (e) => {
     e.preventDefault();
     if (memberToUpdate.memberPhone !== checkedPhone || originalPhone !== memberToUpdate.memberPhone) {
-      alert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.");
+      swAlert("연락처를 변경하셨습니다. 본인인증을 먼저 해주세요.", "warning");
       return;
     }
     formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
@@ -74,10 +74,9 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
           sessionStorage.setItem("nickName", res.data.memberNickname);
           sessionStorage.setItem("mbti", res.data.memberMbti);
           sessionStorage.setItem("profileImg", res.data.memberSaveimg);
-          alert("성공");
-          nav("/");
+          swAlert("수정된 회원 정보가 성공적으로 저장됐습니다.", "success", () => nav("/memberpage"));
         } else {
-          alert("실패");
+          swAlert("회원 정보 수정 과정에 문제가 발생했습니다.");
         }
       })
       .catch((error) => console.log(error));
@@ -306,7 +305,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
       setMemberToUpdate({ ...memberToUpdate, memberPhone: e.target.value });
     }
   };
-
+  console.log(memberPhone);
   const [checkedPhone, setCheckedPhone] = useState(member.memberPhone);
   // eslint-disable-next-line no-unused-vars
   const [originalPhone, setOriginalPhone] = useState(member.memberPhone);
@@ -314,9 +313,9 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
   const Certification = () => {
     // console.log(joinForm.memberPhone);
     if (memberToUpdate.memberPhone === "") {
-      return alert("연락처를 입력해주세요!");
+      return swAlert("연락처를 입력해주세요!", "warning");
     } else if (memberToUpdate.memberPhone === originalPhone) {
-      return alert("기존 연락처와 동일합니다.");
+      return swAlert("기존 연락처와 동일합니다.", "warning");
     }
     axios
       .post("/checkPhone", memberToUpdate.memberPhone, {
@@ -325,7 +324,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
       .then((result) => {
         //     console.log(result.data);
         if (result.data === "fail") {
-          alert("이미 등록된 전화번호입니다.");
+          swAlert("이미 등록된 전화번호입니다.", "warning");
         } else {
           const { IMP } = window;
 
@@ -335,8 +334,10 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
             merchant_uid: `mid_${new Date().getTime()}`,
             company: "아임포트",
             carrier: "",
+            name: memberName,
             phone: memberToUpdate.memberPhone,
           };
+          console.log(data);
           IMP.certification(data, callback);
 
           function callback(response) {
@@ -346,11 +347,11 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
             if (success) {
               setCheckedPhone(memberToUpdate.memberPhone);
               //    setDisabled(false);
-              alert("본인인증 성공");
+              swAlert("본인인증이 완료됐습니다.");
               //   console.log(response);
               //  console.log(merchant_uid);
             } else {
-              alert(`본인인증 실패: ${error_msg}`);
+              swAlert(`본인인증에 실패했습니다.<br/>: ${error_msg}`);
             }
           }
         }
@@ -426,6 +427,7 @@ export default function UpdateMember({ member, lstate, sucLogin }) {
                 {sessionStorage.getItem("classification") !== "k" ? (
                   <Grid item xs={12}>
                     <ChangePwdModal
+                      swAlert={swAlert}
                       onClick={() => setOpenChangePwd(() => true)}
                       openChangePwd={openChangePwd}
                       setOpenChangePwd={setOpenChangePwd}

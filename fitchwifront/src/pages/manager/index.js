@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import Swal from "sweetalert2";
 import CheckMangerPwdModal from "./components/CheckMangerPwdModal";
 import AddFacilities from "./components/facilities/AddFacilities";
 import EditFacilities from "./components/facilities/EditFacilities";
@@ -12,6 +13,15 @@ import TogeterManagement from "./components/togethermanagement/TogetherManagemen
 
 export default function ManagerIndex({ setIsManager, isManager }) {
   // const [isManager, setIsManager] = useState(false);
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
 
   return (
     <Box>
@@ -20,20 +30,20 @@ export default function ManagerIndex({ setIsManager, isManager }) {
       ) : (
         <div>
           <Routes>
-            <Route path="/" element={<Manager />} />
+            <Route path="/" element={<Manager swAlert={swAlert} />} />
 
-            <Route path="/facilities" element={<Facilities />} />
-            <Route path="/facilities/insertFacilities" element={<AddFacilities />} />
+            <Route path="/facilities" element={<Facilities swAlert={swAlert} />} />
+            <Route path="/facilities/insertFacilities" element={<AddFacilities swAlert={swAlert} />} />
             <Route
               path="/facilities/updateFacilities/:facilitiesCode"
-              element={<EditFacilities />}
+              element={<EditFacilities swAlert={swAlert} />}
             />
             <Route
               path="/facilities/getFacilitiesInfo/:facilitiesCode"
-              element={<ViewFacilities />}
+              element={<ViewFacilities swAlert={swAlert} />}
             />
-            <Route path="/report" element={<ReportManagement />} />
-            <Route path="/togetherManagement" element={<TogeterManagement />} />
+            <Route path="/report" element={<ReportManagement swAlert={swAlert} />} />
+            <Route path="/togetherManagement" element={<TogeterManagement swAlert={swAlert} />} />
           </Routes>
         </div>
       )}

@@ -15,7 +15,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-export default function AddFacilities() {
+export default function AddFacilities({ swAlert }) {
   const nav = useNavigate();
 
   const [facilities, setFacilities] = useState({
@@ -45,10 +45,10 @@ export default function AddFacilities() {
     e.preventDefault();
     axios.post("/insertFacilities", facilities).then((res) => {
       if (res.data === "ok") {
-        alert("시설 등록에 성공했습니다.");
+        swAlert("시설 등록에 성공했습니다.");
         nav("/manager/facilities/");
       } else {
-        alert("시설 등록에 실패했습니다.");
+        swAlert("시설 등록에 실패했습니다.", "warning");
       }
     });
   };

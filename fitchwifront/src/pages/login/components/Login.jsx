@@ -13,7 +13,7 @@ import { LoginOutlined } from "@mui/icons-material";
 import KaKaoLogin from "./KakaoLogin";
 import FindMemberInfoModal from "./FindMemberInfoModal";
 
-export default function Login({ sucLogin }) {
+export default function Login({ sucLogin, swAlert }) {
   const nav = useNavigate();
   const [loginForm, setLoginForm] = React.useState({
     memberEmail: "",
@@ -35,7 +35,7 @@ export default function Login({ sucLogin }) {
     (e) => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
-        //  console.log(res.data);
+        console.log(res.data);
         switch (res.data.state) {
           case "ok":
             sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
@@ -44,28 +44,28 @@ export default function Login({ sucLogin }) {
             sessionStorage.setItem("mbti", res.data.mbti);
             sessionStorage.setItem("profileImg", res.data.profileImg);
 
-            alert(res.data.memberNickname + "님 환영합니다.");
+            swAlert(res.data.memberNickname + "님 환영합니다.");
             nav("/", { replace: true });
             break;
 
           case "wrong pwd":
-            alert("비밀번호가 틀렸습니다.");
+            swAlert("비밀번호가 틀렸습니다.", "warning");
             break;
           case "no data":
-            alert("아이디와 일치하는 회원정보가 없습니다.");
+            swAlert("아이디와 일치하는 회원정보가 없습니다.", "warning");
             break;
           case "reported":
-            alert("신고누적으로, " + res.data.memberRestriction + "부터 이용 가능합니다.");
+            swAlert("신고누적으로, " + res.data.memberRestriction + "부터 이용 가능합니다.", "warning");
             nav("/", { replace: true });
             break;
           case "released":
-            alert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.");
+            swAlert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.", "info");
             sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
             sessionStorage.setItem("mbti", res.data.mbti);
             sessionStorage.setItem("profileImg", res.data.profileImg);
-            alert(res.data.memberNickname + "님 환영합니다.");
+            swAlert(res.data.memberNickname + "님 환영합니다.");
             nav("/", { replace: true });
             break;
           default:
@@ -133,12 +133,12 @@ export default function Login({ sucLogin }) {
             </Button>
 
             <Button fullWidth variant="text" sx={{ mt: 1, mb: 2, height: "45px" }}>
-              <KaKaoLogin />
+              <KaKaoLogin swAlert={swAlert} />
             </Button>
           </Box>
           <Grid container>
             <Grid item xs>
-              <FindMemberInfoModal />
+              <FindMemberInfoModal swAlert={swAlert} />
             </Grid>
 
             <Grid item>

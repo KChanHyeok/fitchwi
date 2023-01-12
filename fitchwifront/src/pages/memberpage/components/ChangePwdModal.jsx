@@ -11,7 +11,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 
-export default function ChangePwdModal({ children, openChangePwd, setOpenChangePwd, lstate }) {
+export default function ChangePwdModal({ children, openChangePwd, setOpenChangePwd, lstate, swAlert }) {
   //회원 정보 수정
   console.log(lstate);
   const [memberToCheck, setMemberToCheck] = React.useState({
@@ -88,7 +88,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
         if (result.data === "ok") {
           axios.put("/updatePwd", memberToChange).then((result) => {
             if (result.data === "ok") {
-              alert("비밀번호 변경이 완료됐습니다.");
+              swAlert("비밀번호 변경이 완료됐습니다.");
               handleClose(true);
               setCheckPwd("");
               setCorrectPwd(null);
@@ -98,7 +98,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
           });
         } else {
           console.log(result.data);
-          alert("기존 비밀번호를 다시한번 확인하세요.");
+          swAlert("기존 비밀번호를 다시한번 확인하세요.", "warning");
         }
       })
       .catch((error) => console.log(error));
@@ -106,11 +106,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
   };
   return (
     <div>
-      <Button
-        variant="outlined"
-        onClick={() => setOpenChangePwd(() => true)}
-        sx={{ width: "100%" }}
-      >
+      <Button variant="outlined" onClick={() => setOpenChangePwd(() => true)} sx={{ width: "100%" }}>
         <Typography>{children}</Typography>
       </Button>
 

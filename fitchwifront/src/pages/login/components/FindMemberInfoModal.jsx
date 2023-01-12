@@ -14,7 +14,7 @@ import axios from "axios";
 //category : 함께해요-together / 얘기해요 - talk / 공유해요 - share / 회원 - memberpage / 댓글-comment
 //target : togerther / talk / feed /각 키값  //  회원신고는 target="0"
 //type : MenuItem으로 쓸거면 prop으로 MenuItem 전달 / 기본값은 버튼
-export default function FindMemberInfoModal() {
+export default function FindMemberInfoModal({ swAlert }) {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
 
@@ -37,6 +37,7 @@ export default function FindMemberInfoModal() {
   });
 
   const handlePhone = (e) => {
+    console.log(memberPhone);
     setMemberPhone(e.target.value);
   };
   // console.log(memberPhone);
@@ -51,7 +52,7 @@ export default function FindMemberInfoModal() {
     e.preventDefault();
 
     if (memberPhone === "") {
-      return alert("연락처를 입력해주세요!");
+      return "연락처를 입력해주세요!";
     }
 
     const { IMP } = window;
@@ -109,7 +110,7 @@ export default function FindMemberInfoModal() {
         //   console.log(response);
         //  console.log(merchant_uid);
       } else {
-        alert(`본인인증 실패: ${error_msg}`);
+        swAlert(`본인인증 실패: ${error_msg}`, "warning");
       }
     }
   };
@@ -151,7 +152,8 @@ export default function FindMemberInfoModal() {
       .put("/updatePwd", memberToChangePwd)
       .then((result) => {
         //    console.log(result.data);
-        alert("비밀번호가 성공적으로 변경됐습니다.");
+
+        swAlert("비밀번호가 성공적으로 변경됐습니다.");
         handleClose();
         nav("/login");
       })

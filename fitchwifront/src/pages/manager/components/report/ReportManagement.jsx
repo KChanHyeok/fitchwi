@@ -40,6 +40,7 @@ export default function ReportManagement() {
 
   useEffect(() => {
     pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
+
     // console.log("axios");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -63,11 +64,14 @@ export default function ReportManagement() {
   }, []);
 
   const onRistrict = (period, memberEmail, reportCode) => {
-    // console.log(period);
+    if (period === undefined) {
+      alert("이용 제한일을 먼저 선택해주세요.");
+      return;
+    }
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
 
     axios.put(`/restrictMember/${restrictDate}/${memberEmail}`).then((result) => {
-      //   console.log(result);
+      console.log(result);
       updateReportState(reportCode, restrictDate);
     });
   };
@@ -75,7 +79,7 @@ export default function ReportManagement() {
   const [restrictDateMap, setRestrictDateMap] = useState(new Map());
 
   const onSelectDate = useCallback((e) => {
-    //  console.log(e.target.value);
+    console.log(e.target.value);
     setRestrictDateMap((prev) => new Map(prev).set(e.target.name, e.target.value));
   }, []);
 
@@ -257,9 +261,7 @@ export default function ReportManagement() {
                 <AccordionDetails>
                   <TableContainer component="main">
                     <Table aria-label="simple table">
-                      <TableHead
-                        style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}
-                      >
+                      <TableHead style={{ borderBottom: "1.5px solid gray", backgroundColor: "#fcefef" }}>
                         <TableRow>
                           <CenterTableCell>신고일시</CenterTableCell>
                           <CenterTableCell>신고한 유저</CenterTableCell>
@@ -268,14 +270,9 @@ export default function ReportManagement() {
                       </TableHead>
                       <TableBody>
                         {report.reportDetailList.map((reportDetail) => (
-                          <TableRow
-                            key={reportDetail.reportDetailCode}
-                            sx={{ backgroundColor: "#f2f2f2" }}
-                          >
+                          <TableRow key={reportDetail.reportDetailCode} sx={{ backgroundColor: "#f2f2f2" }}>
                             <CenterTableCell>{reportDetail.reportDetailDate}</CenterTableCell>
-                            <CenterTableCell>
-                              {reportDetail.memberEmail.memberEmail}
-                            </CenterTableCell>
+                            <CenterTableCell>{reportDetail.memberEmail.memberEmail}</CenterTableCell>
                             <CenterTableCell>{reportDetail.reportDetailContent}</CenterTableCell>
                           </TableRow>
                         ))}
@@ -317,12 +314,17 @@ export default function ReportManagement() {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 name={report.reportCode + ""}
-                                // value={restrictDateMap ? restrictDateMap.get(report.reportCode) : 2}
+                                // value={
+                                //   !restrictDateMap.has(report.reportCode + "")
+                                //     ? restrictDateMap.get(report.reportCode + "", 2)
+                                //     : 2
+                                // }
+                                defaultValue={0}
                                 label="restrictDate"
-                                defaultValue={2}
                                 onChange={(e) => onSelectDate(e)}
                                 size="small"
                               >
+                                <MenuItem value={0}> 선택</MenuItem>
                                 <MenuItem value={2}>1일</MenuItem>
                                 <MenuItem value={8}>7일</MenuItem>
                                 <MenuItem value={31}>30일</MenuItem>

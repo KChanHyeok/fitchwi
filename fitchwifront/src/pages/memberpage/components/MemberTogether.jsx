@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Membertogether({ myMenu, togetherJoinList, togetherOpenedList }) {
+export default function Membertogether({ myMenu, togetherJoinList, togetherOpenedList, swAlert }) {
   const [value, setValue] = useState(0);
 
   //  console.log(togetherOpenedList);
@@ -163,7 +163,7 @@ export default function Membertogether({ myMenu, togetherJoinList, togetherOpene
           style={{ textDecoration: "none" }}
           onClick={() => {
             if (together.togetherState === "삭제신청중") {
-              alert("삭제신청 대기중인 함께해요입니다.");
+              swAlert("삭제 처리를 위해 대기중인 함께해요입니다..", "info");
             }
           }}
         >
