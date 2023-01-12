@@ -82,12 +82,10 @@ const SearchResult = () => {
     [newSearchText, nav]
   );
 
-  console.log(talkList);
-  console.log(togetherList);
   return (
     <>
       <StyledAppbar position="sticky">
-        <Toolbar sx={{ ml: 27.5 }} component="form" onSubmit={onSearch}>
+        <Toolbar sx={{ ml: 17 }} component="form" onSubmit={onSearch}>
           <Search sx={{ color: "black", fontSize: 30 }} />
           <Input onChange={handleChange} disableUnderline={true} defaultValue={searchText} fullWidth sx={{ ml: 2 }} />
         </Toolbar>
@@ -158,14 +156,14 @@ const SearchResult = () => {
                             <Typography variant="body1" component="div">
                               {item.togetherContent}
                             </Typography>
-                            <Box display="flex" alignItems="center">
+                            <Box display="flex" alignItems="center" mt={1}>
                               <LocationOn />
                               <Typography variant="subtitle1" ml={1} mr={2}>
                                 {item.togetherPosition} · {item.togetherDate}
                               </Typography>
                               <People />
                               <Typography variant="subtitle1" ml={1}>
-                                {item.togetherMemberCount}/{item.togetherMax}명
+                                {item.togetherMemberCount + 1}/{item.togetherMax}명
                               </Typography>
                             </Box>
                           </CardContent>
