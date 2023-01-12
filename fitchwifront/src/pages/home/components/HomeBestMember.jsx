@@ -14,7 +14,7 @@ const HomeBestMember = () => {
         if (acc.findIndex(({ memberEmail }) => memberEmail === current.memberEmail) === -1) {
           acc.push(current);
         }
-        console.log(acc);
+        acc.sort((a, b) => b.memberFeedCount - a.memberFeedCount);
         setMember(acc);
         return acc;
       }, []);
@@ -76,18 +76,20 @@ const HomeBestMember = () => {
                 </Grid>
               ) : (
                 <Grid item xs={3} sm={6} md={6} lg={3} key={data.memberEmail} display="flex" flexDirection="column" alignItems="center">
-                  <StyledBadge2
-                    overlap="circular"
-                    anchorOrigin={{ vertical: "top", horizontal: "left" }}
-                    badgeContent="🏅"
-                    sx={{ display: { xs: "block", sm: "none" } }}
-                  >
-                    <Avatar src={data.memberSaveimg} sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3 }} />
-                  </StyledBadge2>
-                  <Avatar
-                    src={data.memberSaveimg}
-                    sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3, display: { xs: "none", sm: "block" } }}
-                  />
+                  <Link to="/memberpage" state={{ memberId: data.memberEmail }}>
+                    <StyledBadge2
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                      badgeContent="🏅"
+                      sx={{ display: { xs: "block", sm: "none" } }}
+                    >
+                      <Avatar src={data.memberSaveimg} sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3 }} />
+                    </StyledBadge2>
+                    <Avatar
+                      src={data.memberSaveimg}
+                      sx={{ width: { xs: 50, sm: 200 }, height: { xs: 50, sm: 200 }, boxShadow: 3, display: { xs: "none", sm: "block" } }}
+                    />
+                  </Link>
                   <Typography fontSize={20} fontWeight={100} mt={2} sx={{ display: { xs: "none", sm: "block" } }}>
                     🏅 {data.memberNickname}님
                   </Typography>

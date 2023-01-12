@@ -1,34 +1,58 @@
 import * as React from "react";
-import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { ImageListItemBar } from "@mui/material";
+import { Grid, ImageListItemBar } from "@mui/material";
 
 export default function HomeCategory({ setCategory, setKorCategory }) {
   return (
-    <ImageList sx={{ width: "100%", height: 150 }} cols={7} gap={10}>
-      {itemData.map((item, index) => (
-        <ImageListItem
-          style={{ height: "150px" }}
-          onClick={() => {
-            setKorCategory(item.title);
-            setCategory(item.category);
-          }}
-          key={index}
-        >
-          <img
-            src={`${item.img}?w=248&fit=crop&auto=format`}
-            alt={item.title}
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: 10,
-              cursor: "pointer",
-            }}
-          />
-          <ImageListItemBar title={item.title} sx={{ textAlign: "center", borderRadius: 2, cursor: "pointer" }} />
-        </ImageListItem>
-      ))}
-    </ImageList>
+    <Grid container spacing={2} display="flex" p={3} alignItems="center">
+      {itemData.map((item, index) =>
+        index !== 6 ? (
+          <Grid item xs={4} sm={3} md={2} lg={1.7} key={index}>
+            <ImageListItem
+              style={{ height: "150px" }}
+              onClick={() => {
+                setKorCategory(item.title);
+                setCategory(item.category);
+              }}
+            >
+              <img
+                src={`${item.img}?w=248&fit=crop&auto=format`}
+                alt={item.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                }}
+              />
+              <ImageListItemBar subtitle={item.title} sx={{ textAlign: "center", borderRadius: 2, cursor: "pointer" }} />
+            </ImageListItem>
+          </Grid>
+        ) : (
+          <Grid item xs={12} sm={3} md={2} lg={1.7} key={index}>
+            <ImageListItem
+              style={{ height: "150px" }}
+              onClick={() => {
+                setKorCategory(item.title);
+                setCategory(item.category);
+              }}
+            >
+              <img
+                src={`${item.img}?w=248&fit=crop&auto=format`}
+                alt={item.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                }}
+              />
+              <ImageListItemBar subtitle={item.title} sx={{ textAlign: "center", borderRadius: 2, cursor: "pointer" }} />
+            </ImageListItem>
+          </Grid>
+        )
+      )}
+    </Grid>
   );
 }
 
