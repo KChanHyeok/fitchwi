@@ -234,7 +234,6 @@ const TogetherAdd = ({ data, refreshTogetherList }) => {
     })
   }
 
-  console.log(insertForm)
 
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
