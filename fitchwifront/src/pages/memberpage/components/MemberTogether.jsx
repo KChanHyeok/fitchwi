@@ -92,8 +92,9 @@ export default function Membertogether({
           <br />
           {isMine && (
             <Typography>
-              다른 사람들과 같은 공간에서 같은 취미를 즐겨요! <br />
-              '함께해요'에 가입해보세요!
+              새로운 사람들과 함께하는 취미생활!
+              <br />
+              '함께해요'에 가입해보세요.
             </Typography>
           )}
           <br />
@@ -200,10 +201,9 @@ export default function Membertogether({
             <div>
               <Typography>같은 취미라도 함께하면 더 즐겁죠!</Typography>
               <Typography> '함께해요'에서 함께해요!</Typography>
-              <br />
             </div>
           )}
-
+          <br />
           <Link to="/together/add" style={{ color: "#ff0456" }}>
             '함께해요' 개설하러 가기
           </Link>

@@ -328,10 +328,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   }}
                   avatar={
                     // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                    <Avatar
-                      src={memberSaveimg}
-                      sx={{ width: 100, height: 100, boxShadow: "0 0 3px  2px  #ffffff" }}
-                    />
+                    <Avatar src={memberSaveimg} sx={{ width: 100, height: 100, backgroundColor: "white" }} />
                   }
                   title={
                     <Typography sx={{ fontSize: 25 }}>
