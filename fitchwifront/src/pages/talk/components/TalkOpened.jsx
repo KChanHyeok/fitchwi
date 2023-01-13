@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Chip, CircularProgress, FormControl, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+import Swal from "sweetalert2";
 
 const UserBox = styled(Box)({
     display: "flex",
@@ -105,7 +107,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
             .then((res) => {
                 if (res.data === "ok") {
                     setLoad(false);
-                    alert("개설 성공");
+                    swAlert(res.data, "success");
                     nav("/talk");
                     refreshTalkList();
                     refreshTalkTagList();
@@ -128,6 +130,48 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
     const otherCheck = () => {
         setShowInquiry(false);
     }
+
+    // 태그 추가
+
+    const ListItem = styled('li')(({ theme }) => ({
+        margin: theme.spacing(0.5),
+    }));
+    const [chipData, setChipData] = React.useState([]);
+    const [count, setCount] = useState(0);
+    const addTag = useCallback(
+        (e) => {
+            setCount(count + 1);
+            const chipObj = {
+                key: count,
+                label: insertTalkOp.talkTagContent
+            }
+            setChipData(chipData.concat(chipObj))
+            setInsertTalkOp({
+                ...insertTalkOp,
+                talkTagContent: ""
+            });
+        }, [chipData, count, insertTalkOp])
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const saveClick = () => {
+        setInsertTalkOp({
+            ...insertTalkOp,
+            talkTagContent: chipData.map(data => data.label).join(" ")
+        });
+    }
+
+    const swAlert = (contentText, icon) => {
+        Swal.fire({
+            title: "알림",
+            text: contentText,
+            icon: icon,
+            confirmButtonText: "확인",
+            confirmButtonColor: "#ff0456",
+        });
+    };
 
     return (
         <>
@@ -181,7 +225,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     onChange={onChange}
                                     required
                                 />
-                                <FormControl sx={{ mt: 2 }} fullWidth>
+                                <FormControl sx={{ mt: 3 }} fullWidth>
                                     <InputLabel>모임 카테고리 선정</InputLabel>
                                     <Select label="모임 카테고리 선정"
                                         name="talkCategory"
@@ -199,7 +243,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     </Select>
                                 </FormControl>
                                 <div className="talkJoinStyle">
-                                    <FormControl sx={{ mt: 2, minWidth: 130 }}>
+                                    <FormControl sx={{ mt: 3, minWidth: 130 }}>
                                         <InputLabel className="talkTypeSt">가입유형</InputLabel>
                                         <Select label="가입유형" name="talkType"
                                             value={insertTalkOp.talkType}
@@ -214,7 +258,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     {showInquiry && <TextField label="가입질문"
                                         name="talkInquiry"
                                         value={insertTalkOp.talkInquiry}
-                                        sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
+                                        sx={{ mt: 3, float: "right", minWidth: 600 }}
                                         onChange={onChange} />}
                                 </div>
                                 <Stack>
@@ -233,14 +277,15 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                             />
                                         </Button>
                                         {/* &nbsp;&nbsp;
-                                    <Button variant="contained" component="label" size="large"
-                                        style={{
-                                            backgroundColor: "gray",
-                                            color: "white",
-                                        }}
-                                        onClick={() => deleteFileImage()}>
-                                        Delete
-                                    </Button> */}
+                                        <Button variant="contained" component="label" size="large"
+                                            style={{
+                                                backgroundColor: "gray",
+                                                color: "white",
+                                            }}
+                                        onClick={() => deleteFileImage()}
+                                        >
+                                            Delete
+                                        </Button> */}
                                     </Typography>
                                     <Box style={imgBoxStyle} className="img_box">
                                     </Box>
@@ -253,14 +298,44 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     placeholder="5000자 이내로 작성"
                                     multiline
                                     required />
-                                <TextField fullWidth
-                                    label="애기해요 태그"
-                                    name="talkTagContent"
-                                    sx={{ mt: 3 }}
-                                    onChange={onChange}
-                                    required />
-                                <Typography sx={{ float: "right" }}>
-                                    <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>개설하기</Button>
+                                <Stack
+                                    direction="row"
+                                    sx={{ mt: 3, height: 55 }}
+                                    spacing={3}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="태그"
+                                        name="talkTagContent"
+                                        // sx={{ mt: 3 }}
+                                        onChange={onChange}
+                                        value={insertTalkOp.talkTagContent}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start" >
+                                                    {chipData.map((data) => {
+                                                        let icon;
+                                                        if (data.label === 'React') {
+                                                            icon = <TagFacesIcon />;
+                                                        }
+                                                        return (
+                                                            <ListItem key={data.key} style={{ listStyle: "none" }}>
+                                                                <Chip
+                                                                    icon={icon}
+                                                                    label={data.label}
+                                                                    onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                                                />
+                                                            </ListItem>
+                                                        );
+                                                    })}
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <Button variant={"contained"} onClick={addTag}>추가</Button>
+                                </Stack>
+                                <Typography sx={{ mt: 3, float: "right" }}>
+                                    <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }} onClick={saveClick}>개설하기</Button>
                                     <Button href="/talk" variant={"contained"} sx={{ mt: 2 }}>취소</Button>
                                 </Typography>
                             </form>
