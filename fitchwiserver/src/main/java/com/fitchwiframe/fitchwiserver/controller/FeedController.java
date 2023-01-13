@@ -95,6 +95,12 @@ public class FeedController {
         return feedService.deleteFeed(feed, session);
     }
 
+    @DeleteMapping("/deleteComment")
+    private String deleteComment(@RequestBody FeedComment data){
+        log.info("deleteComment()");
+        return feedService.deleteComment(data);
+    }
+
     @GetMapping("/getTagList")
     private List<Tag> getTagList(){
         log.info("getTagList()");

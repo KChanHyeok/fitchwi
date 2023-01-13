@@ -138,7 +138,7 @@ const Post = ({
     const result = [];
     if (clist.length > 4) {
       for (let i = 0; i < 1; i++) {
-        result.push(<Comments key={clist[i].feedCommentCode} data={clist[i]} />);
+        result.push(<Comments key={clist[i].feedCommentCode} data={clist[i]} refreshFeed={refreshFeed} />);
       }
     }
     return result;
@@ -217,7 +217,7 @@ const Post = ({
                     src={"/images/" + item.feedFileSaveimg}
                     alt={item.feedFileImg}
                     // sx={{ backgroundSize: "cover" }}
-                  //  onDoubleClick={() => onLike(isLike)}
+                    //  onDoubleClick={() => onLike(isLike)}
                   />
                 ))}
               </Carousel>
@@ -312,7 +312,7 @@ const Post = ({
                 ) : (
                   <Box>
                     {clist.map((clist) => (
-                      <Comments key={clist.feedCommentCode} data={clist} />
+                      <Comments key={clist.feedCommentCode} data={clist} refreshFeed={refreshFeed} />
                     ))}
                   </Box>
                 )
@@ -479,7 +479,7 @@ const Post = ({
                     {comment.length >= 1 ? (
                       <>
                         {comment.map((comment) => (
-                          <Comments key={comment.feedCommentCode} data={comment} memberWriterInfo={memberWriterInfo} />
+                          <Comments key={comment.feedCommentCode} data={comment} refreshFeed={refreshFeed} />
                         ))}
                       </>
                     ) : (
