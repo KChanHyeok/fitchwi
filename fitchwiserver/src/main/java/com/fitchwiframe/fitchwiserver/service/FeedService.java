@@ -240,6 +240,18 @@ public class FeedService {
         return result;
     }
 
+    public String deleteComment(FeedComment data) {
+        String result = "fail";
+        log.info("feedService.deleteComment()");
+        try {
+            feedCommentRepository.delete(data);
+            result = "ok";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     private void deleteFeedFile(Feed feed, HttpSession session) {
         log.info("deleteFeedFile()");
         try {
@@ -460,4 +472,6 @@ public class FeedService {
         }
         return members;
     }
+
+
 }

@@ -10,10 +10,9 @@ const MoveToTop = () => {
   return (
     <Tooltip
       onClick={moveTop}
-      title="위로 가기"
       sx={{
         position: "fixed",
-        bottom: 160,
+        bottom: 100,
         right: 25,
       }}
     >
