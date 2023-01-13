@@ -86,10 +86,10 @@ const JoinIndex = () => {
       .post("/joinmember", formData, config)
       .then((res) => {
         if (res.data === "ok") {
-          alert("성공");
+          swAlert("회원가입이 완료됐습니다.");
           nav("/login", { replace: true });
         } else {
-          alert("실패");
+          swAlert("회원 가입 처리과정에 문제가 발생했습니다.", "warning");
         }
       })
       .catch((error) => console.log(error));

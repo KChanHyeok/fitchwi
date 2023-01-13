@@ -387,7 +387,7 @@ public class TogetherService {
                 result = "이미 결제가 완료되었거나 삭제요청이 진행중인 모임이라 취소가 불가능 합니다 챗봇을 통해 문의해주세요";
                 return result;
             }
-            
+
             TogetherJoin joinTogetherMember = togetherJoinRepository.findByMemberEmailAndTogetherCode(loginMember, joinTogether);
 
             togetherJoinRepository.delete(joinTogetherMember);
@@ -661,14 +661,39 @@ public class TogetherService {
     }
 
     public boolean isAvailableToDeleteMember(Member member){
-        boolean result = false;
-        List<TogetherJoin> togetherJoinListByMember = getTogetherJoinListByMember(member.getMemberEmail());
-        List<TogetherOpened> togetherOpenedListByMember = getTogetherOpenedListByMember(member.getMemberEmail());
 
-        if(togetherJoinListByMember.isEmpty() && togetherOpenedListByMember.isEmpty()){
-            result = true;
+        //개설한 함께해요가 있을 경우 -탈퇴 불가
+        List<TogetherOpened> togetherOpenedListByMember = getTogetherOpenedListByMember(member.getMemberEmail());
+        if(!togetherOpenedListByMember.isEmpty()){
+            return  false;
         }
-        return result;
+
+
+        //참여중인 함께해요가 있을 경우 - 탈퇴불가 / '거절 일경우는 해당 값 지우면서 탈퇴 가능
+        List<TogetherJoin> togetherJoinListByMember = getTogetherJoinListByMember(member.getMemberEmail());
+
+        List<TogetherJoin> rejectedTogetherJoinList = new ArrayList<>();
+
+
+        if(!togetherJoinListByMember.isEmpty()){
+            for(TogetherJoin tj : togetherJoinListByMember){
+               if(tj.getTogetherJoinState().equals("거절")){
+                   rejectedTogetherJoinList.add(tj);
+               }else{
+                   return false;
+               }
+            }
+            try{
+              togetherJoinRepository.deleteAll(rejectedTogetherJoinList);
+            } catch (Exception e){
+              e.printStackTrace();
+              return false;
+            }
+
+
+        }
+      return true;
+
 
     }
 
