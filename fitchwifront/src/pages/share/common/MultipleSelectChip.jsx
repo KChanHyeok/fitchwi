@@ -25,6 +25,7 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
     await axios
       .get("/getTagList")
       .then((response) => {
+        console.log(response.data);
         setTagList(response.data);
       })
       .catch((error) => {
@@ -102,31 +103,31 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
             </MenuItem>
           ))}
         </Select>
-        <FormControl variant="outlined" fullWidth>
-          <OutlinedInput
-            sx={{ mt: 1 }}
-            value={tag}
-            id="outlined-adornment-weight"
-            endAdornment={
-              <InputAdornment position="end">
-                <Button variant="outlined" onClick={onClick}>
-                  추가
-                </Button>
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-                    태그 추가 완료!
-                  </Alert>
-                </Snackbar>
-              </InputAdornment>
-            }
-            aria-describedby="outlined-weight-helper-text"
-            onChange={onChange}
-            placeholder="태그를 추가해보세요!"
-            inputProps={{
-              "aria-label": "weight",
-            }}
-          />
-        </FormControl>
+      </FormControl>
+      <FormControl variant="outlined" fullWidth>
+        <OutlinedInput
+          sx={{ mt: 1 }}
+          value={tag}
+          id="outlined-adornment-weight"
+          endAdornment={
+            <InputAdornment position="end">
+              <Button variant="outlined" onClick={onClick}>
+                추가
+              </Button>
+              <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+                  태그 추가 완료!
+                </Alert>
+              </Snackbar>
+            </InputAdornment>
+          }
+          aria-describedby="outlined-weight-helper-text"
+          onChange={onChange}
+          placeholder="태그를 추가해보세요!"
+          inputProps={{
+            "aria-label": "weight",
+          }}
+        />
       </FormControl>
     </div>
   );

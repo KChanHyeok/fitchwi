@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +27,46 @@ const About = () => {
           </Box>
         </Box>
       </Container>
-      <Box height={300} width="100%" sx={{ backgroundColor: "pink" }} mt={5} />
+      <Box height={500} width="100%" sx={{ backgroundColor: "pink" }} mt={5}>
+        <Grid container spacing={2} display="flex" p={3} alignItems="center" sx={{ flexDirection: { xs: "column", sm: "row" } }}>
+          <Grid item xs={4} display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={30} fontWeight={100} mb={2} sx={{ display: { xs: "none", sm: "block" } }}>
+              👥 함께하고
+            </Typography>
+            <Avatar
+              src={"/images/MainPage1.png"}
+              sx={{ width: { xs: 130, sm: 180, md: 250, lg: 300 }, height: { xs: 130, sm: 180, md: 250, lg: 300 } }}
+            />
+            <Typography fontSize={18} fontWeight={100} sx={{ display: { xs: "none", sm: "block" } }} mt={2}>
+              똑같은 일상을 다채롭게 만들어 줄 취향 모임
+            </Typography>
+          </Grid>
+          <Grid item xs={4} display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={18} fontWeight={100} sx={{ display: { xs: "none", sm: "block" } }} mb={2}>
+              언제나 어디서나 관심사로 연결되기
+            </Typography>
+            <Avatar
+              src={"/images/MainPage2.png"}
+              sx={{ width: { xs: 130, sm: 180, md: 250, lg: 300 }, height: { xs: 130, sm: 180, md: 250, lg: 300 } }}
+            />
+            <Typography fontSize={30} fontWeight={100} mt={2} sx={{ display: { xs: "none", sm: "block" } }}>
+              💬 얘기하고
+            </Typography>
+          </Grid>
+          <Grid item xs={4} display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={30} fontWeight={100} mb={2} sx={{ display: { xs: "none", sm: "block" } }}>
+              🤝 공유해요
+            </Typography>
+            <Avatar
+              src={"/images/MainPage3.png"}
+              sx={{ width: { xs: 130, sm: 180, md: 250, lg: 300 }, height: { xs: 130, sm: 180, md: 250, lg: 300 } }}
+            />
+            <Typography fontSize={18} fontWeight={100} sx={{ display: { xs: "none", sm: "block" } }} mt={2}>
+              비슷한 관심사를 가진 멤버들의 취향 피드 구독하기
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
       <Box textAlign="center" mt={5}>
         <Typography variant="h4">모든 공간이</Typography>
         <Typography variant="h4" mt={2}>
@@ -35,7 +74,7 @@ const About = () => {
         </Typography>
       </Box>
       <Box height={300} width="100%" sx={{ backgroundColor: "beige" }} textAlign="center" mt={5}>
-        <Typography variant="h4" p={11}>
+        <Typography variant="h4" p={11} fontWeight={100}>
           취향 나누러 가볼까요?
           <br />
           <Button variant="contained" onClick={() => nav("/")} sx={{ backgroundColor: "orange", borderRadius: 5, mt: 4 }} size="large">

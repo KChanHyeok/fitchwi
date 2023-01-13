@@ -44,10 +44,10 @@ const Home = () => {
 
   return (
     <>
-      <Box mb={5} height={400} width="100%">
+      <Box mb={5} width="100%" sx={{ height: { xs: 250, sm: 250, md: 300, lg: 400 } }}>
         <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
           <Box
-            height={400}
+            // height={400}
             width="100%"
             component="img"
             src="/images/MainPage1.png"
@@ -55,7 +55,7 @@ const Home = () => {
             onClick={() => nav("/together")}
           ></Box>
           <Box
-            height={400}
+            // height={400}
             width="100%"
             component="img"
             src="/images/MainPage3.png"
@@ -63,7 +63,7 @@ const Home = () => {
             onClick={() => nav("/talk")}
           ></Box>
           <Box
-            height={400}
+            // height={400}
             width="100%"
             component="img"
             src="/images/MainPage2.png"
@@ -82,7 +82,7 @@ const Home = () => {
             <HomeCategory setCategory={setCategory} setKorCategory={setKorCategory} />
             <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"recent"} />
             <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"recent"} />
-            <Box height={300} mt={6} component="img" src="/images/TalkPost1.png" sx={{ display: { xs: "none", sm: "block" } }} />
+            <Box height={300} mt={6} component="img" src="/images/TalkPost1.png" width="100%" />
             <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"popular"} />
             <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"popular"} />
             <Typography variant="h6" mt={4}>

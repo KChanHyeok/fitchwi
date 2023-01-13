@@ -73,10 +73,19 @@ const FeedOther = ({ memberInfo }) => {
   return (
     <>
       <Box flex={4} p={2}>
+        {loading ? (
+          <Box textAlign="center" lineHeight={40}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : (
+          <></>
+        )}
         {feed && (
           <>
             {feed.length === 0 ? (
-              <Box textAlign="center">작성된 공유해요가 없습니다</Box>
+              <Box textAlign="center" lineHeight={40}>
+                👀 작성된 공유해요가 없습니다
+              </Box>
             ) : (
               feed.map((data) => (
                 <Post
@@ -98,13 +107,7 @@ const FeedOther = ({ memberInfo }) => {
             )}
           </>
         )}
-        {loading ? (
-          <Box textAlign="center" lineHeight={40}>
-            <CircularProgress color="inherit" />
-          </Box>
-        ) : (
-          <></>
-        )}
+
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>

@@ -73,38 +73,35 @@ const FeedExercise = ({ memberInfo }) => {
   return (
     <>
       <Box flex={4} p={2}>
-        {feed && (
-          <>
-            {feed.length === 0 ? (
-              <Box textAlign="center">작성된 공유해요가 없습니다</Box>
-            ) : (
-              feed.map((data) => (
-                <Post
-                  key={data.feedCode}
-                  tag={data.feedTag}
-                  information={data}
-                  feedClassificationcode={data.feedClassificationcode}
-                  memberWriterInfo={data.memberEmail}
-                  feedDate={data.feedDate}
-                  feedContent={data.feedContent}
-                  feedCode={data.feedCode}
-                  file={data.ffList}
-                  comment={data.fcList}
-                  memberInfo={memberInfo}
-                  refreshFeed={loadFeed}
-                  like={data.flList}
-                />
-              ))
-            )}
-          </>
-        )}
         {loading ? (
           <Box textAlign="center" lineHeight={40}>
-            <CircularProgress color="inherit" />
+            <CircularProgress />
           </Box>
         ) : (
           <></>
         )}
+        {feed && (
+          <>
+            {feed.map((data) => (
+              <Post
+                key={data.feedCode}
+                tag={data.feedTag}
+                information={data}
+                feedClassificationcode={data.feedClassificationcode}
+                memberWriterInfo={data.memberEmail}
+                feedDate={data.feedDate}
+                feedContent={data.feedContent}
+                feedCode={data.feedCode}
+                file={data.ffList}
+                comment={data.fcList}
+                memberInfo={memberInfo}
+                refreshFeed={loadFeed}
+                like={data.flList}
+              />
+            ))}
+          </>
+        )}
+
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>

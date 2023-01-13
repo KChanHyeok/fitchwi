@@ -73,38 +73,35 @@ const FeedCulture = ({ memberInfo }) => {
   return (
     <>
       <Box flex={4} p={2}>
-        {feedCulture && (
-          <>
-            {feedCulture.length === 0 ? (
-              <></>
-            ) : (
-              feedCulture.map((data) => (
-                <Post
-                  key={data.feedCode}
-                  tag={data.feedTag}
-                  information={data}
-                  memberWriterInfo={data.memberEmail}
-                  feedDate={data.feedDate}
-                  feedClassificationcode={data.feedClassificationcode}
-                  feedContent={data.feedContent}
-                  feedCode={data.feedCode}
-                  file={data.ffList}
-                  comment={data.fcList}
-                  memberInfo={memberInfo}
-                  refreshFeed={loadFeed}
-                  like={data.flList}
-                />
-              ))
-            )}
-          </>
-        )}
         {loading ? (
-          <Box textAlign="center" alignItems="center" lineHeight={40}>
-            <CircularProgress color="inherit" />
+          <Box textAlign="center" lineHeight={40}>
+            <CircularProgress />
           </Box>
         ) : (
           <></>
         )}
+        {feedCulture && (
+          <>
+            {feedCulture.map((data) => (
+              <Post
+                key={data.feedCode}
+                tag={data.feedTag}
+                information={data}
+                memberWriterInfo={data.memberEmail}
+                feedDate={data.feedDate}
+                feedClassificationcode={data.feedClassificationcode}
+                feedContent={data.feedContent}
+                feedCode={data.feedCode}
+                file={data.ffList}
+                comment={data.fcList}
+                memberInfo={memberInfo}
+                refreshFeed={loadFeed}
+                like={data.flList}
+              />
+            ))}
+          </>
+        )}
+
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
       </Box>

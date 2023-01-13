@@ -5,7 +5,7 @@ import { Home, Palette, RunCircle, Fastfood, Flight, LocalLibrary, AutoAwesome, 
 
 const Sidebar = ({ pageurl }) => {
   return (
-    <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+    <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block", md: "block", lg: "block" } }}>
       <Box position="fixed">
         <List>
           <ListItem disablePadding sx={{ mb: 2 }}>
