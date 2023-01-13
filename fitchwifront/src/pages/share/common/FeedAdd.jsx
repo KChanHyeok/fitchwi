@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
 import MultipleSelectChip from "./MultipleSelectChip";
 import "../styles/FeedAdd.scss";
+import Swal from "sweetalert2";
+import FeedTag from "./FeedTag";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -54,8 +56,7 @@ const FeedAdd = ({ refreshFeed }) => {
 
   const handleOpen = () => {
     if (sessionStorage.getItem("id") === null) {
-      alert("로그인이 필요한 서비스입니다.");
-      nav("/login");
+      swAlert("로그인 후 이용 가능합니다.", "warning", () => nav("/login"));
     } else {
       setOpen(true);
     }
@@ -121,6 +122,7 @@ const FeedAdd = ({ refreshFeed }) => {
       ...insertForm,
       feedTag: tagForm.join(" "),
     };
+    console.log(tagObj);
     setInsertForm(tagObj);
     setState(true);
     setSnackbarOpen(true);
@@ -128,7 +130,7 @@ const FeedAdd = ({ refreshFeed }) => {
 
   const sendFeed = () => {
     if (insertForm.feedCategory === "") {
-      alert("카테고리를 선택하세요!");
+      swAlert("카테고리를 선택하세요!", "error");
       return;
     } else if (insertForm.feedContent === "") {
       alert("내용을 입력하세요!");
@@ -210,6 +212,17 @@ const FeedAdd = ({ refreshFeed }) => {
     getMemberTalk();
   }, [preview, getMemberTalk]);
 
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
+
+  const [tagg, setTagg] = useState("");
   return (
     <>
       <Tooltip
@@ -377,6 +390,14 @@ const FeedAdd = ({ refreshFeed }) => {
                   <MenuItem value="기타">기타</MenuItem>
                 </Select>
               </FormControl>
+              {/* <FeedTag
+                insertForm={insertForm}
+                setInsertForm={setInsertForm}
+                tagForm={tagForm}
+                setTagForm={setTagForm}
+                setTagg={setTagg}
+                tagg={tagg}
+              /> */}
               <MultipleSelectChip insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
               <TextField
                 sx={{ mt: 1 }}

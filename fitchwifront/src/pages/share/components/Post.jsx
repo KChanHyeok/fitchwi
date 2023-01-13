@@ -26,6 +26,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Comments from "../common/Comments";
 import FeedLikeList from "../common/FeedLikeList";
+import Swal from "sweetalert2";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -53,6 +54,15 @@ const Post = ({
   tag,
   information,
 }) => {
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
   // 피드 작성시간
   const toDay = new Date();
   const toDayD = toDay.getTime();
@@ -102,8 +112,7 @@ const Post = ({
 
   const insertComment = () => {
     if (sessionStorage.getItem("id") === null) {
-      alert("로그인이 필요한 서비스입니다.");
-      nav("/login");
+      swAlert("로그인 후 이용 가능합니다.", "warning", () => nav("/login"));
     } else {
       axios
         .post("/insertComment", insertCommentForm)
@@ -139,8 +148,8 @@ const Post = ({
   const onLike = useCallback(
     (isLike) => {
       if (memberInfo.memberEmail === undefined) {
-        alert("로그인이 필요한 서비스입니다.");
-        return nav("/login");
+        swAlert("로그인 후 이용 가능합니다.", "warning", () => nav("/login"));
+        return;
       }
       if (isLike === false) {
         axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {

@@ -57,7 +57,7 @@ const Feed = ({ memberInfo }) => {
 
   useEffect(() => {
     //옵저버 생성
-    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.3 });
     if (obsRef.current) observer.observe(obsRef.current);
     return () => {
       observer.disconnect();
@@ -74,35 +74,52 @@ const Feed = ({ memberInfo }) => {
     <>
       <Box flex={4} p={2}>
         {loading ? (
-          <Box textAlign="center" lineHeight={40}>
-            <CircularProgress color="inherit" />
-          </Box>
+          <>
+            <Box textAlign="center" lineHeight={40}>
+              <CircularProgress />
+            </Box>
+          </>
         ) : (
-          <></>
+          <>
+            {/* {feed.map((data) => (
+              <Post
+                key={data.feedCode}
+                tag={data.feedTag}
+                information={data}
+                memberWriterInfo={data.memberEmail}
+                feedDate={data.feedDate}
+                feedContent={data.feedContent}
+                feedCode={data.feedCode}
+                feedClassificationcode={data.feedClassificationcode}
+                file={data.ffList}
+                comment={data.fcList}
+                memberInfo={memberInfo}
+                refreshFeed={loadFeed}
+                like={data.flList}
+              />
+            ))} */}
+          </>
         )}
+
         {feed && (
           <>
-            {feed.length === 0 ? (
-              <Box textAlign="center">작성된 공유해요가 없습니다</Box>
-            ) : (
-              feed.map((data) => (
-                <Post
-                  key={data.feedCode}
-                  tag={data.feedTag}
-                  information={data}
-                  memberWriterInfo={data.memberEmail}
-                  feedDate={data.feedDate}
-                  feedContent={data.feedContent}
-                  feedCode={data.feedCode}
-                  feedClassificationcode={data.feedClassificationcode}
-                  file={data.ffList}
-                  comment={data.fcList}
-                  memberInfo={memberInfo}
-                  refreshFeed={loadFeed}
-                  like={data.flList}
-                />
-              ))
-            )}
+            {feed.map((data) => (
+              <Post
+                key={data.feedCode}
+                tag={data.feedTag}
+                information={data}
+                memberWriterInfo={data.memberEmail}
+                feedDate={data.feedDate}
+                feedContent={data.feedContent}
+                feedCode={data.feedCode}
+                feedClassificationcode={data.feedClassificationcode}
+                file={data.ffList}
+                comment={data.fcList}
+                memberInfo={memberInfo}
+                refreshFeed={loadFeed}
+                like={data.flList}
+              />
+            ))}
           </>
         )}
         <Box ref={obsRef}></Box>

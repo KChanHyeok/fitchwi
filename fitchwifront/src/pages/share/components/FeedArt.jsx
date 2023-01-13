@@ -73,37 +73,33 @@ const FeedArt = ({ memberInfo }) => {
   return (
     <>
       <Box flex={4} p={2}>
-        {feed && (
-          <>
-            {feed.length === 0 ? (
-              <></>
-            ) : (
-              feed.map((data) => (
-                <Post
-                  key={data.feedCode}
-                  tag={data.feedTag}
-                  information={data}
-                  memberWriterInfo={data.memberEmail}
-                  feedDate={data.feedDate}
-                  feedClassificationcode={data.feedClassificationcode}
-                  feedContent={data.feedContent}
-                  feedCode={data.feedCode}
-                  file={data.ffList}
-                  comment={data.fcList}
-                  memberInfo={memberInfo}
-                  refreshFeed={loadFeed}
-                  like={data.flList}
-                />
-              ))
-            )}
-          </>
-        )}
         {loading ? (
           <Box textAlign="center" lineHeight={40}>
-            <CircularProgress color="inherit" />
+            <CircularProgress />
           </Box>
         ) : (
           <></>
+        )}
+        {feed && (
+          <>
+            {feed.map((data) => (
+              <Post
+                key={data.feedCode}
+                tag={data.feedTag}
+                information={data}
+                memberWriterInfo={data.memberEmail}
+                feedDate={data.feedDate}
+                feedClassificationcode={data.feedClassificationcode}
+                feedContent={data.feedContent}
+                feedCode={data.feedCode}
+                file={data.ffList}
+                comment={data.fcList}
+                memberInfo={memberInfo}
+                refreshFeed={loadFeed}
+                like={data.flList}
+              />
+            ))}
+          </>
         )}
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />

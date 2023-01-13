@@ -201,7 +201,7 @@ const SearchResult = () => {
                             </Grid>
                             <Grid item>
                               <Avatar
-                                src={`/images/${item.talkOpenCode.memberEmail.memberSaveimg}`}
+                                src={item.talkOpenCode.memberEmail.memberSaveimg}
                                 sx={{
                                   height: 150,
                                   width: 150,
