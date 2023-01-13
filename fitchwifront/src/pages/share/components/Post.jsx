@@ -217,7 +217,7 @@ const Post = ({
                     src={"/images/" + item.feedFileSaveimg}
                     alt={item.feedFileImg}
                     // sx={{ backgroundSize: "cover" }}
-                    onDoubleClick={() => onLike(isLike)}
+                  //  onDoubleClick={() => onLike(isLike)}
                   />
                 ))}
               </Carousel>
