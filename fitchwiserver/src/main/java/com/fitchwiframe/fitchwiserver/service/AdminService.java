@@ -251,6 +251,7 @@ public class AdminService {
         reportDetailRepository.save(reportDetail);
         result = "ok";
       } else {
+        existingReport.setReportedCount(existingReport.getReportedCount()+1);
         ReportDetail reportDetail = report.getReportDetailList().get(0);
         reportDetail.setReportCode(existingReport);
         reportDetail.setMemberEmail(memberRepository.findById(reportDetail.getMemberEmail().getMemberEmail()).get());
@@ -259,23 +260,23 @@ public class AdminService {
       }
 
 //create report
-//      for (int i = 1; i <= 45; i++) {
-//        if (i == 43) {
-//          break;
-//        }
-//        Report report1 = new Report();
-//        report1.setMemberEmail(memberRepository.findById("test20@test.com").get());
-//        report1.setReportCategory("memberpage");
-//        report1.setReportTarget(0L);
-//        reportRepository.save(report1);
-//
-//        ReportDetail reportDetail = new ReportDetail();
-//        reportDetail.setReportCode(report1);
-//        reportDetail.setMemberEmail(memberRepository.findById("test21@test.com").get());
-//        reportDetail.setReportDetailContent("내용" + i);
-//        reportDetail.setReportDetailDate("2023-01-01");
-//        reportDetailRepository.save(reportDetail);
-//      }
+      for (int i = 1; i <= 45; i++) {
+        if (i == 43) {
+          break;
+        }
+        Report report1 = new Report();
+        report1.setMemberEmail(memberRepository.findById("test20@test.com").get());
+        report1.setReportCategory("memberpage");
+        report1.setReportTarget(0L);
+        reportRepository.save(report1);
+
+        ReportDetail reportDetail = new ReportDetail();
+        reportDetail.setReportCode(report1);
+        reportDetail.setMemberEmail(memberRepository.findById("test21@test.com").get());
+        reportDetail.setReportDetailContent("내용" + i);
+        reportDetail.setReportDetailDate("2023-01-01");
+        reportDetailRepository.save(reportDetail);
+      }
 
 
     } catch (Exception e) {
@@ -330,16 +331,20 @@ public class AdminService {
   }
 
   //신고 목록 조회
-  public Map<String, Object> getReportList(Integer pageNum) {
+  public Map<String, Object> getReportList(Integer pageNum, String keyword) {
     log.info("adminService.getReportList()");
-
+    System.out.println("keyword = " + keyword);
 
     if (pageNum == null) {
       pageNum = 1;
     }
     int listCount = 9;
-    Pageable pageable = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, "reportCode");
+
+    Pageable pageable  = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, keyword);
     Page<Report> result = reportRepository.findAll(pageable);
+
+
+
     List<Report> reportList = result.getContent();
     int totalPage = result.getTotalPages();
 
@@ -347,6 +352,7 @@ public class AdminService {
     Map<String, Object> mapToReturn = new HashMap<>();
     mapToReturn.put("totalPage", totalPage);
     mapToReturn.put("pageNum", pageNum);
+    mapToReturn.put("keyword", keyword);
 
 
     try {

@@ -86,9 +86,9 @@ public class AdminController {
   }
 
   @GetMapping("/getReports")
-  public Map<String, Object> getReportList(@RequestParam Integer pageNum) {
+  public Map<String, Object> getReportList(@RequestParam Integer pageNum, @RequestParam String keyword) {
     log.info("adminController.getReportList() pageNum = "+pageNum);
-    return adminService.getReportList(pageNum);
+    return adminService.getReportList(pageNum, keyword);
   }
 
   @PutMapping("/restrictMember/{restrictDate}/{memberEmail}")

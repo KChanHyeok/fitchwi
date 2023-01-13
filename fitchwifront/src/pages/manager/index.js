@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Swal from "sweetalert2";
 import CheckMangerPwdModal from "./components/CheckMangerPwdModal";
@@ -22,6 +22,11 @@ export default function ManagerIndex({ setIsManager, isManager }) {
       confirmButtonColor: "#ff0456",
     }).then(func);
   };
+
+  // //관리자 로그인 막기
+  // useEffect(() => {
+  //   setIsManager(true);
+  // }, [setIsManager]);
 
   return (
     <Box>
