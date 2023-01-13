@@ -88,6 +88,12 @@ public class TogetherController {
         log.info("deleteTogetherFreeJoinInfo()");
         return togetherService.deleteTogetherFreeJoinInfo(memberEmail, togetherCode);
     }
+    @DeleteMapping("/deleteTogether")
+    public String deleteTogether(@RequestParam long togetherCode){
+        log.info("deleteTogether()");
+        log.info(togetherCode +"받은거");
+        return togetherService.deleteTogether(togetherCode);
+    }
 
     @PutMapping("/deleteTogetherState")
     public String deleteTogetherState(@RequestBody Together together) {
