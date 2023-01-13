@@ -15,7 +15,7 @@ export default function FacilitiesSearch({ keyword, setKeyword, loadFacilities }
   // console.log("insearchComp");
   // console.log(keyword);
   return (
-    <Box component="form" onSubmit={(e) => onSearchFacilities(e)}>
+    <Box component="form" onSubmit={(e) => onSearchFacilities(e)} display="inline-block">
       <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
         <InputLabel htmlFor="standard-adornment-password">시실 명 검색</InputLabel>
         <Input

@@ -56,7 +56,7 @@ export default function EditFacilities({ swAlert }) {
     e.preventDefault();
 
     axios.put(`/updateFacilities/${facilitiesCode}`, newFacilities).then((res) => {
-      if (res === "ok") {
+      if (res.data === "ok") {
         swAlert("해당 시설의 수정된 정보가 <br/> 성공적으로 저장됐습니다.");
       } else {
         swAlert("수정된 정보를 저장하는데 실패했습니다.");
@@ -65,7 +65,7 @@ export default function EditFacilities({ swAlert }) {
   };
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main" sx={{ height: "100vh", display: "flex", alignItems: "center" }}>
+    <Container component="main" sx={{ display: "flex", alignItems: "center" }}>
       {load === false ? (
         <Box
           style={{
@@ -81,6 +81,7 @@ export default function EditFacilities({ swAlert }) {
           component="form"
           onSubmit={(e) => onSubmit(e)}
           sx={{
+            mt: 7,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

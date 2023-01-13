@@ -222,7 +222,10 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   ]);
 
   return (
-    <Container component="main" sx={{ height: "100vh", display: "flex" }}>
+    <Container
+      component="main"
+      sx={{ height: "100vh", display: "flex", mt: 3, justifyContent: "flex-start" }}
+    >
       {memberSaveimg === undefined ||
       feedList === undefined ||
       followList === undefined ||
@@ -238,8 +241,8 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container justifyContent="center" flexWrap="nowrap">
-          <Grid item xs={2} sx={{ mt: 15 }}>
+        <Grid container flexWrap="nowrap" spacing={5}>
+          <Grid item xs={2}>
             <List>
               <ListItem disablePadding>
                 <ListItemButton>
@@ -304,16 +307,13 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
 
           <Grid
             item
-            xs={7}
+            xs={8}
             sx={{
-              marginRight: 20,
-              marginTop: 8,
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
             }}
           >
-            <Card sx={{ width: "100%" }}>
+            <Card sx={{ width: "100%", minHeight: 112, maxHeight: 230 }}>
               <Box
                 style={{
                   background: "#ff0456",
@@ -323,15 +323,15 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   style={{
                     backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "180px",
+                    backgroundSize: "150px",
                     backgroundPosition: "right 2% bottom 10%",
                   }}
                   avatar={
                     // <Avatar src={`/images/${memberSaveimg}`} sx={{ width: 100, height: 100 }} />
-                    <Avatar src={memberSaveimg} sx={{ width: 100, height: 100, backgroundColor: "white" }} />
+                    <Avatar src={memberSaveimg} sx={{ width: 80, height: 80, backgroundColor: "white" }} />
                   }
                   title={
-                    <Typography sx={{ fontSize: 25 }}>
+                    <>
                       {logid === memberEmail ? (
                         <div>
                           <Typography
@@ -358,16 +358,16 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                         <Typography
                           variant="h5"
                           style={{
-                            display: "inline-block",
                             color: "#ffffff",
-                            fontWeight: "500",
+                            fontWeight: "600",
+                            display: "inline-block",
                           }}
                         >
                           {" "}
                           {memberNickname}
                         </Typography>
                       )}
-                    </Typography>
+                    </>
                   }
                   subheader={
                     logid === memberEmail ? (
@@ -388,35 +388,35 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                 <Grid container>
                   <Grid item xs={8}>
                     <div style={{ textAlign: "left" }}>
-                      {interestArr &&
-                        interestArr.map((interest, index) => (
-                          <Chip
-                            onClick={() => console.log("검색으로 이동")}
-                            variant="outlined"
-                            key={index}
-                            label={interest}
-                            style={{
-                              fontSize: 13,
-                              marginLeft: 5,
-                              marginBottom: 5,
-                              boxShadow: "0 3px 5px  lightgray",
-                            }}
-                          />
-                        ))}
+                      {interestArr[0] !== ""
+                        ? interestArr.map((interest, index) => (
+                            <Chip
+                              onClick={() => console.log("검색으로 이동")}
+                              variant="outlined"
+                              key={index}
+                              label={interest}
+                              style={{
+                                fontSize: 13,
+                                marginLeft: 5,
+                                marginBottom: 5,
+                                boxShadow: "0 3px 5px  lightgray",
+                              }}
+                            />
+                          ))
+                        : null}
                     </div>
                   </Grid>
                   {followList !== undefined ? (
-                    <Grid item xs={4}>
+                    <Grid item xs={3.8}>
                       <FollowMemberListModal lstate={lstate} followList={followerList}>
                         팔로워 {followerList.length}
                       </FollowMemberListModal>
-
                       <FollowMemberListModal lstate={lstate} followList={followList}>
                         팔로우 {followList.length}
                       </FollowMemberListModal>
-
                       {logid === memberEmail ? null : (
                         <Checkbox
+                          sx={{ mr: -1 }}
                           checked={isFollow}
                           icon={<FavoriteBorder />}
                           checkedIcon={<Favorite />}

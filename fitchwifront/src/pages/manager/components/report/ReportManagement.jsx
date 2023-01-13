@@ -165,7 +165,7 @@ export default function ReportManagement({ swAlert }) {
   const [load, setLoad] = useState(false);
   return (
     <Container component="main" align="center" sx={{ mt: 13 }}>
-      <Box sx={{ mb: 12 }}>
+      <Box sx={{ mb: 5 }}>
         <Typography variant="h4">신고 관리</Typography>
       </Box>
 
@@ -372,7 +372,6 @@ export default function ReportManagement({ swAlert }) {
       </Box>
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
-          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"

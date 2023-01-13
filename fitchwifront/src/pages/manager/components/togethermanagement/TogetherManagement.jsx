@@ -200,7 +200,6 @@ export default function TogeterManagement({swAlert}) {
       </Box>
       <Stack spacing={2} alignItems="center" mt={3}>
         <Pagination
-          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"

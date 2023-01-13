@@ -56,7 +56,7 @@ export default function ViewFacilities({ swAlert }) {
 
   const [load, setLoad] = useState(false);
   return (
-    <Container component="main" sx={{ height: "100vh", display: "flex", alignItems: "center" }}>
+    <Container component="main" sx={{ display: "flex", alignItems: "center" }}>
       {load === false ? (
         <Box
           style={{
@@ -70,10 +70,10 @@ export default function ViewFacilities({ swAlert }) {
       ) : (
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            mt: 3,
           }}
         >
           <Typography component="h1" variant="h5" sx={{ mb: 10 }}>

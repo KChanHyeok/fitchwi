@@ -363,7 +363,7 @@ public class MemberService {
         member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
         member.setMemberMbti("ISFP");
         member.setMemberAddr("경기도 시흥시");
-        member.setMemberPhone("000-0000-0000");
+        member.setMemberPhone("00000000000");
         memberRepository.save(member);
         result = "ok";
       }
