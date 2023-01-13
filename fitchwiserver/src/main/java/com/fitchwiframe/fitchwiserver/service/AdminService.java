@@ -338,7 +338,7 @@ public class AdminService {
     if (pageNum == null) {
       pageNum = 1;
     }
-    int listCount = 9;
+    int listCount = 8;
 
     Pageable pageable  = PageRequest.of((pageNum - 1), listCount, Sort.Direction.DESC, keyword);
     Page<Report> result = reportRepository.findAll(pageable);

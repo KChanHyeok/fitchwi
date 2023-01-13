@@ -51,6 +51,7 @@ export default function ReportManagement({ swAlert }) {
   const getReports = (pageNumInSessionStg, keywordInSessionStg) => {
     console.log("report");
     setLoad(false);
+
     axios
       .get("/getReports", { params: { pageNum: pageNumInSessionStg, keyword: keywordInSessionStg } })
       .then((result) => {
@@ -58,9 +59,10 @@ export default function ReportManagement({ swAlert }) {
 
         //  console.log(result.data);
         setReportList(reportList);
-        setPageNum(pageNum);
         setTotalPage(totalPage);
         setKeyword(keyword);
+        setPageNum(pageNum);
+
         sessionStorage.setItem("pageNum", pageNum);
         sessionStorage.setItem("keyword", keyword);
         setLoad(true);
@@ -173,11 +175,8 @@ export default function ReportManagement({ swAlert }) {
 
   const onSort = (e) => {
     setKeyword(e.target.value);
+    getReports(1, e.target.value);
   };
-
-  useEffect(() => {
-    getReports(pageNum, keyword);
-  }, [keyword]);
 
   return (
     <Container component="main" align="center" sx={{ mt: 13 }}>
