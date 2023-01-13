@@ -91,7 +91,6 @@ public class TogetherController {
     @DeleteMapping("/deleteTogether")
     public String deleteTogether(@RequestParam long togetherCode){
         log.info("deleteTogether()");
-        log.info(togetherCode +"받은거");
         return togetherService.deleteTogether(togetherCode);
     }
 
