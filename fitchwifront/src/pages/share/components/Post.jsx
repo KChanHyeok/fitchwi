@@ -118,7 +118,6 @@ const Post = ({
         .post("/insertComment", insertCommentForm)
         .then((response) => {
           if (response.data === "ok") {
-            alert("성공");
             setInsertCommentForm({
               memberEmail: {
                 memberEmail: sessionStorage.getItem("id"),
@@ -128,7 +127,7 @@ const Post = ({
             });
             refreshFeed();
           } else {
-            alert("실패");
+            swAlert("등록 실패!", "warning");
           }
         })
         .catch((error) => console.log(error));
@@ -217,7 +216,8 @@ const Post = ({
                     component="img"
                     src={"/images/" + item.feedFileSaveimg}
                     alt={item.feedFileImg}
-                    sx={{ backgroundSize: "cover" }}
+                    // sx={{ backgroundSize: "cover" }}
+                    onDoubleClick={() => onLike(isLike)}
                   />
                 ))}
               </Carousel>

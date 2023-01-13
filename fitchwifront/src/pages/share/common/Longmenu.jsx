@@ -3,7 +3,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,
   Button,
-  ButtonGroup,
   CardMedia,
   Divider,
   FormControl,
@@ -18,10 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import axios from "axios";
 import Report from "../../../components/common/Report";
+import Swal from "sweetalert2";
 
 const ITEM_HEIGHT = 48;
 const StyleModal = styled(Modal)({
@@ -32,14 +31,11 @@ const StyleModal = styled(Modal)({
 
 export default function LongMenu({ flist, refreshFeed, information }) {
   let formdata = new FormData();
-  const nav = useNavigate();
   const [feedToUpdate, setFeedUpdate] = useState({});
   const { feedCategory, feedContent, feedClassificationcode, feedTag } = feedToUpdate;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [tagForm, setTagForm] = useState([]);
   const [open, setOpen] = useState(false);
   const Menuopen = Boolean(anchorEl);
-  const [state, setState] = useState(false);
 
   const handleChange = useCallback(
     (event) => {
@@ -48,28 +44,14 @@ export default function LongMenu({ flist, refreshFeed, information }) {
     [feedToUpdate]
   );
 
-  const saveFeed = () => {
-    console.log(feedToUpdate);
-    const updateObj = {
-      ...feedToUpdate,
-      feedTag: tagForm.join(" "),
-    };
-    setFeedUpdate(updateObj);
-    setState(true);
-  };
-
   const sendFeed = () => {
     formdata.append("data", new Blob([JSON.stringify(feedToUpdate)], { type: "application/json" }));
-
     axios
       .post("/updateFeed", formdata)
       .then((response) => {
         if (response.data === "ok") {
-          setOpen(false);
-          alert("성공");
-          window.location.reload();
-          // setTagForm([]);
-          // setFeedUpdate({});
+          // setOpen(false);
+          swAlert("수정 성공!", "success", () => window.location.reload());
         } else {
           alert("실패");
         }
@@ -84,19 +66,8 @@ export default function LongMenu({ flist, refreshFeed, information }) {
     setAnchorEl(null);
   };
 
-  const handleOpen = () => {
-    if (sessionStorage.getItem("id") === null) {
-      alert("로그인이 필요한 서비스입니다.");
-      nav("/login");
-    } else {
-      setOpen(true);
-    }
-  };
-
   const handleClose = () => {
     setOpen(false);
-    setState(false);
-    setTagForm([]);
     setFeedUpdate({
       feedCode: information.feedCode,
       memberEmail: {
@@ -111,18 +82,33 @@ export default function LongMenu({ flist, refreshFeed, information }) {
   };
 
   const deleteFeed = () => {
-    if (window.confirm("해당 피드를 삭제하시겠습니까?")) {
-      axios.delete("/deleteFeed", { data: information }).then((response) => {
-        if (response.data === "ok") {
-          alert("삭제 완료");
-          refreshFeed();
-        } else {
-          alert("실패");
-        }
-      });
-    } else {
-      alert("취소합니다.");
-    }
+    Swal.fire({
+      title: "정말로 삭제 하시겠습니까?",
+      text: "삭제한 피드는 되돌릴 수 없습니다.",
+      icon: "warning",
+
+      showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+      confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
+      confirmButtonText: "확인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
+
+      reverseButtons: true, // 버튼 순서 거꾸로
+    }).then((result) => {
+      // 만약 Promise리턴을 받으면,
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        axios.delete("/deleteFeed", { data: information }).then((response) => {
+          if (response.data === "ok") {
+            swAlert("삭제 성공!", "success", () => window.location.reload());
+          } else {
+            swAlert("삭제 실패", "error", () => window.location.reload());
+          }
+        });
+      } else {
+        swAlert("취소합니다.", "info", () => window.location.reload());
+      }
+    });
   };
 
   const [talkJoinList, setTalkJoinList] = useState([]);
@@ -146,10 +132,20 @@ export default function LongMenu({ flist, refreshFeed, information }) {
       feedContent: information.feedContent,
       feedClassificationcode: information.feedClassificationcode,
       feedDate: information.feedDate,
-      feedTag: information.feedTag.split(" "),
+      feedTag: information.feedTag,
     });
     getMemberTalk();
   }, [information, getMemberTalk]);
+
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
 
   return (
     <div>
@@ -179,7 +175,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
             },
           }}
         >
-          <MenuItem onClick={handleOpen}>수정하기</MenuItem>
+          <MenuItem onClick={() => setOpen(true)}>수정하기</MenuItem>
           <MenuItem onClick={deleteFeed}>삭제하기</MenuItem>
         </Menu>
       ) : (
@@ -210,12 +206,7 @@ export default function LongMenu({ flist, refreshFeed, information }) {
             <Typography variant="button" textAlign="center">
               공유해요 수정하기
             </Typography>
-            <ButtonGroup>
-              <Button color="success" onClick={saveFeed}>
-                SAVE
-              </Button>
-              {state === false ? <Button disabled>UPDATE</Button> : <Button onClick={sendFeed}>UPDATE</Button>}
-            </ButtonGroup>
+            <Button onClick={sendFeed}>UPDATE</Button>
           </Stack>
           <Divider />
           <Stack direction="row" gap={2} mb={2} p={1}>

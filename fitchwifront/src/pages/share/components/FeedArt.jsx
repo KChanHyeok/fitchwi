@@ -1,6 +1,7 @@
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import MoveToTop from "../../../components/common/MoveToTop";
 import FeedAdd from "../common/FeedAdd";
 import Post from "./Post";
 
@@ -103,6 +104,7 @@ const FeedArt = ({ memberInfo }) => {
         )}
         <Box ref={obsRef}></Box>
         <FeedAdd memberInfo={memberInfo} refreshFeed={loadFeed} memberEmail={memberInfo.memberEmail} />
+        <MoveToTop />
       </Box>
     </>
   );

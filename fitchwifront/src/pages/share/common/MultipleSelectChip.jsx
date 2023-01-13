@@ -9,6 +9,7 @@ import Chip from "@mui/material/Chip";
 import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Button, InputAdornment, Snackbar } from "@mui/material";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function getStyles(name, tagForm, theme) {
   return {
@@ -51,7 +52,7 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
 
   const onClick = useCallback(() => {
     if (tag === "") {
-      alert("내용을 입력하세요!");
+      swAlert("내용을 입력하세요!", "info");
       return;
     }
     axios
@@ -62,12 +63,13 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
       })
       .then((response) => {
         if (response.data === "fail") {
-          alert("이미 등록되어 있는 태그입니다!");
+          swAlert("이미 등록되어 있는 태그입니다!", "info");
+        } else {
+          setTag("");
+          setOpen(true);
         }
         getTagList();
       });
-    setTag("");
-    setOpen(true);
   }, [tag]);
   const [open, setOpen] = useState(false);
 
@@ -76,6 +78,16 @@ export default function MultipleSelectChip({ tagForm, setTagForm, insertForm }) 
       return;
     }
     setOpen(false);
+  };
+
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
   };
 
   return (

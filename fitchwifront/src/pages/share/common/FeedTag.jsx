@@ -4,9 +4,8 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 import { Alert, Button, FormControl, InputAdornment, OutlinedInput, Snackbar } from "@mui/material";
-import { useEffect } from "react";
 
-export default function FeedTag({ tagForm, setTagForm, insertForm, setTagg, tagg }) {
+export default function FeedTag({ tagForm, setTagForm, insertForm }) {
   const [tagList, setTagList] = React.useState([]);
   React.useEffect(() => {
     getTagList();
