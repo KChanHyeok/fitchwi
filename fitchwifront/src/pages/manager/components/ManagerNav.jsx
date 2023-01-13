@@ -65,7 +65,7 @@ function ManagerNav(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", mb: 10 }}>
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>

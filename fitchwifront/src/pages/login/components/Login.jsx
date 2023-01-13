@@ -90,7 +90,7 @@ export default function Login({ sucLogin, swAlert }) {
       <Container maxWidth="xs">
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -133,11 +133,7 @@ export default function Login({ sucLogin, swAlert }) {
               로그인
             </Button>
 
-            <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
-              구글로그인
-            </Button>
-
-            <Button fullWidth variant="text" sx={{ mt: 1, mb: 2, height: "45px" }}>
+            <Button fullWidth variant="text" sx={{ mt: 2, mb: 2, height: "45px" }}>
               <KaKaoLogin swAlert={swAlert} />
             </Button>
           </Box>
@@ -153,6 +149,9 @@ export default function Login({ sucLogin, swAlert }) {
             </Grid>
           </Grid>
         </Box>
+        <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
+          테스트계정생성
+        </Button>
       </Container>
     </>
   );

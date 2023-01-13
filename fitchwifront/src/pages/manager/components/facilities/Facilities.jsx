@@ -95,21 +95,21 @@ export default function Facilities({ swAlert }) {
     <Container component="main" align="center" sx={{ mt: 13 }}>
       <Box>
         <Typography variant="h4">시설 관리</Typography>
-
+        <FacilitiesSearch
+          keyword={keyword}
+          setKeyword={setKeyword}
+          pageNum={pageNum}
+          loadFacilities={loadFacilities}
+        />
         <Link to="/manager/facilities/insertFacilities" style={{ textDecoration: "none" }}>
           <Button variant="contained" style={{ float: "right" }}>
             시설 등록
           </Button>
         </Link>
       </Box>
-      <FacilitiesSearch
-        keyword={keyword}
-        setKeyword={setKeyword}
-        pageNum={pageNum}
-        loadFacilities={loadFacilities}
-      />
-      <TableContainer component="main" sx={{ width: "100%", height: 570 }}>
-        <Table sx={{ mt: 2 }} aria-label="simple table">
+
+      <TableContainer component="main" sx={{ width: "100%", height: 480 }}>
+        <Table aria-label="simple table">
           <TableHead style={{ borderBottom: "2px solid black" }}>
             <TableRow>
               <TableCell align="center" width="20%">
@@ -176,9 +176,8 @@ export default function Facilities({ swAlert }) {
         </Table>
       </TableContainer>
 
-      <Stack spacing={2} alignItems="center" mt={3}>
+      <Stack spacing={2} alignItems="center" mt={1}>
         <Pagination
-          sx={{ mb: 5 }}
           count={totalPage}
           onChange={(e, value) => handlepageNum(value)}
           color="primary"

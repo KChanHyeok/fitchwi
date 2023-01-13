@@ -1,7 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
@@ -32,9 +31,12 @@ export default function FollowMemberListModal({ children, followList, lstate }) 
   console.log(interestArr);
   return (
     <div>
-      <Button onClick={handleOpen} style={{ color: "black" }}>
+      <Typography
+        onClick={handleOpen}
+        sx={{ color: "black", display: "inline-block", fontSize: 14, mt: 1, cursor: "pointer" }}
+      >
         {children}
-      </Button>
+      </Typography>
       <Modal
         keepMounted
         open={open}
