@@ -89,9 +89,9 @@ public class TogetherController {
         return togetherService.deleteTogetherFreeJoinInfo(memberEmail, togetherCode);
     }
     @DeleteMapping("/deleteTogether")
-    public String deleteTogether(@RequestParam long togetherCode){
+    public String deleteTogether(@RequestParam long togetherCode, HttpSession session){
         log.info("deleteTogether()");
-        return togetherService.deleteTogether(togetherCode);
+        return togetherService.deleteTogether(togetherCode, session);
     }
 
     @PutMapping("/deleteTogetherState")

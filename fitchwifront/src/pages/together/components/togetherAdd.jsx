@@ -104,9 +104,9 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
 
   const getNodayList = useCallback(
     (facilitiesCode) => {
-      axios.get("/getNodayList", { params: {facilitiesCode: facilitiesCode}}).then((res) => {
+      axios.get("/getNodayList", { params: { facilitiesCode: facilitiesCode } }).then((res) => {
         setNoday(res.data)
-      }).catch((error)=> console.log(error));
+      }).catch((error)=> setNoday([]));
     },[])
   
 
@@ -346,7 +346,6 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
                 </ListItemButton>
               </ListItem>
               ))}
-
             </List>
           </Grid>
           <Grid item xs>
