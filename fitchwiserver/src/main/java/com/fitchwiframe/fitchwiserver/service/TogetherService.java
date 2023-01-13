@@ -53,6 +53,7 @@ public class TogetherService {
     NodayRepository nodayRepository;
 
 
+
     public String addTogetherOpened(TogetherOpened togetherOpened, Together together, TogetherTag togetherTag, MultipartFile pic, HttpSession session) {
         String result = null;
 
@@ -74,7 +75,9 @@ public class TogetherService {
         togetherOpenedRepository.save(togetherOpened);
         togetherRepository.save(together);
         togetherTagRepository.save(togetherTag);
-        nodayRepository.save(noday);
+        if(togetherOpened.getFacilitiesCode().getFacilitiesCode()!=0){
+            nodayRepository.save(noday);
+        }
         result = "개설완료";
 
         }catch (Exception e) {
@@ -106,6 +109,31 @@ public class TogetherService {
         pic.transferTo(file);
 
         return together;
+    }
+
+    private void deleteFile(String filsSysname, HttpSession session) {
+        String realSysname = filsSysname;
+        System.out.println("realSysname = " + realSysname);
+        System.out.println(realSysname);
+        if (realSysname.equals("DefaultProfileImageSystemName.jpg")) {
+            return;
+        }
+        String realPath = session.getServletContext().getRealPath("/");
+
+        realPath += "images/";
+
+        File fileToDelete = new File(realPath + realSysname);
+
+
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                log.info("파일 삭제 성공");
+            } else {
+                log.info("파일을 삭제하였습니다.");
+            }
+        } else {
+            log.info("파일이 존재하지 않습니다.");
+        }
     }
     public Iterable<Together> getAllTogetherList() {
         log.info("getAllTogetherList()");
@@ -726,11 +754,12 @@ public class TogetherService {
     }
 
 
-    public String deleteTogether(long togetherCode) {
+    public String deleteTogether(long togetherCode, HttpSession session) {
         String result=null;
             Together together = togetherRepository.findById(togetherCode).get();
             List<TogetherJoin> togetherJoinList = togetherJoinRepository.findByTogetherCodeAndTogetherJoinStateContains(together, "가입중");
             List<TogetherJoin> togetherWaitJoinList = togetherJoinRepository.findByTogetherCodeAndTogetherJoinStateContains(together, "대기");
+            List<TogetherJoin> TogetherRefusalJoinList = togetherJoinRepository.findByTogetherCodeAndTogetherJoinStateContains(together, "거절");
             TogetherTag togetherTag =  togetherTagRepository.findByTogetherCode(together);
             try {
                 for(TogetherJoin data : togetherJoinList) {
@@ -773,6 +802,14 @@ public class TogetherService {
                     }
                     togetherJoinRepository.delete(data);
                 }
+                for(TogetherJoin data : TogetherRefusalJoinList) {
+                    try {
+                        togetherJoinRepository.delete(data);
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                deleteFile(together.getTogetherSaveimg(), session);
                 togetherTagRepository.delete(togetherTag);
                 togetherRepository.delete(together);
                 togetherOpenedRepository.delete(together.getTogetherOpenedCode());
