@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   CircularProgress,
   Container,
   Divider,
@@ -24,7 +25,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TogetherSearch from "./TogetherSearch";
 
-export default function TogeterManagement() {
+export default function TogeterManagement({swAlert}) {
   const [togetherCancelRequestList, setTogetherCancelRequestList] = useState([]);
   const [togetherTitleToSearch, setTogetherTitleToSearch] = useState("");
   const [pageNum, setPageNum] = useState(1);
@@ -59,7 +60,16 @@ export default function TogeterManagement() {
         sessionStorage.setItem("pageNum", pageNum);
         setLoad(true);
       });
-  };
+    };
+  const deleteTogether = (together) => {
+    console.log(together)
+    axios.delete("/deleteTogether", {params: {togetherCode: together.togetherCode}})
+    .then((res) => {
+      swAlert(res.data);
+      getTogetherCancelRequestList(pageNum, togetherTitleToSearch);
+    }).catch((error)=> console.log(error))
+  } 
+
   const handlepageNum = useCallback((value) => {
     getTogetherCancelRequestList(value, togetherTitleToSearch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,6 +79,7 @@ export default function TogeterManagement() {
     textAlign: "center",
     width: "20%",
   });
+
 
   return (
     <Container component="main" align="center" sx={{ mt: 13 }}>
@@ -179,6 +190,7 @@ export default function TogeterManagement() {
                       </TableBody>
                     </Table>
                   </TableContainer>
+                  <Button sx={{mt:3}} variant="contained" onClick={()=> deleteTogether(together)}>삭제 및 환불하기</Button>
                 </AccordionDetails>
               </Accordion>
               <Divider variant="middle" component={"li"} style={{ listStyle: "none" }} />
