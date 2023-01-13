@@ -21,6 +21,7 @@ import Carousel from "react-material-ui-carousel";
 import Comments from "./Comments";
 import FeedLikeList from "./FeedLikeList";
 import LongMenu from "./Longmenu";
+import Swal from "sweetalert2";
 
 const StyleModal = styled(Modal)({
   display: "flex",
@@ -54,6 +55,16 @@ const FeedInfoModal = ({
   const [tagList, setTagList] = useState([]);
   const [talkInfo, setTalkInfo] = useState();
 
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
+
   const getTalkInfo = useCallback(() => {
     if (feedClassificationcode !== null) {
       axios.get("/getTalk", { params: { talkCode: feedClassificationcode } }).then((res) => setTalkInfo(res.data));
@@ -81,14 +92,12 @@ const FeedInfoModal = ({
 
   const insertComment = () => {
     if (sessionStorage.getItem("id") === null) {
-      alert("로그인이 필요한 서비스입니다.");
-      nav("/login");
+      swAlert("로그인 후 이용 가능합니다.", "warning", nav("/login"));
     } else {
       axios
         .post("/insertComment", insertCommentForm)
         .then((response) => {
           if (response.data === "ok") {
-            alert("성공");
             setInsertCommentForm({
               memberEmail: {
                 memberEmail: sessionStorage.getItem("id"),
@@ -98,7 +107,7 @@ const FeedInfoModal = ({
             });
             refreshFeed();
           } else {
-            alert("실패");
+            swAlert("등록 실패!", "warning");
           }
         })
         .catch((error) => console.log(error));
@@ -108,8 +117,8 @@ const FeedInfoModal = ({
   const onLike = useCallback(
     (isLike) => {
       if (memberInfo.memberEmail === undefined) {
-        alert("로그인이 필요한 서비스입니다.");
-        return nav("/login");
+        swAlert("로그인 후 이용 가능합니다.", "warning", () => nav("/login"));
+        return;
       }
       if (isLike === false) {
         axios.get("/likeFeed", { params: { feedCode: feedCode, memberInfo: memberInfo.memberEmail } }).then((res) => {

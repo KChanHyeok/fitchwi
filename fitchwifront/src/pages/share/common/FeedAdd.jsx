@@ -6,9 +6,11 @@ import {
   Divider,
   Fab,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Modal,
+  OutlinedInput,
   Select,
   Snackbar,
   styled,
@@ -16,7 +18,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, AddPhotoAlternate } from "@mui/icons-material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -111,7 +113,7 @@ const FeedAdd = ({ refreshFeed }) => {
   const onLoadFile = useCallback((event) => {
     const files = event.target.files;
     if (files.length > 4) {
-      alert("사진은 최대 4장까지입니다!");
+      swAlert("로그인 후 이용 가능합니다.", "warning");
       return;
     }
     setFileForm(files);
@@ -122,7 +124,6 @@ const FeedAdd = ({ refreshFeed }) => {
       ...insertForm,
       feedTag: tagForm.join(" "),
     };
-    console.log(tagObj);
     setInsertForm(tagObj);
     setState(true);
     setSnackbarOpen(true);
@@ -133,10 +134,10 @@ const FeedAdd = ({ refreshFeed }) => {
       swAlert("카테고리를 선택하세요!", "error");
       return;
     } else if (insertForm.feedContent === "") {
-      alert("내용을 입력하세요!");
+      swAlert("내용을 입력하세요!", "error");
       return;
     } else if (insertForm.feedTag.length === 0) {
-      alert("태그를 선택하세요!");
+      swAlert("태그를 선택하세요!", "error");
       return;
     }
     formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
@@ -153,10 +154,9 @@ const FeedAdd = ({ refreshFeed }) => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
-          alert("동록 성공");
-          window.location.reload();
+          swAlert("등록 성공!", "success", () => window.location.reload());
         } else {
-          alert("실패");
+          swAlert("등록 실패!", "error");
         }
       })
       .catch((error) => console.log(error));
@@ -222,7 +222,6 @@ const FeedAdd = ({ refreshFeed }) => {
     }).then(func);
   };
 
-  const [tagg, setTagg] = useState("");
   return (
     <>
       <Tooltip
@@ -249,8 +248,8 @@ const FeedAdd = ({ refreshFeed }) => {
                 RESET
               </Button>
             </ButtonGroup>
-            <Typography variant="button" textAlign="center">
-              DO SHARE!
+            <Typography variant="button" textAlign="center" fontSize={30}>
+              공유하기
             </Typography>
             <ButtonGroup>
               <Button color="success" onClick={saveFeed}>
@@ -277,11 +276,11 @@ const FeedAdd = ({ refreshFeed }) => {
             <Box mt={1}>
               {fileForm.length === 0 ? (
                 <>
-                  <Typography variant="body6" component="p" textAlign="right" color="grey">
-                    * 이미지는 최대 4장까지만 등록할 수 있습니다.
-                  </Typography>
                   <Button variant="outlined" onClick={onClickImageInput} sx={{ width: 400, height: 400 }}>
-                    <AddIcon />
+                    <Typography variant="body6" color="grey" fontWeight={100}>
+                      * 이미지는 최대 4장까지만 등록할 수 있습니다
+                    </Typography>
+                    <AddPhotoAlternate />
                   </Button>
                   <input
                     type="file"
@@ -309,27 +308,37 @@ const FeedAdd = ({ refreshFeed }) => {
             </Box>
             <Divider orientation="vertical" flexItem variant="middle" />
             <Box sx={{ width: 440, height: 400 }}>
+              <TextField
+                sx={{ mt: 1 }}
+                fullWidth
+                value={insertForm.feedContent}
+                id="outlined-multiline-static"
+                onChange={handleChange}
+                label="피드 내용"
+                multiline
+                rows={4}
+                name="feedContent"
+              />
               {talkJoinList.length === 0 && talkOpenedList.length === 0 ? (
                 <>
-                  <Box textAlign="right">
-                    <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
-                      🔍 얘기해요 구경하기
-                    </Button>
-                  </Box>
-                  <FormControl fullWidth disabled>
-                    <InputLabel id="demo-simple-select-autowidth-label" margin="dense">
-                      참여중인 얘기해요가 없습니다.
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-autowidth-label"
-                      id="demo-simple-select-autowidth"
-                      value={insertForm.feedClassificationcode}
-                      name="feedClassificationcode"
-                      onChange={handleChange}
-                      label="참여중인 얘기해요가 없습니다."
-                    >
-                      <MenuItem value=""></MenuItem>
-                    </Select>
+                  <FormControl variant="outlined" fullWidth>
+                    <OutlinedInput
+                      disabled
+                      sx={{ mt: 1 }}
+                      defaultValue="참여중인 얘기해요가 없습니다."
+                      id="outlined-adornment-weight"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <Button variant="text" color="success" onClick={() => nav("/talk")} sx={{ p: 0 }}>
+                            🔍 얘기해요 구경하기
+                          </Button>
+                        </InputAdornment>
+                      }
+                      aria-describedby="outlined-weight-helper-text"
+                      inputProps={{
+                        "aria-label": "weight",
+                      }}
+                    />
                   </FormControl>
                 </>
               ) : (
@@ -395,21 +404,8 @@ const FeedAdd = ({ refreshFeed }) => {
                 setInsertForm={setInsertForm}
                 tagForm={tagForm}
                 setTagForm={setTagForm}
-                setTagg={setTagg}
-                tagg={tagg}
               /> */}
               <MultipleSelectChip insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
-              <TextField
-                sx={{ mt: 1 }}
-                fullWidth
-                value={insertForm.feedContent}
-                id="outlined-multiline-static"
-                onChange={handleChange}
-                label="피드 내용"
-                multiline
-                rows={4}
-                name="feedContent"
-              />
             </Box>
           </Stack>
         </Box>
