@@ -155,12 +155,12 @@ export default function AddFacilities({ swAlert }) {
 
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
                 등록하기
               </Button>
             </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={6}>
+
+            <Grid item xs={12}>
               <Link to="/manager/facilities" style={{ textDecoration: "none" }}>
                 <Button
                   align="center"
@@ -168,7 +168,7 @@ export default function AddFacilities({ swAlert }) {
                   type="button"
                   fullWidth
                   variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
+                  sx={{ mt: 1, mb: 2 }}
                 >
                   취소하기
                 </Button>

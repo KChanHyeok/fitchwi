@@ -186,7 +186,7 @@ export default function EditFacilities({ swAlert }) {
             </Grid>
             <Grid item xs={4}>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                수정하기
+                수정 내용 저장하기
               </Button>
             </Grid>
           </Grid>

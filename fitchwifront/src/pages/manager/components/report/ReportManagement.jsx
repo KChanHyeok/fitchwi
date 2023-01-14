@@ -33,35 +33,44 @@ export default function ReportManagement({ swAlert }) {
   const [reportList, setReportList] = useState([]);
 
   const [pageNum, setPageNum] = useState(1);
-
+  const [keyword, setKeyword] = useState("reportCode");
   const [totalPage, setTotalPage] = useState(0);
-
+  let keywordInSessionStg = sessionStorage.getItem("keyword");
   let pageNumInSessionStg = sessionStorage.getItem("pageNum");
 
   useEffect(() => {
-    pageNumInSessionStg !== null ? getReports(pageNumInSessionStg) : getReports(1);
-
-    // console.log("axios");
+    pageNumInSessionStg !== null
+      ? keywordInSessionStg !== null
+        ? getReports(pageNumInSessionStg, keywordInSessionStg)
+        : getReports(pageNumInSessionStg, "")
+      : getReports(pageNum, keyword);
+    console.log("axios");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getReports = (pageNumInSessionStg) => {
+  const getReports = (pageNumInSessionStg, keywordInSessionStg) => {
     console.log("report");
     setLoad(false);
-    axios.get("/getReports", { params: { pageNum: pageNumInSessionStg } }).then((result) => {
-      const { reportList, totalPage, pageNum } = result.data;
 
-      //  console.log(result.data);
-      setReportList(reportList);
-      setPageNum(pageNum);
-      setTotalPage(totalPage);
-      sessionStorage.setItem("pageNum", pageNum);
-      setLoad(true);
-    });
+    axios
+      .get("/getReports", { params: { pageNum: pageNumInSessionStg, keyword: keywordInSessionStg } })
+      .then((result) => {
+        const { reportList, totalPage, pageNum, keyword } = result.data;
+
+        //  console.log(result.data);
+        setReportList(reportList);
+        setTotalPage(totalPage);
+        setKeyword(keyword);
+        setPageNum(pageNum);
+
+        sessionStorage.setItem("pageNum", pageNum);
+        sessionStorage.setItem("keyword", keyword);
+        setLoad(true);
+      });
   };
-  const handlepageNum = useCallback((value) => {
-    getReports(value);
-  }, []);
+  const handlepageNum = (value) => {
+    getReports(value, keyword);
+  };
 
   const onRistrict = (period, memberEmail, reportCode) => {
     if (period === undefined) {
@@ -92,7 +101,7 @@ export default function ReportManagement({ swAlert }) {
         swAlert("신고 내역을 삭제하는 데 실패했습니다.", "info");
       }
 
-      getReports(pageNum);
+      getReports(pageNum, keyword);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -154,7 +163,7 @@ export default function ReportManagement({ swAlert }) {
         swAlert("신고 내역 상태변경에 실패했습니다.", "info");
       }
 
-      getReports(pageNum);
+      getReports(pageNum, keyword);
     });
   };
 
@@ -163,12 +172,32 @@ export default function ReportManagement({ swAlert }) {
     width: "33%",
   });
   const [load, setLoad] = useState(false);
+
+  const onSort = (e) => {
+    setKeyword(e.target.value);
+    getReports(1, e.target.value);
+  };
+
   return (
     <Container component="main" align="center" sx={{ mt: 13 }}>
       <Box sx={{ mb: 5 }}>
         <Typography variant="h4">신고 관리</Typography>
       </Box>
-
+      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        <InputLabel id="demo-select-small">정렬방식</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          defaultValue={"reportCode"}
+          label="sortReport"
+          onChange={(e) => onSort(e)}
+          size="small"
+        >
+          <MenuItem value={"reportCode"}>최신순</MenuItem>
+          <MenuItem value={"reportState"}>처리상태</MenuItem>
+          <MenuItem value={"reportedCount"}>신고건수</MenuItem>
+        </Select>
+      </FormControl>
       <Accordion>
         <AccordionSummary
           expandIcon={<Remove />}
@@ -231,7 +260,7 @@ export default function ReportManagement({ swAlert }) {
                         >
                           <Typography>{report.reportCategory}</Typography>
                         </Link>
-                      ) : report.reportState === "대기" ? (
+                      ) : report.reportState === "처분 대기" ? (
                         <Link
                           to={`/${report.reportCategory}/${report.reportTarget}`}
                           style={{ textDecoration: "none", color: "black" }}
@@ -255,11 +284,11 @@ export default function ReportManagement({ swAlert }) {
                     </Grid>
 
                     <Grid item xs={1}>
-                      <Typography>{report.reportDetailList.length}</Typography>
+                      <Typography>{report.reportedCount}</Typography>
                     </Grid>
 
                     <Grid item xs={4}>
-                      {report.reportState === "대기" ? (
+                      {report.reportState === "처분 대기" ? (
                         <Typography>{report.reportState}</Typography>
                       ) : (
                         <Typography>{report.reportState}</Typography>
@@ -300,7 +329,7 @@ export default function ReportManagement({ swAlert }) {
                       </Button>
                     </Grid>
                     <Grid item xs={6}>
-                      {report.reportState === "대기" ? (
+                      {report.reportState === "처분 대기" ? (
                         report.reportCategory === "share" || report.reportCategory === "talk" ? (
                           <Button
                             variant="contained"
@@ -324,11 +353,6 @@ export default function ReportManagement({ swAlert }) {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 name={report.reportCode + ""}
-                                // value={
-                                //   !restrictDateMap.has(report.reportCode + "")
-                                //     ? restrictDateMap.get(report.reportCode + "", 2)
-                                //     : 2
-                                // }
                                 defaultValue={0}
                                 label="restrictDate"
                                 onChange={(e) => onSelectDate(e)}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-export default function Name({ onChange, joinForm }) {
+export default function Name({ onChange, joinForm, isKakao }) {
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
     if (joinForm.memberName !== "") {
@@ -14,9 +14,16 @@ export default function Name({ onChange, joinForm }) {
   }, [joinForm.memberName]);
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        당신의 이름을 알려주세요.
-      </Typography>
+      {isKakao === true ? (
+        <Typography variant="h4" gutterBottom mb={10}>
+          <b>{joinForm.memberNickname}</b>의 이름(본명)도 알고싶어요!
+        </Typography>
+      ) : (
+        <Typography variant="h4" gutterBottom mb={10}>
+          <b>{joinForm.memberNickname}</b>의 이름도 알고싶어요!
+        </Typography>
+      )}
+
       <TextField
         name="memberName"
         label="이름"

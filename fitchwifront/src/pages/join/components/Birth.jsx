@@ -15,8 +15,8 @@ export default function Birth({ onChange, joinForm }) {
   }, [joinForm.memberBirth]);
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        태어나신 연도를 입력해주세요
+      <Typography variant="h4" gutterBottom mb={10}>
+        아 맞다 생일! 생일도 알려주세요!
       </Typography>
       {/* <TextField
         id="standard-multiline-flexible"

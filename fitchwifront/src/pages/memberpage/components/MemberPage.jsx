@@ -42,6 +42,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const [togetherOpenedList, setTogetherOpenedList] = useState([]);
   const [togetherJoinList, setTogetherJoinList] = useState([]);
 
+  console.log(member);
   //메뉴 선택 후 해당 정보 조회
   const [myMenu, setMyMenu] = useState("share");
 
@@ -220,6 +221,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
     ["ENFJ", "/images/mbti/ENFJ.png"],
     ["ENTJ", "/images/mbti/ENTJ.png"],
   ]);
+  console.log(member);
 
   return (
     <Container

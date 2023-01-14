@@ -143,8 +143,10 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
 
   return (
     <div style={{ textAlign: "center", width: 400 }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        더 알려주세요
+      <Typography variant="h5" gutterBottom mb={1}>
+        이제 마지막!
+        <br /> 이거까지만 입력해주시면 <br />
+        <b>{joinForm.memberNickname}</b>님도 FITCHWI회원이에요!
       </Typography>
       <Grid container>
         <Grid item xs={12}>
