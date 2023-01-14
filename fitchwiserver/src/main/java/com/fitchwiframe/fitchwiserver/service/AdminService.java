@@ -260,7 +260,7 @@ public class AdminService {
       }
 
 //create report
-      for (int i = 1; i <= 45; i++) {
+     /* for (int i = 1; i <= 45; i++) {
         if (i == 43) {
           break;
         }
@@ -276,7 +276,7 @@ public class AdminService {
         reportDetail.setReportDetailContent("내용" + i);
         reportDetail.setReportDetailDate("2023-01-01");
         reportDetailRepository.save(reportDetail);
-      }
+      }*/
 
 
     } catch (Exception e) {
