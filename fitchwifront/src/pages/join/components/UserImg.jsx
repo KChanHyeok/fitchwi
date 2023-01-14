@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Avatar, Box, Button, FormControlLabel, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function UserImg({ setFileForm }) {
+export default function UserImg({ setFileForm, joinForm }) {
   const [file, setFile] = useState("");
 
   const imageLoad = (event) => {
@@ -21,13 +21,15 @@ export default function UserImg({ setFileForm }) {
   };
   return (
     <Box style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom>
-        당신을 표현할 수 있는 이미지를 선택해주세요
+      <Typography variant="h4" gutterBottom>
+        ' <b>{joinForm.memberNickname}</b>'님이시군요!
+        <br />
+        <b>{joinForm.memberNickname}</b>님을 표현할 수 있는 이미지를 선택해주세요.
       </Typography>
-      <Typography variant="h4" gutterBottom mb={5}>
+      <Typography variant="h6" gutterBottom mb={5}>
         *미등록시 기본 이미지로 등록됩니다.
       </Typography>
-      <Avatar src={file !== "" ? file : ""} sx={{ width: 300, height: 300, m: "auto", mb: 4 }} />
+      <Avatar src={file !== "" ? file : ""} sx={{ width: 250, height: 250, m: "auto", mb: 4 }} />
       <Button variant="outlined" sx={{ pl: 5 }}>
         <FormControlLabel
           control={

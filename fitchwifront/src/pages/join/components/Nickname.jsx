@@ -13,9 +13,11 @@ export default function Nickname({ onChange, joinForm }) {
     }
   }, [joinForm.memberNickname]);
   return (
-    <div style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        FITCHWI에서 사용하실 별명을 입력해주세요
+    <div style={{ textAlign: "center", transition: "all 1s" }}>
+      <Typography variant="h4" gutterBottom mb={10}>
+        반가워요!
+        <br />
+        FITCHWI에서 사용하실 별명을 알려주세요.
       </Typography>
       <TextField
         onChange={onChange}

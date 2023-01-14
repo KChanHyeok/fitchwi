@@ -67,8 +67,11 @@ export default function Mbti({ joinForm, setJoinForm }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom>
-        MBTI를 입력해주세요
+      <Typography variant="h4" gutterBottom mb={10}>
+        오 그렇군요! <br />
+        MBTI는 뭐예요?
+        <br />
+        <small>(*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)</small>
       </Typography>
 
       <ToggleButtonGroup orientation="vertical" value={ei} exclusive onChange={handleChange}>
@@ -92,12 +95,7 @@ export default function Mbti({ joinForm, setJoinForm }) {
       </ToggleButtonGroup>
       <br />
       <Link to="/join/UserInfo" style={{ textDecoration: "none" }}>
-        <Button
-          sx={{ mt: 5, width: 100 }}
-          variant="contained"
-          onClick={onMemberMbti}
-          disabled={isDisabled}
-        >
+        <Button sx={{ mt: 5, width: 100 }} variant="contained" onClick={onMemberMbti} disabled={isDisabled}>
           다음
         </Button>
       </Link>

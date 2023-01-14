@@ -118,8 +118,11 @@ const JoinIndex = () => {
       <Routes>
         <Route path="/" element={<Nickname onChange={onChange} joinForm={joinForm} />}></Route>
 
-        <Route path="/userimg" element={<UserImg setFileForm={setFileForm} />}></Route>
-        <Route path="/name" element={<Name onChange={onChange} joinForm={joinForm} />}></Route>
+        <Route path="/userimg" element={<UserImg joinForm={joinForm} setFileForm={setFileForm} />}></Route>
+        <Route
+          path="/name"
+          element={<Name onChange={onChange} joinForm={joinForm} isKakao={isKakao} />}
+        ></Route>
         <Route path="/gender" element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
         <Route path="/birth" element={<Birth onChange={onChange} joinForm={joinForm} />}></Route>
         <Route path="/interest" element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>

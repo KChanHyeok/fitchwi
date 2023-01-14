@@ -93,9 +93,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     },
     [memberToUpdate]
   );
-  useEffect(() => {
-    //   console.log(memberToUpdate);
-  }, [memberToUpdate]);
 
   //mbti 처리
   const [userMbTi, setUserMbti] = useState();
@@ -274,7 +271,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     setMemberToUpdate({ ...memberToUpdate, memberInterest: stringInterest.slice(0, -1) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInterest]);
-
+  console.log(memberToUpdate);
   //이미지 변경
   const [file, setFile] = useState("");
 

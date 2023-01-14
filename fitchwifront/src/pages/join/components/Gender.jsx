@@ -26,8 +26,9 @@ export default function Gender({ joinForm, setJoinForm }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        성별은요?
+      <Typography variant="h4" gutterBottom mb={10}>
+        <b>{joinForm.memberNickname}</b>({joinForm.memberName})님은 여자? 남자? <br />
+        알려주지 않아도 괜찮아요!<small>(*기타 선택)</small>
       </Typography>
       <br />
       <Link to="/join/birth" style={{ textDecoration: "none" }}>

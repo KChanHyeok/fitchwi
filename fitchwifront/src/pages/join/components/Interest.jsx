@@ -7,13 +7,14 @@ import { Box } from "@mui/system";
 
 export default function Interest({ joinForm, setJoinForm }) {
   const InterestCheckBox = styled(Checkbox)({
-    width: "150px",
-    height: "150px",
-    borderRadius: "100px",
+    width: "100px",
+    height: "100px",
+    borderRadius: "50px",
     fontSize: "30px",
     marginLeft: "100px",
     marginRight: "100px",
     onClick: "onCheck",
+    marginBottom: "10px",
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -70,8 +71,9 @@ export default function Interest({ joinForm, setJoinForm }) {
 
   return (
     <div style={{ textAlign: "center", width: "1200px" }}>
-      <Typography variant="h2" gutterBottom mb={10}>
-        관심있는 건 뭐예요
+      <Typography variant="h4" gutterBottom mb={5}>
+        <b>{joinForm.memberNickname}</b>님은 어떤 분야에 관심이 있나요? <br />
+        <small>(*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)</small>
       </Typography>
 
       <FormControlLabel
