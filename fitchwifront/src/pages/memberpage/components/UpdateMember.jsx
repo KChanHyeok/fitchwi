@@ -51,8 +51,8 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   const nav = useNavigate();
   const [fileForm, setFileForm] = useState("");
 
-  const onUpdate = (e) => {
-    e.preventDefault();
+  const onUpdate = () => {
+    //  e.preventDefault();
     if (memberToUpdate.memberPhone !== checkedPhone && member.memberPhone !== memberToUpdate.memberPhone) {
       swAlert("연락처를 변경하셨습니다. <br/>본인인증을 먼저 해주세요.", "warning");
       return;
@@ -409,7 +409,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
               </ButtonGroup>
             </Box>
 
-            <Box component="form" onSubmit={(e) => onUpdate(e)} noValidate sx={{ mt: 1 }}>
+            <Box component="main" noValidate sx={{ mt: 1 }}>
               <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12} sm={12}>
                   <TextField
@@ -662,7 +662,14 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
                 </Grid>
               </Grid>
 
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                onClick={() => {
+                  onUpdate(memberToUpdate);
+                }}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 수정하기
               </Button>
             </Box>

@@ -132,7 +132,7 @@ export default function Report({ targetMember, target, category, type }) {
           <Box component="form" onSubmit={handleDeclration}>
             <DialogContent>
               <DialogContentText color="red" fontSize={20}>
-                신고 사유를 선택해주세요
+                신고 사유를 작성해주세요.
               </DialogContentText>
               <DialogContentText color="black" mt={2}>
                 회원님의 소중한 의견은 🍑FITCHWI를 더욱 안전하고 신뢰할 수 있도록 만드는데
@@ -146,7 +146,7 @@ export default function Report({ targetMember, target, category, type }) {
                 name="reportDetailContent"
                 autoFocus
                 margin="dense"
-                label="신고 사유를 간략하게 입력해주세요(선택)"
+                label="악성 유저 신고는 해당 유저의 마이페이지에서 신고해주세요!"
                 type="text"
                 fullWidth
                 variant="standard"

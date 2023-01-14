@@ -136,18 +136,32 @@ export default function ViewFacilities({ swAlert }) {
             </Grid>
           </Grid>
 
-          <Link to="/manager/facilities" style={{ textDecoration: "none" }}>
-            <Button
-              align="center"
-              color="info"
-              type="button"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              뒤로가기
-            </Button>
-          </Link>
+          <Grid container spacing={1} justifyContent="space-around">
+            <Grid item xs={4}>
+              <Link to="/manager/facilities" style={{ textDecoration: "none" }}>
+                <Button
+                  align="center"
+                  color="info"
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  뒤로가기
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item xs={4}>
+              <Link
+                to={`/manager/facilities/updateFacilities/${facilitiesCode}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Button align="center" type="button" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  수정하기
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
       )}
     </Container>
