@@ -14,6 +14,7 @@ import { Box } from '@mui/system';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import "../styles/TalkOpMenu.scss";
+import Swal from 'sweetalert2';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -94,7 +95,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
         axios.put("/deleteJoinMember", data)
             .then((res) => {
                 setLoad(false);
-                alert(res.data);
+                swAlert(res.data, "success");
                 refreshTalkJoinList();
                 setOpenJoinMemberList(false);
             })
@@ -124,7 +125,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
         axios.put("/approvalTalkMember", data)
             .then((res) => {
                 setLoad(false);
-                alert(res.data);
+                swAlert(res.data, "success");
                 refreshTalkList();
                 refreshTalkJoinList();
                 setOpenApplyMember(false);
@@ -138,7 +139,7 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
         axios.put("/refusalTalkMember", data)
             .then((res) => {
                 setLoad(false);
-                alert(res.data);
+                swAlert(res.data, "success");
                 refreshTalkList();
                 refreshTalkJoinList();
                 setOpenApplyMember(false);
@@ -154,15 +155,25 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                 .then((res) => {
                     if (res.data === "ok") {
                         setLoad(false);
-                        alert("얘기해요 삭제 완료");
+                        swAlert("얘기해요가 삭제되었습니다.", "success");
                         nav("/talk");
                         refreshTalkList();
                     } else {
-                        alert("삭제 불가");
+                        swAlert("얘기해요 삭제가 불가능합니다.", "warning");
                     }
                 });
         }, [talkInfo, nav, refreshTalkList]
     );
+
+    const swAlert = (contentText, icon) => {
+        Swal.fire({
+            title: "알림",
+            text: contentText,
+            icon: icon,
+            confirmButtonText: "확인",
+            confirmButtonColor: "#ff0456",
+        });
+    };
 
     //삭제 모달 창
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -236,15 +247,23 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     <div>
                         <Dialog
                             open={openJoinMemberList}
-                            onClose={modalClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                         >
                             <DialogTitle id="alert-dialog-title" className="memberListBox">
                                 {"얘기해요 참여자 관리"}
+                                <button className="modalCloseBtn" onClick={modalClose}>
+                                    ✖
+                                </button>
                             </DialogTitle>
                             <hr />
-                            <DialogContent>
+                            <DialogContent
+                                style={{
+                                    height: 200,
+                                    overflowY: "scroll",
+                                    overflowX: "hidden",
+                                }}
+                            >
                                 {!talkJoinMember
                                     ? <Box style={{
                                         position: "absolute",
@@ -259,10 +278,10 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                                         : talkJoinMember.map((data) =>
                                             <UserBox key={data.talkJoinCode}>
                                                 <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                                <Typography fontWeight={500} variant="span">
+                                                <Typography fontWeight={500} width={200} variant="span">
                                                     <b>{data.memberEmail.memberNickname}님</b>
-                                                    <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
                                                 </Typography>
+                                                <Button className="applyBtn" onClick={() => deleteJoinMember(data)}>탈퇴</Button>
                                             </UserBox>)}
                             </DialogContent>
                         </Dialog>
@@ -270,16 +289,24 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                     <div>
                         <Dialog
                             open={openApplyMember}
-                            onClose={modalClose}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                         >
                             <DialogTitle id="alert-dialog-title" className="memberListBox">
                                 {"승인 대기 중인 회원"}
+                                <button className="modalCloseBtn" onClick={modalClose}>
+                                    ✖
+                                </button>
                             </DialogTitle>
                             <hr />
-                            <DialogContent>
-                                <Typography>회원 / 답변</Typography>
+                            <DialogContent
+                                style={{
+                                    height: 300,
+                                    width: 400,
+                                    overflowY: "scroll",
+                                    overflowX: "hidden",
+                                }}>
+                                <Typography mb={1} textAlign="center"><b>회원 / 답변</b></Typography>
                                 {!waitingMemberList
                                     ? <Box style={{
                                         position: "absolute",
@@ -292,15 +319,20 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                                     : waitingMemberList.length === 0
                                         ? <Typography>현재 승인 대기 중인 인원이 없습니다.</Typography>
                                         : waitingMemberList.map((data) =>
-                                            <Typography fontWeight={500} variant="span">
+                                            <Box>
                                                 <UserBox key={data.talkJoinCode}>
                                                     <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                                    <b>{data.memberEmail.memberNickname}님</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    {data.talkJoinAnswer}
+                                                    <Typography fontWeight={500} width={200} variant="p">
+                                                        <b>{data.memberEmail.memberNickname} 님</b>
+                                                    </Typography>
                                                     <Button className="applyBtn" onClick={() => approval(data)}>승인</Button>
                                                     <Button className="applyBtn" onClick={() => refusal(data)}>거절</Button>
+
                                                 </UserBox>
-                                            </Typography>)}
+                                                <Typography mb={3}>
+                                                    <b>답변 :</b> {data.talkJoinAnswer}
+                                                </Typography>
+                                            </Box>)}
 
                             </DialogContent>
                         </Dialog>

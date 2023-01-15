@@ -89,8 +89,7 @@ function Home() {
           sx={{
             position: "fixed",
             bottom: 20,
-            marginLeft: 7,
-            left: { xs: "calc(50% - 81px)", md: 30 },
+            left: { xs: "calc(50% - 25px)", md: 30 },
           }}
         >
           <Fab color="secondary" aria-label="add">
@@ -100,7 +99,7 @@ function Home() {
       )}
       <Stack>
         <Routes>
-          <Route path="/*" element={<TalkHome talkList={talkList} refreshTalkList={getAllTalkList} />} />
+          <Route path="/*" element={<TalkHome talkList={talkList} />} />
           <Route path="/new" element={<TalkNew talkList={talkList} />} />
           <Route path="/category/:talkCategoryText" element={<TalkCategoryList talkList={talkList} />} />
           <Route
