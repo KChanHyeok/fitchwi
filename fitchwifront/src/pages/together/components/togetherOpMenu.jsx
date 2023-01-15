@@ -121,12 +121,12 @@ const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMembe
     };
     const deleteRequestTogether = (e) => {
         e.preventDefault();
-        axios.put("/deleteTogetherState", togetherInfo).then((res)=> console.log(res.data)).catch((error) => console.log(error))
-
-        swAlert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.","success")
-        setOpendelete(false)
-        refreshTogetherList();
-        nav("/together");
+        axios.put("/deleteTogetherState", togetherInfo).then((res)=> {
+            swAlert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.","success")
+            setOpendelete(false)
+            refreshTogetherList();
+            nav("/together");
+        }).catch((error) => console.log(error))
     }
 
     const approval = (data) => {
