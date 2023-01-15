@@ -350,7 +350,15 @@ const Post = ({
                   onChange={handleChange}
                 />
                 <Box>
-                  <Button onClick={insertComment}>게시</Button>
+                  {insertCommentForm.feedCommentContent === "" ? (
+                    <Button onClick={insertComment} disabled>
+                      등록
+                    </Button>
+                  ) : (
+                    <Button onClick={insertComment} sx={{ color: "black" }}>
+                      등록
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </CardContent>

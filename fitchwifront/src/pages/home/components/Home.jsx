@@ -31,7 +31,6 @@ const Home = () => {
     await axios
       .get("/getAllTogetherList")
       .then((res) => {
-        console.log(res.data);
         setTogetherList(res.data);
       })
       .catch((error) => console.log(error));
