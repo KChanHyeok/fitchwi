@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   Button,
   ButtonGroup,
@@ -12,7 +11,6 @@ import {
   Modal,
   OutlinedInput,
   Select,
-  Snackbar,
   styled,
   TextField,
   Tooltip,
@@ -23,7 +21,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
-import MultipleSelectChip from "./MultipleSelectChip";
 import "../styles/FeedAdd.scss";
 import Swal from "sweetalert2";
 import FeedTag from "./FeedTag";
@@ -37,10 +34,8 @@ const StyleModal = styled(Modal)({
 const FeedAdd = ({ refreshFeed }) => {
   let formdata = new FormData();
   const nav = useNavigate();
-  const [state, setState] = useState(false);
   const [fileForm, setFileForm] = useState("");
   const [open, setOpen] = useState(false);
-  const [SnackbarOpen, setSnackbarOpen] = useState(false);
   const [talkJoinList, setTalkJoinList] = useState([]);
   const [talkOpenedList, setTalkOpenedList] = useState([]);
   const [tagForm, setTagForm] = useState([]);
@@ -113,23 +108,26 @@ const FeedAdd = ({ refreshFeed }) => {
   const onLoadFile = useCallback((event) => {
     const files = event.target.files;
     if (files.length > 4) {
-      swAlert("로그인 후 이용 가능합니다.", "warning");
+      swAlert("사진은 4장까지만 등록 가능합니다!", "warning");
       return;
     }
     setFileForm(files);
   }, []);
 
   const saveFeed = () => {
+    var TagArr = [];
+    for (var i = 0; i < tagForm.length; i++) {
+      TagArr.push(tagForm[i].tagContent);
+    }
     const tagObj = {
       ...insertForm,
-      feedTag: tagForm.join(" "),
+      feedTag: TagArr.join(" "),
     };
     setInsertForm(tagObj);
-    setState(true);
-    setSnackbarOpen(true);
   };
 
-  const sendFeed = () => {
+  const sendFeed = (e) => {
+    e.preventDefault();
     if (insertForm.feedCategory === "") {
       swAlert("카테고리를 선택하세요!", "error");
       return;
@@ -163,7 +161,6 @@ const FeedAdd = ({ refreshFeed }) => {
   };
 
   const reset = () => {
-    setState(false);
     setFileForm("");
     setTagForm([]);
     setInsertForm({
@@ -199,12 +196,15 @@ const FeedAdd = ({ refreshFeed }) => {
   };
 
   const getMemberTalk = useCallback(() => {
-    axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
-      const { talkJoinList, talkOpenedList } = res.data;
-      console.log(res.data);
-      setTalkJoinList(talkJoinList.filter((item) => item.talkJoinState === "가입중"));
-      setTalkOpenedList(talkOpenedList);
-    });
+    if (sessionStorage.getItem("id") === null) {
+      return;
+    } else {
+      axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
+        const { talkJoinList, talkOpenedList } = res.data;
+        setTalkJoinList(talkJoinList.filter((item) => item.talkJoinState === "가입중"));
+        setTalkOpenedList(talkOpenedList);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -238,8 +238,17 @@ const FeedAdd = ({ refreshFeed }) => {
         </Fab>
       </Tooltip>
       <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box width={850} height={500} bgcolor="white" p={3} borderRadius={5} sx={{ display: "flex", flexDirection: "column" }}>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          component="form"
+          onSubmit={sendFeed}
+          width={850}
+          height={500}
+          bgcolor="white"
+          p={3}
+          borderRadius={5}
+          sx={{ display: "flex", flexDirection: "column" }}
+        >
+          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <ButtonGroup>
               <Button color="error" onClick={handleClose}>
                 CANCEL
@@ -251,25 +260,9 @@ const FeedAdd = ({ refreshFeed }) => {
             <Typography variant="button" textAlign="center" fontSize={30}>
               공유하기
             </Typography>
-            <ButtonGroup>
-              <Button color="success" onClick={saveFeed}>
-                SAVE
-              </Button>
-              <Snackbar open={SnackbarOpen} autoHideDuration={6000}>
-                <Alert severity="success" sx={{ width: "100%" }}>
-                  저장 완료!
-                </Alert>
-              </Snackbar>
-              {state === false ? (
-                <>
-                  <Button onClick={sendFeed} disabled>
-                    UPLOAD
-                  </Button>
-                </>
-              ) : (
-                <Button onClick={sendFeed}>UPLOAD</Button>
-              )}
-            </ButtonGroup>
+            <Button type="submit" onClick={saveFeed} variant="contained">
+              UPLOAD
+            </Button>
           </Stack>
           <Divider />
           <Stack direction="row" gap={2} mb={2} p={1}>
@@ -319,6 +312,32 @@ const FeedAdd = ({ refreshFeed }) => {
                 rows={4}
                 name="feedContent"
               />
+              <br />
+              <FormControl sx={{ mt: 2, mb: 2 }} fullWidth>
+                <InputLabel>카테고리</InputLabel>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={insertForm.feedCategory}
+                  required
+                  name="feedCategory"
+                  onChange={handleChange}
+                  label="카테고리"
+                >
+                  <MenuItem value="">
+                    <em>선택</em>
+                  </MenuItem>
+                  <MenuItem value="문화·예술">문화·예술</MenuItem>
+                  <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
+                  <MenuItem value="요리·음식">요리·음식</MenuItem>
+                  <MenuItem value="여행">여행</MenuItem>
+                  <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
+                  <MenuItem value="공예·수공예">공예·수공예</MenuItem>
+                  <MenuItem value="게임·오락">게임·오락</MenuItem>
+                  <MenuItem value="기타">기타</MenuItem>
+                </Select>
+              </FormControl>
+              <FeedTag insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
               {talkJoinList.length === 0 && talkOpenedList.length === 0 ? (
                 <>
                   <FormControl variant="outlined" fullWidth>
@@ -373,39 +392,6 @@ const FeedAdd = ({ refreshFeed }) => {
                   </FormControl>
                 </>
               )}
-
-              <br />
-              <FormControl sx={{ mt: 2 }} fullWidth>
-                <InputLabel>카테고리</InputLabel>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={insertForm.feedCategory}
-                  required
-                  name="feedCategory"
-                  onChange={handleChange}
-                  label="카테고리"
-                >
-                  <MenuItem value="">
-                    <em>선택</em>
-                  </MenuItem>
-                  <MenuItem value="문화·예술">문화·예술</MenuItem>
-                  <MenuItem value="운동·액티비티">운동·액티비티</MenuItem>
-                  <MenuItem value="요리·음식">요리·음식</MenuItem>
-                  <MenuItem value="여행">여행</MenuItem>
-                  <MenuItem value="성장·자기계발">성장·자기계발</MenuItem>
-                  <MenuItem value="공예·수공예">공예·수공예</MenuItem>
-                  <MenuItem value="게임·오락">게임·오락</MenuItem>
-                  <MenuItem value="기타">기타</MenuItem>
-                </Select>
-              </FormControl>
-              {/* <FeedTag
-                insertForm={insertForm}
-                setInsertForm={setInsertForm}
-                tagForm={tagForm}
-                setTagForm={setTagForm}
-              /> */}
-              <MultipleSelectChip insertForm={insertForm} setInsertForm={setInsertForm} tagForm={tagForm} setTagForm={setTagForm} />
             </Box>
           </Stack>
         </Box>

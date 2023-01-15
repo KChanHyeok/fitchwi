@@ -12,7 +12,6 @@ const Rightbar = () => {
   const nav = useNavigate();
 
   const mbti = sessionStorage.getItem("mbti");
-  console.log(mbti);
   const getMemberList = useCallback(() => {
     axios.get("/getMemberList").then((response) => {
       if (response.data.length > 9) {

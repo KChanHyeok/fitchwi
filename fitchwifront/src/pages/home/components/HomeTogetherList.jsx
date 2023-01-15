@@ -23,7 +23,6 @@ const HomeTogetherList = ({ category, togetherList, korCategory, type }) => {
   if (togetherListByCategory !== undefined) {
     togetherListByCategory.length = 4;
   }
-  console.log(togetherListByCategory);
 
   return (
     <>

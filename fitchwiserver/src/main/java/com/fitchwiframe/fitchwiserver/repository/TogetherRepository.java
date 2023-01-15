@@ -11,7 +11,6 @@ import java.util.List;
 public interface TogetherRepository extends CrudRepository<Together, Long> {
 
     List<Together> findByTogetherTitleLike(String searchText);
-
   Together findBytogetherOpenedCode(TogetherOpened to);
 
 
@@ -20,4 +19,5 @@ public interface TogetherRepository extends CrudRepository<Together, Long> {
   Page<Together> findByTogetherStateAndTogetherTitleLike(String cancel, String keywordToSearch, Pageable pageable);
 
   Together findByTogetherOpenedCodeAndTogetherDate(TogetherOpened to, String noday);
+
 }

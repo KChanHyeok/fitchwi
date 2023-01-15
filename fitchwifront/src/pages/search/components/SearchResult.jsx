@@ -133,7 +133,17 @@ const SearchResult = () => {
             <Box height={800} border={1} borderRadius={1} mt={2}>
               {type === 1 &&
                 (togetherList.length === 0 ? (
-                  <div>함께해요 검색결과가 없습니다</div>
+                  <div style={{ textAlign: "center" }}>
+                    <Typography sx={{ mt: 3 }} variant="h6">
+                      <b>{searchText}</b>에 대한 검색 결과를 찾을 수 없습니다.
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle1">검색어를 다시 확인해 주세요!</Typography>
+                    <br />
+                    <Link to="/together" style={{ color: "#ff0456", textDecoration: "none" }}>
+                      '함께해요' 둘러보기
+                    </Link>
+                  </div>
                 ) : (
                   togetherList.map((item, index) => (
                     <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }} key={index}>
@@ -175,7 +185,17 @@ const SearchResult = () => {
 
               {type === 2 &&
                 (talkList.length === 0 ? (
-                  <div>얘기해요 검색결과가 없습니다</div>
+                  <div style={{ textAlign: "center" }}>
+                    <Typography sx={{ mt: 3 }} variant="h6">
+                      <b>{searchText}</b>에 대한 검색 결과를 찾을 수 없습니다.
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle1">검색어를 다시 확인해 주세요!</Typography>
+                    <br />
+                    <Link to="/talk" style={{ color: "#ff0456", textDecoration: "none" }}>
+                      '얘기해요' 둘러보기
+                    </Link>
+                  </div>
                 ) : (
                   talkList.map((item, index) => (
                     <Link to={`/talk/${item.talkCode}`} style={{ textDecoration: "none" }} key={index}>
@@ -243,7 +263,17 @@ const SearchResult = () => {
 
               {type === 3 &&
                 (feedList.length === 0 ? (
-                  <div>공유해요 검색결과가 없습니다</div>
+                  <div style={{ textAlign: "center" }}>
+                    <Typography sx={{ mt: 3 }} variant="h6">
+                      <b>{searchText}</b>에 대한 검색 결과를 찾을 수 없습니다.
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle1">검색어를 다시 확인해 주세요!</Typography>
+                    <br />
+                    <Link to="/share" style={{ color: "#ff0456", textDecoration: "none" }}>
+                      '공유해요' 둘러보기
+                    </Link>
+                  </div>
                 ) : (
                   <ImageList sx={{ width: "100%", height: "800px", overflowY: "scroll" }} cols={3} rowHeight={164}>
                     {feedList.map((item, index) => (

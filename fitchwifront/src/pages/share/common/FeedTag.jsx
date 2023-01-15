@@ -4,8 +4,19 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 import { Alert, Button, FormControl, InputAdornment, OutlinedInput, Snackbar } from "@mui/material";
+import Swal from "sweetalert2";
 
 export default function FeedTag({ tagForm, setTagForm, insertForm }) {
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
+
   const [tagList, setTagList] = React.useState([]);
   React.useEffect(() => {
     getTagList();
@@ -15,15 +26,12 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
     await axios
       .get("/getTagList")
       .then((response) => {
-        console.log(response.data);
         setTagList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const [value, setValue] = React.useState([]);
-  console.log(value);
   const [tag, setTag] = React.useState("");
 
   const onChange = (event) => {
@@ -32,7 +40,7 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
 
   const onClick = React.useCallback(() => {
     if (tag === "") {
-      alert("내용을 입력하세요!");
+      swAlert("내용을 입력하세요!", "warning");
       return;
     }
     axios
@@ -43,7 +51,7 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
       })
       .then((response) => {
         if (response.data === "fail") {
-          alert("이미 등록되어 있는 태그입니다!");
+          swAlert("등록되어 있는 태그입니다!", "warning");
         }
         getTagList();
       });
@@ -64,15 +72,17 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
       <Autocomplete
         multiple
         id="fixed-tags-demo"
-        value={value}
+        value={tagForm}
         onChange={(event, newValue) => {
-          setValue([...newValue]);
+          setTagForm([...newValue]);
         }}
         options={tagList}
         getOptionLabel={(option) => option.tagContent}
-        renderTags={(value, getTagProps) => value.map((option, index) => <Chip label={option.tagContent} {...getTagProps({ index })} />)}
+        renderTags={(tagForm, getTagProps) =>
+          tagForm.map((option, index) => <Chip label={option.tagContent} {...getTagProps({ index })} />)
+        }
         style={{ width: 400 }}
-        renderInput={(params) => <TextField {...params} label="태그" placeholder="태그 추가" />}
+        renderInput={(params) => <TextField {...params} label="태그" placeholder="태그를 검색해보세요." />}
       />
       <FormControl variant="outlined" fullWidth>
         <OutlinedInput

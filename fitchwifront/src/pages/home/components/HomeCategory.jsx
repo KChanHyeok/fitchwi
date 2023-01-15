@@ -16,7 +16,7 @@ export default function HomeCategory({ setCategory, setKorCategory }) {
               }}
             >
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
+                src={item.img}
                 alt={item.title}
                 style={{
                   width: "100%",
@@ -38,7 +38,7 @@ export default function HomeCategory({ setCategory, setKorCategory }) {
               }}
             >
               <img
-                src={`${item.img}?w=248&fit=crop&auto=format`}
+                src={item.img}
                 alt={item.title}
                 style={{
                   width: "100%",
@@ -58,43 +58,43 @@ export default function HomeCategory({ setCategory, setKorCategory }) {
 
 const itemData = [
   {
-    img: "https://source.unsplash.com/featured/?culture",
+    img: "/images/category/Culture.jpg",
     title: "문화·예술",
     category: "culture",
     rows: 1,
     cols: 2,
   },
   {
-    img: "https://source.unsplash.com/featured/?exercise",
+    img: "/images/category/Exercise.jpg",
     title: "운동·액티비티",
     category: "exercise",
   },
   {
-    img: "https://source.unsplash.com/featured/?food,cook",
+    img: "/images/category/Food.jpg",
     title: "요리·음식",
     category: "food",
   },
   {
-    img: "https://source.unsplash.com/featured/?travel,trip",
+    img: "/images/category/Travel.jpg",
     title: "여행",
     category: "travel",
     cols: 2,
   },
   {
-    img: "https://source.unsplash.com/featured/?growth",
+    img: "/images/category/Growth.webp",
     title: "성장·자기계발",
     category: "growth",
     cols: 2,
   },
   {
-    img: "https://source.unsplash.com/featured/?crafts",
+    img: "/images/category/Art.webp",
     title: "공예·수공예",
     category: "art",
     rows: 2,
     cols: 2,
   },
   {
-    img: "https://source.unsplash.com/featured/?game",
+    img: "/images/category/Game.jpg",
     title: "게임·오락",
     category: "game",
   },

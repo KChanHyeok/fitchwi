@@ -115,11 +115,15 @@ export default function LongMenu({ flist, refreshFeed, information }) {
   const [talkOpenedList, setTalkOpenedList] = useState([]);
 
   const getMemberTalk = useCallback(() => {
-    axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
-      const { talkJoinList, talkOpenedList } = res.data;
-      setTalkJoinList(talkJoinList);
-      setTalkOpenedList(talkOpenedList);
-    });
+    if (sessionStorage.getItem("id") === null) {
+      return;
+    } else {
+      axios.get("/getMemberTalk", { params: { memberEmail: sessionStorage.getItem("id") } }).then((res) => {
+        const { talkJoinList, talkOpenedList } = res.data;
+        setTalkJoinList(talkJoinList);
+        setTalkOpenedList(talkOpenedList);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -199,14 +203,16 @@ export default function LongMenu({ flist, refreshFeed, information }) {
       )}
       <StyleModal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box width={850} height={500} bgcolor="white" p={3} borderRadius={5} sx={{ display: "flex", flexDirection: "column" }}>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Button color="error" onClick={handleClose}>
               CANCEL
             </Button>
             <Typography variant="button" textAlign="center">
               공유해요 수정하기
             </Typography>
-            <Button onClick={sendFeed}>UPDATE</Button>
+            <Button onClick={sendFeed} variant="contained">
+              UPDATE
+            </Button>
           </Stack>
           <Divider />
           <Stack direction="row" gap={2} mb={2} p={1}>

@@ -91,17 +91,17 @@ const Header = (props) => {
     <>
       <AppBar position="sticky" style={{ boxShadow: "0 1px 1px  lightgray" }}>
         <StyledToolbar>
+          <IconButton
+            color="black"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "block", md: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Container sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Box p={2} ml={2} display="flex" alignItems="center">
-              <IconButton
-                color="black"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
-              >
-                <MenuIcon />
-              </IconButton>
               <Link to={homeLink} style={{ textDecoration: "none", marginRight: 20 }}>
                 {/*Monday Feelings by Essentials Studio*/}
                 <img src="/images/logo.png" alt="logo" width="100" />
@@ -110,17 +110,17 @@ const Header = (props) => {
             </Typography> */}
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/about"}>
-                <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}>소개페이지</Typography>
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}>소개페이지</Typography>
               </Link>
 
               <Link style={{ textDecoration: "none", color: "black" }} to={"/together"}>
-                <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 } }}>함께해요</Typography>
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>함께해요</Typography>
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/talk"}>
-                <Typography sx={{ display: { xs: "none", sm: "block" }, mr: { xs: 0, sm: 10 } }}>얘기해요</Typography>
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>얘기해요</Typography>
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/share"}>
-                <Typography sx={{ display: { xs: "none", sm: "block" } }}>공유해요</Typography>
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" } }}>공유해요</Typography>
               </Link>
             </Box>
 
@@ -150,7 +150,7 @@ const Header = (props) => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { xs: "block", sm: "block", md: "none" },
             "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
           }}
         >
