@@ -28,8 +28,8 @@ function TabPanel(props) {
           display="flex"
           p={3}
           sx={{
-            flexDirection: { xs: "column", sm: "row", md: "row", lg: "row" },
-            flexWrap: { xs: "nowrap", sm: "wrap" },
+            flexDirection: "row",
+            flexWrap: "wrap",
           }}
           alignItems="center"
         >
@@ -38,46 +38,52 @@ function TabPanel(props) {
               {children} 취미
             </Typography>
           </Grid>
-          <Grid item xs={5} sm={4} md={4} lg={4}>
-            <ImageListItem>
+          <Grid item xs={4} sm={4} md={4} lg={4}>
+            <ImageListItem style={{ height: "150px" }}>
               <img
-                src={`https://source.unsplash.com/random/280x170/?${source[0]}`}
+                src={`/images/hobby/${source[0]}.jpeg`}
                 alt={"index"}
                 style={{
+                  width: "100%",
+                  height: "100%",
                   borderRadius: 10,
                   cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[0]}`)}
               />
-              <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2, display: { xs: "none", sm: "block" } }} />
+              <ImageListItemBar title={kor[0]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
           </Grid>
-          <Grid item xs={5} sm={4} md={4} lg={4}>
-            <ImageListItem>
+          <Grid item xs={4} sm={4} md={4} lg={4}>
+            <ImageListItem style={{ height: "150px" }}>
               <img
-                src={`https://source.unsplash.com/random/280x170/?${source[1]}`}
+                src={`/images/hobby/${source[1]}.jpeg`}
                 alt={"index"}
                 style={{
+                  width: "100%",
+                  height: "100%",
                   borderRadius: 10,
                   cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[1]}`)}
               />
-              <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2, display: { xs: "none", sm: "block" } }} />
+              <ImageListItemBar title={kor[1]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
           </Grid>
-          <Grid item xs={5} sm={4} md={4} lg={4}>
-            <ImageListItem>
+          <Grid item xs={4} sm={4} md={4} lg={4}>
+            <ImageListItem style={{ height: "150px" }}>
               <img
-                src={`https://source.unsplash.com/random/280x170/?${source[2]}`}
+                src={`/images/hobby/${source[2]}.jpeg`}
                 alt={"index"}
                 style={{
+                  width: "100%",
+                  height: "100%",
                   borderRadius: 10,
                   cursor: "pointer",
                 }}
                 onClick={() => nav(`/search/${kor[2]}`)}
               />
-              <ImageListItemBar title={kor[2]} sx={{ textAlign: "center", borderRadius: 2, display: { xs: "none", sm: "block" } }} />
+              <ImageListItemBar title={kor[2]} sx={{ textAlign: "center", borderRadius: 2 }} />
             </ImageListItem>
           </Grid>
         </Grid>
@@ -158,52 +164,52 @@ export default function HomeTapPanel() {
         <Tab label="#ESTP" {...a11yProps(14)} />
         <Tab label="#ESTJ" {...a11yProps(15)} />
       </Tabs>
-      <TabPanel value={value} index={0} source={["book", "music", "exhibition"]} kor={["독서", "음악 감상", "전시회 관람"]}>
+      <TabPanel value={value} index={0} source={["Readbook", "Music", "MusiumP"]} kor={["독서", "음악 감상", "전시회 관람"]}>
         🐶 INFP : 열정적인 중재자형
       </TabPanel>
-      <TabPanel value={value} index={1} source={["paint", "movie", "book"]} kor={["그림", "영화", "독서"]}>
+      <TabPanel value={value} index={1} source={["DrawingP", "PictureP", "Readbook"]} kor={["그림", "사진", "독서"]}>
         🐱 INFJ : 선의의 옹호자
       </TabPanel>
-      <TabPanel value={value} index={2} source={["boardgame", "skydive", "readbook"]} kor={["보드게임", "스카이다이빙", "독서"]}>
+      <TabPanel value={value} index={2} source={["BoardgameP", "SkydivingP", "Readbook"]} kor={["보드게임", "스카이다이빙", "독서"]}>
         🐭 INTP : 논리적인 사색가형
       </TabPanel>
-      <TabPanel value={value} index={3} source={["movie", "game", "book"]} kor={["영화", "게임", "독서"]}>
+      <TabPanel value={value} index={3} source={["Movie", "Game", "Readbook"]} kor={["영화", "게임", "독서"]}>
         🐹 INTJ : 용의주도한 전략가형
       </TabPanel>
-      <TabPanel value={value} index={4} source={["paint", "movie", "news"]} kor={["그림", "영화", "뉴스"]}>
+      <TabPanel value={value} index={4} source={["DrawingP", "Movie", "NewsP"]} kor={["그림", "영화", "뉴스"]}>
         🐰 ISFP : 호기심 많은 예술가형
       </TabPanel>
-      <TabPanel value={value} index={5} source={["shopping", "cook", "album"]} kor={["쇼핑", "요리", "앨범 정리"]}>
+      <TabPanel value={value} index={5} source={["ShoppingP", "CookingP", "AlbumP"]} kor={["쇼핑", "요리", "앨범 정리"]}>
         🦊 ISFJ : 용감한 수호자형
       </TabPanel>
-      <TabPanel value={value} index={6} source={["youtube", "picture", "book"]} kor={["유트브", "사진", "독서"]}>
+      <TabPanel value={value} index={6} source={["Exercise", "PictureP", "Readbook"]} kor={["운동", "사진", "독서"]}>
         🐻 ISTP : 만능 재주꾼형
       </TabPanel>
-      <TabPanel value={value} index={7} source={["plan", "pet", "news"]} kor={["계획 세우기", "동물농장 보기", "뉴스 보기"]}>
+      <TabPanel value={value} index={7} source={["Planning", "Pet", "NewsP"]} kor={["계획 세우기", "동물농장 보기", "뉴스 보기"]}>
         🐼 ISTJ : 청렴결백한 논리주의자형
       </TabPanel>
-      <TabPanel value={value} index={8} source={["song", "group", "trip"]} kor={["노래방", "모임", "여행"]}>
+      <TabPanel value={value} index={8} source={["SingP", "AlbumP", "Travel"]} kor={["노래방", "모임", "여행"]}>
         🐻‍❄️ ENFP : 재기발랄한 활동가형
       </TabPanel>
-      <TabPanel value={value} index={9} source={["walk", "bike", "group"]} kor={["산책", "자전거", "모임"]}>
+      <TabPanel value={value} index={9} source={["Walk", "Bike", "Group"]} kor={["산책", "자전거", "모임"]}>
         🐨 ENFJ : 정의로운 사회운동가형
       </TabPanel>
-      <TabPanel value={value} index={10} source={["sing", "game", "debate"]} kor={["노래방", "게임", "토론"]}>
+      <TabPanel value={value} index={10} source={["SingP", "Game", "Debate"]} kor={["노래방", "게임", "토론"]}>
         🐯 ENTP : 논쟁을 즐기는 변론가형
       </TabPanel>
-      <TabPanel value={value} index={11} source={["exercise", "debate", "trip"]} kor={["운동", "토론", "여행"]}>
+      <TabPanel value={value} index={11} source={["Exercise", "Meeting", "Travel"]} kor={["운동", "토론", "여행"]}>
         🦁 ENTJ : 대담한 통솔자형
       </TabPanel>
-      <TabPanel value={value} index={12} source={["training", "shopping", "meeting"]} kor={["운동", "쇼핑", "모임"]}>
+      <TabPanel value={value} index={12} source={["Exercise", "ShoppingP", "Debate"]} kor={["운동", "쇼핑", "모임"]}>
         🐮 ESFP : 자유로운 영혼의 연예인형
       </TabPanel>
-      <TabPanel value={value} index={13} source={["news", "group", "book"]} kor={["뉴스", "모임", "독서"]}>
+      <TabPanel value={value} index={13} source={["NewsP", "Meeting", "Readbook"]} kor={["뉴스", "모임", "독서"]}>
         🐷 ESFJ : 사교적인 외교관형
       </TabPanel>
-      <TabPanel value={value} index={14} source={["composition", "exercise", "sing"]} kor={["작곡", "운동", "노래방"]}>
+      <TabPanel value={value} index={14} source={["Composition", "Exercise", "SingP"]} kor={["작곡", "운동", "노래방"]}>
         🐵 ESTP : 모험을 즐기는 사험가형
       </TabPanel>
-      <TabPanel value={value} index={15} source={["news", "clean", "book"]} kor={["뉴스", "청소", "독서"]}>
+      <TabPanel value={value} index={15} source={["NewsP", "Clean", "Readbook"]} kor={["뉴스", "청소", "독서"]}>
         🐸 ESTJ : 엄격한 관리자형
       </TabPanel>
     </Box>

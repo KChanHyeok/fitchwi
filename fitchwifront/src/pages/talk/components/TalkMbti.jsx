@@ -64,48 +64,48 @@ export default function TalkMbti({ talkList }) {
                 >
                     <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
-                {sessionStorage.getItem("id") === null && <Box>
-                    {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-                        .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue)
-                        .map(data => (
-                            <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine: "none", boxShadow: "none" }}
-                                key={data.talkCode}
-                            >
-                                <CardActionArea>
-                                    <Link to={`/talk/${data.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
-                                        <CardMedia src={`/images/${data.talkSaveimg}`} component="img" width="200" height="200" alt="talkimg" />
-                                    </Link>
-                                    <CardContent sx={{ backgroundColor: "#ff427e", borderEndStartRadius: 5, borderEndEndRadius: 5 }}>
-                                        <UserBox sx={{ float: "right", marginTop: 2 }}>
-                                            <Link to="/memberpage"
-                                                state={{ memberId: data.talkOpenCode.memberEmail.memberEmail }}>
-                                                <Avatar
-                                                    src={data.talkOpenCode.memberEmail.memberSaveimg}
-                                                    sx={{ width: 50, height: 50 }}
-                                                />
-                                            </Link>
-                                        </UserBox>
-                                        <Link to={`/talk/${data.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
-                                            <Typography
-                                                variant="h6"
-                                                sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30, color: "white" }}
-                                            >
-                                                {data.talkTitle}
-                                            </Typography>
-                                            <Box>
-                                                <Chip
-                                                    variant="outlined"
-                                                    label={data.talkCategory}
-                                                    size="small"
-                                                    sx={{ mt: 1, fontSize: 12, cursor: "pointer", color: "white", borderColor: "white" }}
-                                                />
-                                            </Box>
+
+                {sessionStorage.getItem("id") === null && talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
+                    .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue)
+                    .filter((data, index) => index < 3)
+                    .map(data => (
+                        <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine: "none", boxShadow: "none" }}
+                            key={data.talkCode}
+                        >
+                            <CardActionArea>
+                                <Link to={`/talk/${data.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                                    <CardMedia src={`/images/${data.talkSaveimg}`} component="img" width="200" height="200" alt="talkimg" />
+                                </Link>
+                                <CardContent sx={{ backgroundColor: "#ff427e", borderEndStartRadius: 5, borderEndEndRadius: 5 }}>
+                                    <UserBox sx={{ float: "right", marginTop: 2 }}>
+                                        <Link to="/memberpage"
+                                            state={{ memberId: data.talkOpenCode.memberEmail.memberEmail }}>
+                                            <Avatar
+                                                src={data.talkOpenCode.memberEmail.memberSaveimg}
+                                                sx={{ width: 50, height: 50 }}
+                                            />
                                         </Link>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        ))}
-                </Box>}
+                                    </UserBox>
+                                    <Link to={`/talk/${data.talkCode}`} style={{ textDecoration: "none", color: "black" }}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30, color: "white" }}
+                                        >
+                                            {data.talkTitle}
+                                        </Typography>
+                                        <Box>
+                                            <Chip
+                                                variant="outlined"
+                                                label={data.talkCategory}
+                                                size="small"
+                                                sx={{ mt: 1, fontSize: 12, cursor: "pointer", color: "white", borderColor: "white" }}
+                                            />
+                                        </Box>
+                                    </Link>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    ))}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
                     .filter(data => data.talkOpenCode.memberEmail.memberMbti === sessionStorage.getItem("mbti"))
                     .filter(data => data.talkOpenCode.memberEmail.memberEmail !== sessionStorage.getItem("id"))

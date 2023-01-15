@@ -1,90 +1,18 @@
 import {
-    AppBar,
     Avatar,
-    Button,
-    ButtonGroup,
-    Card,
     CardActionArea,
     CardContent,
     CardMedia,
     Chip,
     Container,
-    Grid,
-    ImageList,
-    ImageListItem,
-    Input,
-    Toolbar,
     Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { People, LocationOn, SportsKabaddi, Groups, PermContactCalendar, AssignmentTurnedIn, DateRange, Search } from "@mui/icons-material";
-import moment from "moment";
+import { Link, useLocation } from "react-router-dom";
 
 const TalkFeedList = () => {
-    const nav = useNavigate();
-    let { searchText } = useParams();
-    const [newSearchText, setNewSearchText] = useState();
-
-    const [togetherList, setTogetherList] = useState([]);
-    const [talkList, setTalkList] = useState([]);
-    const [type, setType] = useState(1);
-
-    function getToday(time) {
-        var date = new Date(time);
-        var year = date.getFullYear();
-        var month = ("0" + (1 + date.getMonth())).slice(-2);
-        var day = ("0" + date.getDate()).slice(-2);
-
-        return year + month + day;
-    }
-
-    let nowTime = (time) => moment(getToday(Number(time))).fromNow();
-
-    const searchResult = useCallback(() => {
-        axios
-            .get("/getTogetherListBySearch", { params: { searchText: searchText } })
-            .then((response) => {
-                setTogetherList(response.data);
-            })
-            .catch((error) => console.log(error));
-
-        axios
-            .get("/getFeedListBySearch", { params: { searchText: searchText } })
-            .then((response) => {
-                setFeedList(response.data);
-            })
-            .catch((error) => console.log(error));
-
-        axios
-            .get("/getTalkListBySearch", { params: { searchText: searchText } })
-            .then((response) => {
-                setTalkList(response.data);
-            })
-            .catch((error) => console.log(error));
-    }, [searchText]);
-
-    useEffect(() => {
-        searchResult();
-    }, [searchResult]);
-
-    const handleChange = (event) => {
-        setNewSearchText(event.target.value);
-    };
-
-    const onSearch = useCallback(
-        (e) => {
-            if (!newSearchText || newSearchText.length < 2) {
-                alert("두 글자 이상 입력해 주세요.");
-                return;
-            }
-            e.preventDefault();
-            nav(`/search/${newSearchText}`);
-        },
-        [newSearchText, nav]
-    );
 
     //해당 얘기해요 피드 불러오기
     const [feedList, setFeedList] = useState([]);
@@ -123,40 +51,32 @@ const TalkFeedList = () => {
                             : feedList.sort((a, b) => b.feedCode - a.feedCode).map((feed, index) => (
                                 <>
                                     <Link to={`/share/${feed.feedCode}`} key={index}
-                                        style={{ textDecoration: "none", color: "black", float: "left" }}>
+                                        style={{ textDecoration: "none", color: "black" }}>
                                         <Box flexDirection="column" alignItems="center"
-                                            boxShadow={2} mt={2} mb={4} ml={6} borderRadius={2} width={200}>
+                                            boxShadow={2} mt={2} mb={4} mr={6} borderRadius={2} width={300}
+                                            style={{ float: "left" }}>
                                             <CardActionArea>
                                                 <CardMedia
                                                     component="img"
                                                     sx={{
-                                                        width: 200, height: 200,
+                                                        width: 300, height: 200,
                                                         borderTopLeftRadius: 8, borderBottomLeftRadius: 8,
                                                         borderTopRightRadius: 8, borderBottomRightRadius: 8
                                                     }}
                                                     image={`/images/${feed.ffList[0].feedFileSaveimg}`}
                                                 />
                                                 <CardContent>
-                                                    {feed.feedContent.length > 8
-                                                        ? <Typography variant="h6">{feed.feedContent.substr(0, 8)}...
-                                                            <Chip
-                                                                color="primary"
-                                                                variant="outlined"
-                                                                label={feed.feedCategory}
-                                                                size="small"
-                                                                sx={{ mt: 0.5, float: "right", fontSize: 7, fontWeight: "normal" }}
-                                                            />
-                                                        </Typography>
-                                                        : <Typography variant="h6">{feed.feedContent}
-                                                            <Chip
-                                                                color="primary"
-                                                                variant="outlined"
-                                                                label={feed.feedCategory}
-                                                                size="small"
-                                                                sx={{ mt: 0.5, float: "right", fontSize: 7, fontWeight: "normal" }}
-                                                            />
-                                                        </Typography>
-                                                    }
+                                                    <Chip
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        label={feed.feedCategory}
+                                                        size="small"
+                                                        sx={{ mb: 1 }}
+                                                    />
+                                                    <Typography
+                                                        sx={{ overflow: "hidden", textOverflow: "ellipsis", height: 70 }}>
+                                                        {feed.feedContent}
+                                                    </Typography>
                                                     <Box
                                                         sx={{
                                                             mt: 1,

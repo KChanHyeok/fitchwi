@@ -33,7 +33,7 @@ function a11yProps(index) {
   };
 }
 
-export default function TogetherTap({ list }) {
+export default function TogetherTap({ list, togetherTagList }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -49,10 +49,10 @@ export default function TogetherTap({ list }) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        안녕하세용
+
       </TabPanel>
       <TabPanel value={value} index={1}>
-        반가워용
+        
       </TabPanel>
     </Box>
   );

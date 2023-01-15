@@ -13,11 +13,13 @@ const Together = () => {
   const [facilitiesList, setFacilitiesList] = useState([]);
   const [togetherList, setTogetherList] = useState([]);
   const [togetherJoinList, setTogetherJoinList] = useState([]);
+  const [togetherTagList, setTogetherTagList] = useState([]);
 
   useEffect(() => {
     getAllFacilitiesList();
     getAllTogetherList();
     getAllTogetherJoinList();
+    getAllTogetherTagList();
   }, []);
 
   const getAllFacilitiesList = async () => {
@@ -44,6 +46,13 @@ const Together = () => {
       })
       .catch((error) => console.log(error));
   };
+  const getAllTogetherTagList = async () => {
+    await axios
+      .get("/getAllTogetherTag")
+      .then((res) => {
+        setTogetherTagList(res.data);
+      })
+  };
 
   return (
     <Box>
@@ -53,7 +62,7 @@ const Together = () => {
           path="/*"
           element={
             <TogetherHome
-              togetherList={togetherList} />} />
+              togetherList={togetherList} togetherTagList={togetherTagList} />} />
         <Route
           path="/category/:togetherCategoryText"
           element={
@@ -65,8 +74,10 @@ const Together = () => {
             <TogetherInfo
               refreshTogetherJoinList={getAllTogetherJoinList}
               refreshTogetherList={getAllTogetherList}
+              refreshTogetherTagList={getAllTogetherTagList}
               togetherJoinList={togetherJoinList}
               togetherList={togetherList}
+              togetherTagList={togetherTagList}
             />
           }
         />

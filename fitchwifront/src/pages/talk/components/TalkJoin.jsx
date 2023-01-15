@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const StyleModal = styled(Modal)({
     display: "flex",
@@ -57,7 +58,14 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
             .then((res) => {
                 setOpenModal(false);
                 setLoad(false);
-                alert(res.data);
+                if (res.data === "ok") {
+                    swAlert("가입 신청이 완료되었습니다.", "success");
+                } else if (res.data === "memberMax") {
+                    swAlert("인원이 가득차서 가입할 수 없습니다.", "warning");
+                } else {
+                    swAlert("가입에 실패했습니다.", "error");
+                }
+
                 refreshTalkJoinList();
             })
             .catch((error) => console.log(error));
@@ -77,10 +85,10 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
             .then((res) => {
                 if (talkJoinState === "대기") {
                     setLoad(false);
-                    alert("신청 취소 완료");
+                    swAlert("신청 취소가 완료되었습니다.", "success");
                 } else {
                     setLoad(false);
-                    alert(res.data);
+                    swAlert("모임 탈퇴가 완료되었습니다.", "success");
                 }
                 setOpenModal(false);
                 refreshTalkJoinList();
@@ -95,15 +103,25 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
         console.log(talkJoinState);
     }, [talkJoinState]);
 
-    //로그인 조건 / 최대 인원 설정
+    //로그인 조건
     const isLogin = () => {
         if (sessionStorage.getItem("id") === null) {
-            alert("로그인이 필요한 서비스입니다.");
+            swAlert("로그인이 필요한 서비스입니다.", "warning");
             nav("/login");
         } else {
             setOpenModal(true);
         }
     }
+
+    const swAlert = (contentText, icon) => {
+        Swal.fire({
+            title: "알림",
+            text: contentText,
+            icon: icon,
+            confirmButtonText: "확인",
+            confirmButtonColor: "#ff0456",
+        });
+    };
 
     return (
 
@@ -188,7 +206,8 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                                 </Button>
                             </Box>
                         ) : talkInfo.talkType === "승인제"
-                            ? (<Box Box conponent="form" width={400} height={400} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                            ? (<Box conponent="form" bgcolor="white" p={3} borderRadius={5}
+                                sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
                                 <Typography variant="h6" color="gray" textAlign="center">
                                     얘기해요 참여하기
                                     <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
@@ -203,20 +222,30 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                                     </Typography>
                                 </UserBox>
                                 <hr /><br />
-                                <Box><h2>{talkInfo.talkTitle}</h2></Box>
-                                <Box sx={{ mt: 2 }}><b>가입질문</b>
-                                    <Typography sx={{ mt: 1 }}>{talkInfo.talkInquiry}</Typography>
-                                    <TextField sx={{ mt: 1 }} fullWidth
-                                        label="답변" name="talkJoinAnswer" value={insertTalkJoin.talkJoinAnswer} onChange={onChange} />
-                                    <Box sx={{ mt: 1 }}>승인제의 경우 승인대기 상태로 방장의 승인을 기다려야 합니다.</Box>
+                                <Box style={{
+                                    height: 300,
+                                    width: 400,
+                                    overflowY: "scroll",
+                                    overflowX: "hidden",
+                                }}>
+                                    <Box><h2>{talkInfo.talkTitle}</h2></Box>
+                                    <Box sx={{ mt: 2 }}>
+                                        <Typography color="#ff0456"><b>가입질문</b></Typography>
+                                        <Typography sx={{ mt: 1 }}>{talkInfo.talkInquiry}</Typography>
+                                        <br />
+                                        <TextField sx={{ mt: 1, mb: 1 }} fullWidth
+                                            label="답변" name="talkJoinAnswer" onChange={onChange} />
+                                        <Box sx={{ mt: 1 }}>승인제의 경우 승인대기 상태로 방장의 승인을 기다려야 합니다.</Box>
+                                    </Box>
+                                    <Button sx={{ mt: 3, float: "right" }} type="submit" onClick={onTalkJoin}>
+                                        참여하기
+                                    </Button>
                                 </Box>
-                                <Button sx={{ mt: 3, float: "right" }} type="submit" onClick={onTalkJoin}>
-                                    참여하기
-                                </Button>
                             </Box>
                             )
                             :
-                            (<Box Box conponent="form" width={400} height={300} bgcolor="white" p={3} borderRadius={5} sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
+                            (<Box Box conponent="form" bgcolor="white" p={3} borderRadius={5}
+                                sx={{ mt: 5, mb: 10, overflowY: "auto" }}>
                                 <Typography variant="h6" color="gray" textAlign="center">
                                     얘기해요 참여하기
                                     <button className="modalCloseBtn" onClick={() => setOpenModal(false)}>
@@ -231,11 +260,18 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                                     </Typography>
                                 </UserBox>
                                 <hr /><br />
-                                <Box><h2>{talkInfo.talkTitle}</h2></Box>
-                                <Typography sx={{ mt: 3 }}><Box>선착순의 경우 바로 참여가능합니다.</Box></Typography>
-                                <Button sx={{ mt: 3, float: "right" }} type="submit" onClick={onTalkJoin}>
-                                    참여하기
-                                </Button>
+                                <Box style={{
+                                    height: 180,
+                                    width: 400,
+                                    overflowY: "scroll",
+                                    overflowX: "hidden",
+                                }}>
+                                    <Box><h2>{talkInfo.talkTitle}</h2></Box>
+                                    <Typography sx={{ mt: 3 }}><Box>선착순의 경우 바로 참여가능합니다.</Box></Typography>
+                                    <Button sx={{ mt: 3, float: "right" }} type="submit" onClick={onTalkJoin}>
+                                        참여하기
+                                    </Button>
+                                </Box>
                             </Box>
                             )}
                     </StyleModal>

@@ -107,12 +107,12 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
             .then((res) => {
                 if (res.data === "ok") {
                     setLoad(false);
-                    swAlert(res.data, "success");
+                    swAlert("얘기해요 개설이 완료되었습니다.", "success");
                     nav("/talk");
                     refreshTalkList();
                     refreshTalkTagList();
                 } else {
-                    alert("개설 실패");
+                    swAlert("얘기해요 개설 실패", "error");
                 }
             })
             .catch((error) => console.log(error));

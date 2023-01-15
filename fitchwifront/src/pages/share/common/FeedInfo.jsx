@@ -4,11 +4,22 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FeedInfoModal from "./FeedInfoModal";
+import Swal from "sweetalert2";
+import { Box, CircularProgress } from "@mui/material";
 
 const FeedInfo = ({ memberInfo, refreshFeed }) => {
   let { feedCode } = useParams();
   const [feedInfo, setFeedInfo] = useState();
   const nav = useNavigate();
+  const swAlert = (html, icon = "success", func) => {
+    Swal.fire({
+      title: "알림",
+      html: html,
+      icon: icon,
+      confirmButtonText: "확인",
+      confirmButtonColor: "#ff0456",
+    }).then(func);
+  };
 
   // 피드 댓글 입력 양식 구성
 
@@ -20,10 +31,8 @@ const FeedInfo = ({ memberInfo, refreshFeed }) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         if (response.data === "") {
-          alert("존재하지 않는 게시글입니다.");
-          nav(-1);
+          swAlert("존재하지 않는 게시글입니다.", "warning", () => nav(-1));
         }
         setFeedInfo(response.data);
       });
@@ -36,7 +45,9 @@ const FeedInfo = ({ memberInfo, refreshFeed }) => {
   return (
     <>
       {!feedInfo ? (
-        <div>로딩중</div>
+        <Box textAlign="center" lineHeight={40}>
+          <CircularProgress />
+        </Box>
       ) : (
         <>
           <FeedInfoModal
