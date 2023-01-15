@@ -1,7 +1,9 @@
+import { AssignmentTurnedIn } from "@mui/icons-material";
 import { Avatar, Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/TalkList.scss";
+import PeopleIcon from '@mui/icons-material/People';
 
 const TalkList = ({ talkList }) => {
     const {
@@ -13,6 +15,7 @@ const TalkList = ({ talkList }) => {
         talkSaveimg,
         talkType,
         talkInquiry,
+        talkMemberCount,
         talkMax,
         talkOpenCode,
     } = talkList;
@@ -55,18 +58,32 @@ const TalkList = ({ talkList }) => {
                             label={talkCategory}
                             size="small"
                             sx={{ mt: 1.5, fontSize: 12, float: "right" }}
+                            style={{ cursor: "pointer" }}
                         />
                         <Typography
                             sx={{ mt: 7, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 180, height: 30 }}
                         >
                             {talkContent}
                         </Typography>
+
                         <Typography variant="body" color="text.secondary">
-                            {talkType}
+                            <Box style={{ float: "left" }}>
+                                <AssignmentTurnedIn sx={{ color: "grey" }} fontSize="small" />
+                            </Box>
+                            <Typography color="textSecondary" variant="caption" style={{ float: "left" }}>
+                                <b>{talkType}</b>&nbsp;&nbsp;
+                            </Typography>
+                            <Box style={{ float: "left" }}>
+                                <PeopleIcon sx={{ color: "grey" }} fontSize="small" />
+                            </Box>
+                            <Typography color="textSecondary" variant="caption" style={{ float: "left" }}>
+                                <b>{talkMemberCount + 1}/{talkMax}명</b>
+                            </Typography>
                             <Typography variant="span" className="talkOpDate">
                                 {talkOpenCode.talkOpenDate}
                             </Typography>
                         </Typography>
+                        <br />
                     </CardContent>
                 </CardActionArea>
             </Card>
