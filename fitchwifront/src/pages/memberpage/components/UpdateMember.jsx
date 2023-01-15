@@ -444,8 +444,9 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
                     margin="normal"
                     focused={true}
                     required
+                    inputProps={{ maxLength: 10 }}
                     fullWidth
-                    label="닉네임"
+                    label="닉네임(2자 이상 10자 이하)"
                     name="memberNickname"
                     variant="standard"
                     onChange={(e) => inputChange(e)}

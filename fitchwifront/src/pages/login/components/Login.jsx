@@ -44,8 +44,10 @@ export default function Login({ sucLogin, swAlert }) {
             sessionStorage.setItem("mbti", res.data.mbti);
             sessionStorage.setItem("profileImg", res.data.profileImg);
 
-            swAlert(res.data.memberNickname + "님 환영합니다.");
-            nav("/", { replace: true });
+            swAlert(res.data.memberNickname + "님 환영합니다.", "success", () => {
+              nav("/", { replace: true });
+            });
+
             break;
 
           case "wrong pwd":
@@ -58,19 +60,25 @@ export default function Login({ sucLogin, swAlert }) {
             swAlert(
               "누적된 신고에 의해, <br/> FITCHWI 이용이 불가합니다.<br/> 제한 해지일 :" +
                 res.data.memberRestriction,
-              "warning"
+              "warning",
+              () => {
+                nav("/", { replace: true });
+              }
             );
-            nav("/", { replace: true });
+
             break;
           case "released":
-            swAlert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.", "info");
-            sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
-            sessionStorage.setItem("id", res.data.memberEmail);
-            sessionStorage.setItem("nickName", res.data.memberNickname);
-            sessionStorage.setItem("mbti", res.data.mbti);
-            sessionStorage.setItem("profileImg", res.data.profileImg);
-            swAlert(res.data.memberNickname + "님 환영합니다.");
-            nav("/", { replace: true });
+            swAlert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.", "info", () => {
+              sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+              sessionStorage.setItem("id", res.data.memberEmail);
+              sessionStorage.setItem("nickName", res.data.memberNickname);
+              sessionStorage.setItem("mbti", res.data.mbti);
+              sessionStorage.setItem("profileImg", res.data.profileImg);
+              swAlert(res.data.memberNickname + "님 환영합니다.", "success", () => {
+                nav("/", { replace: true });
+              });
+            });
+
             break;
           default:
             break;
@@ -125,6 +133,7 @@ export default function Login({ sucLogin, swAlert }) {
               label="Password"
               type="password"
               id="password"
+              inputProps={{ maxLength: 20 }}
               onChange={onLoginChange}
               value={memberPwd}
             />
@@ -143,7 +152,7 @@ export default function Login({ sucLogin, swAlert }) {
             </Grid>
 
             <Grid item>
-              <Link to="/join" style={{ textDecoration: "none" }}>
+              <Link to="/join" state={{ member: "newMember" }} style={{ textDecoration: "none" }}>
                 <Button>회원 가입</Button>
               </Link>
             </Grid>

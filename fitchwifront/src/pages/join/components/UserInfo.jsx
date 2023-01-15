@@ -3,8 +3,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Button, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import Postcode from "./Postcode";
+import { useNavigate } from "react-router-dom";
 
-export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swAlert }) {
+export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swAlert, isValid }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const [msg, setMsg] = useState("");
 
   const [pwd, setPwd] = useState("");
@@ -36,25 +46,31 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
   }, [joinForm, checkedId, checkedPhone, correctPwd, isKakao]);
 
   useEffect(() => {
-    if (checkPwd === "" && pwd !== "") {
-      setMsg("비밀번호 확인을 진행해주세요.", "warning");
-    } else if (checkPwd === pwd && pwd !== "") {
-      setCorrectPwd(true);
-      setMsg("비밀번호 확인이 완료됐습니다.");
-      const joinObj = {
-        ...joinForm,
-        memberPwd: pwd,
-      };
-      setJoinForm(joinObj);
-    } else if (checkPwd !== pwd) {
+    if (pwd !== "" && (pwd.length < 8 || pwd.length > 20)) {
+      setMsg("비밀번호를 8자 이상, 20자 이하로 설정해주세요.");
       setCorrectPwd(false);
-      setMsg("입력하신 두 비밀번호가 서로 다릅니다.", "warning");
-      const joinObj = {
-        ...joinForm,
-        memberPwd: "",
-      };
-      setJoinForm(joinObj);
+    } else {
+      if (checkPwd === "" && pwd !== "") {
+        setMsg("비밀번호 확인을 진행해주세요.");
+      } else if (checkPwd === pwd && pwd !== "") {
+        setCorrectPwd(true);
+        setMsg("비밀번호 확인이 완료됐습니다.");
+        const joinObj = {
+          ...joinForm,
+          memberPwd: pwd,
+        };
+        setJoinForm(joinObj);
+      } else if (checkPwd !== pwd) {
+        setCorrectPwd(false);
+        setMsg("입력하신 두 비밀번호가 서로 다릅니다.");
+        const joinObj = {
+          ...joinForm,
+          memberPwd: "",
+        };
+        setJoinForm(joinObj);
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pwd, checkPwd]);
 
@@ -189,7 +205,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
                 label="비밀번호"
                 variant="standard"
                 InputProps={{ style: { fontSize: 20 } }}
-                inputProps={{ maxLength: 30 }}
+                inputProps={{ maxLength: 20 }}
               />
             </Grid>{" "}
             <Grid item xs={12}>
@@ -202,7 +218,7 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
                 variant="standard"
                 value={checkPwd}
                 InputProps={{ style: { fontSize: 20 } }}
-                inputProps={{ maxLength: 30 }}
+                inputProps={{ maxLength: 20 }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mb: 2 }}>

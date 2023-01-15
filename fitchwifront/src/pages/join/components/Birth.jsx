@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Birth({ onChange, joinForm }) {
+export default function Birth({ onChange, joinForm, isValid, swAlert }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   //console.log(joinForm.memberBirth);
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {

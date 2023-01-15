@@ -123,24 +123,29 @@ export default function FindMemberInfoModal({ swAlert }) {
   const [isCorrectPwd, setIsCorrectPwd] = useState(null);
 
   useEffect(() => {
-    if (checkPwd === "" && pwd !== "") {
-      setMsg("비밀번호 확인을 진행해주세요.");
-    } else if (checkPwd === pwd && pwd !== "") {
-      setIsCorrectPwd(true);
-      setMsg("비밀번호 확인이 완료됐습니다.");
-      const memberObj = {
-        ...memberToChangePwd,
-        memberPwd: pwd,
-      };
-      setMemberToChangePwd(memberObj);
-    } else if (checkPwd !== pwd) {
+    if (pwd !== "" && (pwd.length < 8 || pwd.length > 20)) {
+      setMsg("비밀번호를 8자 이상, 20자 이하로 설정해주세요.");
       setIsCorrectPwd(false);
-      setMsg("입력하신 두 비밀번호가 서로 다릅니다.");
-      const memberObj = {
-        ...memberToChangePwd,
-        memberPwd: pwd,
-      };
-      setMemberToChangePwd(memberObj);
+    } else {
+      if (checkPwd === "" && pwd !== "") {
+        setMsg("비밀번호 확인을 진행해주세요.");
+      } else if (checkPwd === pwd && pwd !== "") {
+        setIsCorrectPwd(true);
+        setMsg("비밀번호 확인이 완료됐습니다.");
+        const memberObj = {
+          ...memberToChangePwd,
+          memberPwd: pwd,
+        };
+        setMemberToChangePwd(memberObj);
+      } else if (checkPwd !== pwd) {
+        setIsCorrectPwd(false);
+        setMsg("입력하신 두 비밀번호가 서로 다릅니다.");
+        const memberObj = {
+          ...memberToChangePwd,
+          memberPwd: pwd,
+        };
+        setMemberToChangePwd(memberObj);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pwd, checkPwd]);
@@ -153,9 +158,10 @@ export default function FindMemberInfoModal({ swAlert }) {
       .then((result) => {
         //    console.log(result.data);
 
-        swAlert("비밀번호가 성공적으로 변경됐습니다.");
-        handleClose();
-        nav("/login");
+        swAlert("비밀번호가 성공적으로 변경됐습니다.", "success", () => {
+          handleClose();
+          nav("/login");
+        });
       })
       .catch((error) => console.log(error));
   };
@@ -252,6 +258,7 @@ export default function FindMemberInfoModal({ swAlert }) {
                 type="password"
                 fullWidth
                 value={pwd}
+                inputProps={{ maxLength: 20 }}
                 variant="standard"
               />
               <TextField
@@ -262,6 +269,7 @@ export default function FindMemberInfoModal({ swAlert }) {
                 label="새 비밀번호 확인"
                 type="password"
                 fullWidth
+                inputProps={{ maxLength: 20 }}
                 value={checkPwd}
                 variant="standard"
               />

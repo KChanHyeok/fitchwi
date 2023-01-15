@@ -49,9 +49,10 @@ export default function Report({ targetMember, target, category, type }) {
   };
   const handleClickOpen = () => {
     if (reportDetail[0].memberEmail.memberEmail == null) {
-      swAlert("로그인 후 이용 가능합니다.", "warning");
+      swAlert("로그인 후 이용 가능합니다.", "warning", () => {
+        nav("/login");
+      });
 
-      nav("/login");
       return;
     }
     axios

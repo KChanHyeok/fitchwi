@@ -4,9 +4,18 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { styled } from "@mui/system";
 import { Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Mbti({ joinForm, setJoinForm }) {
+export default function Mbti({ joinForm, setJoinForm, isValid, swAlert }) {
+  const nav = useNavigate();
+  React.useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const [ei, setEi] = React.useState("");
   const [ns, setNs] = React.useState("");
   const [tf, setTf] = React.useState("");
@@ -67,11 +76,12 @@ export default function Mbti({ joinForm, setJoinForm }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom mb={10}>
+      <Typography variant="h4" gutterBottom>
         오 그렇군요! <br />
         MBTI는 뭐예요?
-        <br />
-        <small>(*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)</small>
+      </Typography>
+      <Typography variant="h6" gutterBottom mb={10}>
+        (*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)
       </Typography>
 
       <ToggleButtonGroup orientation="vertical" value={ei} exclusive onChange={handleChange}>

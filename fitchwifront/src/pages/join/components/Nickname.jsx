@@ -1,24 +1,40 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Nickname({ onChange, joinForm }) {
+export default function Nickname({ onChange, joinForm, isValid, swAlert, location }) {
   const [isDisabled, setIsDisabled] = useState(true);
+  const nav = useNavigate();
+  console.log(location.state);
   useEffect(() => {
-    if (joinForm.memberNickname !== "") {
-      setIsDisabled(false);
-    } else {
-      setIsDisabled(true);
+    if (isValid === false && location.state == null) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (joinForm.memberNickname !== undefined) {
+      if (joinForm.memberNickname.length >= 2) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
     }
   }, [joinForm.memberNickname]);
   return (
     <div style={{ textAlign: "center", transition: "all 1s" }}>
-      <Typography variant="h4" gutterBottom mb={10}>
+      <Typography variant="h4" gutterBottom>
         반가워요!
         <br />
         FITCHWI에서 사용하실 별명을 알려주세요.
       </Typography>
+      <Typography variant="h6" mb={10}>
+        *2자 이상 10자 이하로 정해주세요!
+      </Typography>
+
       <TextField
         onChange={onChange}
         name="memberNickname"
@@ -27,7 +43,7 @@ export default function Nickname({ onChange, joinForm }) {
         variant="standard"
         InputProps={{ style: { fontSize: 40 } }}
         inputProps={{ maxLength: 10 }}
-        value={joinForm.memberNickname}
+        value={joinForm.memberNickname || ""}
       />
       <br />
       <Link to="/join/userimg" style={{ textDecoration: "none" }}>

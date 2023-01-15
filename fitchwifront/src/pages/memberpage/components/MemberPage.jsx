@@ -180,9 +180,10 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           if (res.data === "ok") {
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("nickName");
-            swAlert("탈퇴 처리가 완료됐습니다.");
-            onLogout();
-            nav("/");
+            swAlert("탈퇴 처리가 완료됐습니다.", "success", () => {
+              onLogout();
+              nav("/");
+            });
           } else if (res.data === "togetherExist") {
             swAlert("진행 예정인 함께해요가 있습니다. <br/>함께해요를 먼저 탈퇴해주세요.", "info");
           } else {
@@ -243,7 +244,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container flexWrap="nowrap" spacing={5}>
+        <Grid container flexWrap="nowrap" spacing={5} sx={{ minWidth: "630px" }}>
           <Grid item xs={2}>
             <List>
               <ListItem disablePadding>
@@ -325,7 +326,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   style={{
                     backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "150px",
+                    backgroundSize: "120px",
                     backgroundPosition: "right 2% bottom 10%",
                   }}
                   avatar={

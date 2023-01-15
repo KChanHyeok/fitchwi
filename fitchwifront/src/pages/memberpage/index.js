@@ -19,14 +19,15 @@ export default function MemberPageIndex({ onLogout, lstate, sucLogin }) {
   }
 
   const getMemberInfo = useCallback(() => {
-    if (pageOwner != null) {
+    if (pageOwner !== "") {
       // console.log(member);
       axios.get("/getMemberInfo", { params: { userId: pageOwner } }).then((res) => {
         setMember(() => res.data);
       });
-    } else {
-      alert("로그인 후 이용 가능합니다.");
-      nav("/");
+      // } else {
+      //   swAlert("로그인 후 이용 가능합니다.", "warning", () => {
+      //     nav("/login");
+      //   });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageOwner, nav]);
