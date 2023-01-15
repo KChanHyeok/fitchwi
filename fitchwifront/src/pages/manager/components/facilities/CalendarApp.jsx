@@ -19,10 +19,9 @@ export default function CalendarApp({ facilitiesCode, swAlert }) {
   const [noDayToSend, setNoDayToSend] = useState([]);
   useEffect(() => {
     axios.get("/getNodayList", { params: { facilitiesCode: facilitiesCode } }).then((result) => {
-      // console.log(result.data);
       setNodayList(result.data);
     });
-    //변경필요.
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [noDayToSend]);
 
@@ -32,7 +31,6 @@ export default function CalendarApp({ facilitiesCode, swAlert }) {
       return;
     }
 
-    // console.log(noDayToSend);
     let checkArray = noDayList.filter((n) => noDayToSend.indexOf(n) > 0);
     if (checkArray.length !== 0) {
       swAlert("이미 등록된 날짜를 포함하고 있습니다.", "warning");
@@ -63,8 +61,7 @@ export default function CalendarApp({ facilitiesCode, swAlert }) {
       swAlert("시작일과 종료일을 모두 선택해주세요.", "warning");
       return;
     }
-    // console.log(noDayToSend);
-    // noDayList.filter((n) => noDayToSend.indexOf(n) < 0);
+
     let checkArray = noDayToSend.filter((n) => noDayList.indexOf(n) < 0);
     if (checkArray.length !== 0) {
       swAlert("이용 가능한 날짜를 포함하고 있습니다.", "warning");
@@ -118,21 +115,13 @@ export default function CalendarApp({ facilitiesCode, swAlert }) {
 
     setNoDayToSend(() => dates);
   }, [startDate, endDate]);
-  // console.log("noDayList");
-  // console.log(noDayList);
-  // console.log("noDayToSend");
-  // console.log(noDayToSend);
-  // console.log("startDate");
-  // console.log(startDate);
-  // console.log("endDate");
-  // console.log(endDate);
+
   const onClickDay = (v) => {
     if (startDate !== "" && endDate !== "") {
       setStartDate(v);
       setEndDate("");
     }
     if (startDate === "") {
-      //   console.log(v);
       setStartDate(v);
     }
   };

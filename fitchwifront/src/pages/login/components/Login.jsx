@@ -35,7 +35,6 @@ export default function Login({ sucLogin, swAlert }) {
     (e) => {
       e.preventDefault();
       axios.post("/loginmember", loginForm).then((res) => {
-        console.log(res.data);
         switch (res.data.state) {
           case "ok":
             sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);

@@ -31,7 +31,6 @@ const Home = () => {
     await axios
       .get("/getAllTogetherList")
       .then((res) => {
-        console.log(res.data);
         setTogetherList(res.data);
       })
       .catch((error) => console.log(error));
@@ -45,7 +44,14 @@ const Home = () => {
   return (
     <>
       <Box mb={5} width="100%" sx={{ height: { xs: 250, sm: 250, md: 300, lg: 400 } }}>
-        <Carousel next={() => {}} prev={() => {}} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false}>
+        <Carousel
+          next={() => {}}
+          prev={() => {}}
+          animation="slide"
+          duration={800}
+          sx={{ height: "100%" }}
+          indicators={false}
+        >
           <Box
             // height={400}
             width="100%"
@@ -81,10 +87,25 @@ const Home = () => {
             </Typography>
             <HomeCategory setCategory={setCategory} setKorCategory={setKorCategory} />
             <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"recent"} />
-            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"recent"} />
+            <HomeTogetherList
+              category={category}
+              korCategory={korCategory}
+              togetherList={togetherList}
+              type={"recent"}
+            />
             <Box height={300} mt={6} component="img" src="/images/TalkPost1.png" width="100%" />
-            <HomeTalkList category={category} korCategory={korCategory} talkList={talkList} type={"popular"} />
-            <HomeTogetherList category={category} korCategory={korCategory} togetherList={togetherList} type={"popular"} />
+            <HomeTalkList
+              category={category}
+              korCategory={korCategory}
+              talkList={talkList}
+              type={"popular"}
+            />
+            <HomeTogetherList
+              category={category}
+              korCategory={korCategory}
+              togetherList={togetherList}
+              type={"popular"}
+            />
             <Typography variant="h6" mt={4}>
               🏆 이 달의 회원
             </Typography>

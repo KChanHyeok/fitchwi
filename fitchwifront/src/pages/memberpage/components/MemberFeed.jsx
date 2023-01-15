@@ -43,8 +43,6 @@ function a11yProps(index) {
 export default function MemberFeed({ myMenu, feedList }) {
   const [value, setValue] = useState(0);
 
-  //console.log(talkOpenedList);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 export default function ChangePwdModal({ children, openChangePwd, setOpenChangePwd, lstate, swAlert }) {
   //회원 정보 수정
-  console.log(lstate);
+
   const [memberToCheck, setMemberToCheck] = React.useState({
     memberEmail: lstate.logid,
     memberPwd: "",
@@ -32,11 +32,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
   const [checkPwd, setCheckPwd] = useState("");
 
   const [correctPwd, setCorrectPwd] = useState(null);
-  // console.log(memberToCheck);
-  // console.log(currentPwd);
-  // console.log(pwd);
-  // console.log(checkPwd);
-  // console.log(memberToChange);
 
   const [msg, setMsg] = useState("");
   useEffect(() => {
@@ -89,7 +84,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
     axios
       .post("/checkPwd", memberToCheck)
       .then((result) => {
-        console.log(result.data);
         if (result.data === "ok") {
           axios.put("/updatePwd", memberToChange).then((result) => {
             if (result.data === "ok") {
@@ -109,7 +103,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
             }
           });
         } else {
-          console.log(result.data);
           swAlert("기존 비밀번호를 다시한번 확인하세요.", "warning");
           handleClose(true);
           setCheckPwd("");
@@ -119,7 +112,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
         }
       })
       .catch((error) => console.log(error));
-    console.log(memberToCheck);
   };
   return (
     <div>

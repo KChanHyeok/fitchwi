@@ -28,7 +28,7 @@ export default function FollowMemberListModal({ children, followList, lstate }) 
   let interestArr = [];
   const { logid } = lstate;
   followList.map((member) => (interestArr = [...interestArr, member.memberInterest.split(" ")]));
-  console.log(interestArr);
+
   return (
     <div>
       <Typography

@@ -37,10 +37,8 @@ export default function FindMemberInfoModal({ swAlert }) {
   });
 
   const handlePhone = (e) => {
-    console.log(memberPhone);
     setMemberPhone(e.target.value);
   };
-  // console.log(memberPhone);
 
   //휴대전화 인증 -> ok -> 아이디 알려주기 + 카카오인지 일반회원인지도 알려줘야함
   //카카오회원 -> 로그인화면에서 카카오로그인을 이용해주세요
@@ -57,17 +55,14 @@ export default function FindMemberInfoModal({ swAlert }) {
 
     const { IMP } = window;
     // IMP.init("imp51345423");
-    // 본인인증은 다날과 계약을 진행해야 서비스 제공이 가능해서 본인 가맹점 식별코드로는 테스트가 불가능함!
 
-    // 그래서 아임포트에서 본인인증 테스트가 가능한 계정을 제공해줌!
     IMP.init("imp10391932");
 
-    // 회원가입 할 때 입력한 정보로 채워줄지 아니면 공백으로 처리할 지는 고민해봐야 할듯
     const data = {
       merchant_uid: `mid_${new Date().getTime()}`,
       company: "아임포트",
       carrier: "",
-      //name: joinForm.memberName,
+
       phone: memberPhone,
     };
     IMP.certification(data, callback);
@@ -75,17 +70,12 @@ export default function FindMemberInfoModal({ swAlert }) {
     function callback(response) {
       // eslint-disable-next-line no-unused-vars
       const { success, merchant_uid, error_msg } = response;
-      // console.log(response);
+
       if (success) {
         setCheckPhone(true);
-        //    setDisabled(false);
-        // alert("본인인증 성공");
 
         axios.get("/getMemberByPhone", { params: { memberPhone: memberPhone } }).then((result) => {
-          //  console.log(result.data);
           if (result.data[0] === "no data") {
-            // alert("등록되지 않은 전화번호입니다. 회원가입을 먼저 진행해주세요");
-            //  setOpen(false);
             return;
           } else {
             if (result.data === "kakao") {
@@ -106,9 +96,6 @@ export default function FindMemberInfoModal({ swAlert }) {
             }
           }
         });
-
-        //   console.log(response);
-        //  console.log(merchant_uid);
       } else {
         swAlert(`본인인증 실패: ${error_msg}`, "warning");
       }
@@ -151,13 +138,9 @@ export default function FindMemberInfoModal({ swAlert }) {
   }, [pwd, checkPwd]);
 
   const updatePwd = () => {
-    // console.log("update");
-    // console.log(memberToChangePwd);
     axios
       .put("/updatePwd", memberToChangePwd)
       .then((result) => {
-        //    console.log(result.data);
-
         swAlert("비밀번호가 성공적으로 변경됐습니다.", "success", () => {
           handleClose();
           nav("/login");

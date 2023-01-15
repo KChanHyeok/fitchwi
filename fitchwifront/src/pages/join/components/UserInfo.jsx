@@ -25,10 +25,6 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
   const [disabled, setDisabled] = useState(true);
   const [correctPwd, setCorrectPwd] = useState(null);
   useEffect(() => {
-    // console.log(checkedId);
-    // console.log(checkedPhone);
-    // console.log(correctPwd);
-    // console.log(isKakao);
     if (isKakao === true && joinForm.memberAddr !== "" && checkedPhone === joinForm.memberPhone) {
       setDisabled(false);
     } else {
@@ -89,7 +85,6 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
         swAlert("사용할 수 없는 Email 입니다.", "warning");
       }
     });
-    //console.log(typeof joinForm.memberEmail);
   };
 
   const insertAddr = useCallback(
@@ -102,27 +97,22 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
     },
     [joinForm, setJoinForm]
   );
-  //console.log(joinForm.memberPhone);
+
   const Certification = () => {
-    // console.log(joinForm.memberPhone);
     if (joinForm.memberPhone === "") {
       return swAlert("연락처를 입력해주세요.", "warning");
     }
     axios
       .post("/checkPhone", joinForm.memberPhone, { headers: { "Content-Type": "test/plain" } })
       .then((result) => {
-        //     console.log(result.data);
         if (result.data === "fail") {
           swAlert("이미 등록된 전화번호입니다.", "warning");
         } else {
           const { IMP } = window;
           // IMP.init("imp51345423");
-          // 본인인증은 다날과 계약을 진행해야 서비스 제공이 가능해서 본인 가맹점 식별코드로는 테스트가 불가능함!
 
-          // 그래서 아임포트에서 본인인증 테스트가 가능한 계정을 제공해줌!
           IMP.init("imp10391932");
 
-          // 회원가입 할 때 입력한 정보로 채워줄지 아니면 공백으로 처리할 지는 고민해봐야 할듯
           const data = {
             merchant_uid: `mid_${new Date().getTime()}`,
             company: "아임포트",
@@ -135,13 +125,11 @@ export default function UserInfo({ onChange, joinForm, setJoinForm, isKakao, swA
           function callback(response) {
             // eslint-disable-next-line no-unused-vars
             const { success, merchant_uid, error_msg } = response;
-            //      console.log(response);
+
             if (success) {
               setCheckedPhone(joinForm.memberPhone);
-              //    setDisabled(false);
+
               swAlert("본인인증이 완료됐습니다.");
-              //   console.log(response);
-              //  console.log(merchant_uid);
             } else {
               swAlert(`본인인증에 실패했습니다.<br/>: ${error_msg}`, "warning");
             }

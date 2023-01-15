@@ -13,7 +13,6 @@ export default function Birth({ onChange, joinForm, isValid, swAlert }) {
     }
   });
 
-  //console.log(joinForm.memberBirth);
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
     if (joinForm.memberBirth !== "") {
@@ -27,15 +26,7 @@ export default function Birth({ onChange, joinForm, isValid, swAlert }) {
       <Typography variant="h4" gutterBottom mb={10}>
         아 맞다 생일! 생일도 알려주세요!
       </Typography>
-      {/* <TextField
-        id="standard-multiline-flexible"
-        label="연도"
-        multiline
-        maxRows={4}
-        variant="standard"
-        InputProps={{ style: { fontSize: 40 } }}
-        inputProps={{ maxLength: 10 }}
-      /> */}
+
       <TextField
         onChange={onChange}
         name="memberBirth"

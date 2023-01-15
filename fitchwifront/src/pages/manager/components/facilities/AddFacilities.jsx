@@ -39,7 +39,6 @@ export default function AddFacilities({ swAlert }) {
   const onInputChange = (e) => {
     setFacilities({ ...facilities, [e.target.name]: e.target.value });
   };
-  //console.log(facilities);
 
   const onSubmit = (e) => {
     e.preventDefault();

@@ -47,7 +47,6 @@ export default function Mbti({ joinForm, setJoinForm, isValid, swAlert }) {
         break;
     }
   };
-  // console.log(ei + ns + tf + jp);
 
   const MbtiToggleBtn = styled(ToggleButton)({
     height: "100px",

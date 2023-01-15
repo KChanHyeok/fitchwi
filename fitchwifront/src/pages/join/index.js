@@ -44,14 +44,9 @@ const JoinIndex = () => {
     if (location.state != null) {
       setIsValid(true);
       if (location.state.member === "newMember") {
-        console.log("newmember");
       } else {
         setIsValid(true);
-        // console.log(location.state);
-        // console.log(location.state.memberEmail);
-        // console.log(location.state.memberNickname);
-        // console.log(location.state.memberImg);
-        // console.log(location.state.memberSaveimg);
+
         setIsKakao(true);
         const joinFormObj = {
           ...joinForm,
@@ -78,14 +73,9 @@ const JoinIndex = () => {
     [joinForm]
   );
 
-  //console.log(joinForm);
-
   const sendJoin = (e) => {
-    //   if (!success) {
-    //    return alert("본인인증이 필요합니다.");
-    //   }
     e.preventDefault();
-    //  console.log(joinForm.memberInterest);
+
     formData.append("data", new Blob([JSON.stringify(joinForm)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
 
