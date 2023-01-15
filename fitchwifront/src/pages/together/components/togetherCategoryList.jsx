@@ -18,7 +18,7 @@ const TogetherCategoryList = ({ togetherList }) => {
   console.log(togetherList.filter((data) => data.togetherCategory === categorys[togetherCategoryText]));
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
-      <h1>{categorys[togetherCategoryText]}</h1>
+      <Typography variant="h4" mb={2} fontWeight="bold">{categorys[togetherCategoryText]}</Typography>
       {togetherList.filter(
         (data) =>
           data.togetherState !== "삭제신청중" &&

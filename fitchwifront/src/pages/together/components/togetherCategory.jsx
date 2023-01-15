@@ -7,7 +7,7 @@ import TalkCategoryImage from "../../talk/components/TalkCategoryImage";
 import TogetherTap from "./common/togetherTap";
 import TogetherCategoryImage from "./togetherCategoryImage";
 
-const TogetherCategory = ({ open, setOpen, type }) => {
+const TogetherCategory = ({ open, setOpen, type, togetherTagList }) => {
   const StyleModal = styled(Modal)({
     display: "flex",
     alignItems: "center",
@@ -26,7 +26,7 @@ const TogetherCategory = ({ open, setOpen, type }) => {
         {type === "talk" ? <TalkCategoryImage /> : <TogetherCategoryImage />}
         <Divider sx={{ mt: 2 }} />
         <Box height={200} mt={1}>
-          <TogetherTap />
+          <TogetherTap togetherTagList={togetherTagList} />
         </Box>
       </Box>
     </StyleModal>

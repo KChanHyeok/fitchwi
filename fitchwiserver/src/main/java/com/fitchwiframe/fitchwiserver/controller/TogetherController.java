@@ -129,4 +129,10 @@ public class TogetherController {
         log.info("TogetherController.getTogetherCancelRequestList");
         return togetherService.getTogetherCancelRequestList(pageNum,togetherTitle);
     }
+
+    @GetMapping("/getAllTogetherTag")
+    public Iterable<TogetherTag> getAllTogetherTag() {
+        log.info("getAllTogetherTag()");
+        return togetherService.getAllTogetherTag();
+    }
 }

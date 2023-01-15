@@ -820,4 +820,15 @@ public class TogetherService {
             }
         return result;
     }
+
+    public Iterable<TogetherTag> getAllTogetherTag() {
+        log.info("getAllTogetherTag()");
+        Iterable<TogetherTag> togetherTagsList = null;
+        try {
+            togetherTagsList = togetherTagRepository.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return togetherTagsList;
+    }
 }
