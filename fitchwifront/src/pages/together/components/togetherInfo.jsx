@@ -1,17 +1,23 @@
-import { Box, Stack, styled, Avatar, Typography, Button, TextField, CircularProgress } from "@mui/material";
+import { Box, Stack, styled, Avatar, Typography, Button, TextField, CircularProgress, Grid, Chip } from "@mui/material";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import TogetherJoin from "./togetherJoin";
 import TogetherOpMenu from "./togetherOpMenu";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Container } from "@mui/system";
+import { AssignmentTurnedIn } from "@mui/icons-material";
+import PeopleIcon from '@mui/icons-material/People';
+import { useNavigate } from "react-router-dom";
 
 
-const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList }) => {
+const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList, refreshTogetherTagList, togetherTagList }) => {
   let { togetherPageCode } = useParams();
   const [togetherInfo, setTogetherInfo] = useState(null);
   const [togetherJoinMember, setTogetherJoinMember] = useState(null);
   const [togetherAppliedMember, setTogetherAppliedMember] = useState(null);
+
+  const nav = useNavigate();
 
   useEffect(() => {
     try {
@@ -39,45 +45,78 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
   
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
-      {!togetherInfo || !togetherJoinMember ? (
+      {!togetherInfo || !togetherJoinMember || togetherTagList.length===0 ? (
         <Box
         textAlign="center" lineHeight={40}
         >
           <CircularProgress/>
         </Box>
       ) : (
-        <Box>
-          <Stack flex={2} direction={"row"} justifyContent="space-between" sx={{mb:2}}>
-            <h1>{togetherInfo.togetherTitle}</h1><br/>
+        <Container>
+            <Grid container direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+            <Typography></Typography>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
-                <TogetherOpMenu
-                  togetherAppliedMember={togetherAppliedMember}
-                  togetherJoinMember={togetherJoinMember}
-                  refreshTogetherJoinList={refreshTogetherJoinList}
-                  refreshTogetherList={refreshTogetherList}
-                  togetherInfo={togetherInfo}
-                  sx={{ fontSize: 20}}
-                  />
+              <TogetherOpMenu
+              togetherAppliedMember={togetherAppliedMember}
+              togetherJoinMember={togetherJoinMember}
+              refreshTogetherJoinList={refreshTogetherJoinList}
+              refreshTogetherList={refreshTogetherList}
+              togetherInfo={togetherInfo}
+              sx={{ fontSize: 20}}
+              />
               ) : null
-              }
-          </Stack>
-          <Box sx={{maxWidth:1000, mb:3}}>
+            }
+            </Grid>
+            <Grid container alignItems="flex-end" >
+              <Grid>
+                <Chip
+                  color="primary"
+                  variant="outlined"
+                  label={togetherInfo.togetherCategory}
+                  size="small"
+                  sx={{mb:1, fontSize:15, mr:2}}
+                />
+              </Grid>
+              <Grid>
+                <Box sx={{mb:0.2}}>
+                  <PeopleIcon sx={{ color: "grey", fontSize:25}} />
+                </Box>
+              </Grid>
+              <Grid>
+                <Typography color="textSecondary" variant="caption" sx={{ fontSize:20, mr:1}}>
+                  <b>{togetherInfo.togetherMemberCount + 1}/{togetherInfo.togetherMax}</b>
+                </Typography >
+              </Grid>
+              <Grid>
+                <Box sx={{mb:0.4}}>
+                  <AssignmentTurnedIn sx={{ color: "grey", fontSize:22}} />
+                </Box>
+              </Grid>
+              <Typography color="textSecondary" variant="caption" sx={{mb:0.6, fontSize: 15 }}>
+                <b>
+                  {togetherInfo.togetherType}
+                </b>
+              </Typography>
+            </Grid>
+            <Grid container>
+              <Typography variant="h4" fontWeight="bold" sx={{mb:2}}>{togetherInfo.togetherTitle}</Typography>
+            </Grid>
+          <Box sx={{maxWidth:1000, mb:3, textAlign:"center"}}>
             {togetherInfo.togetherSaveimg && (
               <Box
                 component="img"
-                sx={{width:"50%", height:"50%", textAlign: "center" }}
+                sx={{width:"70%", height:"50%", textAlign: "center" }}
                 src={`/images/${togetherInfo.togetherSaveimg}`}
                 alt="green iguana"
               ></Box>
             )}
           </Box>
-          <h3>함께해요 소개</h3>
+          <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>함께해요 소개</Typography>
           <Box component="span">{togetherInfo.togetherContent}</Box>
-          <Box sx={{ mt: 2, mb: 2 }}>
-            <h3>멤버 소개</h3>
+          <Box sx={{ mt: 5, mb: 1 }}>
+            <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>방장</Typography>
             <br />
-            <h4>방장</h4>
-            <UserBox>
+            <UserBox p={2}>
               <Avatar
                 component={Link}
                 to={"/memberpage"}
@@ -95,12 +134,12 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
             </UserBox>
           </Box>
           <Box sx={{ mb: 2 }}>
-            <h4>참여중인 회원</h4>
+            <Typography variant="h6" fontWeight="bold" pl={1} mb={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>참여중인 회원</Typography>
             {togetherJoinMember.length === 0 ? (
               <Box component="span">현재 참여중인 멤버가 없습니다</Box>
             ) : (
               togetherJoinMember.map((data) => (
-                <UserBox key={data.togetherJoinCode}>
+                <UserBox key={data.togetherJoinCode} p={2}>
                   <Avatar
                     component={Link}
                     to={"/memberpage"}
@@ -115,33 +154,63 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
               ))
             )}
           </Box>
-          <h3>안내사항</h3><br/>
-          <Box component="span">
-            모집인원 : {togetherInfo.togetherMax}명 <br />
-            모집유형 : {togetherInfo.togetherType} <br />
-            1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}원 <br />
-            장소 : {togetherInfo.togetherPosition} <br />
-            방장연락처 : {togetherInfo.togetherOpenedCode.memberEmail.memberPhone}<br/><br/>
+          <Box sx={{mb:2}}>
+            <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{ borderLeft: "4px solid rgb(240, 59, 59)" }}>태그</Typography>
+            <Typography variant="span" p={2}>
+                {togetherTagList.length===0 ? "입력된 태그정보가 없습니다" : togetherTagList.filter(data => data.togetherCode.togetherCode === togetherInfo.togetherCode)[0].togetherTagContent.split(" ").map(data =>
+                  <Chip
+                    key={data}
+                    onClick={() => nav(`/search/${data}`)}  
+                    color="primary"
+                    variant="outlined"
+                    label={data}
+                    size="small"
+                    sx={{mb:1, fontSize:15, mr:2}}
+                />)}
+            </Typography>
+          </Box>
+          <Typography variant="h6" fontWeight="bold" pl={1} mb={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>1인당 부담금</Typography>
+            {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice<=0 ? <Typography variant="span" p={2} mb={1}>무료</Typography> : <Typography variant="span" p={2}>{(togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice).toLocaleString()+" 원 (시설1인비용 포함)"}</Typography>} <br />
+              
+            {!togetherJoinList.filter(
+                  (data) =>
+                    data.togetherCode.togetherCode === togetherPageCode * 1 &&
+                    data.memberEmail.memberEmail === sessionStorage.getItem("id")
+          )[0] ? "" :
+            <Box mt={2}>
+              <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{ borderLeft: "4px solid rgb(240, 59, 59)" }}>방장연락처</Typography>  
+              <Typography variant="span" p={2}>
+                {togetherInfo.togetherOpenedCode.memberEmail.memberPhone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)}
+              </Typography>
+            </Box>  
+            }  
+            <Box mt={2}>
+              <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{ borderLeft: "4px solid rgb(240, 59, 59)" }}>장소</Typography>  
+              <Typography variant="span" p={2}>
+                {togetherInfo.togetherPosition}
+              </Typography>
+            </Box>
             <Stack 
+              sx={{mt:3}}
               direction="row"
-
+              justifyContent="space-between"  
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Box>
-                <Typography variant="h5">
+                <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>
                 모집일정
                 </Typography> 
                 <StaticDatePicker
                   displayStaticWrapperAs="desktop"
                   label="모집"
-                  disablePast
+                  disablePast    
                   value={togetherInfo.togetherDate || '2022-01-10'}
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <TextField {...params} />}    
                   onChange={onChange}
                   />
                 </Box>
                 <Box>
-                  <Typography variant="h5">
+                  <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>
                   모집시작기간
                   </Typography>
                   <StaticDatePicker
@@ -154,13 +223,13 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                   />
                 </Box>
                 <Box>
-                  <Typography variant="h5">
+                  <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>
                   모집마감기간
                   </Typography>
                   <StaticDatePicker
                     displayStaticWrapperAs="desktop"
                     label="종료"
-                    disablePast
+                    disablePast  
                     value={togetherInfo.togetherRecruitEndDate || '2022-01-10'}
                     renderInput={(params) => <TextField {...params} />}
                     onChange={onChange}
@@ -168,7 +237,6 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
                 </Box>
               </LocalizationProvider>
             </Stack>
-          </Box>
             <Box sx={{ mt: 2 }}>
             {togetherInfo.togetherOpenedCode.memberEmail.memberEmail === sessionStorage.getItem("id") ? (
               <TogetherJoin
@@ -207,7 +275,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
               />
             )}
           </Box>
-        </Box>
+        </Container>
       )}
     </Stack>
   );
