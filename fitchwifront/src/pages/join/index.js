@@ -97,8 +97,9 @@ const JoinIndex = () => {
       .post("/joinmember", formData, config)
       .then((res) => {
         if (res.data === "ok") {
-          swAlert("회원가입이 완료됐습니다.", "success", () => {
+          swAlert("회원가입이 완료됐습니다.<br/> 로그인 페이지로 이동합니다.", "success", () => {
             nav("/login", { replace: true });
+            setIsValid(false);
           });
         } else {
           swAlert("회원 가입 처리과정에 문제가 발생했습니다.", "warning");
