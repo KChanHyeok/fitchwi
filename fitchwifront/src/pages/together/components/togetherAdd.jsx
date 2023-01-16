@@ -10,12 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import moment from "moment/moment";
 import { useDaumPostcodePopup } from "react-daum-postcode";
-import MapIcon from "@mui/icons-material/Map";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import AddIcCallRoundedIcon from "@mui/icons-material/AddIcCallRounded";
-import FaceRoundedIcon from "@mui/icons-material/FaceRounded";
-import SentimentSatisfiedAltRoundedIcon from "@mui/icons-material/SentimentSatisfiedAltRounded";
 import CircularProgress from '@mui/material/CircularProgress';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import Swal from "sweetalert2";
@@ -130,9 +124,23 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
   const sendTogether = (e) => {
     e.preventDefault();
     setLoad(true)
+    if(fileForm.length === 0) {
+      setLoad(false)
+      return swAlert("사진을 넣어주세요", "warning", ()=> {
+        setInsertForm({
+          ...insertForm,
+          togetherTagContent:""
+        })
+      }); 
+    }
     if (insertForm.togetherMax < 2) {
       setLoad(false)
-      return swAlert("최소 2명 이상이여야 합니다.", "warning")
+      return swAlert("최소 2명 이상이여야 합니다.", "warning", ()=> {
+        setInsertForm({
+          ...insertForm,
+          togetherTagContent:""
+        })
+      })
     }
       
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
@@ -240,16 +248,15 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
     })
   }
 
-  const swAlert = (contentText, icon ) => {
+  const swAlert = (contentText, icon, func ) => {
     Swal.fire({
       title: "알림",
       text: contentText,
       icon: icon,
       confirmButtonText: "확인",
       confirmButtonColor: "#ff0456",
-    });
+    }).then(func)
   };
-
 
   return (
     <Stack sx={{ width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>
@@ -356,29 +363,30 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
           <Grid item xs>
             <Box component="div" sx={{ mt: 10, height: 230 }}>
               {insertForm.facilitiesCode.facilitiesCode === 0 ? (
-                <Typography variant="h6" component="div">
+                <Typography component="div">
                   시설 이용안함
                 </Typography>
               ) : (
-                <Typography variant="h6" component="div">
-                  <ApartmentIcon />
-                  시설명 : {insertForm.facilitiesCode.facilitiesName}
-                  <br />
-                  <MapIcon />
-                  시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}
-                  <br />
-                  <AttachMoneyIcon />
-                  시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원
-                  <br />
-                  <SentimentSatisfiedAltRoundedIcon />
-                  시설 등급 : {insertForm.facilitiesCode.facilitiesGrade}
-                  <br />
-                  <FaceRoundedIcon />
-                  시설담당자 : {insertForm.facilitiesCode.facilitiesManager}
-                  <br />
-                  <AddIcCallRoundedIcon />
-                  시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
-                </Typography>
+                <Stack style={{height:190}} component="div" direction="column" justifyContent="space-between">
+                  <Box>
+                    🏢 시설명 : {insertForm.facilitiesCode.facilitiesName}
+                  </Box>
+                  <Box>
+                    🗾 시설 위치 : {insertForm.facilitiesCode.facilitiesPosition}
+                  </Box>
+                  <Box>
+                    💲 시설 1인 이용료 : {insertForm.facilitiesCode.facilitiesPrice}원
+                  </Box>
+                  <Box>
+                    ✅ 제휴 상태 : {insertForm.facilitiesCode.facilitiesGrade}
+                  </Box>
+                  <Box>
+                    🧑 시설담당자 : {insertForm.facilitiesCode.facilitiesManager}
+                  </Box>
+                  <Box>
+                    📞 시설담당자연락처 : {insertForm.facilitiesCode.facilitiesPhone}
+                  </Box>
+                </Stack>
               )}
             </Box>
           </Grid>
@@ -536,6 +544,7 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
                 color="grey"
                 onChange={onLoadFile}
                 required
+                readOnly
                 accept="image/*"
               />
             </Button>

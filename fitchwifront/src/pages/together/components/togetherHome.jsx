@@ -246,11 +246,8 @@ const TogetherHome = ({togetherList, togetherTagList}) => {
                 </Card>
                 )) 
               }
-              
             </Stack>
           </Box>
-
-          
 
           {/* 4번 카테고리 */}
           {/* <Box height={300} mt={6} mb={6}>
