@@ -81,7 +81,7 @@ const Together = () => {
             />
           }
         />
-        <Route path="add" element={<TogetherAdd facilitieList={facilitiesList} refreshTogetherList={getAllTogetherList} />} />
+        <Route path="add" element={<TogetherAdd facilitieList={facilitiesList} refreshTogetherList={getAllTogetherList} refreshTogetherTagList={getAllTogetherTagList} />} />
       </Routes>
     </Box>
   );
