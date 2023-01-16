@@ -133,10 +133,8 @@ export default function HomeTapPanel({ mbti }) {
     ];
     if (mbti === "") {
       var even = Math.floor(Math.random() * 15);
-      console.log(even);
     } else {
       even = mbtiArr.findIndex((item, index) => item === mbti);
-      console.log(even);
     }
     setValue(even);
   }, [mbti]);
