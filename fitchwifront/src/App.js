@@ -27,6 +27,7 @@ function App() {
     logid: "",
     nickName: "",
     profileImg: "",
+    mbti: "",
     flink: "/login",
   });
 
@@ -35,6 +36,7 @@ function App() {
     const id = sessionStorage.getItem("id");
     const nickName = sessionStorage.getItem("nickName");
     const profileImg = sessionStorage.getItem("profileImg");
+    const mbti = sessionStorage.getItem("mbti");
     ChannelService.boot({
       pluginKey: "261174a2-5819-4674-be05-d9bb582cd3b9",
       memberId: id,
@@ -49,6 +51,7 @@ function App() {
         logid: id,
         nickName: nickName,
         profileImg: profileImg,
+        mbti: mbti,
         flink: "/memberpage",
       };
       setLstate(newState);
@@ -56,11 +59,12 @@ function App() {
   }, []);
 
   //로그인 성공 시 로그인 상태 변경 함수
-  const sucLogin = useCallback((id, nickName, profileImg) => {
+  const sucLogin = useCallback((id, nickName, profileImg, mbti) => {
     const newState = {
       logid: id,
       nickName: nickName,
       profileImg: profileImg,
+      mbti: mbti,
       flink: "/memberpage",
     };
     setLstate(newState);
@@ -87,6 +91,7 @@ function App() {
 
     const newState = {
       logid: "",
+      mbti: "",
       flink: "/login",
     };
     setLstate(newState);
@@ -106,7 +111,7 @@ function App() {
     <>
       {isManager === true ? <ManagerNav /> : <Header lstate={lstate} onLogout={onLogout} />}
       <Routes>
-        <Route path="/*" element={<Home />}></Route>
+        <Route path="/*" element={<Home lstate={lstate} />}></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/login" element={<LoginMember sucLogin={sucLogin} />}></Route>
         <Route path="/join/*" element={<JoinMember />}></Route>
@@ -114,14 +119,8 @@ function App() {
         <Route path="/talk/*" element={<Talk />}></Route>
         <Route path="/together/*" element={<Together />}></Route>
         <Route path="/search/*" element={<Search />}></Route>
-        <Route
-          path="/memberpage/*"
-          element={<MemberPage onLogout={onLogout} lstate={lstate} sucLogin={sucLogin} />}
-        ></Route>
-        <Route
-          path="/manager/*"
-          element={<Manager isManager={isManager} setIsManager={setIsManager} />}
-        ></Route>
+        <Route path="/memberpage/*" element={<MemberPage onLogout={onLogout} lstate={lstate} sucLogin={sucLogin} />}></Route>
+        <Route path="/manager/*" element={<Manager isManager={isManager} setIsManager={setIsManager} />}></Route>
         <Route path="/login/kakao/callback" element={<KaKaoLoginRedirect sucLogin={sucLogin} />}></Route>
       </Routes>
     </>

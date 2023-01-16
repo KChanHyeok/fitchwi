@@ -4,9 +4,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Grid, ImageListItem, ImageListItemBar } from "@mui/material";
+import { CircularProgress, Grid, ImageListItem, ImageListItemBar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function TabPanel(props) {
   const { children, value, index, kor, source, ...other } = props;
@@ -105,113 +106,125 @@ function a11yProps(index) {
   };
 }
 
-const mbti = [
-  "INFP",
-  "INFJ",
-  "INTP",
-  "INTJ",
-  "ISFP",
-  "ISFJ",
-  "ISTP",
-  "ISTJ",
-  "ENFP",
-  "ENFJ",
-  "ENTP",
-  "ENTJ",
-  "ESFP",
-  "ESFJ",
-  "ESTP",
-  "ESTJ",
-];
-
-if (sessionStorage.getItem("mbti") !== null) {
-  const MyMbti = sessionStorage.getItem("mbti");
-  var even = mbti.findIndex((item, index) => item === MyMbti);
-} else {
-  even = Math.floor(Math.random() * 15);
-}
-
-export default function HomeTapPanel() {
-  const [value, setValue] = useState(even);
+export default function HomeTapPanel({ mbti }) {
+  const [value, setValue] = useState();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    const mbtiArr = [
+      "INFP",
+      "INFJ",
+      "INTP",
+      "INTJ",
+      "ISFP",
+      "ISFJ",
+      "ISTP",
+      "ISTJ",
+      "ENFP",
+      "ENFJ",
+      "ENTP",
+      "ENTJ",
+      "ESFP",
+      "ESFJ",
+      "ESTP",
+      "ESTJ",
+    ];
+    if (mbti === "") {
+      var even = Math.floor(Math.random() * 15);
+      console.log(even);
+    } else {
+      even = mbtiArr.findIndex((item, index) => item === mbti);
+      console.log(even);
+    }
+    setValue(even);
+  }, [mbti]);
+
+  console.log(value);
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 300, border: 1 }} mb={4}>
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: "divider", minWidth: 100 }}
-      >
-        <Tab label="#INFP" {...a11yProps(0)} />
-        <Tab label="#INFJ" {...a11yProps(1)} />
-        <Tab label="#INTP" {...a11yProps(2)} />
-        <Tab label="#INTJ" {...a11yProps(3)} />
-        <Tab label="#ISFP" {...a11yProps(4)} />
-        <Tab label="#ISFJ" {...a11yProps(5)} />
-        <Tab label="#ISTP" {...a11yProps(6)} />
-        <Tab label="#ISTJ" {...a11yProps(7)} />
-        <Tab label="#ENFP" {...a11yProps(8)} />
-        <Tab label="#ENFJ" {...a11yProps(9)} />
-        <Tab label="#ENTP" {...a11yProps(10)} />
-        <Tab label="#ENTJ" {...a11yProps(11)} />
-        <Tab label="#ESFP" {...a11yProps(12)} />
-        <Tab label="#ESFJ" {...a11yProps(13)} />
-        <Tab label="#ESTP" {...a11yProps(14)} />
-        <Tab label="#ESTJ" {...a11yProps(15)} />
-      </Tabs>
-      <TabPanel value={value} index={0} source={["Readbook", "Music", "MusiumP"]} kor={["독서", "음악 감상", "전시회 관람"]}>
-        🐶 INFP : 열정적인 중재자형
-      </TabPanel>
-      <TabPanel value={value} index={1} source={["DrawingP", "PictureP", "Readbook"]} kor={["그림", "사진", "독서"]}>
-        🐱 INFJ : 선의의 옹호자
-      </TabPanel>
-      <TabPanel value={value} index={2} source={["BoardgameP", "SkydivingP", "Readbook"]} kor={["보드게임", "스카이다이빙", "독서"]}>
-        🐭 INTP : 논리적인 사색가형
-      </TabPanel>
-      <TabPanel value={value} index={3} source={["Movie", "Game", "Readbook"]} kor={["영화", "게임", "독서"]}>
-        🐹 INTJ : 용의주도한 전략가형
-      </TabPanel>
-      <TabPanel value={value} index={4} source={["DrawingP", "Movie", "NewsP"]} kor={["그림", "영화", "뉴스"]}>
-        🐰 ISFP : 호기심 많은 예술가형
-      </TabPanel>
-      <TabPanel value={value} index={5} source={["ShoppingP", "CookingP", "AlbumP"]} kor={["쇼핑", "요리", "앨범 정리"]}>
-        🦊 ISFJ : 용감한 수호자형
-      </TabPanel>
-      <TabPanel value={value} index={6} source={["Exercise", "PictureP", "Readbook"]} kor={["운동", "사진", "독서"]}>
-        🐻 ISTP : 만능 재주꾼형
-      </TabPanel>
-      <TabPanel value={value} index={7} source={["Planning", "Pet", "NewsP"]} kor={["계획 세우기", "동물농장 보기", "뉴스 보기"]}>
-        🐼 ISTJ : 청렴결백한 논리주의자형
-      </TabPanel>
-      <TabPanel value={value} index={8} source={["SingP", "AlbumP", "Travel"]} kor={["노래방", "모임", "여행"]}>
-        🐻‍❄️ ENFP : 재기발랄한 활동가형
-      </TabPanel>
-      <TabPanel value={value} index={9} source={["Walk", "Bike", "Group"]} kor={["산책", "자전거", "모임"]}>
-        🐨 ENFJ : 정의로운 사회운동가형
-      </TabPanel>
-      <TabPanel value={value} index={10} source={["SingP", "Game", "Debate"]} kor={["노래방", "게임", "토론"]}>
-        🐯 ENTP : 논쟁을 즐기는 변론가형
-      </TabPanel>
-      <TabPanel value={value} index={11} source={["Exercise", "Meeting", "Travel"]} kor={["운동", "토론", "여행"]}>
-        🦁 ENTJ : 대담한 통솔자형
-      </TabPanel>
-      <TabPanel value={value} index={12} source={["Exercise", "ShoppingP", "Debate"]} kor={["운동", "쇼핑", "모임"]}>
-        🐮 ESFP : 자유로운 영혼의 연예인형
-      </TabPanel>
-      <TabPanel value={value} index={13} source={["NewsP", "Meeting", "Readbook"]} kor={["뉴스", "모임", "독서"]}>
-        🐷 ESFJ : 사교적인 외교관형
-      </TabPanel>
-      <TabPanel value={value} index={14} source={["Composition", "Exercise", "SingP"]} kor={["작곡", "운동", "노래방"]}>
-        🐵 ESTP : 모험을 즐기는 사험가형
-      </TabPanel>
-      <TabPanel value={value} index={15} source={["NewsP", "Clean", "Readbook"]} kor={["뉴스", "청소", "독서"]}>
-        🐸 ESTJ : 엄격한 관리자형
-      </TabPanel>
-    </Box>
+    <>
+      {value === undefined ? (
+        <Box textAlign="center" height={300} lineHeight={20}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 300, border: 1 }} mb={4}>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            sx={{ borderRight: 1, borderColor: "divider", minWidth: 100 }}
+          >
+            <Tab label="#INFP" {...a11yProps(0)} />
+            <Tab label="#INFJ" {...a11yProps(1)} />
+            <Tab label="#INTP" {...a11yProps(2)} />
+            <Tab label="#INTJ" {...a11yProps(3)} />
+            <Tab label="#ISFP" {...a11yProps(4)} />
+            <Tab label="#ISFJ" {...a11yProps(5)} />
+            <Tab label="#ISTP" {...a11yProps(6)} />
+            <Tab label="#ISTJ" {...a11yProps(7)} />
+            <Tab label="#ENFP" {...a11yProps(8)} />
+            <Tab label="#ENFJ" {...a11yProps(9)} />
+            <Tab label="#ENTP" {...a11yProps(10)} />
+            <Tab label="#ENTJ" {...a11yProps(11)} />
+            <Tab label="#ESFP" {...a11yProps(12)} />
+            <Tab label="#ESFJ" {...a11yProps(13)} />
+            <Tab label="#ESTP" {...a11yProps(14)} />
+            <Tab label="#ESTJ" {...a11yProps(15)} />
+          </Tabs>
+          <TabPanel value={value} index={0} source={["Readbook", "Music", "MusiumP"]} kor={["독서", "음악 감상", "전시회 관람"]}>
+            🐶 INFP : 열정적인 중재자형
+          </TabPanel>
+          <TabPanel value={value} index={1} source={["DrawingP", "PictureP", "Readbook"]} kor={["그림", "사진", "독서"]}>
+            🐱 INFJ : 선의의 옹호자
+          </TabPanel>
+          <TabPanel value={value} index={2} source={["BoardgameP", "SkydivingP", "Readbook"]} kor={["보드게임", "스카이다이빙", "독서"]}>
+            🐭 INTP : 논리적인 사색가형
+          </TabPanel>
+          <TabPanel value={value} index={3} source={["Movie", "Game", "Readbook"]} kor={["영화", "게임", "독서"]}>
+            🐹 INTJ : 용의주도한 전략가형
+          </TabPanel>
+          <TabPanel value={value} index={4} source={["DrawingP", "Movie", "NewsP"]} kor={["그림", "영화", "뉴스"]}>
+            🐰 ISFP : 호기심 많은 예술가형
+          </TabPanel>
+          <TabPanel value={value} index={5} source={["ShoppingP", "CookingP", "AlbumP"]} kor={["쇼핑", "요리", "앨범 정리"]}>
+            🦊 ISFJ : 용감한 수호자형
+          </TabPanel>
+          <TabPanel value={value} index={6} source={["Exercise", "PictureP", "Readbook"]} kor={["운동", "사진", "독서"]}>
+            🐻 ISTP : 만능 재주꾼형
+          </TabPanel>
+          <TabPanel value={value} index={7} source={["Planning", "Pet", "NewsP"]} kor={["계획 세우기", "동물농장 보기", "뉴스 보기"]}>
+            🐼 ISTJ : 청렴결백한 논리주의자형
+          </TabPanel>
+          <TabPanel value={value} index={8} source={["SingP", "AlbumP", "Travel"]} kor={["노래방", "모임", "여행"]}>
+            🐻‍❄️ ENFP : 재기발랄한 활동가형
+          </TabPanel>
+          <TabPanel value={value} index={9} source={["Walk", "Bike", "Group"]} kor={["산책", "자전거", "모임"]}>
+            🐨 ENFJ : 정의로운 사회운동가형
+          </TabPanel>
+          <TabPanel value={value} index={10} source={["SingP", "Game", "Debate"]} kor={["노래방", "게임", "토론"]}>
+            🐯 ENTP : 논쟁을 즐기는 변론가형
+          </TabPanel>
+          <TabPanel value={value} index={11} source={["Exercise", "Meeting", "Travel"]} kor={["운동", "토론", "여행"]}>
+            🦁 ENTJ : 대담한 통솔자형
+          </TabPanel>
+          <TabPanel value={value} index={12} source={["Exercise", "ShoppingP", "Debate"]} kor={["운동", "쇼핑", "모임"]}>
+            🐮 ESFP : 자유로운 영혼의 연예인형
+          </TabPanel>
+          <TabPanel value={value} index={13} source={["NewsP", "Meeting", "Readbook"]} kor={["뉴스", "모임", "독서"]}>
+            🐷 ESFJ : 사교적인 외교관형
+          </TabPanel>
+          <TabPanel value={value} index={14} source={["Composition", "Exercise", "SingP"]} kor={["작곡", "운동", "노래방"]}>
+            🐵 ESTP : 모험을 즐기는 사험가형
+          </TabPanel>
+          <TabPanel value={value} index={15} source={["NewsP", "Clean", "Readbook"]} kor={["뉴스", "청소", "독서"]}>
+            🐸 ESTJ : 엄격한 관리자형
+          </TabPanel>
+        </Box>
+      )}
+    </>
   );
 }
