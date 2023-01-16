@@ -136,11 +136,13 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
               .then((res) => {
                 if(res.data==="가입 성공" || res.data==="가입신청 성공"){
                     setOpen(false);
-                    swAlert(res.data,"success");
-                    refreshTogetherJoinList();
+                    swAlert(res.data,"success",()=> {
+                        window.location.reload();
+                    });
                 }else {
-                    swAlert(res.data, "warning");
-                    window.location.reload();
+                    swAlert(res.data, "warning",()=>{
+                        window.location.reload();
+                    });
                 }
               })
               .catch((Error) => console.log(Error))
@@ -185,8 +187,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             axios.post("/insertTogetherPay", insertPayForm)
               .then((res) => {
                   setOpen(false);
-                  swAlert(res.data,"success");
-                  refreshTogetherList();
+                  swAlert(res.data,"success",()=> {
+                    window.location.reload();
+                  });
               })
               .catch((Error) => console.log(Error))
           } else {
@@ -199,8 +202,7 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             .then((res) => {
                 setOpen(false);
                 swAlert(res.data,"success",()=> {
-                    refreshTogetherList();
-                    refreshTogetherJoinList();
+                    window.location.reload();
                 });
         })
     }
