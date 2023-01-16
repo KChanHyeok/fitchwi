@@ -33,7 +33,7 @@ const facilities = {
   facilitiesPrice: 0,
 };
 
-const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
+const TogetherAdd = ({ facilitieList, refreshTogetherList, refreshTogetherTagList }) => {
   const nav = useNavigate();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const formDate = new FormData();
@@ -156,6 +156,7 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
         swAlert(res.data,"success");
         nav("/together");
         refreshTogetherList();
+        refreshTogetherTagList();
       })
       .catch((error) => {
         console.log(error);
