@@ -26,9 +26,11 @@ export default function Nickname({ onChange, joinForm, isValid, swAlert, locatio
   }, [joinForm.memberNickname]);
   return (
     <div style={{ textAlign: "center", transition: "all 1s" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h3" gutterBottom>
         반가워요!
         <br />
+      </Typography>
+      <Typography variant="h4" gutterBottom>
         FITCHWI에서 사용하실 별명을 알려주세요.
       </Typography>
       <Typography variant="h6" mb={10}>

@@ -29,15 +29,17 @@ export default function UserImg({ setFileForm, joinForm, isValid, swAlert }) {
   };
   return (
     <Box style={{ textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom>
-        ' <b>{joinForm.memberNickname}</b>'님이시군요!
-        <br />
-        <b>{joinForm.memberNickname}</b>님을 표현할 수 있는 이미지를 선택해주세요.
+      <Typography variant="h5" gutterBottom>
+        '<b>{joinForm.memberNickname}</b>'님이시군요!
       </Typography>
-      <Typography variant="h6" gutterBottom mb={5}>
+      <Typography variant="h4" gutterBottom>
+        <b>{joinForm.memberNickname}</b>님을 표현할 수 있는 이미지를
+        <br /> 선택해주세요.
+      </Typography>
+      <Typography variant="h6" mb={5}>
         ( *미등록시 기본 이미지로 등록됩니다.)
       </Typography>
-      <Avatar src={file !== "" ? file : ""} sx={{ width: 250, height: 250, m: "auto", mb: 4 }} />
+      <Avatar src={file !== "" ? file : ""} sx={{ width: 250, height: 250, m: "auto", mb: 2 }} />
       <Button variant="outlined" sx={{ pl: 5 }}>
         <FormControlLabel
           control={

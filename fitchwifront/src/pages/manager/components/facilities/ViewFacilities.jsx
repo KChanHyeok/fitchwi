@@ -105,7 +105,7 @@ export default function ViewFacilities({ swAlert }) {
                     <ListItemIcon>
                       <HandshakeIcon />
                     </ListItemIcon>
-                    <ListItemText secondary="등급" primary={facilitiesGrade} />
+                    <ListItemText secondary="제휴상태" primary={facilitiesGrade} />
                   </ListItemButton>
                 </ListItem>
                 <Divider variant="middle" component="li" />
