@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 export default function ChangePwdModal({ children, openChangePwd, setOpenChangePwd, lstate, swAlert }) {
   //회원 정보 수정
-  console.log(lstate);
+
   const [memberToCheck, setMemberToCheck] = React.useState({
     memberEmail: lstate.logid,
     memberPwd: "",
@@ -32,11 +32,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
   const [checkPwd, setCheckPwd] = useState("");
 
   const [correctPwd, setCorrectPwd] = useState(null);
-  // console.log(memberToCheck);
-  // console.log(currentPwd);
-  // console.log(pwd);
-  // console.log(checkPwd);
-  // console.log(memberToChange);
 
   const [msg, setMsg] = useState("");
   useEffect(() => {
@@ -50,30 +45,35 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
         memberPwd: currentPwd,
       };
       setMemberToCheck(memberToCheckObj);
-      if (checkPwd === "" && pwd !== "") {
-        setMsg("새 비밀번호의 확인을 진행해주세요.");
+      if (pwd !== "" && (pwd.length < 8 || pwd.length > 20)) {
+        setMsg("새 비밀번호를 8자 이상, 20자 이하로 설정해주세요.");
         setCorrectPwd(false);
-      } else if (checkPwd === pwd && pwd !== "" && currentPwd !== "") {
-        setCorrectPwd(true);
-        setMsg("새 비밀번호 확인이 완료됐습니다.");
-        const memberToChangeObj = {
-          ...memberToChange,
-          memberPwd: pwd,
-        };
-        setMemberToChange(memberToChangeObj);
-      } else if (checkPwd !== pwd) {
-        setCorrectPwd(false);
-        setMsg("입력하신 새 비밀번호가 서로 다릅니다.");
-        const memberToChangeObj = {
-          ...memberToChange,
-          memberPwd: "",
-        };
-        setMemberToChange(memberToChangeObj);
-        const memberToCheckObj = {
-          ...memberToCheck,
-          memberPwd: "",
-        };
-        setMemberToCheck(memberToCheckObj);
+      } else {
+        if (checkPwd === "" && pwd !== "") {
+          setMsg("새 비밀번호의 확인을 진행해주세요.");
+          setCorrectPwd(false);
+        } else if (checkPwd === pwd && pwd !== "" && currentPwd !== "") {
+          setCorrectPwd(true);
+          setMsg("새 비밀번호 확인이 완료됐습니다.");
+          const memberToChangeObj = {
+            ...memberToChange,
+            memberPwd: pwd,
+          };
+          setMemberToChange(memberToChangeObj);
+        } else if (checkPwd !== pwd) {
+          setCorrectPwd(false);
+          setMsg("입력하신 새 비밀번호가 서로 다릅니다.");
+          const memberToChangeObj = {
+            ...memberToChange,
+            memberPwd: "",
+          };
+          setMemberToChange(memberToChangeObj);
+          const memberToCheckObj = {
+            ...memberToCheck,
+            memberPwd: "",
+          };
+          setMemberToCheck(memberToCheckObj);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,7 +84,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
     axios
       .post("/checkPwd", memberToCheck)
       .then((result) => {
-        console.log(result.data);
         if (result.data === "ok") {
           axios.put("/updatePwd", memberToChange).then((result) => {
             if (result.data === "ok") {
@@ -104,7 +103,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
             }
           });
         } else {
-          console.log(result.data);
           swAlert("기존 비밀번호를 다시한번 확인하세요.", "warning");
           handleClose(true);
           setCheckPwd("");
@@ -114,7 +112,6 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
         }
       })
       .catch((error) => console.log(error));
-    console.log(memberToCheck);
   };
   return (
     <div>
@@ -139,7 +136,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
                   label="기존 비밀번호"
                   variant="standard"
                   InputProps={{ style: { fontSize: 20 } }}
-                  inputProps={{ maxLength: 30 }}
+                  inputProps={{ maxLength: 20 }}
                 />
               </Grid>{" "}
               <Grid item xs={12}>
@@ -153,7 +150,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
                   label="새 비밀번호"
                   variant="standard"
                   InputProps={{ style: { fontSize: 20 } }}
-                  inputProps={{ maxLength: 30 }}
+                  inputProps={{ maxLength: 20 }}
                 />
               </Grid>{" "}
               <Grid item xs={12}>
@@ -166,7 +163,7 @@ export default function ChangePwdModal({ children, openChangePwd, setOpenChangeP
                   variant="standard"
                   value={checkPwd}
                   InputProps={{ style: { fontSize: 20 } }}
-                  inputProps={{ maxLength: 30 }}
+                  inputProps={{ maxLength: 20 }}
                 />
               </Grid>
               <Grid item xs={12} sx={{ mb: 2 }}>

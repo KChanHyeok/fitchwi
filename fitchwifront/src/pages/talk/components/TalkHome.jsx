@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AssignmentTurnedIn, Category } from "@mui/icons-material";
-import { Avatar, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Container, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardActionArea, CardContent, CardMedia, Chip, CircularProgress, Container, Paper, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import Carousel from "react-material-ui-carousel";
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import TogetherCategory from "../../together/components/togetherCategory";
 import styled from "@emotion/styled";
 import TalkMbti from "./TalkMbti";
+import PeopleIcon from '@mui/icons-material/People';
 
 const UserBox = styled(Box)({
   display: "flex",
@@ -16,28 +17,24 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const TalkHome = ({ talkList, refreshTalkList }) => {
+const TalkHome = ({ talkList }) => {
   const nav = useNavigate();
 
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    refreshTalkList();
-  }, [refreshTalkList]);
-
   return (
-
-    <Box mb={5} height={450} width="100%">
-      <Carousel Carousel next={() => { }} prev={() => { }} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false} >
-        <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner1.png" sx={{ cursor: "pointer" }}></Box>
-        <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner2.png" sx={{ cursor: "pointer" }}></Box>
-        <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner3.png" sx={{ cursor: "pointer" }}></Box>
-      </Carousel >
-
+    <>
+      <Box height={400} width="100%">
+        <Carousel next={() => { }} prev={() => { }} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false} >
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner1.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner2.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner3.png" sx={{ cursor: "pointer" }}></Box>
+        </Carousel >
+      </Box>
       {/* 광고 또는 얘기해요 홍보 영역 */}
 
       {/* 얘기해요 소개 페이지 */}
-      <Container fiexd>
+      <Container fixed={true}>
         <Box flex={4}>
           <Box ml={4} mr={4}>
 
@@ -62,8 +59,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
               </Box>
             </Box>
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center" mt={13}>
-              <Typography variant="h6">얘기해요 둘러보기</Typography>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" mt={10}>
+              <Typography variant="h6"></Typography>
               <Button variant="contained" endIcon={<Category />} onClick={() => setOpen(true)}>
                 카테고리
               </Button>
@@ -71,8 +68,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
             <TogetherCategory open={open} setOpen={setOpen} type={"talk"} />
 
             {/* 1번 카테고리 - 최신순 */}
-            <Box height={520}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={3}>
+            <Box height={500}>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" mt={5} mb={3}>
                 <Typography variant="h5">⚡️ 새로 열린 얘기해요</Typography>
                 <Button onClick={() => nav("/talk/new")}>전체보기</Button>
               </Stack>
@@ -84,8 +81,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                 >
                   <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
-                {talkList.sort((a, b) => b.talkCode - a.talkCode).filter((data, index) => index < 4).map(data => (
-                  <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
+                {talkList.sort((a, b) => b.talkCode - a.talkCode).filter((data, index) => index < 3).map(data => (
+                  <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                     key={data.talkCode}
                   >
                     <CardActionArea>
@@ -106,6 +103,18 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                               size="small"
                               sx={{ mt: 1, fontSize: 12 }}
                             />
+                            <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                              <b>{data.talkType}</b>
+                            </Typography>
+                            <Box style={{ float: "right" }}>
+                              <AssignmentTurnedIn sx={{ color: "grey", mt: 1.5 }} fontSize="small" />
+                            </Box>
+                            <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                              <b>{data.talkMemberCount + 1}/{data.talkMax}명</b>&nbsp;&nbsp;
+                            </Typography>
+                            <Box style={{ float: "right" }}>
+                              <PeopleIcon sx={{ color: "grey", mt: 1.2 }} />
+                            </Box>
                           </Box>
                           <Typography
                             sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
@@ -129,12 +138,6 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                             </Box>
                           </UserBox>
                         </Stack>
-                        <Typography color="textSecondary" variant="caption" sx={{ mt: 0.3, mb: 1, mr: 1 }} style={{ float: "right" }}>
-                          {data.talkMemberCount + 1}/{data.talkMax}명 {data.talkType}
-                        </Typography>
-                        <Box style={{ float: "right" }}>
-                          <AssignmentTurnedIn />
-                        </Box>
                       </CardContent>
                     </CardActionArea>
                   </Card>
@@ -148,7 +151,7 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                 <Typography variant="h5">💬 시끌벅적한 얘기해요</Typography>
               </Box>
               <Typography variant="h6" color="grey">
-                이런저런 취향 나누며 친해져요~
+                활발한 활동이 이루어지는 공간에서 같이 즐겨요~
               </Typography>
               <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
                 {talkList.length === 0 && <Box
@@ -159,8 +162,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                   <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-                  .sort((a, b) => b.talkMemberCount - a.talkMemberCount).filter((data, index) => index < 4).map(data => (
-                    <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
+                  .sort((a, b) => b.talkMemberCount - a.talkMemberCount).filter((data, index) => index < 3).map(data => (
+                    <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}
                     >
                       <CardActionArea>
@@ -181,6 +184,18 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                                 size="small"
                                 sx={{ mt: 1, fontSize: 12 }}
                               />
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkType}</b>
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <AssignmentTurnedIn sx={{ color: "grey", mt: 1.5 }} fontSize="small" />
+                              </Box>
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkMemberCount + 1}/{data.talkMax}명</b>&nbsp;&nbsp;
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <PeopleIcon sx={{ color: "grey", mt: 1.2 }} />
+                              </Box>
                             </Box>
                             <Typography
                               sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
@@ -239,8 +254,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
                   .sort((a, b) => b.talkCode - a.talkCode).filter(data => data.talkTitle.includes("공부"))
-                  .filter((data, index) => index < 4).map(data => (
-                    <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
+                  .filter((data, index) => index < 3).map(data => (
+                    <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}
                     >
                       <CardActionArea>
@@ -261,6 +276,18 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                                 size="small"
                                 sx={{ mt: 1, fontSize: 12 }}
                               />
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkType}</b>
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <AssignmentTurnedIn sx={{ color: "grey", mt: 1.5 }} fontSize="small" />
+                              </Box>
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkMemberCount + 1}/{data.talkMax}명</b>&nbsp;&nbsp;
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <PeopleIcon sx={{ color: "grey", mt: 1.2 }} />
+                              </Box>
                             </Box>
                             <Typography
                               sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
@@ -284,12 +311,6 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                               </Box>
                             </UserBox>
                           </Stack>
-                          <Typography color="textSecondary" variant="caption" sx={{ mt: 0.3, mb: 1, mr: 1 }} style={{ float: "right" }}>
-                            {data.talkMemberCount + 1}/{data.talkMax}명 {data.talkType}
-                          </Typography>
-                          <Box style={{ float: "right" }}>
-                            <AssignmentTurnedIn />
-                          </Box>
                         </CardContent>
                       </CardActionArea>
                     </Card>
@@ -303,7 +324,7 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                 <Typography variant="h5">🎬 접속, 영화 혼자 보는 사람들을 위한 모임</Typography>
               </Box>
               <Typography variant="h6" color="grey">
-                이런저런 취향 나누며 친해져요~
+                영화를 추천하거나 후기를 공유하면서 즐겁게 감상해요~
               </Typography>
               <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
                 {talkList.length === 0 && <Box
@@ -315,8 +336,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
                   .sort((a, b) => b.talkCode - a.talkCode).filter(data => data.talkTitle.includes("영화"))
-                  .filter((data, index) => index < 4).map(data => (
-                    <Card sx={{ mb: 3, width: 300, maxHeight: 500, textDecorationLine: "none" }}
+                  .filter((data, index) => index < 3).map(data => (
+                    <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}
                     >
                       <CardActionArea>
@@ -336,7 +357,20 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                                 label={data.talkCategory}
                                 size="small"
                                 sx={{ mt: 1, fontSize: 12 }}
+                                style={{ cursor: "pointer" }}
                               />
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkType}</b>
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <AssignmentTurnedIn sx={{ color: "grey", mt: 1.5 }} fontSize="small" />
+                              </Box>
+                              <Typography color="textSecondary" variant="caption" sx={{ mt: 1.8 }} style={{ float: "right" }}>
+                                <b>{data.talkMemberCount + 1}/{data.talkMax}명</b>&nbsp;&nbsp;
+                              </Typography>
+                              <Box style={{ float: "right" }}>
+                                <PeopleIcon sx={{ color: "grey", mt: 1.2 }} />
+                              </Box>
                             </Box>
                             <Typography
                               sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
@@ -360,12 +394,6 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
                               </Box>
                             </UserBox>
                           </Stack>
-                          <Typography color="textSecondary" variant="caption" sx={{ mt: 0.3, mb: 1, mr: 1 }} style={{ float: "right" }}>
-                            {data.talkMemberCount + 1}/{data.talkMax}명 {data.talkType}
-                          </Typography>
-                          <Box style={{ float: "right" }}>
-                            <AssignmentTurnedIn />
-                          </Box>
                         </CardContent>
                       </CardActionArea>
                     </Card>
@@ -375,7 +403,8 @@ const TalkHome = ({ talkList, refreshTalkList }) => {
           </Box>
         </Box>
       </Container>
-    </Box>
+      <br />
+    </>
   );
 };
 

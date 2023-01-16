@@ -32,7 +32,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     setMemberToUpdate({ ...member });
   }, [member]);
 
-  // console.log(memberToUpdate);
   const {
     memberEmail,
     memberName,
@@ -52,14 +51,13 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   const [fileForm, setFileForm] = useState("");
 
   const onUpdate = () => {
-    //  e.preventDefault();
     if (memberToUpdate.memberPhone !== checkedPhone && member.memberPhone !== memberToUpdate.memberPhone) {
       swAlert("연락처를 변경하셨습니다. <br/>본인인증을 먼저 해주세요.", "warning");
       return;
     }
     formData.append("data", new Blob([JSON.stringify(memberToUpdate)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
-    //  console.log(memberToUpdate);
+
     const config = {
       headers: { "Content-Type": "multipart/form-data" },
     };
@@ -67,7 +65,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     axios
       .post("/updateMemberInfo", formData, config)
       .then((res) => {
-        //   console.log(typeof sucLogin);
         if (res.data !== null) {
           sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.memberSaveimg);
           sessionStorage.setItem("id", res.data.memberEmail);
@@ -80,16 +77,11 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
         }
       })
       .catch((error) => console.log(error));
-    // console.log(memberToUpdate);
   };
 
   const inputChange = useCallback(
     (e) => {
-      //   console.log("inputChange");
-      //  console.log(memberToUpdate);
       setMemberToUpdate({ ...memberToUpdate, [e.target.name]: e.target.value });
-      //   console.log(memberToUpdate);
-      //  console.log("inputChange");
     },
     [memberToUpdate]
   );
@@ -153,7 +145,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   }, [memberInterest]);
 
   useEffect(() => {
-    // console.log("check type");
     if (typeof memberInterest == "string") {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       interestArray = memberInterest.split(" ");
@@ -205,16 +196,12 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   }, [isMemberInterest]);
 
   const onClickInterest = (e) => {
-    //  console.log("setChecked");
     setChecked({ ...checked, [e.target.name]: e.target.checked });
   };
 
   const [selectedInterest, setSelectedInterest] = useState([]);
 
   useEffect(() => {
-    // if (checked) {
-    //  console.log(" setSelectedInterest(selectedValue);");
-    // console.log(checked);
     let arrKeys = Object.keys(checked);
     let arrValues = Object.values(checked);
     let selectedIndex = [];
@@ -227,15 +214,12 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     selectedIndex.forEach((v) => {
       selectedValue.push(arrKeys[v]);
     });
-    //  console.log(selectedValue);
+
     setSelectedInterest(selectedValue);
     // }
   }, [checked]);
 
-  // console.log("render");
-
   useEffect(() => {
-    //  console.log("selectedInterest.forEach((e");
     let stringInterest = "";
     selectedInterest.forEach((e) => {
       switch (e) {
@@ -271,7 +255,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     setMemberToUpdate({ ...memberToUpdate, memberInterest: stringInterest.slice(0, -1) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInterest]);
-  console.log(memberToUpdate);
+
   //이미지 변경
   const [file, setFile] = useState("");
 
@@ -289,11 +273,8 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
     }
   };
   const clearImg = () => {
-    //  console.log(file);
-
     setMemberToUpdate({ ...memberToUpdate, memberImg: "" });
     setFile("/images/DefaultProfileImageSystemName.jpg");
-    //  console.log(file);
   };
 
   const handlePhoneNumber = (e) => {
@@ -302,11 +283,10 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
       setMemberToUpdate({ ...memberToUpdate, memberPhone: e.target.value });
     }
   };
-  console.log(memberPhone);
+
   const [checkedPhone, setCheckedPhone] = useState(member.memberPhone);
 
   const Certification = () => {
-    // console.log(joinForm.memberPhone);
     if (memberToUpdate.memberPhone === "") {
       return swAlert("연락처를 입력해주세요!", "warning");
     } else if (memberToUpdate.memberPhone === member.memberPhone) {
@@ -317,7 +297,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
         headers: { "Content-Type": "test/plain" },
       })
       .then((result) => {
-        //     console.log(result.data);
         if (result.data === "fail") {
           swAlert("이미 등록된 전화번호입니다.", "warning");
         } else {
@@ -332,19 +311,17 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
             name: memberName,
             phone: memberToUpdate.memberPhone,
           };
-          console.log(data);
+
           IMP.certification(data, callback);
 
           function callback(response) {
             // eslint-disable-next-line no-unused-vars
             const { success, merchant_uid, error_msg } = response;
-            //      console.log(response);
+
             if (success) {
               setCheckedPhone(memberToUpdate.memberPhone);
-              //    setDisabled(false);
+
               swAlert("본인인증이 완료됐습니다.");
-              //   console.log(response);
-              //  console.log(merchant_uid);
             } else {
               swAlert(`본인인증에 실패했습니다.<br/>: ${error_msg}`);
             }
@@ -353,9 +330,6 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
       });
   };
   //회원 정보 수정
-  console.log(member.memberPhone);
-  console.log(memberToUpdate.memberPhone);
-  console.log(checkedPhone);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -444,8 +418,9 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
                     margin="normal"
                     focused={true}
                     required
+                    inputProps={{ maxLength: 10 }}
                     fullWidth
-                    label="닉네임"
+                    label="닉네임(2자 이상 10자 이하)"
                     name="memberNickname"
                     variant="standard"
                     onChange={(e) => inputChange(e)}

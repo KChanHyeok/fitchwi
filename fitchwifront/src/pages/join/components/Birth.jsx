@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Birth({ onChange, joinForm }) {
-  //console.log(joinForm.memberBirth);
+export default function Birth({ onChange, joinForm, isValid, swAlert }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
     if (joinForm.memberBirth !== "") {
@@ -16,17 +24,9 @@ export default function Birth({ onChange, joinForm }) {
   return (
     <div style={{ textAlign: "center" }}>
       <Typography variant="h4" gutterBottom mb={10}>
-        아 맞다 생일! 생일도 알려주세요!
+        생일! 생일도 알려주세요!
       </Typography>
-      {/* <TextField
-        id="standard-multiline-flexible"
-        label="연도"
-        multiline
-        maxRows={4}
-        variant="standard"
-        InputProps={{ style: { fontSize: 40 } }}
-        inputProps={{ maxLength: 10 }}
-      /> */}
+
       <TextField
         onChange={onChange}
         name="memberBirth"

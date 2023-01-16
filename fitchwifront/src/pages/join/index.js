@@ -34,23 +34,25 @@ const JoinIndex = () => {
     memberSaveimg: "",
   });
   /////////////////////
-
+  const [isValid, setIsValid] = useState(false);
   useEffect(() => {
+
     if (location.state != null) {
-      // console.log(location.state);
-      // console.log(location.state.memberEmail);
-      // console.log(location.state.memberNickname);
-      // console.log(location.state.memberImg);
-      // console.log(location.state.memberSaveimg);
-      setIsKakao(true);
-      const joinFormObj = {
-        ...joinForm,
-        memberEmail: location.state.memberEmail,
-        memberNickname: location.state.memberNickname,
-        memberImg: location.state.memberImg,
-        memberSaveimg: location.state.memberSaveimg,
-      };
-      setJoinForm(joinFormObj);
+      setIsValid(true);
+      if (location.state.member === "newMember") {
+      } else {
+        setIsValid(true);
+
+        setIsKakao(true);
+        const joinFormObj = {
+          ...joinForm,
+          memberEmail: location.state.memberEmail,
+          memberNickname: location.state.memberNickname,
+          memberImg: location.state.memberImg,
+          memberSaveimg: location.state.memberSaveimg,
+        };
+        setJoinForm(joinFormObj);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
@@ -67,14 +69,9 @@ const JoinIndex = () => {
     [joinForm]
   );
 
-  //console.log(joinForm);
-
   const sendJoin = (e) => {
-    //   if (!success) {
-    //    return alert("본인인증이 필요합니다.");
-    //   }
     e.preventDefault();
-    //  console.log(joinForm.memberInterest);
+
     formData.append("data", new Blob([JSON.stringify(joinForm)], { type: "application/json" }));
     formData.append("uploadImage", fileForm);
 
@@ -86,8 +83,10 @@ const JoinIndex = () => {
       .post("/joinmember", formData, config)
       .then((res) => {
         if (res.data === "ok") {
-          swAlert("회원가입이 완료됐습니다.");
-          nav("/login", { replace: true });
+          swAlert("회원가입이 완료됐습니다.<br/> 로그인 페이지로 이동합니다.", "success", () => {
+            nav("/login", { replace: true });
+            setIsValid(false);
+          });
         } else {
           swAlert("회원 가입 처리과정에 문제가 발생했습니다.", "warning");
         }
@@ -116,17 +115,58 @@ const JoinIndex = () => {
       //onSubmit={sendTest}
     >
       <Routes>
-        <Route path="/" element={<Nickname onChange={onChange} joinForm={joinForm} />}></Route>
+        <Route
+          path="/"
+          element={
+            <Nickname
+              onChange={onChange}
+              joinForm={joinForm}
+              swAlert={swAlert}
+              isValid={isValid}
+              location={location}
+            />
+          }
+        ></Route>
 
-        <Route path="/userimg" element={<UserImg joinForm={joinForm} setFileForm={setFileForm} />}></Route>
+        <Route
+          path="/userimg"
+          element={
+            <UserImg joinForm={joinForm} setFileForm={setFileForm} swAlert={swAlert} isValid={isValid} />
+          }
+        ></Route>
         <Route
           path="/name"
-          element={<Name onChange={onChange} joinForm={joinForm} isKakao={isKakao} />}
+          element={
+            <Name
+              location={location}
+              onChange={onChange}
+              joinForm={joinForm}
+              swAlert={swAlert}
+              isKakao={isKakao}
+              isValid={isValid}
+            />
+          }
         ></Route>
-        <Route path="/gender" element={<Gender joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
-        <Route path="/birth" element={<Birth onChange={onChange} joinForm={joinForm} />}></Route>
-        <Route path="/interest" element={<Interest joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
-        <Route path="/mbti" element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} />}></Route>
+        <Route
+          path="/gender"
+          element={
+            <Gender joinForm={joinForm} setJoinForm={setJoinForm} swAlert={swAlert} isValid={isValid} />
+          }
+        ></Route>
+        <Route
+          path="/birth"
+          element={<Birth onChange={onChange} joinForm={joinForm} swAlert={swAlert} isValid={isValid} />}
+        ></Route>
+        <Route
+          path="/interest"
+          element={
+            <Interest joinForm={joinForm} setJoinForm={setJoinForm} swAlert={swAlert} isValid={isValid} />
+          }
+        ></Route>
+        <Route
+          path="/mbti"
+          element={<Mbti joinForm={joinForm} setJoinForm={setJoinForm} swAlert={swAlert} isValid={isValid} />}
+        ></Route>
         <Route
           path="/userinfo"
           element={
@@ -136,6 +176,7 @@ const JoinIndex = () => {
               setJoinForm={setJoinForm}
               isKakao={isKakao}
               swAlert={swAlert}
+              isValid={isValid}
             />
           }
         ></Route>

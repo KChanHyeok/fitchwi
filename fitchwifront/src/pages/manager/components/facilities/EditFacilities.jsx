@@ -20,7 +20,6 @@ export default function EditFacilities({ swAlert }) {
   const loadFacilities = useCallback(() => {
     setLoad(false);
     axios.get(`/getFacilitiesInfo/${facilitiesCode}`).then((result) => {
-      //  console.log(result.data);
       setNewFacilities(result.data);
       setLoad(true);
     });
@@ -50,7 +49,6 @@ export default function EditFacilities({ swAlert }) {
   const onInputChange = (e) => {
     setNewFacilities({ ...newFacilities, [e.target.name]: e.target.value });
   };
-  // console.log(newFacilities);
 
   const onSubmit = (e) => {
     e.preventDefault();

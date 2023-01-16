@@ -35,9 +35,20 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
     const [disabled,setdisabled] = useState(true);
     const handleOpen = () => {
         if(!sessionStorage.getItem("id")) {
-            alert("로그인이 필요한 서비스입니다.")
+            swAlert("로그인이 필요한 서비스입니다.", "warning")
             nav("/login");
             return
+        }
+        if (togetherInfo.togetherRecruitStartDate > moment().format("YYYY-MM-DD")) {
+            setOpen(false)
+            swAlert("아직 모집 기간이 아닙니다","warning");
+            return 
+            
+        }
+        if(togetherInfo.togetherRecruitEndDate<moment().format("YYYY-MM-DD")){
+            setOpen(false)
+            swAlert("이미 지난 기간입니다.", "warning")
+            return 
         }
         setOpen(true);
     }
@@ -78,13 +89,15 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
       const togetherJoinSend = (e) => {
         e.preventDefault();        
 
-        if(togetherInfo.togetherRecruitStartDate>moment().format("YYYY-MM-DD")){
+        if (togetherInfo.togetherRecruitStartDate > moment().format("YYYY-MM-DD")) {
+            setOpen(false)
             swAlert("아직 모집 기간이 아닙니다","warning");
             return 
             
         }
         if(togetherInfo.togetherRecruitEndDate<moment().format("YYYY-MM-DD")){
-            swAlert("이미 지난 기간입니다.","warning")
+            setOpen(false)
+            swAlert("이미 지난 기간입니다.", "warning")
             return 
         }
 
@@ -313,26 +326,32 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
                         {sessionStorage.getItem("nickName")}
                         </Typography>
                     </UserBox>
-                    <hr/>
-                    <Typography sx={{ mt: 2 }} variant="h6" component="div"> {/*질문*/}
-                        {togetherInfo.togetherInquiry}
-                    </Typography>
-                    <TextField
-                    value={insertForm.togetherJoinAnswer}
-                    onChange={handleChange}
-                    autoFocus
-                    margin="dense"
-                    name="togetherJoinAnswer"
-                    label="질문의 응답해주세요"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    required
-                    />
+                    
+                    {!togetherInfo.togetherInquiry ? null : 
+                        <Box>
+                            <hr/>
+                            <Typography sx={{ mt: 2 }} variant="h6" component="div"> {/*질문*/}
+                                {togetherInfo.togetherInquiry}
+                            </Typography>
+                            <TextField
+                            value={insertForm.togetherJoinAnswer}
+                            onChange={handleChange}
+                            autoFocus
+                            margin="dense"
+                            name="togetherJoinAnswer"
+                            label="질문의 응답해주세요"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            required
+                            />
+                        </Box>}
                     <Typography>
-                        1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}
+                        1인당 부담금 : {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice===0 ? "무료": togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice}
                     </Typography>
-                    <Button type="submit" variant="contained" onClick={togetherJoinSend} disabled={disabled}>참여하기</Button>
+                    {!togetherInfo.togetherInquiry ? <Button type="submit" variant="contained" onClick={togetherJoinSend} sx={{mt:2}}>참여하기</Button>:                 
+                    <Button type="submit" variant="contained" onClick={togetherJoinSend} disabled={disabled} sx={{mt:2}}>참여하기</Button>
+                    }
                 </Box>
                 }
             </Modal>

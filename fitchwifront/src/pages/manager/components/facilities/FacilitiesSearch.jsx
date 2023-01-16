@@ -6,14 +6,11 @@ export default function FacilitiesSearch({ keyword, setKeyword, loadFacilities }
     e.preventDefault();
 
     loadFacilities(1, keyword);
-
-    // console.log("search" + keyword);
   };
   const onChangeToSearch = (e) => {
     setKeyword(e.target.value);
   };
-  // console.log("insearchComp");
-  // console.log(keyword);
+
   return (
     <Box component="form" onSubmit={(e) => onSearchFacilities(e)} display="inline-block">
       <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">

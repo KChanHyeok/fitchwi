@@ -168,12 +168,12 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList, logid
             <div>
               <Typography>원하는 주제로 '얘기해요'를 개설해보세요!</Typography>
               <br />
+              <br />
+              <Link to="/talk/opened" style={{ color: "#ff0456" }}>
+                '얘기해요' 개설하러 가기
+              </Link>{" "}
             </div>
           )}
-          <br />
-          <Link to="/talk/opened" style={{ color: "#ff0456" }}>
-            '얘기해요' 개설하러 가기
-          </Link>
         </div>
       );
     }
@@ -246,20 +246,20 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList, logid
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="가입중" {...a11yProps(0)} />
-              <Tab label="운영중" {...a11yProps(1)} />
+              <Tab label="운영중" {...a11yProps(0)} />
+              {isMine && <Tab label="가입중" {...a11yProps(1)} />}
               {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
-
           <TabPanel value={value} index={0}>
-            {/* 가입중 */}
-            {printJoin(joiningList, false)}
-          </TabPanel>
-          <TabPanel value={value} index={1}>
             {/* 운영중 */}
             {printOpen(myJoinList)}
           </TabPanel>
+          <TabPanel value={value} index={1}>
+            {/* 가입중 */}
+            {printJoin(joiningList, false)}
+          </TabPanel>
+
           <TabPanel value={value} index={2}>
             {/* 승인대기중 */}
             {printJoin(waitingList, true)}
@@ -269,8 +269,8 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList, logid
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="가입중" {...a11yProps(0)} />
-              <Tab label="운영중" {...a11yProps(1)} />
+              <Tab label="운영중" {...a11yProps(0)} />
+              {isMine && <Tab label="가입중" {...a11yProps(1)} />}
               {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>

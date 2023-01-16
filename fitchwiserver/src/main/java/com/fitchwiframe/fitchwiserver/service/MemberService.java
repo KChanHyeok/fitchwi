@@ -152,12 +152,17 @@ public class MemberService {
         if (restriction.compareTo(today) > 0) {
           result.put("state", "reported");
           result.put("memberRestriction", dbMember.getMemberRestriction());
+
         } else {
           result.put("state", "released");
           result.put("memberRestriction", dbMember.getMemberRestriction());
-
           dbMember.setMemberRestriction(null);
           memberRepository.save(dbMember);
+
+          result.put("memberEmail", dbMember.getMemberEmail());
+          result.put("memberNickname", dbMember.getMemberNickname());
+          result.put("mbti", dbMember.getMemberMbti());
+          result.put("profileImg", dbMember.getMemberSaveimg());
         }
         return result;
 
@@ -357,7 +362,7 @@ public class MemberService {
         member.setMemberGender("남");
         member.setMemberInterest("운동∙액티비티 성장∙자기계발");
         member.setMemberBirth("2022-12-26");
-        String cryptPwd = encoder.encode("0000");
+        String cryptPwd = encoder.encode("00000000000000000000");
         member.setMemberPwd(cryptPwd);
         member.setMemberImg("DefaultProfileImage.jpg");
         member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");

@@ -130,6 +130,11 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
   const sendTogether = (e) => {
     e.preventDefault();
     setLoad(true)
+    if (insertForm.togetherMax < 2) {
+      setLoad(false)
+      return swAlert("최소 2명 이상이여야 합니다.", "warning")
+    }
+      
     formDate.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
     formDate.append("uploadImage", fileForm[0]);
 
@@ -581,13 +586,15 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
             }}
             />
           <Button variant={"contained"} onClick={addTag}>추가</Button>
-        </Stack>
-        <Button type="submit" onClick={saveClick} variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
-          개설하기
-        </Button>
-        <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb: 4 }}>
-          취소
-        </Button>
+          </Stack>
+          <Typography sx={{mt:3, float:"right"}}>
+            <Button type="submit" onClick={saveClick} variant={"contained"} sx={{ mt: 2, mr: 4, mb: 4 }}>
+              개설하기
+            </Button>
+            <Button href="/together" type="submit" variant={"contained"} sx={{ mt: 2, mb: 4 }}>
+              취소
+            </Button>
+          </Typography>
       </Box>}
     </Stack>
   );

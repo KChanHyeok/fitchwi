@@ -7,6 +7,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from "sweetalert2";
 import axios from "axios";
 
 const StyledMenu = styled((props) => (
@@ -51,7 +52,17 @@ const StyledMenu = styled((props) => (
 }));
 
 
-const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList, refreshTogetherList}) => {
+const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList, refreshTogetherList }) => {
+    
+    const swAlert = (contentText, icon ) => {
+        Swal.fire({
+          title: "알림",
+          text: contentText,
+          icon: icon,
+          confirmButtonText: "확인",
+          confirmButtonColor: "#ff0456",
+        });
+      };
 
     const style = {
         position: "absolute",
@@ -110,26 +121,26 @@ const TogetherOpMenu = ({togetherInfo, togetherJoinMember, togetherAppliedMember
     };
     const deleteRequestTogether = (e) => {
         e.preventDefault();
-        axios.put("/deleteTogetherState", togetherInfo).then((res)=> console.log(res.data)).catch((error) => console.log(error))
-
-        alert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.")
-        setOpendelete(false)
-        refreshTogetherList();
-        nav("/together");
+        axios.put("/deleteTogetherState", togetherInfo).then((res)=> {
+            swAlert("삭제신청이 완료 되엇습니다 함께해요 삭제는 3일안에 환불후 삭제 됩니다.","success")
+            setOpendelete(false)
+            refreshTogetherList();
+            nav("/together");
+        }).catch((error) => console.log(error))
     }
 
     const approval = (data) => {
         setOpenAppliedMember(false);
         axios.put("/approvalTogetherMemberState", data)
         .then((res)=> {
-            alert(res.data)
+            swAlert(res.data,"success")
             window.location.reload();
         }).catch((error) => console.log(error))
     }
     const refusal = (data) => {
         axios.put("/refusalTogetherMemberState", data)
         .then((res) => {
-            alert(res.data)
+            swAlert(res.data,"success")
             setOpenAppliedMember(false)
             refreshTogetherJoinList();
         }).catch((error) => console.log(error))

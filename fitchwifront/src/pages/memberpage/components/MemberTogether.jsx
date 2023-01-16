@@ -201,12 +201,13 @@ export default function Membertogether({
             <div>
               <Typography>같은 취미라도 함께하면 더 즐겁죠!</Typography>
               <Typography> '함께해요'에서 함께해요!</Typography>
+
+              <br />
+              <Link to="/together/add" style={{ color: "#ff0456" }}>
+                '함께해요' 개설하러 가기
+              </Link>
             </div>
           )}
-          <br />
-          <Link to="/together/add" style={{ color: "#ff0456" }}>
-            '함께해요' 개설하러 가기
-          </Link>
         </div>
       );
     }
@@ -306,20 +307,20 @@ export default function Membertogether({
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="가입중" {...a11yProps(0)} />
-              <Tab label="운영중" {...a11yProps(1)} />
+              <Tab label="운영중" {...a11yProps(0)} />
+              {isMine && <Tab label="가입중" {...a11yProps(1)} />}
               {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>
-
           <TabPanel value={value} index={0}>
-            {/* 가입중 */}
-            {printJoin(joiningList, false)}
-          </TabPanel>
-          <TabPanel value={value} index={1}>
             {/* 운영중 */}
             {printOpen(myJoinList)}
           </TabPanel>
+          <TabPanel value={value} index={1}>
+            {/* 가입중 */}
+            {printJoin(joiningList, false)}
+          </TabPanel>
+
           <TabPanel value={value} index={2}>
             {/* 승인대기중 */}
             {printJoin(waitingList, true)}
@@ -329,8 +330,8 @@ export default function Membertogether({
         <div>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="가입중" {...a11yProps(0)} />
-              <Tab label="운영중" {...a11yProps(1)} />
+              <Tab label="운영중" {...a11yProps(0)} />
+              {isMine && <Tab label="가입중" {...a11yProps(1)} />}
               {isMine && <Tab label="승인 대기중" {...a11yProps(2)} />}
             </Tabs>
           </Box>

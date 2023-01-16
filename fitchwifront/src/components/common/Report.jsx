@@ -49,9 +49,10 @@ export default function Report({ targetMember, target, category, type }) {
   };
   const handleClickOpen = () => {
     if (reportDetail[0].memberEmail.memberEmail == null) {
-      swAlert("로그인 후 이용 가능합니다.", "warning");
+      swAlert("로그인 후 이용 가능합니다.", "warning", () => {
+        nav("/login");
+      });
 
-      nav("/login");
       return;
     }
     axios
@@ -63,7 +64,6 @@ export default function Report({ targetMember, target, category, type }) {
         },
       })
       .then((res) => {
-        console.log(res.data);
         if (res.data === "reported") {
           setIsReported(true);
           setOpen(true);
@@ -79,7 +79,7 @@ export default function Report({ targetMember, target, category, type }) {
   };
   const handleDeclration = (e) => {
     e.preventDefault();
-    console.log(reportForm);
+
     axios.post("/report", reportForm).then((result) => {
       if (result.data === "ok") {
         swAlert(
@@ -92,14 +92,14 @@ export default function Report({ targetMember, target, category, type }) {
 
     setOpen(false);
   };
-  console.log(reportDetail[0]);
+
   const handleInput = useCallback(
     (e) => {
       const reportDetailObj = {
         ...reportDetail[0],
         reportDetailContent: e.target.value,
       };
-      console.log(reportDetailObj);
+
       setReportDetail([reportDetailObj]);
     },
     [reportDetail]
@@ -109,7 +109,7 @@ export default function Report({ targetMember, target, category, type }) {
       ...reportForm,
       reportDetailList: reportDetail,
     };
-    console.log(reportFormObj);
+
     setReportForm(reportFormObj);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportDetail]);

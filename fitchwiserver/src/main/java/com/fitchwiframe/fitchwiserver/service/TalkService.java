@@ -194,17 +194,17 @@ public class TalkService {
             long talkJoinMemberCount = talkJoinRepository.countByTalkCodeAndTalkJoinStateContains(talkJoin.getTalkCode(), "가입중");
             log.info("가입한 인원수 : " + talkJoinMemberCount);
             if (talkJoin.getTalkCode().getTalkMax()<=talkJoinMemberCount+1) {
-                result="인원이 가득차서 가입할 수 없습니다.";
+                result="memberMax";
                 return result;
             }
             if (talkJoin.getTalkCode().getTalkType().equals("선착순")) {
                 talkJoin.setTalkJoinState("가입중");
             }
             talkJoinRepository.save(talkJoin);
-            result = "가입 신청 완료";
+            result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
-            result = "가입 실패";
+            result = "fail";
         }
         return result;
     }
