@@ -68,7 +68,7 @@ export default function Login({ sucLogin, swAlert }) {
             break;
           case "released":
             swAlert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.", "info", () => {
-              sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+              sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg, res.data.mbti);
               sessionStorage.setItem("id", res.data.memberEmail);
               sessionStorage.setItem("nickName", res.data.memberNickname);
               sessionStorage.setItem("mbti", res.data.mbti);
