@@ -219,12 +219,6 @@ const TalkHome = ({ talkList }) => {
                               </Box>
                             </UserBox>
                           </Stack>
-                          <Typography color="textSecondary" variant="caption" sx={{ mt: 0.3, mb: 1, mr: 1 }} style={{ float: "right" }}>
-                            {data.talkMemberCount + 1}/{data.talkMax}명 {data.talkType}
-                          </Typography>
-                          <Box style={{ float: "right" }}>
-                            <AssignmentTurnedIn />
-                          </Box>
                         </CardContent>
                       </CardActionArea>
                     </Card>
@@ -236,7 +230,7 @@ const TalkHome = ({ talkList }) => {
               <Box height={300} mt={6} component="img" src="/images/TalkPost1.png"></Box>
             </Link>
 
-            {/* 3번 카테고리 - 키워드 추천() */}
+            {/* 3번 카테고리 - 키워드 추천(일기, 독서) */}
             <Box height={500} mt={10}>
               <Box display="flex" alignItems="center">
                 <Typography variant="h5">📖 나 들여다보기, 또다른 나를 발견하는 시간</Typography>
