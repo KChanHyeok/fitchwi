@@ -101,22 +101,28 @@ const Header = (props) => {
             <Box p={2} ml={2} display="flex" alignItems="center">
               <Link to={homeLink} style={{ textDecoration: "none", marginRight: 20 }}>
                 {/*Monday Feelings by Essentials Studio*/}
-                <img src="/images/logo.png" alt="logo" width="100" />
+                <img src="/images/fitchwilogo.png" alt="logo" width="100" />
                 {/* <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }} color="primary">
               FITCHWI
             </Typography> */}
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/about"}>
-
-                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}>소개페이지</Typography>
+                <Typography
+                  sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}
+                >
+                  소개페이지
+                </Typography>
               </Link>
 
               <Link style={{ textDecoration: "none", color: "black" }} to={"/together"}>
-                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>함께해요</Typography>
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>
+                  함께해요
+                </Typography>
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/talk"}>
-                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>얘기해요</Typography>
-
+                <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>
+                  얘기해요
+                </Typography>
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/share"}>
                 <Typography sx={{ display: { xs: "none", sm: "none", md: "block" } }}>공유해요</Typography>
