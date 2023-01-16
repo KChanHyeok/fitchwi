@@ -484,10 +484,10 @@ public class TogetherService {
                 togetherJoinPayRepository.delete(togetherJoinPayment);
                 togetherJoinRepository.delete(joinTogetherMember);
                 log.info(cancle+"");
-                result="삭제성공";
+                result="환불성공";
             }catch (Exception e) {
                 e.printStackTrace();
-                result="삭제실패";
+                result="환불실패";
             }
 
         }catch (Exception e) {
