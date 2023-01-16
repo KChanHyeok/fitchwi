@@ -171,7 +171,9 @@ export default function FindMemberInfoModal({ swAlert }) {
 
   return (
     <>
-      <Button onClick={handleClickOpen}>계정 찾기</Button>
+      <Button sx={{ color: "black" }} onClick={handleClickOpen}>
+        계정 찾기
+      </Button>
 
       <Dialog open={open} onClose={(e) => find(e)}>
         <DialogTitle>계정찾기</DialogTitle>

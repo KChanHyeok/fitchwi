@@ -115,7 +115,7 @@ public class TogetherService {
         String realSysname = filsSysname;
         System.out.println("realSysname = " + realSysname);
         System.out.println(realSysname);
-        if (realSysname.equals("DefaultProfileImageSystemName.jpg")) {
+        if (realSysname.equals("DefaultProfileImageSystemNameBasic.jpg")) {
             return;
         }
         String realPath = session.getServletContext().getRealPath("/");

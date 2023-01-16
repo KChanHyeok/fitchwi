@@ -202,12 +202,11 @@ const FeedInfoModal = ({
               </UserBox>
               <Divider />
               <Box mt={1} sx={{ overflowY: "scroll" }} height={140} flexWrap="wrap">
-                <UserBox mb={2}>
+                <UserBox mb={2} sx={{ alignItems: "stretch" }}>
                   <Avatar alt={memberWriterInfo.memberName} src={memberWriterInfo.memberSaveimg} sx={{ width: 30, height: 30 }} />
-                  <Typography>
-                    <b>{memberWriterInfo.memberNickname}</b>
+                  <Typography sx={{ whiteSpace: "pre-wrap" }}>
+                    <b>{memberWriterInfo.memberNickname}</b> {feedContent}
                   </Typography>
-                  <Typography>{feedContent}</Typography>
                 </UserBox>
               </Box>
               <Box height={120} mb={1}>
@@ -230,10 +229,17 @@ const FeedInfoModal = ({
                         image={`/images/${talkInfo.talkSaveimg}`}
                       />
                       <CardContent>
-                        <Typography variant="h6" sx={{ fontSize: 16 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 200, height: 30, fontSize: 16 }}
+                        >
                           {talkInfo.talkTitle}
                         </Typography>
-                        <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                        <Typography
+                          variant="body1"
+                          color="text.secondary"
+                          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 200, height: 30, fontSize: 14 }}
+                        >
                           {talkInfo.talkContent}
                         </Typography>
                         <Box

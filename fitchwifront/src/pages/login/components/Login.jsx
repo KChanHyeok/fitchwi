@@ -56,7 +56,6 @@ export default function Login({ sucLogin, swAlert }) {
             swAlert("아이디와 일치하는 회원정보가 없습니다.", "warning");
             break;
           case "reported":
-
             swAlert(
               "누적된 신고에 의해, <br/> FITCHWI 이용이 불가합니다.<br/> 제한 해지일 : " +
                 res.data.memberRestriction,
@@ -66,11 +65,10 @@ export default function Login({ sucLogin, swAlert }) {
               }
             );
 
-
             break;
           case "released":
             swAlert(res.data.memberRestriction + "부로 이용 제한이 해제됐습니다.", "info", () => {
-              sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+              sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg, res.data.mbti);
               sessionStorage.setItem("id", res.data.memberEmail);
               sessionStorage.setItem("nickName", res.data.memberNickname);
               sessionStorage.setItem("mbti", res.data.mbti);
@@ -154,7 +152,7 @@ export default function Login({ sucLogin, swAlert }) {
 
             <Grid item>
               <Link to="/join" state={{ member: "newMember" }} style={{ textDecoration: "none" }}>
-                <Button>회원 가입</Button>
+                <Button style={{ color: "black" }}>회원 가입</Button>
               </Link>
             </Grid>
           </Grid>

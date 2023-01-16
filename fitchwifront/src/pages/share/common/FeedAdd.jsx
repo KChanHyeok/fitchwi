@@ -156,6 +156,7 @@ const FeedAdd = ({ refreshFeed }) => {
       .post("/insertfeed", formdata, config)
       .then((response) => {
         if (response.data === "ok") {
+          setOpen(false);
           swAlert("등록 성공!", "success", () => window.location.reload());
         } else {
           swAlert("등록 실패!", "error");
@@ -323,7 +324,6 @@ const FeedAdd = ({ refreshFeed }) => {
                   labelId="demo-simple-select-autowidth-label"
                   id="demo-simple-select-autowidth"
                   value={insertForm.feedCategory}
-                  required
                   name="feedCategory"
                   onChange={handleChange}
                   label="카테고리"

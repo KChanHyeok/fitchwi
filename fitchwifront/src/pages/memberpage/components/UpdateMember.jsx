@@ -66,7 +66,12 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
       .post("/updateMemberInfo", formData, config)
       .then((res) => {
         if (res.data !== null) {
-          sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.memberSaveimg);
+          sucLogin(
+            res.data.memberEmail,
+            res.data.memberNickname,
+            res.data.memberSaveimg,
+            res.data.memberMbti
+          );
           sessionStorage.setItem("id", res.data.memberEmail);
           sessionStorage.setItem("nickName", res.data.memberNickname);
           sessionStorage.setItem("mbti", res.data.memberMbti);
@@ -274,7 +279,7 @@ export default function UpdateMember({ member, lstate, sucLogin, swAlert }) {
   };
   const clearImg = () => {
     setMemberToUpdate({ ...memberToUpdate, memberImg: "" });
-    setFile("/images/DefaultProfileImageSystemName.jpg");
+    setFile("/images/DefaultProfileImageSystemNameBasic.jpg");
   };
 
   const handlePhoneNumber = (e) => {

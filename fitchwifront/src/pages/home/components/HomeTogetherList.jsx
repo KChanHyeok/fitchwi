@@ -47,13 +47,24 @@ const HomeTogetherList = ({ category, togetherList, korCategory, type }) => {
                       <CardActionArea>
                         <CardMedia component="img" width="200" height="150" alt="talkimg" src={`/images/${item.togetherSaveimg}`} />
                         <CardContent>
-                          <Typography variant="h6" fontWeight={100} sx={{ fontSize: { xs: 14, sm: 14, md: 20 } }}>
+                          <Typography
+                            variant="h6"
+                            fontWeight={100}
+                            sx={{
+                              fontSize: { xs: 14, sm: 14, md: 20 },
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              width: 200,
+                              height: 30,
+                            }}
+                          >
                             {item.togetherTitle}
                           </Typography>
                           <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Typography variant="caption">{item.togetherDate}</Typography>
-                            <Typography variant="button" fontWeight={100}>
-                              {item.togetherPosition}
+                            <Typography variant="button">
+                              {item.togetherPosition.length > 10 ? `${item.togetherPosition.slice(0, 10)}...` : item.togetherPosition}
                             </Typography>
                           </Stack>
                         </CardContent>

@@ -61,7 +61,7 @@ public class MemberService {
           fileUpload(newMember, pic, session);
         } else {
           newMember.setMemberImg("DefaultProfileImage.jpg");
-          newMember.setMemberSaveimg("/images/DefaultProfileImageSystemName.jpg");
+          newMember.setMemberSaveimg("/images/DefaultProfileImageSystemNameBasic.jpg");
         }
 
         memberRepository.save(newMember);
@@ -247,7 +247,7 @@ public class MemberService {
     System.out.println("realSysname = " + realSysname);
 
     System.out.println(realSysname);
-    if (realSysname.equals("DefaultProfileImageSystemName.jpg")) {
+    if (realSysname.equals("DefaultProfileImageSystemNameBasic.jpg")) {
       return;
     }
     String realPath = session.getServletContext().getRealPath("/");
@@ -365,7 +365,7 @@ public class MemberService {
         String cryptPwd = encoder.encode("00000000000000000000");
         member.setMemberPwd(cryptPwd);
         member.setMemberImg("DefaultProfileImage.jpg");
-        member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
+        member.setMemberSaveimg("/images/"+"DefaultProfileImageSystemNameBasic.jpg");
         member.setMemberMbti("ISFP");
         member.setMemberAddr("경기도 시흥시");
         member.setMemberPhone("00000000000");
@@ -438,7 +438,7 @@ public class MemberService {
         if (memberToUpdate.getMemberImg().equals("")) {
           deleteFile(memberToUpdate.getMemberSaveimg(), session);
           memberToUpdate.setMemberImg("DefaultProfileImage.jpg");
-          memberToUpdate.setMemberSaveimg("/images/"+"DefaultProfileImageSystemName.jpg");
+          memberToUpdate.setMemberSaveimg("/images/"+"DefaultProfileImageSystemNameBasic.jpg");
         }
       } else {//새이미지사용
         deleteFile(memberToUpdate.getMemberSaveimg(), session);

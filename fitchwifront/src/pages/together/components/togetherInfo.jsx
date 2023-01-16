@@ -9,6 +9,7 @@ import { Container } from "@mui/system";
 import { AssignmentTurnedIn } from "@mui/icons-material";
 import PeopleIcon from '@mui/icons-material/People';
 import { useNavigate } from "react-router-dom";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList, refreshTogetherTagList, togetherTagList }) => {
@@ -112,8 +113,8 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
             )}
           </Box>
           <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>함께해요 소개</Typography>
-          <Box component="span">{togetherInfo.togetherContent}</Box>
-          <Box sx={{ mt: 5, mb: 1 }}>
+          <Box sx={{ whiteSpace:"pre-wrap", p:2}}>{togetherInfo.togetherContent}</Box>
+          <Box sx={{ mt: 2, mb: 1 }}>
             <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>방장</Typography>
             <br />
             <UserBox p={2}>
@@ -157,20 +158,18 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
           <Box sx={{mb:2}}>
             <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{ borderLeft: "4px solid rgb(240, 59, 59)" }}>태그</Typography>
             <Typography variant="span" p={2}>
-                {togetherTagList.length===0 ? "입력된 태그정보가 없습니다" : togetherTagList.filter(data => data.togetherCode.togetherCode === togetherInfo.togetherCode)[0].togetherTagContent.split(" ").map(data =>
+                {togetherTagList.filter(data => data.togetherCode.togetherCode === togetherInfo.togetherCode)[0].togetherTagContent.split(" ").map(data =>
                   <Chip
                     key={data}
-                    onClick={() => nav(`/search/${data}`)}  
-                    color="primary"
+                    label={"#"+data}
                     variant="outlined"
-                    label={data}
                     size="small"
-                    sx={{mb:1, fontSize:15, mr:2}}
+                    sx={{mb:1, fontSize:15, mr:1, boxShadow: "0 3px 5px  lightgray"}}
                 />)}
             </Typography>
           </Box>
           <Typography variant="h6" fontWeight="bold" pl={1} mb={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>1인당 부담금</Typography>
-            {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice<=0 ? <Typography variant="span" p={2} mb={1}>무료</Typography> : <Typography variant="span" p={2}>{(togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice).toLocaleString()+" 원 (시설1인비용 포함)"}</Typography>} <br />
+            {togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice<=0 ? <Typography variant="span" p={2} mb={1}>무료</Typography> : <Chip style={{fontSize:20, fontWeight:"bold"}} label={"💲 "+(togetherInfo.togetherPrice + togetherInfo.togetherOpenedCode.facilitiesCode.facilitiesPrice).toLocaleString()+" 원 (시설1인비용 포함)"}  p={2}></Chip>} <br />
               
             {!togetherJoinList.filter(
                   (data) =>
