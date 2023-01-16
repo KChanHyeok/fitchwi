@@ -47,7 +47,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
         talkOpenDate: nowdate,
     });
 
-    console.log(memberInfo);
     const onChange = useCallback(
         (e) => {
             const inputTo = {
@@ -57,6 +56,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
             setInsertTalkOp(inputTo);
         }, [insertTalkOp]);
 
+    console.log(insertTalkOp)
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
 
@@ -81,6 +81,10 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
         render.readAsDataURL(fileForm[0]);
         render.onload = () => (imgEl.style.backgroundImage = `url(${render.result})`);
     }
+
+    // const deleteFileImage = () => {
+    //     setFileForm("");
+    // }
 
     const onLoadFile = useCallback((event) => {
         const file = event.target.files;
@@ -116,8 +120,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                 }
             })
             .catch((error) => console.log(error));
-
-
     };
 
     //승인제일 때 가입질문 input 창 
@@ -282,7 +284,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                                 backgroundColor: "gray",
                                                 color: "white",
                                             }}
-                                        onClick={() => deleteFileImage()}
+                                            onClick={() => deleteFileImage()}
                                         >
                                             Delete
                                         </Button> */}
@@ -307,7 +309,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                         fullWidth
                                         label="태그"
                                         name="talkTagContent"
-                                        // sx={{ mt: 3 }}
                                         onChange={onChange}
                                         value={insertTalkOp.talkTagContent}
                                         InputProps={{

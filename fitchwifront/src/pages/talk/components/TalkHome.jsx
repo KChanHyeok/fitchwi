@@ -26,9 +26,9 @@ const TalkHome = ({ talkList }) => {
     <>
       <Box height={400} width="100%">
         <Carousel next={() => { }} prev={() => { }} animation="slide" duration={800} sx={{ height: "100%" }} indicators={false} >
-          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner1.png" sx={{ cursor: "pointer" }}></Box>
-          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner2.png" sx={{ cursor: "pointer" }}></Box>
-          <Box minHeight={200} minWidth={300} width="100%" height="100%" component="img" src="/images/TalkBanner3.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={300} minWidth={300} maxHeight={400} width="100%" height="100%" component="img" src="/images/TalkBanner1.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={300} minWidth={300} maxHeight={400} width="100%" height="100%" component="img" src="/images/TalkBanner2.png" sx={{ cursor: "pointer" }}></Box>
+          <Box minHeight={300} minWidth={300} maxHeight={400} width="100%" height="100%" component="img" src="/images/TalkBanner3.png" sx={{ cursor: "pointer" }}></Box>
         </Carousel >
       </Box>
       {/* 광고 또는 얘기해요 홍보 영역 */}
@@ -236,7 +236,7 @@ const TalkHome = ({ talkList }) => {
               <Box height={300} mt={6} component="img" src="/images/TalkPost1.png"></Box>
             </Link>
 
-            {/* 3번 카테고리 */}
+            {/* 3번 카테고리 - 키워드 추천() */}
             <Box height={500} mt={10}>
               <Box display="flex" alignItems="center">
                 <Typography variant="h5">📖 나 들여다보기, 또다른 나를 발견하는 시간</Typography>
@@ -253,7 +253,7 @@ const TalkHome = ({ talkList }) => {
                   <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-                  .sort((a, b) => b.talkCode - a.talkCode).filter(data => data.talkTitle.includes("공부"))
+                  .sort(() => 0.5 - Math.random()).filter(data => data.talkTitle.includes("공부"))
                   .filter((data, index) => index < 3).map(data => (
                     <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}
@@ -318,7 +318,7 @@ const TalkHome = ({ talkList }) => {
               </Stack>
             </Box>
 
-            {/* 4번 카테고리 */}
+            {/* 4번 카테고리 -키워드 추천(영화) */}
             <Box height={500} mt={10}>
               <Box display="flex" alignItems="center">
                 <Typography variant="h5">🎬 접속, 영화 혼자 보는 사람들을 위한 모임</Typography>
@@ -335,7 +335,8 @@ const TalkHome = ({ talkList }) => {
                   <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-                  .sort((a, b) => b.talkCode - a.talkCode).filter(data => data.talkTitle.includes("영화"))
+                  .sort(() => 0.5 - Math.random())
+                  .filter(data => data.talkTitle.includes("영화") || data.talkContent.includes("영화"))
                   .filter((data, index) => index < 3).map(data => (
                     <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}

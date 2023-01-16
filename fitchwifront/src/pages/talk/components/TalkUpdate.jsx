@@ -49,6 +49,9 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
         try {
             setUpdateTalk(state.talkInfo);
             setUpdateTalkTag(state.talkTagInfo);
+            // setChipData({
+
+            // })
         } catch (e) {
 
         }
@@ -101,8 +104,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
         const config = {
             headers: { "Content-Type": "multipart/form-data" },
         };
-        // console.log(updateTalk);
-        // console.log(updateTalkTag);
 
         axios
             .post("/updateTalk", formData, config)
@@ -139,6 +140,39 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
             .catch((error) => console.log(error));
     }
 
+    // 태그 추가
+
+    const ListItem = styled('li')(({ theme }) => ({
+        margin: theme.spacing(0.5),
+    }));
+    const [chipData, setChipData] = React.useState([]);
+    const [count, setCount] = useState(0);
+    const addTag = useCallback(
+        (e) => {
+            setCount(count + 1);
+            const chipObj = {
+                key: count,
+                label: updateTalkTag.talkTagContent
+            }
+            setChipData(chipData.concat(chipObj))
+            setUpdateTalkTag({
+                ...updateTalkTag,
+                talkTagContent: ""
+            });
+        }, [chipData, count, updateTalkTag])
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const saveClick = () => {
+        setUpdateTalkTag({
+            ...updateTalkTag,
+            talkTagContent: chipData.map(data => data.label).join(" ")
+        });
+    }
+
+
     const [showInquiry, setShowInquiry] = useState(false);
 
     const approveCheck = () => {
@@ -151,37 +185,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
 
     console.log(fileForm);
 
-    // // 태그 추가
-
-    // const ListItem = styled('li')(({ theme }) => ({
-    //     margin: theme.spacing(0.5),
-    // }));
-    // const [chipData, setChipData] = React.useState([]);
-    // const [count, setCount] = useState(0);
-    // const updateTag = useCallback(
-    //     (e) => {
-    //         setCount(count + 1);
-    //         const chipObj = {
-    //             key: count,
-    //             label: updateTalk.talkTagContent
-    //         }
-    //         setChipData(chipData.concat(chipObj))
-    //         setUpdateTalkTag({
-    //             ...updateTalk,
-    //             talkTagContent: ""
-    //         });
-    //     }, [chipData, count, updateTalk])
-
-    // const handleDelete = (chipToDelete) => () => {
-    //     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-    // };
-
-    // const saveClick = () => {
-    //     setUpdateTalkTag({
-    //         ...updateTalk,
-    //         talkTagContent: chipData.map(data => data.label).join(" ")
-    //     });
-    // }
 
     const swAlert = (contentText, icon) => {
         Swal.fire({
@@ -302,7 +305,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                 sx={{ mt: 3 }}
                                 onChange={onChange}
                                 multiline />
-                            {!updateTalkTag
+                            {/* {!updateTalkTag
                                 ? <Box style={{
                                     position: "absolute",
                                     left: "50%",
@@ -317,38 +320,43 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                     value={updateTalkTag.talkTagContent || ""}
                                     sx={{ mt: 3 }}
                                     onChange={onChange}
-                                />}
-                            {/* <TextField
-                                fullWidth
-                                label="태그"
-                                name="talkTagContent"
-                                sx={{ mt: 3 }}
-                                onChange={onChange}
-                                value={updateTalkTag.talkTagContent}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start" >
-                                            {chipData.map((data) => {
-                                                let icon;
-                                                if (data.label === 'React') {
-                                                    icon = <TagFacesIcon />;
-                                                }
-                                                return (
-                                                    <ListItem key={data.key} style={{ listStyle: "none" }}>
-                                                        <Chip
-                                                            icon={icon}
-                                                            label={data.label}
-                                                            onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-                                                        />
-                                                    </ListItem>
-                                                );
-                                            })}
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            /> */}
+                                />} */}
+                            <Stack
+                                direction="row"
+                                sx={{ mt: 3, height: 55 }}
+                                spacing={3}
+                            >
+                                <TextField
+                                    fullWidth
+                                    label="태그"
+                                    name="talkTagContent"
+                                    onChange={onChange}
+                                    value={updateTalkTag.talkTagContent}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start" >
+                                                {chipData.map((data) => {
+                                                    let icon;
+                                                    if (data.label === 'React') {
+                                                        icon = <TagFacesIcon />;
+                                                    }
+                                                    return (
+                                                        <ListItem key={data.key} style={{ listStyle: "none" }}>
+                                                            <Chip
+                                                                icon={icon}
+                                                                label={data.label}
+                                                                onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                                            />
+                                                        </ListItem>
+                                                    );
+                                                })}
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <Button variant={"contained"} onClick={addTag}>추가</Button>
+                            </Stack>
                             <Typography sx={{ float: "right" }}>
-                                {/* <Button onClick={updateTag} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 수정</Button> */}
                                 <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>
                                 <Button type="submit" variant={"contained"} sx={{ mt: 2, mr: 4 }}>수정하기</Button>
                                 <Link to={`/talk/${updateTalk.talkCode}`} style={{ textDecoration: 'none' }}>

@@ -12,7 +12,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Avatar, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "../styles/TalkOpMenu.scss";
 import Swal from 'sweetalert2';
 
@@ -277,7 +277,9 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                                         ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
                                         : talkJoinMember.map((data) =>
                                             <UserBox key={data.talkJoinCode}>
-                                                <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
+                                                    <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                </Link>
                                                 <Typography fontWeight={500} width={200} variant="span">
                                                     <b>{data.memberEmail.memberNickname}님</b>
                                                 </Typography>
@@ -321,7 +323,9 @@ function TalkOpMenu({ talkPageCode, talkInfo, talkTagInfo, talkJoinList, talkJoi
                                         : waitingMemberList.map((data) =>
                                             <Box>
                                                 <UserBox key={data.talkJoinCode}>
-                                                    <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                    <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
+                                                        <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                    </Link>
                                                     <Typography fontWeight={500} width={200} variant="p">
                                                         <b>{data.memberEmail.memberNickname} 님</b>
                                                     </Typography>
