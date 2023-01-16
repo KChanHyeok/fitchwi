@@ -29,7 +29,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
           case "ok":
             switch (res.data.state) {
               case "ok":
-                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg, res.data.mbti);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
@@ -50,7 +50,7 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
 
                 break;
               case "released":
-                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+                sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg, res.data.mbti);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);
                 sessionStorage.setItem("classification", "k");
