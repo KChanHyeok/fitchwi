@@ -153,10 +153,11 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList, refreshTogetherTagLis
       .post("/addTogether", formDate, config)
       .then((res) => {
         setLoad(false)
-        swAlert(res.data,"success");
-        nav("/together");
-        refreshTogetherList();
-        refreshTogetherTagList();
+        swAlert(res.data,"success",()=> {
+          nav("/together");
+          refreshTogetherList();
+          refreshTogetherTagList();
+        });
       })
       .catch((error) => {
         console.log(error);

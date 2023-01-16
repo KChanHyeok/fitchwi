@@ -138,7 +138,10 @@ public class TogetherService {
     public Iterable<Together> getAllTogetherList() {
         log.info("getAllTogetherList()");
         Iterable<Together> togetherList = togetherRepository.findAll();
-        log.info(togetherList+"");
+        for (Together t : togetherList){
+            t.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(t));
+        }
+
         return togetherList;
     }
 
@@ -597,6 +600,7 @@ public class TogetherService {
                 cancleBuyDto cancle = restTemplate.postForObject("https://api.iamport.kr/payments/cancel", cancelEntity, cancleBuyDto.class);
 
                 log.info(cancle+"");
+                togetherJoinPayRepository.delete(togetherJoinPayment);
             }catch (Exception e) {
                 e.printStackTrace();
             }
