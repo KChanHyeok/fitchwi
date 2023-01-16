@@ -113,8 +113,8 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
             )}
           </Box>
           <Typography variant="h6" fontWeight="bold" pl={1} mb={1} sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>함께해요 소개</Typography>
-          <Box component="span">{togetherInfo.togetherContent}</Box>
-          <Box sx={{ mt: 5, mb: 1 }}>
+          <Box sx={{ whiteSpace:"pre-wrap", p:2}}>{togetherInfo.togetherContent}</Box>
+          <Box sx={{ mt: 2, mb: 1 }}>
             <Typography variant="h6" fontWeight="bold" pl={1}  sx={{borderLeft: "4px solid rgb(240, 59, 59)"}}>방장</Typography>
             <br />
             <UserBox p={2}>
