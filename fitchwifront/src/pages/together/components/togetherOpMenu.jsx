@@ -54,14 +54,14 @@ const StyledMenu = styled((props) => (
 
 const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMember, refreshTogetherJoinList, refreshTogetherList }) => {
     
-    const swAlert = (contentText, icon ) => {
+    const swAlert = (contentText, icon, func ) => {
         Swal.fire({
           title: "알림",
           text: contentText,
           icon: icon,
           confirmButtonText: "확인",
           confirmButtonColor: "#ff0456",
-        });
+        }).then(func)
       };
 
     const style = {
@@ -133,16 +133,19 @@ const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMembe
         setOpenAppliedMember(false);
         axios.put("/approvalTogetherMemberState", data)
         .then((res)=> {
-            swAlert(res.data,"success")
-            window.location.reload();
+            swAlert(res.data,"success",()=> {
+                window.location.reload();
+            })
+            
         }).catch((error) => console.log(error))
     }
     const refusal = (data) => {
         axios.put("/refusalTogetherMemberState", data)
         .then((res) => {
-            swAlert(res.data,"success")
-            setOpenAppliedMember(false)
-            refreshTogetherJoinList();
+            swAlert(res.data,"success",()=> {
+                window.location.reload();
+            })
+
         }).catch((error) => console.log(error))
     }
 
