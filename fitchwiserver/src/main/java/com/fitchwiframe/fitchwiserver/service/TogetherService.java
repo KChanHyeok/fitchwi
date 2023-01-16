@@ -139,7 +139,7 @@ public class TogetherService {
         log.info("getAllTogetherList()");
         Iterable<Together> togetherList = togetherRepository.findAll();
         for (Together t : togetherList){
-            t.setTogetherMemberCount(togetherJoinRepository.countByTogetherCode(t));
+            t.setTogetherMemberCount(togetherJoinRepository.countByTogetherCodeAndTogetherJoinStateContains(t,"가입중"));
         }
 
         return togetherList;
