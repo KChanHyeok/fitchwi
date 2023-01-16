@@ -24,7 +24,7 @@ export default function Birth({ onChange, joinForm, isValid, swAlert }) {
   return (
     <div style={{ textAlign: "center" }}>
       <Typography variant="h4" gutterBottom mb={10}>
-        아 맞다 생일! 생일도 알려주세요!
+        생일! 생일도 알려주세요!
       </Typography>
 
       <TextField
