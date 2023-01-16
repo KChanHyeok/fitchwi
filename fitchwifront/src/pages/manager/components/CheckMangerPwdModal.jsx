@@ -28,7 +28,6 @@ export default function CheckMangerPwdModal({ setIsManager, swAlert }) {
     axios
       .post("/managerLogin", manager)
       .then((result) => {
-        //  console.log(result.data);
         switch (result.data) {
           case "ok":
             swAlert("관리자 확인이 완료됐습니다.");
@@ -59,8 +58,7 @@ export default function CheckMangerPwdModal({ setIsManager, swAlert }) {
     };
     setManager(managerInfo);
   };
-  // console.log(open);
-  // console.log(manager);
+
   return (
     <Dialog open={open} onClose={(e) => handleClose(e)}>
       <DialogTitle>FITCHWI 관리자 인증</DialogTitle>
@@ -70,7 +68,7 @@ export default function CheckMangerPwdModal({ setIsManager, swAlert }) {
           <DialogContentText color="black" fontSize={20}>
             관리자 확인을 위해, 아이디와 비밀번호를 입력해주세요.
           </DialogContentText>
-          {/* <DialogContentText color="black" mt={2}></DialogContentText> */}
+
           <TextField
             mt={2}
             value={manager.managerId}

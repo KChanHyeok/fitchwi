@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Avatar, Box, Button, FormControlLabel, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function UserImg({ setFileForm, joinForm }) {
+export default function UserImg({ setFileForm, joinForm, isValid, swAlert }) {
   const [file, setFile] = useState("");
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
 
   const imageLoad = (event) => {
     if (event.target.files.length !== 0) {
@@ -27,7 +35,7 @@ export default function UserImg({ setFileForm, joinForm }) {
         <b>{joinForm.memberNickname}</b>님을 표현할 수 있는 이미지를 선택해주세요.
       </Typography>
       <Typography variant="h6" gutterBottom mb={5}>
-        *미등록시 기본 이미지로 등록됩니다.
+        ( *미등록시 기본 이미지로 등록됩니다.)
       </Typography>
       <Avatar src={file !== "" ? file : ""} sx={{ width: 250, height: 250, m: "auto", mb: 4 }} />
       <Button variant="outlined" sx={{ pl: 5 }}>

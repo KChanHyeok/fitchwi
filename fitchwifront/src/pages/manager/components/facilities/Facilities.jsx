@@ -32,13 +32,12 @@ export default function Facilities({ swAlert }) {
 
   const loadFacilities = (pageNumInSessionStg, keywordInSessionStg) => {
     setLoad(false);
-    // console.log(keywordInSessionStg);
+
     axios
       .get("/getFacilitiesList", {
         params: { pageNum: pageNumInSessionStg, keyword: keywordInSessionStg },
       })
       .then((result) => {
-        console.log(result.data);
         const { facilitiesList, totalPage, pageNum, keyword } = result.data;
         setTotalPage(totalPage);
         setPageNum(pageNum);
@@ -56,14 +55,11 @@ export default function Facilities({ swAlert }) {
         ? loadFacilities(pageNumInSessionStg, keywordInSessionStg)
         : loadFacilities(pageNumInSessionStg, "")
       : loadFacilities(pageNum, keyword);
-    console.log("axios");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlepageNum = (value) => {
-    // console.log("pagenum handle");
-    // console.log("value =  " + value);
-    // console.log("facilitiesname = " + facilitiesName);
     loadFacilities(value, keyword);
   };
 
@@ -73,7 +69,6 @@ export default function Facilities({ swAlert }) {
   });
 
   const deleteFacilities = (facilitiesCode) => {
-    console.log(facilitiesCode);
     axios.delete(`/deleteFacilities/${facilitiesCode}`).then((result) => {
       if (result.data === "togetherExist") {
         swAlert("해당 시설에서 진행 예정인<br/> 함께해요가 존재하여<br/> 삭제가 불가능합니다.", "warning");
@@ -89,8 +84,7 @@ export default function Facilities({ swAlert }) {
       }
     });
   };
-  // console.log("out");
-  // console.log(facilitiesName);
+
   return (
     <Container component="main" align="center" sx={{ mt: 13 }}>
       <Box>

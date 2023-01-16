@@ -2,10 +2,19 @@ import React, { useCallback, useEffect, /*useEffect,*/ useMemo, useState } from 
 
 import { Button, Checkbox, FormControlLabel, styled, Typography } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/system";
 
-export default function Interest({ joinForm, setJoinForm }) {
+export default function Interest({ joinForm, setJoinForm, isValid, swAlert }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const InterestCheckBox = styled(Checkbox)({
     width: "100px",
     height: "100px",
@@ -34,9 +43,8 @@ export default function Interest({ joinForm, setJoinForm }) {
   };
 
   const interestArr = useMemo(() => [], []);
-  // console.log(joinForm.memberInterest);
+
   useEffect(() => {
-    //  console.log(joinForm.memberInterest.length);
     if (joinForm.memberInterest.length !== 0) {
       setIsDisabled(false);
     } else {
@@ -55,7 +63,6 @@ export default function Interest({ joinForm, setJoinForm }) {
         memberInterest: interestArr,
       };
       setJoinForm(joinObj);
-      //  console.log(joinForm.memberInterest);
     },
     [joinForm, setJoinForm, interestArr]
   );
@@ -71,9 +78,11 @@ export default function Interest({ joinForm, setJoinForm }) {
 
   return (
     <div style={{ textAlign: "center", width: "1200px" }}>
-      <Typography variant="h4" gutterBottom mb={5}>
+      <Typography variant="h4" gutterBottom>
         <b>{joinForm.memberNickname}</b>님은 어떤 분야에 관심이 있나요? <br />
-        <small>(*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)</small>
+      </Typography>
+      <Typography variant="h6" gutterBottom mb={5}>
+        (*FITCHWI에서 제공하는 각종 서비스 추천에 활용됩니다.)
       </Typography>
 
       <FormControlLabel

@@ -31,7 +31,6 @@ function App() {
   });
 
   useEffect(() => {
-    //세션에 저장된 로그인 아이디를 가져옴(로그인 상태 유지)
     const id = sessionStorage.getItem("id");
     const nickName = sessionStorage.getItem("nickName");
     const profileImg = sessionStorage.getItem("profileImg");
@@ -43,7 +42,7 @@ function App() {
         email: id,
       },
     });
-    //console.log(mid);
+
     if (id !== null) {
       const newState = {
         logid: id,
@@ -55,7 +54,6 @@ function App() {
     }
   }, []);
 
-  //로그인 성공 시 로그인 상태 변경 함수
   const sucLogin = useCallback((id, nickName, profileImg) => {
     const newState = {
       logid: id,
@@ -76,10 +74,9 @@ function App() {
     }).then(func);
   };
 
-  //로그아웃함수
   const onLogout = () => {
     axios.post("/logout", { data: { id: lstate.logid } }).then((result) => console.log(result.data));
-    swAlert("로그아웃이 완료됐습니다.");
+
     // const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
     // const REDIRECT_URI = "http://localhost:3000/";
     // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
@@ -97,7 +94,9 @@ function App() {
     sessionStorage.removeItem("mbti");
     sessionStorage.removeItem("classification");
     sessionStorage.removeItem("profileImg");
-    nav("/"); //첫페이지로 돌아감.
+    swAlert("로그아웃이 완료됐습니다.", "success", () => {
+      nav("/"); //첫페이지로 돌아감.
+    });
   };
 
   const [isManager, setIsManager] = useState(false);

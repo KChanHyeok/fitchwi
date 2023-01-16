@@ -42,11 +42,9 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const [togetherOpenedList, setTogetherOpenedList] = useState([]);
   const [togetherJoinList, setTogetherJoinList] = useState([]);
 
-  console.log(member);
   //메뉴 선택 후 해당 정보 조회
   const [myMenu, setMyMenu] = useState("share");
 
-  console.log(myMenu);
   const getMemberFeed = useCallback(() => {
     axios
       .get("/getMemberFeed", { params: { memberEmail: member.memberEmail } })
@@ -56,7 +54,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const getMemberTalk = useCallback(() => {
     axios.get("/getMemberTalk", { params: { memberEmail: member.memberEmail } }).then((res) => {
       const { talkJoinList, talkOpenedList } = res.data;
-      console.log(res.data);
+
       setTalkJoinList(talkJoinList);
       setTalkOpenedList(talkOpenedList);
     });
@@ -64,7 +62,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
   const getMemberTogether = useCallback(() => {
     axios.get("/getMemberTogether", { params: { memberEmail: member.memberEmail } }).then((res) => {
       const { togetherJoinList, togetherOpenedList } = res.data;
-      console.log(res.data);
+
       setTogetherJoinList(togetherJoinList);
       setTogetherOpenedList(togetherOpenedList);
     });
@@ -127,12 +125,10 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
     for (let i = 0; i < followerList.length; i++) {
       if (followerList[i].memberEmail === logid) {
         setIsFollow(true);
-        console.log(followerList[i].memberEmail);
       } else {
         setIsFollow(false);
       }
     }
-    console.log(followerList);
   }, [followerList, logid]);
 
   const onFollow = useCallback(
@@ -142,9 +138,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
         return;
       }
       if (isFollow === false) {
-        // console.log(pageOwner.memberEmail);
         axios.get("/follow", { params: { loginId: logid, pageOwner: memberEmail } }).then((res) => {
-          // console.log(res.data);
           swAlert(`${memberNickname}님을 팔로우했습니다.`);
           setIsFollow(true);
         });
@@ -154,7 +148,6 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
             params: { loginId: logid, pageOwner: memberEmail, isFollow: isFollow },
           })
           .then((res) => {
-            //  console.log(res.data);
             swAlert(`${memberNickname}님 팔로우를 취소했습니다.`);
             setIsFollow(false);
           });
@@ -163,7 +156,6 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [logid, memberEmail, memberNickname]
   );
-  //console.log(isFollow);
 
   useEffect(() => {
     getFollow();
@@ -180,9 +172,10 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           if (res.data === "ok") {
             sessionStorage.removeItem("id");
             sessionStorage.removeItem("nickName");
-            swAlert("탈퇴 처리가 완료됐습니다.");
-            onLogout();
-            nav("/");
+            swAlert("탈퇴 처리가 완료됐습니다.", "success", () => {
+              onLogout();
+              nav("/");
+            });
           } else if (res.data === "togetherExist") {
             swAlert("진행 예정인 함께해요가 있습니다. <br/>함께해요를 먼저 탈퇴해주세요.", "info");
           } else {
@@ -221,7 +214,6 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
     ["ENFJ", "/images/mbti/ENFJ.png"],
     ["ENTJ", "/images/mbti/ENTJ.png"],
   ]);
-  console.log(member);
 
   return (
     <Container
@@ -243,7 +235,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container flexWrap="nowrap" spacing={5}>
+        <Grid container flexWrap="nowrap" spacing={5} sx={{ minWidth: "630px" }}>
           <Grid item xs={2}>
             <List>
               <ListItem disablePadding>
@@ -325,7 +317,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
                   style={{
                     backgroundImage: `url("${mbtiImageMap.get(member.memberMbti)}")`,
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "150px",
+                    backgroundSize: "120px",
                     backgroundPosition: "right 2% bottom 10%",
                   }}
                   avatar={

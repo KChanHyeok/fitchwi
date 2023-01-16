@@ -44,7 +44,6 @@ export default function ViewFacilities({ swAlert }) {
   const loadFacilities = useCallback(() => {
     setLoad(false);
     axios.get(`/getFacilitiesInfo/${facilitiesCode}`).then((result) => {
-      //  console.log(result.data);
       setFacilities(result.data);
       setLoad(true);
     });

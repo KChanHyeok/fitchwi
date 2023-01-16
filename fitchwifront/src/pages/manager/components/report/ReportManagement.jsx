@@ -44,12 +44,11 @@ export default function ReportManagement({ swAlert }) {
         ? getReports(pageNumInSessionStg, keywordInSessionStg)
         : getReports(pageNumInSessionStg, "")
       : getReports(pageNum, keyword);
-    console.log("axios");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getReports = (pageNumInSessionStg, keywordInSessionStg) => {
-    console.log("report");
     setLoad(false);
 
     axios
@@ -57,7 +56,6 @@ export default function ReportManagement({ swAlert }) {
       .then((result) => {
         const { reportList, totalPage, pageNum, keyword } = result.data;
 
-        //  console.log(result.data);
         setReportList(reportList);
         setTotalPage(totalPage);
         setKeyword(keyword);
@@ -80,7 +78,6 @@ export default function ReportManagement({ swAlert }) {
     let restrictDate = moment().add(period, "days").format("YYYY-MM-DD ");
 
     axios.put(`/restrictMember/${restrictDate}/${memberEmail}`).then((result) => {
-      console.log(result);
       updateReportState(reportCode, restrictDate);
     });
   };
@@ -88,12 +85,10 @@ export default function ReportManagement({ swAlert }) {
   const [restrictDateMap, setRestrictDateMap] = useState(new Map());
 
   const onSelectDate = useCallback((e) => {
-    console.log(e.target.value);
     setRestrictDateMap((prev) => new Map(prev).set(e.target.name, e.target.value));
   }, []);
 
   const deleteReport = useCallback((reportCode) => {
-    // console.log(reportCode);
     axios.delete("/deleteReport", { params: { reportCode: reportCode } }).then((result) => {
       if (result.data === "ok") {
         swAlert("신고 내역을 성공적으로 삭제했습니다.");
@@ -108,14 +103,11 @@ export default function ReportManagement({ swAlert }) {
 
   const deleteReportTarget = useCallback(
     (reportTarget, reportCategory, memberEmail, reportCode) => {
-      //  console.log("delete");
       switch (reportCategory) {
         case "share":
-          //    console.log("feed");
           axios
             .get("/getFeedInfo", { params: { feedCode: reportTarget } })
             .then((feed) => {
-              //     console.log(feed.data);
               axios
                 .delete("/deleteFeed", { data: feed.data })
                 .then((result) => updateReportState(reportCode, "신고 대상 삭제"))
@@ -125,22 +117,15 @@ export default function ReportManagement({ swAlert }) {
 
           break;
         case "talk":
-          //   console.log("talk");
           axios
             .get("/getTalk", { params: { talkCode: reportTarget } })
             .then((talk) => {
-              //   console.log(talk.data);
-              //   console.log(talk.data.talkOpenCode.memberEmail.memberEmail);
-
-              //  console.log("개설자");
               axios
                 .delete("/deleteTalk", { data: talk.data })
                 .then((result) => {
                   updateReportState(reportCode, "신고 대상 삭제");
-                  //swAlert("해당 '얘기해요'를 성공적으로 삭제했습니다.");
                 })
                 .catch((error) => {
-                  // console.log(error);
                   swAlert("해당 얘기해요를 삭제하는 데 실패했습니다.", "warning");
                 });
             })

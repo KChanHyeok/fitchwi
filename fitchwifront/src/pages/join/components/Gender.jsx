@@ -1,9 +1,18 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { Button, styled, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Gender({ joinForm, setJoinForm }) {
+export default function Gender({ joinForm, setJoinForm, isValid, swAlert }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const GenderBtn = styled(Button)({
     width: "150px",
     height: "150px",

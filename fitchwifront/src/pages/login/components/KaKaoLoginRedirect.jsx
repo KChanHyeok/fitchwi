@@ -22,7 +22,6 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
 
     const kakaoLogin = async () => {
       await axios.get("/login/kakao/callback?", { params: { code: code } }).then((res) => {
-        //  console.log(res.data);
         // eslint-disable-next-line no-unused-vars
         const { isPresent, member } = res.data;
 
@@ -30,7 +29,6 @@ const KaKaoLoginRedirect = ({ sucLogin, ...props }) => {
           case "ok":
             switch (res.data.state) {
               case "ok":
-                //       console.log(res.data);
                 sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
                 sessionStorage.setItem("id", res.data.memberEmail);
                 sessionStorage.setItem("nickName", res.data.memberNickname);

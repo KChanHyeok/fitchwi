@@ -32,9 +32,6 @@ const Header = (props) => {
   const { logid, nickName, profileImg, flink } = lstate;
   //로고 클릭(로그인 후 main, 로그인 전 home)
   const homeLink = logid === "" ? "/" : "/";
-  console.log(lstate);
-
-  console.log(logid);
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -110,6 +107,7 @@ const Header = (props) => {
             </Typography> */}
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/about"}>
+
                 <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 }, ml: 5 }}>소개페이지</Typography>
               </Link>
 
@@ -118,6 +116,7 @@ const Header = (props) => {
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/talk"}>
                 <Typography sx={{ display: { xs: "none", sm: "none", md: "block" }, mr: { xs: 0, sm: 10 } }}>얘기해요</Typography>
+
               </Link>
               <Link style={{ textDecoration: "none", color: "black" }} to={"/share"}>
                 <Typography sx={{ display: { xs: "none", sm: "none", md: "block" } }}>공유해요</Typography>
@@ -131,7 +130,9 @@ const Header = (props) => {
                 </Link>
               </Box>
               <Box display="flex" alignItems="center">
-                {logid === "" ? null : <Avatar src={profileImg} onClick={() => nav(flink)} sx={{ cursor: "pointer" }} />}
+                {logid === "" ? null : (
+                  <Avatar src={profileImg} onClick={() => nav(flink)} sx={{ cursor: "pointer" }} />
+                )}
                 <Button color="primary" variant="text" size="small" onClick={() => nav(flink)}>
                   {logid !== "" ? `${nickName} 님` : "로그인 / 회원가입"}
                 </Button>

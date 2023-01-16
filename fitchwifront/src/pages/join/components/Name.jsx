@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 
 import { Button, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-export default function Name({ onChange, joinForm, isKakao }) {
+export default function Name({ onChange, joinForm, isKakao, isValid, swAlert, location }) {
+  const nav = useNavigate();
+  useEffect(() => {
+    if (isValid === false && location.state == null) {
+      swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
+        nav("/");
+      });
+    }
+  });
+
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
-    if (joinForm.memberName !== "") {
+    if (joinForm.memberName.length >= 2) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -16,11 +25,11 @@ export default function Name({ onChange, joinForm, isKakao }) {
     <div style={{ textAlign: "center" }}>
       {isKakao === true ? (
         <Typography variant="h4" gutterBottom mb={10}>
-          <b>{joinForm.memberNickname}</b>의 이름(본명)도 알고싶어요!
+          <b>{joinForm.memberNickname}</b>님의 이름(본명)도 알고싶어요!
         </Typography>
       ) : (
         <Typography variant="h4" gutterBottom mb={10}>
-          <b>{joinForm.memberNickname}</b>의 이름도 알고싶어요!
+          <b>{joinForm.memberNickname}</b>님의 이름도 알고싶어요!
         </Typography>
       )}
 
