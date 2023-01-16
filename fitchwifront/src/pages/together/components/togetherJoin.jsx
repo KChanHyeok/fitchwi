@@ -198,8 +198,10 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         axios.post("/insertTogetherFreeInfo", insertForm.togetherCode)
             .then((res) => {
                 setOpen(false);
-                swAlert(res.data,"success");
-                refreshTogetherList();
+                swAlert(res.data,"success",()=> {
+                    refreshTogetherList();
+                    refreshTogetherJoinList();
+                });
         })
     }
 
@@ -211,9 +213,9 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
         axios.post("/insertTogetherFreeJoinInfo", insertForm)
               .then((res) => {
                   setOpen(false);
-                  swAlert(res.data,"success");
-                  refreshTogetherJoinList();
-                  refreshTogetherList();
+                  swAlert(res.data,"success",()=>{
+                      window.location.reload();
+                  });
               })
               .catch((Error) => console.log(Error))
     }
@@ -234,20 +236,20 @@ const TogetherJoin = ({children, togetherInfo, refreshTogetherJoinList, together
             setOpen(false);
             axios.delete("/deleteTogetherFreeJoinInfo", { params : { memberEmail: sessionStorage.getItem("id"), togetherCode: togetherInfo.togetherCode}})
             .then((res) => {
-                swAlert(res.data,"success");
-                refreshTogetherJoinList();
-                refreshTogetherList();
+                swAlert(res.data,"success",()=>{
+                    window.location.reload();
+                });
             }).catch((error)=> console.log(error))
       }
 
-      const swAlert = (contentText, icon ) => {
+      const swAlert = (contentText, icon, func ) => {
         Swal.fire({
           title: "알림",
           text: contentText,
           icon: icon,
           confirmButtonText: "확인",
           confirmButtonColor: "#ff0456",
-        });
+        }).then(func);
       };
 
     return (

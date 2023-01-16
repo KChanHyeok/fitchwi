@@ -8,8 +8,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Container } from "@mui/system";
 import { AssignmentTurnedIn } from "@mui/icons-material";
 import PeopleIcon from '@mui/icons-material/People';
-import { useNavigate } from "react-router-dom";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList, refreshTogetherList, refreshTogetherTagList, togetherTagList }) => {
@@ -17,8 +15,6 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
   const [togetherInfo, setTogetherInfo] = useState(null);
   const [togetherJoinMember, setTogetherJoinMember] = useState(null);
   const [togetherAppliedMember, setTogetherAppliedMember] = useState(null);
-
-  const nav = useNavigate();
 
   useEffect(() => {
     try {
@@ -43,6 +39,7 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
   const onChange = () => {
 
   }
+  console.log(togetherInfo)
   
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>

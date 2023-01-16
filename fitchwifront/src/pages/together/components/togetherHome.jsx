@@ -33,7 +33,6 @@ const TogetherHome = ({togetherList, togetherTagList}) => {
     return mode;
   }
 
-
   return (
     <>
       <Box height={400} width="100%">
@@ -104,7 +103,7 @@ const TogetherHome = ({togetherList, togetherTagList}) => {
                   <hr />
                   <Box sx={{mt:1}}>
                     <Typography variant="caption" color="textSecondary">
-                      <b>1인당 부담금 </b>{data.togetherPrice === 0 ? "무료" : data.togetherPrice +" 원"}<br />
+                      <b>1인당 부담금 </b>{(data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice) === 0 ? "무료" : (data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice) +" 원"}<br />
                       <b>모이는 일자 </b>{data.togetherDate}<br/>
                       <b>모집 기간 </b>{data.togetherRecruitStartDate} ~ {data.togetherRecruitEndDate}
                     </Typography>
@@ -167,7 +166,7 @@ const TogetherHome = ({togetherList, togetherTagList}) => {
                   <hr />
                   <Box sx={{mt:1}}>
                     <Typography variant="caption" color="textSecondary">
-                      <b>1인당 부담금 </b>{data.togetherPrice === 0 ? "무료" : data.togetherPrice+" 원"}<br />
+                      <b>1인당 부담금 </b>{(data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice) === 0 ? "무료" : (data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice)+" 원"}<br />
                       <b>모이는 일자 </b>{data.togetherDate}<br/>
                       <b>모집 기간 </b>{data.togetherRecruitStartDate} ~ {data.togetherRecruitEndDate}
                     </Typography>
@@ -236,7 +235,7 @@ const TogetherHome = ({togetherList, togetherTagList}) => {
                       <hr />
                       <Box sx={{mt:1}}>
                       <Typography variant="caption" color="textSecondary">
-                        <b>1인당 부담금 </b>{data.togetherPrice === 0 ? "무료" : data.togetherPrice +" 원"}<br />
+                        <b>1인당 부담금 </b>{(data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice) === 0 ? "무료" : (data.togetherPrice + data.togetherOpenedCode.facilitiesCode.facilitiesPrice) +" 원"}<br />
                         <b>모이는 일자 </b>{data.togetherDate}<br/>
                         <b>모집 기간 </b>{data.togetherRecruitStartDate} ~ {data.togetherRecruitEndDate}
                       </Typography>

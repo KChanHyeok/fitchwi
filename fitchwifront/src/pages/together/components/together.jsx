@@ -32,6 +32,7 @@ const Together = ({togetherList}) => {
         togetherTitle,
         togetherType,
         togetherMemberCount,
+        togetherOpenedCode,
     } = togetherList;
 
     return (
@@ -73,7 +74,7 @@ const Together = ({togetherList}) => {
                       </Box>
                     <Box sx={{mt:1}}>
                         <Typography variant="caption" color="textSecondary">
-                        <b>1인당 부담금 </b>{togetherPrice === 0 ? "무료" : togetherPrice +" 원"}<br />
+                        <b>1인당 부담금 </b>{(togetherPrice + togetherOpenedCode.facilitiesCode.facilitiesPrice) === 0 ? "무료" : (togetherPrice + togetherOpenedCode.facilitiesCode.facilitiesPrice) +" 원"}<br />
                         <b>모이는 일자 </b>{togetherDate}<br/>
                         <b>모집 기간 </b>{togetherRecruitStartDate} ~ {togetherRecruitEndDate}
                         </Typography>
