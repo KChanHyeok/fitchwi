@@ -169,6 +169,7 @@ const TogetherAdd = ({ facilitieList, refreshTogetherList }) => {
         [event.target.name]: event.target.value,
       };
       setInsertForm(insertObj);
+      console.log(insertForm)
     },
     [insertForm]
   );
