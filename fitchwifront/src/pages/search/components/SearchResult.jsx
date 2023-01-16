@@ -130,7 +130,7 @@ const SearchResult = () => {
               )}
             </ButtonGroup>
 
-            <Box height={800} border={1} borderRadius={1} mt={2}>
+            <Box height={800} border={1} borderRadius={1} mt={2} sx={{ overflowY: "scroll" }}>
               {type === 1 &&
                 (togetherList.length === 0 ? (
                   <div style={{ textAlign: "center" }}>
@@ -163,7 +163,9 @@ const SearchResult = () => {
                             <Typography gutterBottom variant="h4" component="div" mt={1}>
                               {item.togetherTitle}
                             </Typography>
-                            <Typography variant="body1" component="div">
+                            <Typography
+                              sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 800, height: 30, mt: 1 }}
+                            >
                               {item.togetherContent}
                             </Typography>
                             <Box display="flex" alignItems="center" mt={1}>
@@ -215,7 +217,9 @@ const SearchResult = () => {
                               <Typography color="textPrimary" variant="h4" mt={2}>
                                 {item.talkTitle}
                               </Typography>
-                              <Typography color="textPrimary" variant="body1">
+                              <Typography
+                                sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 800, height: 30, mt: 1 }}
+                              >
                                 {item.talkContent}
                               </Typography>
                             </Grid>

@@ -55,7 +55,15 @@ const HomeTalkList = ({ category, talkList, korCategory, type }) => {
                     fontWeight={100}
                     mt={1}
                     color="black"
-                    sx={{ cursor: "pointer", fontSize: { xs: 14, sm: 14, md: 20 } }}
+                    sx={{
+                      cursor: "pointer",
+                      fontSize: { xs: 14, sm: 14, md: 20 },
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      width: 200,
+                      height: 30,
+                    }}
                     onClick={() => nav(`/talk/${item.talkCode}`)}
                   >
                     {item.talkTitle}
