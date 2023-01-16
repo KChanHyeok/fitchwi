@@ -52,12 +52,14 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
       .then((response) => {
         if (response.data === "fail") {
           swAlert("등록되어 있는 태그입니다!", "warning");
+        } else {
+          setTag("");
+          setOpen(true);
+          getTagList();
+          setTagForm([]);
         }
-        getTagList();
       });
-    setTag("");
-    setOpen(true);
-  }, [tag]);
+  }, [tag, setTagForm]);
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (event, reason) => {
@@ -74,6 +76,7 @@ export default function FeedTag({ tagForm, setTagForm, insertForm }) {
         id="fixed-tags-demo"
         value={tagForm}
         onChange={(event, newValue) => {
+          console.log(...newValue);
           setTagForm([...newValue]);
         }}
         options={tagList}
