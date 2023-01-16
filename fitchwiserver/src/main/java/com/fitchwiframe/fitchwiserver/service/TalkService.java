@@ -199,9 +199,12 @@ public class TalkService {
             }
             if (talkJoin.getTalkCode().getTalkType().equals("선착순")) {
                 talkJoin.setTalkJoinState("가입중");
+                talkJoinRepository.save(talkJoin);
+                result = "joinOk";
+            } else {
+                talkJoinRepository.save(talkJoin);
+                result = "ok";
             }
-            talkJoinRepository.save(talkJoin);
-            result = "ok";
         } catch (Exception e) {
             e.printStackTrace();
             result = "fail";

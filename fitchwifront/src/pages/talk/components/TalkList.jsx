@@ -61,7 +61,7 @@ const TalkList = ({ talkList }) => {
                             style={{ cursor: "pointer" }}
                         />
                         <Typography
-                            sx={{ mt: 7, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 180, height: 30 }}
+                            sx={{ mt: 7, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", width: 180, height: 25 }}
                         >
                             {talkContent}
                         </Typography>

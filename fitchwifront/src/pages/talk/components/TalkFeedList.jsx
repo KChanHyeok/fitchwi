@@ -20,16 +20,13 @@ const TalkFeedList = () => {
     //talkInfo 값
     const { state } = useLocation();
 
-    console.log(state);
     const getFeedListByTalk = useCallback(() => {
         if (state !== undefined) {
             if (state.talkCode !== undefined) {
-                console.log(state.talkCode);
                 axios
                     .get("/getFeedListByTalk", { params: { feedClassificationcode: state.talkCode } })
                     .then((res) => {
                         setFeedList(res.data);
-                        console.log(res.data);
                     })
                     .catch((error) => console.log(error));
             }
@@ -74,7 +71,7 @@ const TalkFeedList = () => {
                                                         sx={{ mb: 1 }}
                                                     />
                                                     <Typography
-                                                        sx={{ overflow: "hidden", textOverflow: "ellipsis", height: 70 }}>
+                                                        sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 70 }}>
                                                         {feed.feedContent}
                                                     </Typography>
                                                     <Box

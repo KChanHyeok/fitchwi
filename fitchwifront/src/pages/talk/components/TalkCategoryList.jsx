@@ -18,8 +18,6 @@ const categorys = {
 const TalkCategoryList = ({ talkList }) => {
 
     let { talkCategoryText } = useParams();
-    console.log(talkCategoryText);
-    console.log(talkList.filter((data) => data.talkCategory === categorys[talkCategoryText]));
 
     return (
         <Container fixed>

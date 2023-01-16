@@ -117,7 +117,7 @@ const TalkHome = ({ talkList }) => {
                             </Box>
                           </Box>
                           <Typography
-                            sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
+                            sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 25 }}
                           >
                             {data.talkContent}
                           </Typography>
@@ -198,7 +198,7 @@ const TalkHome = ({ talkList }) => {
                               </Box>
                             </Box>
                             <Typography
-                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
+                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 25 }}
                             >
                               {data.talkContent}
                             </Typography>
@@ -242,7 +242,7 @@ const TalkHome = ({ talkList }) => {
                 <Typography variant="h5">📖 나 들여다보기, 또다른 나를 발견하는 시간</Typography>
               </Box>
               <Typography variant="h6" color="grey">
-                이런저런 취향 나누며 친해져요~
+                일기나 독서를 통해 자신을 돌아보는 시간을 가져요~
               </Typography>
               <Stack direction="row" spacing={5} alignItems="flex-start" justifyContent="space-between" mt={1}>
                 {talkList.length === 0 && <Box
@@ -253,7 +253,8 @@ const TalkHome = ({ talkList }) => {
                   <CircularProgress sx={{ margin: "auto" }} />
                 </Box>}
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-                  .sort(() => 0.5 - Math.random()).filter(data => data.talkTitle.includes("공부"))
+                  .sort(() => 0.5 - Math.random()).filter(data => data.talkTitle.includes("일기") || data.talkTitle.includes("독서")
+                    || data.talkContent.includes("일기") || data.talkContent.includes("독서"))
                   .filter((data, index) => index < 3).map(data => (
                     <Card sx={{ mb: 3, width: 320, maxHeight: 400, textDecorationLine: "none" }}
                       key={data.talkCode}
@@ -290,7 +291,7 @@ const TalkHome = ({ talkList }) => {
                               </Box>
                             </Box>
                             <Typography
-                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
+                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 25 }}
                             >
                               {data.talkContent}
                             </Typography>
@@ -374,7 +375,7 @@ const TalkHome = ({ talkList }) => {
                               </Box>
                             </Box>
                             <Typography
-                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", height: 30 }}
+                              sx={{ mt: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 25 }}
                             >
                               {data.talkContent}
                             </Typography>

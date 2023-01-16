@@ -38,9 +38,6 @@ export default function TalkMbti({ talkList }) {
 
     useEffect(() => {
         setRandomValue(mbti[Math.floor(Math.random() * mbti.length)]);
-        // console.log(randomValue);
-        // console.log(talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-        //     .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue));
     }, []);
 
 
