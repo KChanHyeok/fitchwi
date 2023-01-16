@@ -38,9 +38,9 @@ export default function TalkMbti({ talkList }) {
 
     useEffect(() => {
         setRandomValue(mbti[Math.floor(Math.random() * mbti.length)]);
-        console.log(randomValue);
-        console.log(talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
-            .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue));
+        // console.log(randomValue);
+        // console.log(talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
+        //     .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue));
     }, []);
 
 
@@ -67,6 +67,7 @@ export default function TalkMbti({ talkList }) {
 
                 {sessionStorage.getItem("id") === null && talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
                     .filter(data => data.talkOpenCode.memberEmail.memberMbti === randomValue)
+                    .sort(() => 0.5 - Math.random())
                     .filter((data, index) => index < 3)
                     .map(data => (
                         <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine: "none", boxShadow: "none" }}
@@ -109,6 +110,7 @@ export default function TalkMbti({ talkList }) {
                 {talkList.filter((data) => data.talkMemberCount + 1 < data.talkMax)
                     .filter(data => data.talkOpenCode.memberEmail.memberMbti === sessionStorage.getItem("mbti"))
                     .filter(data => data.talkOpenCode.memberEmail.memberEmail !== sessionStorage.getItem("id"))
+                    .sort(() => 0.5 - Math.random())
                     .filter((data, index) => index < 3).map(data => (
                         <Card sx={{ mb: 3, width: 300, maxHeight: 300, textDecorationLine: "none", boxShadow: "none" }}
                             key={data.talkCode}

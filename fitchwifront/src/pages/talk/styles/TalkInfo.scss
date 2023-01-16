@@ -40,8 +40,9 @@
 }
 
 #talkToInfo {
-    position: sticky !important;
+    position: sticky;
     top: 65px;
+    z-index: 10;
 }
 
 .talkSticky {
