@@ -245,10 +245,17 @@ const Post = ({
                       image={`/images/${talkInfo.talkSaveimg}`}
                     />
                     <CardContent>
-                      <Typography variant="h6" sx={{ fontSize: 16 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 300, height: 30, fontSize: 16 }}
+                      >
                         {talkInfo.talkTitle}
                       </Typography>
-                      <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                      <Typography
+                        variant="body1"
+                        color="text.secondary"
+                        sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: 400, height: 30, fontSize: 14 }}
+                      >
                         {talkInfo.talkContent}
                       </Typography>
                       <Box
@@ -447,10 +454,31 @@ const Post = ({
                             image={`/images/${talkInfo.talkSaveimg}`}
                           />
                           <CardContent>
-                            <Typography variant="h6" sx={{ fontSize: 16 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                width: 200,
+                                height: 30,
+                                fontSize: 16,
+                              }}
+                            >
                               {talkInfo.talkTitle}
                             </Typography>
-                            <Typography variant="body1" color="text.secondary" sx={{ fontSize: 14 }}>
+                            <Typography
+                              variant="body1"
+                              color="text.secondary"
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                width: 200,
+                                height: 30,
+                                fontSize: 14,
+                              }}
+                            >
                               {talkInfo.talkContent}
                             </Typography>
                             <Box
