@@ -56,7 +56,6 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
             setInsertTalkOp(inputTo);
         }, [insertTalkOp]);
 
-    console.log(insertTalkOp)
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
 
@@ -93,9 +92,21 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
 
     //작성 내용 전송 함수
     const onTalkOpened = (e) => {
-        console.log(insertTalkOp);
         e.preventDefault();
         setLoad(true);
+        if (fileForm.length === 0) {
+            setLoad(false)
+            return swAlert("모임 대표 사진을 넣어주세요", "warning", () => {
+                setInsertTalkOp({
+                    ...insertTalkOp,
+                    talkTagContent: ""
+                })
+            })
+        }
+        if (insertTalkOp.talkMax < 2) {
+            setLoad(false)
+            return swAlert("최소 2명 이상이여야 합니다.", "warning")
+        }
         formData.append(
             "data",
             new Blob([JSON.stringify(insertTalkOp)],
@@ -165,14 +176,14 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
         });
     }
 
-    const swAlert = (contentText, icon) => {
+    const swAlert = (contentText, icon, func) => {
         Swal.fire({
             title: "알림",
             text: contentText,
             icon: icon,
             confirmButtonText: "확인",
             confirmButtonColor: "#ff0456",
-        });
+        }).then(func)
     };
 
     return (
@@ -217,6 +228,7 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     sx={{ mt: 3 }}
                                     onChange={onChange}
                                     placeholder="30자 이내로 작성"
+                                    inputProps={{ maxLength: 30 }}
                                     required
                                     autoFocus />
                                 <TextField fullWidth
@@ -261,20 +273,23 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                         name="talkInquiry"
                                         value={insertTalkOp.talkInquiry}
                                         sx={{ mt: 3, float: "right", minWidth: 600 }}
-                                        onChange={onChange} />}
+                                        onChange={onChange}
+                                        placeholder="100자 이내로 작성"
+                                        inputProps={{ maxLength: 100 }} />}
                                 </div>
                                 <Stack>
                                     <Typography variant="h7" sx={{ mt: 3 }}>대표사진을 넣어주세요
                                         <Button sx={{ ml: 4 }} variant="contained" component="label" size="large">
                                             Upload
-                                            <TextField
+                                            <input
                                                 label="모임대표사진"
                                                 type="file"
                                                 accept="image/*"
-                                                focused
                                                 sx={{ mt: 3, display: "none" }}
                                                 color="grey"
                                                 onChange={onLoadFile}
+                                                hidden
+                                                readOnly
                                                 required
                                             />
                                         </Button>
@@ -298,6 +313,8 @@ function TalkOpened({ memberEmail, memberInfo, refreshTalkList, refreshTalkTagLi
                                     sx={{ mt: 3 }}
                                     onChange={onChange}
                                     placeholder="5000자 이내로 작성"
+                                    inputProps={{ maxLength: 5000 }}
+                                    rows={5}
                                     multiline
                                     required />
                                 <Stack

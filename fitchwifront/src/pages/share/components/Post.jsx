@@ -209,15 +209,15 @@ const Post = ({
             <Divider style={{ background: "black", borderBottomWidth: 0.5 }} />
             {/* 피드 이미지 */}
             {file.length > 1 ? (
-              <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
+              <Carousel next={() => { }} prev={() => { }} autoPlay={false} animation="slide" duration={800} sx={{ height: "100%" }}>
                 {file.map((item, i) => (
                   <CardMedia
                     key={item.feedCode}
                     component="img"
                     src={"/images/" + item.feedFileSaveimg}
                     alt={item.feedFileImg}
-                    // sx={{ backgroundSize: "cover" }}
-                    //  onDoubleClick={() => onLike(isLike)}
+                  // sx={{ backgroundSize: "cover" }}
+                  //  onDoubleClick={() => onLike(isLike)}
                   />
                 ))}
               </Carousel>
@@ -375,7 +375,7 @@ const Post = ({
               <Stack direction="row" spacing={3} justifyContent="space-between">
                 <Box flex={2}>
                   {file.length > 1 ? (
-                    <Carousel next={() => {}} prev={() => {}} autoPlay={false} animation="slide" duration={800} height={670}>
+                    <Carousel next={() => { }} prev={() => { }} autoPlay={false} animation="slide" duration={800} height={670}>
                       {file.map((item, i) => (
                         <CardMedia
                           key={item.feedCode}
@@ -406,7 +406,7 @@ const Post = ({
                         sx={{ width: 30, height: 30, mr: 1 }}
                       />
                       <Typography fontWeight={500} variant="span">
-                        <b>{memberWriterInfo.memberNickname}</b> {}
+                        <b>{memberWriterInfo.memberNickname}</b> { }
                       </Typography>
                     </Box>
                     <LongMenu Modal={setOpen} refreshFeed={refreshFeed} flist={file} information={information} />
@@ -418,7 +418,7 @@ const Post = ({
                       <Typography>
                         <b>{memberWriterInfo.memberNickname}</b>
                       </Typography>
-                      <Typography>{feedContent}</Typography>
+                      <Typography sx={{ whiteSpace: "pre-wrap" }}>{feedContent}</Typography>
                     </UserBox>
                   </Box>
                   <Box height={120} mb={1}>

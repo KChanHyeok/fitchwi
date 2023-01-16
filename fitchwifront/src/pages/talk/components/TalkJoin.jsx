@@ -19,7 +19,7 @@ const UserBox = styled(Box)({
     marginBottom: "20px",
 });
 
-const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJoinList }) => {
+const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkList, refreshTalkJoinList }) => {
 
 
     const nav = useNavigate();
@@ -50,7 +50,6 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
 
     //작성 내용 전송 함수
     const onTalkJoin = (e) => {
-        console.log(insertTalkJoin);
         e.preventDefault();
         setLoad(true);
         axios
@@ -60,12 +59,15 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                 setLoad(false);
                 if (res.data === "ok") {
                     swAlert("가입 신청이 완료되었습니다.", "success");
-                } else if (res.data === "memberMax") {
+                } else if (res.data === "joinOk") {
+                    swAlert("가입이 완료되었습니다. 즐거운 활동 되세요😊", "success");
+                    refreshTalkList();
+                }
+                else if (res.data === "memberMax") {
                     swAlert("인원이 가득차서 가입할 수 없습니다.", "warning");
                 } else {
                     swAlert("가입에 실패했습니다.", "error");
                 }
-
                 refreshTalkJoinList();
             })
             .catch((error) => console.log(error));
@@ -89,6 +91,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                 } else {
                     setLoad(false);
                     swAlert("모임 탈퇴가 완료되었습니다.", "success");
+                    refreshTalkList();
                 }
                 setOpenModal(false);
                 refreshTalkJoinList();
@@ -98,10 +101,6 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
 
     //참여 모달창
     const [openModal, setOpenModal] = useState(false);
-
-    useEffect(() => {
-        console.log(talkJoinState);
-    }, [talkJoinState]);
 
     //로그인 조건
     const isLogin = () => {
@@ -234,7 +233,11 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                                         <Typography sx={{ mt: 1 }}>{talkInfo.talkInquiry}</Typography>
                                         <br />
                                         <TextField sx={{ mt: 1, mb: 1 }} fullWidth
-                                            label="답변" name="talkJoinAnswer" onChange={onChange} />
+                                            label="답변" name="talkJoinAnswer" onChange={onChange}
+                                            placeholder="200자 이내로 작성"
+                                            inputProps={{ maxLength: 200 }}
+                                            multiline
+                                            required />
                                         <Box sx={{ mt: 1 }}>승인제의 경우 승인대기 상태로 방장의 승인을 기다려야 합니다.</Box>
                                     </Box>
                                     <Button sx={{ mt: 3, float: "right" }} type="submit" onClick={onTalkJoin}>
@@ -261,7 +264,7 @@ const TalkJoin = ({ children, memberInfo, talkInfo, talkJoinState, refreshTalkJo
                                 </UserBox>
                                 <hr /><br />
                                 <Box style={{
-                                    height: 180,
+                                    height: 145,
                                     width: 400,
                                     overflowY: "scroll",
                                     overflowX: "hidden",

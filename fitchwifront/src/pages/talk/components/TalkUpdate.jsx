@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "../styles/TalkOpenedModal.scss";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, Chip, CircularProgress, FormControl, InputAdornment, InputLabel, ListItem, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Chip, CircularProgress, FormControl, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Box, Stack, styled } from "@mui/system";
 import "../styles/TalkInfo.scss";
 import TagFacesIcon from '@mui/icons-material/TagFaces';
@@ -31,7 +30,7 @@ const imgBoxStyle2 = {
     backgroundSize: "cover",
 };
 
-function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refreshTalkTagList }) {
+function TalkUpdate({ memberInfo, refreshTalkList, refreshTalkTagList }) {
     let formData = new FormData();
     const nav = useNavigate();
     const imgEl = document.querySelector(".img_box");
@@ -49,9 +48,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
         try {
             setUpdateTalk(state.talkInfo);
             setUpdateTalkTag(state.talkTagInfo);
-            // setChipData({
-
-            // })
         } catch (e) {
 
         }
@@ -74,8 +70,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
             })
         }, [updateTalk, updateTalkTag]
     );
-    console.log(updateTalk);
-    console.log(updateTalkTag);
 
     //파일 업로드
     const [fileForm, setFileForm] = useState("");
@@ -115,7 +109,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                     refreshTalkList();
                     setUpdateTalk({});
                 } else {
-                    swAlert("얘기해요 수정 실패", "warning");
+                    swAlert("얘기해요 수정 실패", "error");
                 }
             })
             .catch((error) => console.log(error));
@@ -131,47 +125,14 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
             .then((res) => {
                 if (res.data === "ok") {
                     setLoad(false);
-                    swAlert("태그 저장 성공");
+                    swAlert("태그 저장 성공", "success");
                     refreshTalkTagList();
                 } else {
-                    swAlert("태그 저장 실패");
+                    swAlert("태그 저장 실패", "error");
                 }
             })
             .catch((error) => console.log(error));
     }
-
-    // 태그 추가
-
-    const ListItem = styled('li')(({ theme }) => ({
-        margin: theme.spacing(0.5),
-    }));
-    const [chipData, setChipData] = React.useState([]);
-    const [count, setCount] = useState(0);
-    const addTag = useCallback(
-        (e) => {
-            setCount(count + 1);
-            const chipObj = {
-                key: count,
-                label: updateTalkTag.talkTagContent
-            }
-            setChipData(chipData.concat(chipObj))
-            setUpdateTalkTag({
-                ...updateTalkTag,
-                talkTagContent: ""
-            });
-        }, [chipData, count, updateTalkTag])
-
-    const handleDelete = (chipToDelete) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-    };
-
-    const saveClick = () => {
-        setUpdateTalkTag({
-            ...updateTalkTag,
-            talkTagContent: chipData.map(data => data.label).join(" ")
-        });
-    }
-
 
     const [showInquiry, setShowInquiry] = useState(false);
 
@@ -182,9 +143,6 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
     const otherCheck = () => {
         setShowInquiry(false);
     }
-
-    console.log(fileForm);
-
 
     const swAlert = (contentText, icon) => {
         Swal.fire({
@@ -228,6 +186,7 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                 value={updateTalk.talkTitle || ""}
                                 sx={{ mt: 3 }}
                                 onChange={onChange}
+                                inputProps={{ maxLength: 30 }}
                             />
                             <TextField fullWidth
                                 label="최대 참여인원"
@@ -269,11 +228,12 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                 </FormControl>
                                 {updateTalk.talkType === "승인제" ?
                                     <TextField
-                                        label="가입질문"
+                                        label="가입질문(100자 이내)"
                                         name="talkInquiry"
                                         value={updateTalk.talkInquiry || ""}
                                         sx={{ mt: 3, float: "right", marginTop: 2, minWidth: 600 }}
-                                        onChange={onChange} />
+                                        onChange={onChange}
+                                        inputProps={{ maxLength: 100 }} />
                                     : <div></div>}
                             </div>
                             <Stack>
@@ -299,28 +259,14 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                 </Box>
                             </Stack>
                             <TextField fullWidth
-                                label="모임을 소개해주세요"
+                                label="모임을 소개해주세요(5000자 이내)"
                                 name="talkContent"
                                 value={updateTalk.talkContent || ""}
                                 sx={{ mt: 3 }}
                                 onChange={onChange}
+                                inputProps={{ maxLength: 5000 }}
+                                rows={5}
                                 multiline />
-                            {/* {!updateTalkTag
-                                ? <Box style={{
-                                    position: "absolute",
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                }}>
-                                    <CircularProgress sx={{ margin: "auto" }} />
-                                </Box>
-                                : <TextField fullWidth
-                                    label="애기해요 태그"
-                                    name="talkTagContent"
-                                    value={updateTalkTag.talkTagContent || ""}
-                                    sx={{ mt: 3 }}
-                                    onChange={onChange}
-                                />} */}
                             <Stack
                                 direction="row"
                                 sx={{ mt: 3, height: 55 }}
@@ -331,30 +277,8 @@ function TalkUpdate({ memberEmail, memberInfo, talkList, refreshTalkList, refres
                                     label="태그"
                                     name="talkTagContent"
                                     onChange={onChange}
-                                    value={updateTalkTag.talkTagContent}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start" >
-                                                {chipData.map((data) => {
-                                                    let icon;
-                                                    if (data.label === 'React') {
-                                                        icon = <TagFacesIcon />;
-                                                    }
-                                                    return (
-                                                        <ListItem key={data.key} style={{ listStyle: "none" }}>
-                                                            <Chip
-                                                                icon={icon}
-                                                                label={data.label}
-                                                                onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-                                                            />
-                                                        </ListItem>
-                                                    );
-                                                })}
-                                            </InputAdornment>
-                                        ),
-                                    }}
+                                    value={updateTalkTag.talkTagContent || ""}
                                 />
-                                <Button variant={"contained"} onClick={addTag}>추가</Button>
                             </Stack>
                             <Typography sx={{ float: "right" }}>
                                 <Button onClick={onTalkTagUpdate} variant={"contained"} sx={{ mt: 2, mr: 4 }}>태그 저장</Button>

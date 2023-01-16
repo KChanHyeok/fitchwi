@@ -97,7 +97,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                     .get("/getFeedListByTalk", { params: { feedClassificationcode: talkInfo.talkCode } })
                     .then((res) => {
                         setFeedList(res.data);
-                        // console.log(res.data);
                     })
                     .catch((error) => console.log(error));
             }
@@ -114,20 +113,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
             talkTagArr = talkTagInfo.talkTagContent.split(" ");
         }
     }
-
-    console.log(talkInfo);
-
-    // let interestArr = [];
-    // if (talkJoinMember !== undefined) {
-    //     if (talkJoinMember.memberEmail.memberInterest != null) {
-    //         interestArr = talkJoinMember.memberEmail.memberInterest.split(" ");
-    //     }
-    // }
-
-    // console.log(interestArr);
-
-    // console.log(feedList.filter(data => data.memberEmail.memberEmail === (talkJoinMember[0].memberEmail.memberEmail))
-    //     .sort((a, b) => b.feedCode - a.feedCode).filter((data, index) => index < 3))
 
     return (
         <>
@@ -212,7 +197,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                             <Box width={888}>
                                 <Box>
                                     <Typography variant="h6" mt={4} mb={1} fontWeight="bold" id="toJoinMember" className="hrColumn">&nbsp;얘기해요 소개</Typography>
-                                    <Typography mb={5} ml={2} mr={2}>
+                                    <Typography mb={5} ml={2} mr={2} sx={{ whiteSpace: "pre-wrap" }}>
                                         {talkInfo.talkContent}
                                     </Typography>
                                     {!talkTagInfo
@@ -228,7 +213,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                             {talkTagArr[0] !== ""
                                                 ? talkTagArr.map((talkTag, index) => (
                                                     <Chip
-                                                        onClick={() => nav(`/search/${talkTag}`)}
                                                         variant="outlined"
                                                         key={index}
                                                         label={"#" + talkTag}
@@ -246,41 +230,32 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         <Typography variant="h6" mb={1} fontWeight="bold" className="hrColumn">&nbsp;방장</Typography>
                                         <Link to="/memberpage" state={{ memberId: talkInfo.talkOpenCode.memberEmail.memberEmail }}
                                             style={{ textDecoration: "none", color: "black", }}>
-                                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 15
+                                            {talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length >= 10
                                                 ?
-                                                <Chip sx={{ ml: 1, width: 380, height: 50, cursor: "pointer" }}
+                                                <Chip sx={{ width: 250, height: 50, cursor: "pointer" }}
                                                     avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
                                                         src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                                     />}
                                                     label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
                                                     style={{ fontSize: 15 }}
                                                 />
-                                                : talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 10
+                                                : talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 5
                                                     ?
-                                                    <Chip sx={{ width: 300, height: 50, cursor: "pointer" }}
+                                                    <Chip sx={{ width: 230, height: 50, cursor: "pointer" }}
                                                         avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
                                                             src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                                         />}
                                                         label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
                                                         style={{ fontSize: 15 }}
                                                     />
-                                                    : talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname.length > 5
-                                                        ?
-                                                        <Chip sx={{ width: 250, height: 50, cursor: "pointer" }}
-                                                            avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
-                                                                src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
-                                                            />}
-                                                            label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
-                                                            style={{ fontSize: 15 }}
-                                                        />
-                                                        :
-                                                        <Chip sx={{ width: 180, height: 50, cursor: "pointer" }}
-                                                            avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
-                                                                src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
-                                                            />}
-                                                            label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
-                                                            style={{ fontSize: 15 }}
+                                                    :
+                                                    <Chip sx={{ width: 180, height: 50, cursor: "pointer" }}
+                                                        avatar={<Avatar alt="img" style={{ width: 40, height: 40 }}
+                                                            src={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberSaveimg}
                                                         />}
+                                                        label={talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberNickname + " 님"}
+                                                        style={{ fontSize: 15 }}
+                                                    />}
                                         </Link>
                                     </Box>
                                     <br />
@@ -324,21 +299,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                             size="small"
                                                             sx={{ mt: 0.5, fontSize: 13, width: 50, cursor: "pointer" }}
                                                         />
-                                                        {/* {talkTagArr[0] !== ""
-                                                            ? talkTagArr.map((talkTag, index) => (
-                                                                <Chip
-                                                                    variant="outlined"
-                                                                    key={index}
-                                                                    label={data.memberEmail.memberInterest}
-                                                                    style={{
-                                                                        fontSize: 13,
-                                                                        marginLeft: 5,
-                                                                        marginBottom: 40,
-                                                                        boxShadow: "0 3px 5px  lightgray",
-                                                                    }}
-                                                                />
-                                                            ))
-                                                            : null} */}
                                                         <Typography fontWeight={500}>
                                                             {data.memberEmail.memberNickname} 님
                                                         </Typography>
@@ -355,9 +315,10 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                     </Stack>
                                     {feedList.length === 0 ? <Typography>아직 작성된 피드가 없습니다.</Typography>
                                         : feedList.sort((a, b) => b.feedCode - a.feedCode).filter((data, index) => index < 3).map(feed => (
-                                            <>
+
+                                            <Box key={feed.feedCode}>
                                                 <Card sx={{ mb: 3, mr: 2, width: 280, maxHeight: 400, textDecorationLine: "none", float: "left" }}
-                                                    key={feed.feedCode}>
+                                                >
                                                     <Link to={`/share/${feed.feedCode}`}
                                                         style={{ textDecoration: "none", color: "black", float: "left" }}>
                                                         <CardActionArea>
@@ -388,7 +349,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                                 </Typography>
                                                                 <br />
                                                                 <Typography variant="h6"
-                                                                    sx={{ overflow: "hidden", textOverflow: "ellipsis", height: 90 }}>
+                                                                    sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "pre-wrap", height: 90 }}>
                                                                     {feed.feedContent}
                                                                 </Typography>
                                                                 <Box
@@ -403,7 +364,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                         </CardActionArea>
                                                     </Link>
                                                 </Card>
-                                            </>
+                                            </Box>
                                         ))
                                     }
                                 </Box>
@@ -423,11 +384,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         ? (<Button onClick={isDelete} className="talkSticky">삭제하기</Button>)
                                         : talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                             && data.memberEmail.memberEmail === sessionStorage.getItem("id")).length === 0
-                                            ? <TalkJoin memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkJoinList={refreshTalkJoinList}
+                                            ? <TalkJoin memberInfo={memberInfo} talkInfo={talkInfo} refreshTalkList={refreshTalkList} refreshTalkJoinList={refreshTalkJoinList}
                                                 talkJoinMember={talkJoinMember}>참여하기</TalkJoin>
                                             : (<TalkJoin memberInfo={memberInfo} talkInfo={talkInfo}
                                                 talkJoinState={talkJoinList.filter((data) => data.talkCode.talkCode === (talkPageCode * 1)
                                                     && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
+                                                refreshTalkList={refreshTalkList}
                                                 refreshTalkJoinList={refreshTalkJoinList} />)}
                                 {/* </Box> */}
                             </Box>
@@ -457,22 +419,21 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                             : talkJoinMember.length === 0
                                                 ? <Typography>현재 참여 중인 회원이 없습니다.</Typography>
                                                 : talkJoinMember.map((data) =>
-                                                    <Box>
-                                                        <UserBox key={data.talkJoinCode}>
-                                                            <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
-                                                                <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
-                                                            </Link>
-                                                            <Chip
-                                                                color="primary"
-                                                                label={data.memberEmail.memberMbti}
-                                                                size="small"
-                                                                sx={{ mt: 0.5, fontSize: 13, width: 50, cursor: "pointer" }}
-                                                            />
-                                                            <Typography fontWeight={500} width={150} variant="span">
-                                                                <b>{data.memberEmail.memberNickname}님</b>
-                                                            </Typography>
-                                                        </UserBox>
-                                                    </Box>)}
+                                                    <UserBox key={data.talkJoinCode}>
+                                                        <Link to="/memberpage" state={{ memberId: data.memberEmail.memberEmail }}>
+                                                            <Avatar src={data.memberEmail.memberSaveimg} alt={"profil.memberImg"} sx={{ width: 30, height: 30 }} />
+                                                        </Link>
+                                                        <Chip
+                                                            color="primary"
+                                                            label={data.memberEmail.memberMbti}
+                                                            size="small"
+                                                            sx={{ mt: 0.5, fontSize: 13, width: 50, cursor: "pointer" }}
+                                                        />
+                                                        <Typography fontWeight={500} width={150} variant="span">
+                                                            <b>{data.memberEmail.memberNickname}님</b>
+                                                        </Typography>
+                                                    </UserBox>
+                                                )}
                                     </DialogContent>
                                 </Dialog>
                             </div>
