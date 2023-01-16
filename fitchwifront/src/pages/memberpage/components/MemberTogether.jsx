@@ -201,12 +201,13 @@ export default function Membertogether({
             <div>
               <Typography>같은 취미라도 함께하면 더 즐겁죠!</Typography>
               <Typography> '함께해요'에서 함께해요!</Typography>
+
+              <br />
+              <Link to="/together/add" style={{ color: "#ff0456" }}>
+                '함께해요' 개설하러 가기
+              </Link>
             </div>
           )}
-          <br />
-          <Link to="/together/add" style={{ color: "#ff0456" }}>
-            '함께해요' 개설하러 가기
-          </Link>
         </div>
       );
     }

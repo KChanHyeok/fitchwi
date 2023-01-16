@@ -75,7 +75,9 @@ function App() {
   };
 
   const onLogout = () => {
-    axios.post("/logout", { data: { id: lstate.logid } }).then((result) => console.log(result.data));
+    axios.post("/logout", { data: { id: lstate.logid } }).catch((error) => {
+      swAlert("로그아웃 과정에 문제가 발생했습니다.", "warning");
+    });
 
     // const REST_API_KEY = "bad1b060092a0ed86a3dfe34c2fb99f9";
     // const REDIRECT_URI = "http://localhost:3000/";

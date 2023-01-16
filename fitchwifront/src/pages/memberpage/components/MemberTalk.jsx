@@ -168,12 +168,12 @@ export default function MemberTalk({ myMenu, talkJoinList, talkOpenedList, logid
             <div>
               <Typography>원하는 주제로 '얘기해요'를 개설해보세요!</Typography>
               <br />
+              <br />
+              <Link to="/talk/opened" style={{ color: "#ff0456" }}>
+                '얘기해요' 개설하러 가기
+              </Link>{" "}
             </div>
           )}
-          <br />
-          <Link to="/talk/opened" style={{ color: "#ff0456" }}>
-            '얘기해요' 개설하러 가기
-          </Link>
         </div>
       );
     }
