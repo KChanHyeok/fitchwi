@@ -36,11 +36,7 @@ const JoinIndex = () => {
   /////////////////////
   const [isValid, setIsValid] = useState(false);
   useEffect(() => {
-    // if (location.state === null) {
-    //   swAlert("비정상적인 접근입니다.<br/> 메인화면으로 이동합니다.", "warning", () => {
-    //     nav("/");
-    //   });
-    // }
+
     if (location.state != null) {
       setIsValid(true);
       if (location.state.member === "newMember") {
