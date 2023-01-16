@@ -124,7 +124,7 @@ export default function EditFacilities({ swAlert }) {
                   onChange={(e) => onInputChange(e)}
                 />
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">등급</InputLabel>
+                  <InputLabel id="demo-simple-select-label">제휴상태</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"

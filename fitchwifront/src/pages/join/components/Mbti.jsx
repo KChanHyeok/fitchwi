@@ -75,8 +75,10 @@ export default function Mbti({ joinForm, setJoinForm, isValid, swAlert }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h5" gutterBottom>
         오 그렇군요! <br />
+      </Typography>
+      <Typography variant="h4" gutterBottom>
         MBTI는 뭐예요?
       </Typography>
       <Typography variant="h6" gutterBottom mb={10}>

@@ -15,9 +15,9 @@ public class FeedFile {
     @Column(nullable = false, length = 50)
     private Long feedCode;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String feedFileImg;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String feedFileSaveimg;
 }

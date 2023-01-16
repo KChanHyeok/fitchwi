@@ -109,7 +109,7 @@ export default function AddFacilities({ swAlert }) {
             onChange={(e) => onInputChange(e)}
           />
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">등급</InputLabel>
+            <InputLabel id="demo-simple-select-label">제휴상태</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -122,16 +122,7 @@ export default function AddFacilities({ swAlert }) {
               <MenuItem value={"비제휴"}>비제휴</MenuItem>
             </Select>
           </FormControl>
-          {/* <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="facilitiesGrade"
-            label="등급"
-            type="text"
-            value={facilitiesGrade}
-            onChange={(e) => onInputChange(e)}
-          /> */}
+
           <TextField
             margin="normal"
             required
