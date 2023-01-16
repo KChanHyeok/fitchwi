@@ -31,43 +31,43 @@ export default function TogetherCategoryImage() {
 
 const itemData = [
   {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    img: "/images/category/Culture.jpg",
     title: "문화·예술",
     category: "culture",
     rows: 1,
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    img: "/images/category/Exercise.jpg",
     title: "운동·액티비티",
     category: "exercise",
   },
   {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    img: "/images/category/Food.jpg",
     title: "요리·음식",
     category: "food",
   },
   {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    img: "/images/category/Travel.jpg",
     title: "여행",
     category: "travel",
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    img: "/images/category/Growth.webp",
     title: "성장·자기계발",
     category: "growth",
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    img: "/images/category/Art.webp",
     title: "공예·수공예",
     category: "art",
     rows: 2,
     cols: 2,
   },
   {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    img: "/images/category/Game.jpg",
     title: "게임·오락",
     category: "game",
   },
