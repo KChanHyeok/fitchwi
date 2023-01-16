@@ -11,7 +11,9 @@ import HomeTalkList from "./HomeTalkList";
 import HomeTapPanel from "./HomeTapPanel";
 import HomeTogetherList from "./HomeTogetherList";
 
-const Home = () => {
+const Home = ({ lstate }) => {
+  console.log(lstate);
+  const { mbti } = lstate;
   const nav = useNavigate();
   const [category, setCategory] = useState("culture");
   const [korCategory, setKorCategory] = useState("문화·예술");
@@ -81,7 +83,7 @@ const Home = () => {
       <Container>
         <Box flex={4}>
           <Box ml={4} mr={4}>
-            <HomeTapPanel />
+            <HomeTapPanel mbti={mbti} />
             <Typography variant="h6" mb={1}>
               📕 카테고리 ❯ {korCategory}
             </Typography>

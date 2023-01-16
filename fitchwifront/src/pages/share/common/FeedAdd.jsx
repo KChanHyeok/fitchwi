@@ -137,7 +137,11 @@ const FeedAdd = ({ refreshFeed }) => {
     } else if (insertForm.feedTag.length === 0) {
       swAlert("태그를 선택하세요!", "error");
       return;
+    } else if (fileForm.length === 0) {
+      swAlert("이미지를 추기하세요!", "error");
+      return;
     }
+
     formdata.append("data", new Blob([JSON.stringify(insertForm)], { type: "application/json" }));
 
     for (let i = 0; i < fileForm.length; i++) {

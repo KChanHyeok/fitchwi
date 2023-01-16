@@ -37,7 +37,7 @@ export default function Login({ sucLogin, swAlert }) {
       axios.post("/loginmember", loginForm).then((res) => {
         switch (res.data.state) {
           case "ok":
-            sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg);
+            sucLogin(res.data.memberEmail, res.data.memberNickname, res.data.profileImg, res.data.mbti);
             sessionStorage.setItem("id", res.data.memberEmail);
             sessionStorage.setItem("nickName", res.data.memberNickname);
             sessionStorage.setItem("mbti", res.data.mbti);
@@ -56,14 +56,16 @@ export default function Login({ sucLogin, swAlert }) {
             swAlert("아이디와 일치하는 회원정보가 없습니다.", "warning");
             break;
           case "reported":
+
             swAlert(
-              "누적된 신고에 의해, <br/> FITCHWI 이용이 불가합니다.<br/> 제한 해지일 :" +
+              "누적된 신고에 의해, <br/> FITCHWI 이용이 불가합니다.<br/> 제한 해지일 : " +
                 res.data.memberRestriction,
               "warning",
               () => {
                 nav("/", { replace: true });
               }
             );
+
 
             break;
           case "released":
