@@ -14,12 +14,11 @@ const Rightbar = () => {
   const mbti = sessionStorage.getItem("mbti");
   const getMemberList = useCallback(() => {
     axios.get("/getMemberList").then((response) => {
-      if (response.data.length > 9) {
-        response.data.length = 7;
-      }
       getMember(response.data.filter((data) => data.memberMbti === mbti));
     });
   }, [mbti]);
+
+  console.log(member);
 
   useEffect(() => {
     getMemberList();

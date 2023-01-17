@@ -258,13 +258,15 @@ const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMembe
             aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
-                    <Typography variant="h5" component="div">
+                    <Typography variant="h5" component="div" mb={2}>
                         함께해요 신청자 명단
                     </Typography>
                     <hr/>
-                    <Box sx={{mt:5}}>
+                    <Typography mb={1} mt={2} textAlign="center"><b>회원 / 답변</b></Typography>
+                    <Box sx={{mt:3}}>
                         {togetherAppliedMember.length===0 || togetherAppliedMember.filter(data=>data.togetherJoinState==="대기").length===0 ? <Typography>현재 신청중인 인원이 없습니다</Typography> :
                         togetherAppliedMember.filter(data=>data.togetherJoinState!=="가입중").map((data)=>(
+                        <Box>                            
                             <UserBox key={data.togetherJoinCode}>
                                 <Avatar
                                     component={Link}
@@ -274,18 +276,19 @@ const TogetherOpMenu = ({ togetherInfo, togetherJoinMember, togetherAppliedMembe
                                     alt={"profil.memberImg"}
                                     sx={{ width: 30, height: 30 }}
                                 />
-                                <Typography fontWeight={500} variant="span">
+                                <Typography fontWeight={500} width={200} variant="span">
                                     {!data.memberEmail.memberNickname
                                     ? data.memberEmail.memberEmail
                                     : data.memberEmail.memberNickname}
                                     님
                                 </Typography>
-                                <Typography variant="span">
-                                답변<br/>{data.togetherJoinAnswer}
+                                    <Button onClick={()=> approval(data)} sx={{ml:2}}>승인</Button>
+                                    <Button onClick={()=> refusal(data)}>거절</Button>
+                                </UserBox>
+                                <Typography mb={3}>
+                                  <b>답변 : </b>{data.togetherJoinAnswer}
                                 </Typography>
-                                <Button onClick={()=> approval(data)} sx={{ml:2}}>승인</Button>
-                                <Button onClick={()=> refusal(data)}>거절</Button>
-                            </UserBox>
+                            </Box>
                         ))}
                     </Box>
                 </Box>

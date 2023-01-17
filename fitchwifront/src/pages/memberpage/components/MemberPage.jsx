@@ -425,7 +425,7 @@ export default function MemberPage({ member, onLogout, lstate, swAlert }) {
             {myMenu === "share" ? (
               <Box sx={{ mt: 2, width: "100%" }}>
                 <Typography variant="h6" gutterBottom>
-                  공유 해요
+                  공유해요
                 </Typography>
                 {feedList !== undefined ? <MemberFeed feedList={feedList} /> : null}
               </Box>
