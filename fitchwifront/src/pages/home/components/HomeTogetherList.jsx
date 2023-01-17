@@ -39,7 +39,7 @@ const HomeTogetherList = ({ category, togetherList, korCategory, type }) => {
             <Button onClick={() => nav(`/together/category/${category}`)}>전체보기</Button>
           </Stack>
           <Grid container spacing={2} display="flex" alignItems="center">
-            {togetherListByCategory.map((item, index) => (
+            {togetherListByCategory.sort((a,b) => b.togetherCode - a.togetherCode).map((item, index) => (
               <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                 <Box key={item.togetherCode}>
                   <Link to={`/together/${item.togetherCode}`} style={{ textDecoration: "none" }}>

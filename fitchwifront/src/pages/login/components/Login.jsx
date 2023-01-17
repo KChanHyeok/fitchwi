@@ -157,9 +157,9 @@ export default function Login({ sucLogin, swAlert }) {
             </Grid>
           </Grid>
         </Box>
-        <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
+        {/* <Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={() => createMemeber()}>
           테스트계정생성
-        </Button>
+        </Button> */}
       </Container>
     </>
   );

@@ -39,7 +39,6 @@ const TogetherInfo = ({ togetherJoinList, togetherList, refreshTogetherJoinList,
   const onChange = () => {
 
   }
-  console.log(togetherInfo)
   
   return (
     <Stack sx={{width: 1000, height: 800, margin: "auto" }} flex={7} p={3}>

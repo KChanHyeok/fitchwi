@@ -152,7 +152,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                             </Box>)}
                                 </Box>
                                 <Typography variant="span" sx={{ fontSize: 30, backgroundColor: "#ff0456", color: "white", borderRadius: 5 }}>
-                                    &nbsp;&nbsp;{talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberMbti} 추천 취미&nbsp;&nbsp;
+                                    &nbsp;&nbsp;{talkList.filter(data => data.talkCode === (talkPageCode * 1))[0].talkOpenCode.memberEmail.memberMbti} 추천 모임&nbsp;&nbsp;
                                 </Typography>
                                 <br />
                                 <Box>
@@ -183,20 +183,20 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                             <Box sx={{ mb: 5, maxWidth: 900, textAlign: "center" }}>
                                 {talkInfo.talkSaveimg && (<Box
                                     component="img"
-                                    sx={{ mt: 2, width: 700 }}
+                                    sx={{ mt: 4, width: 700 }}
                                     src={`/images/${talkInfo.talkSaveimg}`}
                                     alt="talkimg"
                                 ></Box>)}
                             </Box>
-
+                            <Box mb={12} id="toInfo" />
                             <Box style={{ backgroundColor: "#fd5089", height: 50 }} id="talkToInfo" >
-                                <Typography variant="span"><a href="#talkToInfo" className="subTopBar">얘기해요 소개</a></Typography>
+                                <Typography variant="span"><a href="#toInfo" className="subTopBar">얘기해요 소개</a></Typography>
                                 <Typography variant="span"><a href="#toJoinMember" className="subTopBar">회원</a></Typography>
                                 <Typography variant="span"><a href="#toTalkFeed" className="subTopBar">얘기해요 피드</a></Typography>
                             </Box>
                             <Box width={888}>
                                 <Box>
-                                    <Typography variant="h6" mt={4} mb={1} fontWeight="bold" id="toJoinMember" className="hrColumn">&nbsp;얘기해요 소개</Typography>
+                                    <Typography variant="h6" mt={4} mb={1} fontWeight="bold" className="hrColumn">&nbsp;얘기해요 소개</Typography>
                                     <Typography mb={5} ml={2} mr={2} sx={{ whiteSpace: "pre-wrap" }}>
                                         {talkInfo.talkContent}
                                     </Typography>
@@ -209,7 +209,7 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         }}>
                                             <CircularProgress sx={{ margin: "auto" }} />
                                         </Box>
-                                        : <Box>
+                                        : <Box id="toJoinMember">
                                             {talkTagArr[0] !== ""
                                                 ? talkTagArr.map((talkTag, index) => (
                                                     <Chip
@@ -304,11 +304,10 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                         </Typography>
                                                     </Link>
                                                 }
-
-                                            </UserBox>)}
+                                                </UserBox>)}
                                     <Box>
                                     </Box>
-                                    <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={1}>
+                                    <Stack direction="row" alignItems="center" justifyContent="space-between" mt={10} mb={1} id="toTalkFeed">
                                         <Typography variant="h6" fontWeight="bold" className="hrColumn">&nbsp;{talkInfo.talkTitle} 피드</Typography>
                                         {feedList.length < 4 ? <></>
                                             : <Button onClick={() => nav(`/talk/feed/${talkPageCode}`, { state: talkInfo })}>전체보기</Button>}
@@ -368,7 +367,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         ))
                                     }
                                 </Box>
-                                {/* <Box className="talkTxtLine"> */}
                                 <br />
                                 <br />
                                 {!talkJoinMember
@@ -391,7 +389,6 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                                     && data.memberEmail.memberEmail === sessionStorage.getItem("id"))[0].talkJoinState}
                                                 refreshTalkList={refreshTalkList}
                                                 refreshTalkJoinList={refreshTalkJoinList} />)}
-                                {/* </Box> */}
                             </Box>
                             <div>
                                 <Dialog
@@ -406,7 +403,12 @@ const TalkInfo = ({ memberInfo, talkList, talkTagList, talkJoinList,
                                         </button>
                                     </DialogTitle>
                                     <hr />
-                                    <DialogContent>
+                                    <DialogContent
+                                        style={{
+                                            height: 250,
+                                            overflowY: "scroll",
+                                            overflowX: "hidden",
+                                        }}>
                                         {!talkJoinMember
                                             ? <Box style={{
                                                 position: "absolute",
